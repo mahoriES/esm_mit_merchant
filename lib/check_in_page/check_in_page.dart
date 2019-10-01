@@ -316,11 +316,9 @@ class CheckInPageState extends State<CheckInPage> {
               ),
             ),
             validator: (String value) {
-              if (value.contains('+')) {
-                return null;
-              } else {
-                return 'Please enter a phone number with country code.';
-              }
+              return value.length < 1
+                    ? 'Please enter a valid phone number.'
+                    : null;
             },
           ),
           const SizedBox(height: 20),
