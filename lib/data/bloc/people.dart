@@ -51,7 +51,7 @@ class PeopleBloc {
   }
 
   loadMore() {
-    if (this._peopleState.response == null || this._reviewState.isLoadingMore) {
+    if (this._peopleState.response == null || this._peopleState.isLoadingMore) {
       return;
     }
     if (this._peopleState.response.next == null) {

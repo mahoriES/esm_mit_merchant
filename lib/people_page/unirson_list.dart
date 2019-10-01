@@ -30,19 +30,26 @@ class UnirsonListWidget extends StatelessWidget {
               );
             } else if (snapshot.data.isLoadingFailed) {
               return Text('Loading Failed');
-            } else if (snapshot.data.response != null) {
-              return ListView(
-                  padding: const EdgeInsets.only(top: 30),
-                  children: snapshot.data.response.results.map((item) {
-                    return UnirsonItemWidget(
-                        unirsonItem: item,
-                        onUnirsonSelected: onUnirsonSelected);
-                  }).toList());
+            } else {
+              return NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollInfo) {
+                  if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent) {
+                    this._peopleBloc.loadMore();
+                  }
+                  return false;
+                },
+                child: ListView(
+                    padding: const EdgeInsets.only(top: 30),
+                    children: snapshot.data.items.map((item) {
+                      return UnirsonItemWidget(
+                          unirsonItem: item,
+                          onUnirsonSelected: onUnirsonSelected);
+                    }).toList()),
+              );
             }
           }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return Container();
         });
   }
 }

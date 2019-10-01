@@ -103,8 +103,9 @@ class HttpService {
         'Accept': 'application/json',
         'Authorization': 'JWT ${this._authBloc.authState.authData.token}'
       };
-      final httpResponse =
-          await http.post(url, headers: requestHeaders, body: body);
+
+      final httpResponse = await http.get(url, headers: requestHeaders);
+
       if (httpResponse.statusCode == 403 || httpResponse.statusCode == 401) {
         this._authBloc.logout();
         throw Exception('Auth Failed');
