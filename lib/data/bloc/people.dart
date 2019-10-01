@@ -13,16 +13,11 @@ class PeopleBloc {
   BehaviorSubject<PeopleState> _subjectPeopleState;
 
   onSearchTextChanged(TextEditingController controller) {
-    this.searchText = controller.text;
-    if (this.searchText == null || this.searchText == '') {
-      this.getPeople();
-    } else {
-      this.getPeopleFromSearch();
-    }
+    this.searchText = controller.text != null ? controller.text : '';
+    this.getPeopleFromSearch();
   }
 
-
-  PeopleBloc( this._httpService) {
+  PeopleBloc(this._httpService) {
     this._subjectPeopleState = new BehaviorSubject<PeopleState>.seeded(
         _peopleState); //initializes the subject with element already
   }
@@ -38,7 +33,7 @@ class PeopleBloc {
         .foGet('unirson/all/search/?search_key=${this.searchText}')
         .then((httpResponse) {
       if (httpResponse.statusCode == 200) {
-         this._peopleState.isLoadingFailed = false;
+        this._peopleState.isLoadingFailed = false;
         this._peopleState.isLoading = false;
         this._peopleState.response =
             UnirsonItemResponse.fromJson(json.decode(httpResponse.body));
@@ -47,34 +42,7 @@ class PeopleBloc {
         this._peopleState.isLoading = false;
       }
       this._updateState();
-    })
-    .catchError((onError) {
-      this._peopleState.isLoadingFailed = true;
-      this._peopleState.isLoading = false;
-      this._updateState();
-    });
-  }
-
-  getPeople() {
-    this._peopleState.isLoading = true;
-    this._peopleState.response = null;
-    this._updateState();
-    _httpService
-        .foPost('segment/members/',
-            '{"segment_info":{"top_operator":"and","condition_params_info":[]}}')
-        .then((httpResponse) {
-      if (httpResponse.statusCode == 200) {
-         this._peopleState.isLoadingFailed = false;
-        this._peopleState.isLoading = false;
-        this._peopleState.response =
-            UnirsonItemResponse.fromJson(json.decode(httpResponse.body));
-      } else {
-        this._peopleState.isLoadingFailed = true;
-        this._peopleState.isLoading = false;
-      }
-      this._updateState();
-    })
-    .catchError((onError) {
+    }).catchError((onError) {
       this._peopleState.isLoadingFailed = true;
       this._peopleState.isLoading = false;
       this._updateState();
