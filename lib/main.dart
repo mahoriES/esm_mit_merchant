@@ -1,7 +1,7 @@
+import 'package:foore/logo_page/logo_page.dart';
+import 'package:foore/home_page/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:foore/home_page/home_page.dart';
-import 'package:foore/logo_page/logo_page.dart';
 import 'data/bloc/auth.dart';
 import 'data/http_service.dart';
 import 'data/push_notification_listener.dart';

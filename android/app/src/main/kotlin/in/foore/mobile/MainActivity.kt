@@ -1,4 +1,4 @@
-package in.foore.mobile
+package `in`.foore.mobile
 
 import android.os.Bundle
 
