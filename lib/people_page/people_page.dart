@@ -18,7 +18,7 @@ class _PeoplePageState extends State<PeoplePage> {
   void didChangeDependencies() {
     final httpService = Provider.of<HttpService>(context);
     this._peopleBloc = PeopleBloc(httpService);
-    this._peopleBloc.getPeople();
+    this._peopleBloc.getPeopleFromSearch();
     super.didChangeDependencies();
   }
 
