@@ -86,15 +86,17 @@ class ReviewBloc {
 }
 
 class ReviewState {
-  bool isLoading = false;
-  bool isLoadingFailed = false;
-  bool isLoadingMore = false;
-  bool isLoadingMoreFailed = false;
+  bool isLoading;
+  bool isLoadingFailed;
+  bool isLoadingMore;
+  bool isLoadingMoreFailed;
   List<FeedbackItem> items = new List<FeedbackItem>();
   FeedbackResponse response;
   ReviewState() {
     this.isLoading = false;
     this.isLoadingFailed = false;
+    this.isLoadingMore = false;
+    this.isLoadingMoreFailed = false;
   }
 }
 

@@ -18,8 +18,8 @@ class PeopleBloc {
   }
 
   PeopleBloc(this._httpService) {
-    this._subjectPeopleState = new BehaviorSubject<PeopleState>.seeded(
-        _peopleState); //initializes the subject with element already
+    this._subjectPeopleState =
+        new BehaviorSubject<PeopleState>.seeded(_peopleState);
   }
 
   Observable<PeopleState> get peopleStateObservable =>
@@ -37,6 +37,7 @@ class PeopleBloc {
         this._peopleState.isLoading = false;
         this._peopleState.response =
             UnirsonItemResponse.fromJson(json.decode(httpResponse.body));
+        this._peopleState.items = this._peopleState.response.results;
       } else {
         this._peopleState.isLoadingFailed = true;
         this._peopleState.isLoading = false;
@@ -45,6 +46,36 @@ class PeopleBloc {
     }).catchError((onError) {
       this._peopleState.isLoadingFailed = true;
       this._peopleState.isLoading = false;
+      this._updateState();
+    });
+  }
+
+  loadMore() {
+    if (this._peopleState.response == null || this._reviewState.isLoadingMore) {
+      return;
+    }
+    if (this._peopleState.response.next == null) {
+      return;
+    }
+    this._peopleState.isLoadingMore = true;
+    this._peopleState.isLoadingMoreFailed = false;
+    this._updateState();
+    _httpService.foGetUrl(this._peopleState.response.next).then((httpResponse) {
+      if (httpResponse.statusCode == 200) {
+        print(httpResponse.body);
+        this._peopleState.response =
+            UnirsonItemResponse.fromJson(json.decode(httpResponse.body));
+        this._peopleState.items.addAll(this._peopleState.response.results);
+        this._peopleState.isLoadingMoreFailed = false;
+        this._peopleState.isLoadingMore = false;
+      } else {
+        this._peopleState.isLoadingMoreFailed = true;
+        this._peopleState.isLoadingMore = false;
+      }
+      this._updateState();
+    }).catchError((err) {
+      this._peopleState.isLoadingMoreFailed = true;
+      this._peopleState.isLoadingMore = false;
       this._updateState();
     });
   }
@@ -61,10 +92,15 @@ class PeopleBloc {
 class PeopleState {
   bool isLoading = false;
   UnirsonItemResponse response;
+  List<UnirsonItem> items = new List<UnirsonItem>();
   bool isLoadingFailed = false;
+  bool isLoadingMore;
+  bool isLoadingMoreFailed;
   PeopleState() {
     this.isLoading = false;
     this.isLoadingFailed = false;
+    this.isLoadingMore = false;
+    this.isLoadingMoreFailed = false;
   }
 }
 

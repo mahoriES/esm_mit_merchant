@@ -8,7 +8,7 @@ class HttpService {
 
   HttpService(AuthBloc authBloc) {
     this._authBloc = authBloc;
-    if(const bool.fromEnvironment('dart.vm.product')) {
+    if (const bool.fromEnvironment('dart.vm.product')) {
       this.apiUrl = 'https://www.api.foore.io/api/v1/';
     }
   }
@@ -77,6 +77,26 @@ class HttpService {
   }
 
   Future<http.Response> foPostUrl(url, body) async {
+    if (this._authBloc.authState.authData != null) {
+      Map<String, String> requestHeaders = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'JWT ${this._authBloc.authState.authData.token}'
+      };
+      final httpResponse =
+          await http.post(url, headers: requestHeaders, body: body);
+      if (httpResponse.statusCode == 403 || httpResponse.statusCode == 401) {
+        this._authBloc.logout();
+        throw Exception('Auth Failed');
+      }
+      return httpResponse;
+    } else {
+      this._authBloc.logout();
+      throw Exception('Auth Failed');
+    }
+  }
+
+  Future<http.Response> foGetUrl(url) async {
     if (this._authBloc.authState.authData != null) {
       Map<String, String> requestHeaders = {
         'Content-type': 'application/json',
