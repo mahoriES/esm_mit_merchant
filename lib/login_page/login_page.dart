@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/login.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -182,7 +183,14 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             FlatButton(
-              onPressed: () {},
+              onPressed: () async {
+                const url = 'https://app.foore.in/signup/';
+                if (await canLaunch(url)) {
+                  await launch(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+              },
               child: Container(
                 width: double.infinity,
                 child: Text(
@@ -308,37 +316,37 @@ class _LoginPageState extends State<LoginPage> {
                       ),
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: Container(),
-            ),
-            Container(
-              width: double.infinity,
-              child: Text(
-                "Didn't receive OTP?",
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            FlatButton(
-              onPressed: () {
-                /*...*/
-              },
-              child: Container(
-                width: double.infinity,
-                child: Text(
-                  "Resend OTP",
-                  style: TextStyle(
-                    fontSize: 18,
-                    decoration: TextDecoration.underline,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
+            // Expanded(
+            //   flex: 1,
+            //   child: Container(),
+            // ),
+            // Container(
+            //   width: double.infinity,
+            //   child: Text(
+            //     "Didn't receive OTP?",
+            //     style: TextStyle(
+            //       color: Colors.black54,
+            //       fontSize: 16,
+            //     ),
+            //     textAlign: TextAlign.center,
+            //   ),
+            // ),
+            // FlatButton(
+            //   onPressed: () {
+            //     /*...*/
+            //   },
+            //   child: Container(
+            //     width: double.infinity,
+            //     child: Text(
+            //       "Resend OTP",
+            //       style: TextStyle(
+            //         fontSize: 18,
+            //         decoration: TextDecoration.underline,
+            //       ),
+            //       textAlign: TextAlign.center,
+            //     ),
+            //   ),
+            // ),
             Expanded(
               flex: 2,
               child: Container(),
