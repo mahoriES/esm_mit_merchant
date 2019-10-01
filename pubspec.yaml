@@ -38,6 +38,8 @@ dependencies:
 
   firebase_messaging: ^5.1.6
 
+  url_launcher: ^5.1.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
