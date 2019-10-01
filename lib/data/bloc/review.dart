@@ -5,10 +5,9 @@ import 'package:rxdart/rxdart.dart';
 
 class ReviewBloc {
   final ReviewState _reviewState = new ReviewState();
-  final  HttpService _httpService;
+  final HttpService _httpService;
 
   BehaviorSubject<ReviewState> _subjectReviewState;
-
 
   ReviewBloc(this._httpService) {
     this._subjectReviewState = new BehaviorSubject<ReviewState>.seeded(
@@ -45,33 +44,36 @@ class ReviewBloc {
   }
 
   loadMore() {
-    if (this._reviewState.response != null &&
-        !this._reviewState.isLoadingMore) {
-      this._reviewState.isLoadingMore = true;
-      this._reviewState.isLoadingMoreFailed = false;
-      this._updateState();
-      _httpService
-          .foPostUrl(this._reviewState.response.next,
-              '{"segment_info":{"top_operator":"and","condition_params_info":[]}}')
-          .then((httpResponse) {
-        if (httpResponse.statusCode == 200) {
-          print(httpResponse.body);
-          this._reviewState.response =
-              FeedbackResponse.fromJson(json.decode(httpResponse.body));
-          this._reviewState.items.addAll(this._reviewState.response.results);
-          this._reviewState.isLoadingMoreFailed = false;
-          this._reviewState.isLoadingMore = false;
-        } else {
-          this._reviewState.isLoadingMoreFailed = true;
-          this._reviewState.isLoadingMore = false;
-        }
-        this._updateState();
-      }).catchError((err) {
+    if (this._reviewState.response == null || this._reviewState.isLoadingMore) {
+      return;
+    }
+    if (this._reviewState.response.next == null) {
+      return;
+    }
+    this._reviewState.isLoadingMore = true;
+    this._reviewState.isLoadingMoreFailed = false;
+    this._updateState();
+    _httpService
+        .foPostUrl(this._reviewState.response.next,
+            '{"segment_info":{"top_operator":"and","condition_params_info":[]}}')
+        .then((httpResponse) {
+      if (httpResponse.statusCode == 200) {
+        print(httpResponse.body);
+        this._reviewState.response =
+            FeedbackResponse.fromJson(json.decode(httpResponse.body));
+        this._reviewState.items.addAll(this._reviewState.response.results);
+        this._reviewState.isLoadingMoreFailed = false;
+        this._reviewState.isLoadingMore = false;
+      } else {
         this._reviewState.isLoadingMoreFailed = true;
         this._reviewState.isLoadingMore = false;
-        this._updateState();
-      });
-    }
+      }
+      this._updateState();
+    }).catchError((err) {
+      this._reviewState.isLoadingMoreFailed = true;
+      this._reviewState.isLoadingMore = false;
+      this._updateState();
+    });
   }
 
   _updateState() {
