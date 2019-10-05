@@ -50,6 +50,12 @@ class GmbReviewHelper {
   }
 
   static String gmbReplyText(FeedbackItem feedbackItem) {
+    if (feedbackItem.gmbReview == null) {
+      return '';
+    }
+    if (feedbackItem.gmbReview.reviewReply == null) {
+      return '';
+    }
     return feedbackItem.gmbReview.reviewReply.comment != null
         ? feedbackItem.gmbReview.reviewReply.comment
         : '';
