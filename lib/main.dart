@@ -1,7 +1,10 @@
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:foore/logo_page/logo_page.dart';
 import 'package:foore/home_page/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'app_translations_delegate.dart';
+import 'application.dart';
 import 'data/bloc/auth.dart';
 import 'data/http_service.dart';
 import 'data/push_notification_listener.dart';
@@ -28,12 +31,22 @@ class ReviewApp extends StatefulWidget {
 }
 
 class _ReviewAppState extends State<ReviewApp> {
+  AppTranslationsDelegate _newLocaleDelegate;
+
+   @override
+  void initState() {
+    super.initState();
+    _newLocaleDelegate = AppTranslationsDelegate(newLocale: Locale('hi', ''));
+    application.onLocaleChanged = onLocaleChange;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final authBloc = Provider.of<AuthBloc>(context);
 
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Foore',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         appBarTheme: AppBarTheme(
@@ -56,6 +69,23 @@ class _ReviewAppState extends State<ReviewApp> {
             }
             return Container();
           }),
+      localizationsDelegates: [
+        _newLocaleDelegate,
+        //provides localised strings
+        GlobalMaterialLocalizations.delegate,
+        //provides RTL support
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale("en", ""),
+        const Locale("hi", ""),
+      ],
     );
+  }
+
+  void onLocaleChange(Locale locale) {
+    setState(() {
+      _newLocaleDelegate = AppTranslationsDelegate(newLocale: locale);
+    });
   }
 }

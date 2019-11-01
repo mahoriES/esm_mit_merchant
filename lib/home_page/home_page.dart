@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/people_page/people_page.dart';
 import 'package:foore/review_page/review_page.dart';
 
+import '../app_translations.dart';
 import 'app_drawer.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,14 +37,18 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: AppDrawer(),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
-            title: Text('People'),
+            title: Text(
+              AppTranslations.of(context).text("tab_people"),
+            ),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.feedback),
-            title: Text('Reviews'),
+            title: Text(
+              AppTranslations.of(context).text("tab_reviews"),
+            ),
           ),
         ],
         currentIndex: _selectedIndex,

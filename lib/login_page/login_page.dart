@@ -5,6 +5,8 @@ import 'package:foore/data/bloc/login.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../app_translations.dart';
+
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
 
@@ -86,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Container(),
             ),
             Text(
-              'LOGIN',
+              AppTranslations.of(context).text("login_page_title"),
               style: TextStyle(
                 color: Colors.black54,
                 fontSize: 24,
@@ -95,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Please enter your email address linked to Foore.',
+              AppTranslations.of(context).text("login_page_sub_title"),
               style: TextStyle(
                 color: Colors.black54,
                 fontSize: 16,
@@ -129,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.white,
                       style: BorderStyle.solid,
                     )),
-                labelText: 'Email Address',
+                labelText:  AppTranslations.of(context).text("login_page_email_address_label"),
                 labelStyle: TextStyle(
                   color: Colors.black54,
                 ),
@@ -158,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                         backgroundColor: Colors.white,
                       ))
                     : Text(
-                        'GET OTP',
+                         AppTranslations.of(context).text("login_page_button_get_otp"),
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.white,
@@ -174,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
             Container(
               width: double.infinity,
               child: Text(
-                "Don't have an account?",
+                AppTranslations.of(context).text("login_page_don't_have_an_account"),
                 style: TextStyle(
                   color: Colors.black54,
                   fontSize: 16,
@@ -194,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Container(
                 width: double.infinity,
                 child: Text(
-                  "Create Account",
+                 AppTranslations.of(context).text("login_page_button_create_account"),
                   style: TextStyle(
                     fontSize: 18,
                     decoration: TextDecoration.underline,
@@ -237,7 +239,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Container(),
             ),
             Text(
-              'ENTER OTP',
+              AppTranslations.of(context).text("otp_page_title"),
               style: TextStyle(
                 color: Colors.black54,
                 fontSize: 24,
@@ -280,7 +282,7 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.white,
                       style: BorderStyle.solid,
                     )),
-                labelText: 'Enter OTP',
+                labelText:  AppTranslations.of(context).text("otp_page_enter_otp_label"),
                 labelStyle: TextStyle(
                   color: Colors.black54,
                 ),
@@ -307,7 +309,7 @@ class _LoginPageState extends State<LoginPage> {
                         backgroundColor: Colors.white,
                       ))
                     : Text(
-                        'LOGIN',
+                       AppTranslations.of(context).text("otp_page_button_login"),
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.white,

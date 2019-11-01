@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/constants/feedback.dart';
 import 'package:foore/data/model/feedback.dart';
 import 'package:foore/review_page/reply_gmb.dart';
+import '../app_translations.dart';
 import 'review_page_helper.dart';
 
 class GoogleItemWidget extends StatelessWidget {
@@ -61,7 +62,7 @@ class GoogleItemWidget extends StatelessWidget {
               ? Text(GmbReviewHelper.getGmbCommentText(this._feedbackItem))
               : null,
         ),
-        reply(this._feedbackItem),
+        reply(this._feedbackItem, context),
         this.isShowReplyButton
             ? ButtonTheme.bar(
                 child: ButtonBar(
@@ -96,7 +97,7 @@ class GoogleItemWidget extends StatelessWidget {
     return null;
   }
 
-  Widget reply(FeedbackItem feedbackItem) {
+  Widget reply(FeedbackItem feedbackItem, BuildContext context) {
     if (!this.isShowReplyButton) {
       return Container();
     }
@@ -113,7 +114,7 @@ class GoogleItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Your reply has been posted on Google',
+              AppTranslations.of(context).text("review_page_reply_posted"),
               style: TextStyle(
                 fontSize: 12.0,
                 color: Colors.black45,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foore/data/constants/feedback.dart';
 import 'package:foore/data/model/feedback.dart';
+import '../app_translations.dart';
 import 'review_page_helper.dart';
 
 class NpsFeedbackItemWidget extends StatelessWidget {
@@ -107,7 +108,7 @@ class NpsFeedbackItemWidget extends StatelessWidget {
     return null;
   }
 
-  Widget reply() {
+  Widget reply(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Container(
@@ -117,7 +118,7 @@ class NpsFeedbackItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Your reply has beeb posted on Google',
+              AppTranslations.of(context).text("review_page_reply_posted"),
               style: TextStyle(
                 fontSize: 12.0,
                 color: Colors.black45,

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/feedback.dart';
 import 'package:foore/review_page/review_page_helper.dart';
+import '../app_translations.dart';
 import 'google_review_item.dart';
 
 class ReplyGmb extends StatefulWidget {
@@ -50,7 +51,7 @@ class ReplyGmbState extends State<ReplyGmb> {
         textTheme: Typography.blackMountainView,
         iconTheme: IconThemeData.fallback(),
         title: Text(
-          'Reply',
+           AppTranslations.of(context).text("reply_page_title"),
           style: TextStyle(
             color: Colors.black54,
             fontSize: 24.0,
@@ -67,7 +68,7 @@ class ReplyGmbState extends State<ReplyGmb> {
                       child: CircularProgressIndicator())
                   : FlatButton(
                       child: Text(
-                        'SAVE',
+                         AppTranslations.of(context).text("reply_page_submit"),
                         style: TextStyle(color: Colors.blue),
                       ),
                       onPressed: () {
@@ -101,7 +102,7 @@ class ReplyGmbState extends State<ReplyGmb> {
                 ),
                 alignment: Alignment.bottomLeft,
                 child: Text(
-                    'Enter your reply here. Keep it less than 4000 characters. Leave empty to delete existing reply.'),
+                    AppTranslations.of(context).text("reply_page_reply_label")),
               ),
               Container(
                 padding:
@@ -133,8 +134,8 @@ class ReplyGmbState extends State<ReplyGmb> {
                             color: Colors.white,
                             style: BorderStyle.solid,
                           )),
-                      hintText:
-                          'Enter your reply here. [[NAME]] will be replaced by customers name.',
+                      hintText: AppTranslations.of(context)
+                          .text("reply_page_reply_hint"),
                       labelStyle: TextStyle(
                         color: Colors.black54,
                       )),

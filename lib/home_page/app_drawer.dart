@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/auth.dart';
 
+import '../app_translations.dart';
+
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key key}) : super(key: key);
   @override
@@ -58,7 +60,7 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.power_settings_new),
-            title: Text('Log out'),
+            title: Text(AppTranslations.of(context).text("drawer_button_logout")),
             onTap: () {
               authBloc.logout();
             },

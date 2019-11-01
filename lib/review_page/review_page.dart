@@ -7,6 +7,7 @@ import 'package:foore/data/model/feedback.dart';
 import 'package:foore/review_page/nps_feedback_item.dart';
 import 'package:foore/review_page/review_page_helper.dart';
 
+import '../app_translations.dart';
 import 'google_review_item.dart';
 
 class ReviewPage extends StatefulWidget {
@@ -57,7 +58,7 @@ class _ReviewPageState extends State<ReviewPage> {
           },
         ),
         title: Text(
-          'Reviews',
+          AppTranslations.of(context).text("reviews_page_title"),
           style: TextStyle(
             color: Colors.black54,
             fontSize: 24.0,
@@ -81,7 +82,8 @@ class _ReviewPageState extends State<ReviewPage> {
                 onPressed: this.onGetReviews,
                 child: Container(
                   child: Text(
-                    'Get Reviews',
+                    AppTranslations.of(context)
+                        .text("review_page_button_get_reviews"),
                     style: TextStyle(
                       color: Colors.white,
                     ),

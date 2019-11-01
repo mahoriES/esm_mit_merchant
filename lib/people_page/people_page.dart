@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:foore/check_in_page/check_in_page.dart';
 import 'package:foore/data/bloc/people.dart';
 import 'package:foore/data/http_service.dart';
+import '../app_translations.dart';
 import 'unirson_list.dart';
 import 'unirson_searchbar.dart';
 
@@ -54,7 +55,7 @@ class _PeoplePageState extends State<PeoplePage> {
           },
         ),
         title: Text(
-          'People',
+          AppTranslations.of(context).text("people_page_title"),
           style: TextStyle(
             color: Colors.black54,
             fontSize: 24.0,
@@ -78,7 +79,7 @@ class _PeoplePageState extends State<PeoplePage> {
                 onPressed: this.onGetReviews,
                 child: Container(
                   child: Text(
-                    'New Check In',
+                    AppTranslations.of(context).text("people_page_button_check_in"),
                     style: TextStyle(
                       color: Colors.white,
                     ),

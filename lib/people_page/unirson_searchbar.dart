@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/people.dart';
 
+import '../app_translations.dart';
+
 class UnirsonSearchBar extends StatefulWidget {
   final PeopleBloc _peopleBloc;
 
@@ -71,7 +73,7 @@ class _UnirsonSearchBarState extends State<UnirsonSearchBar> {
             ),
             gapPadding: 10.0,
           ),
-          labelText: 'Search people',
+          labelText: AppTranslations.of(context).text("people_page_search_label"),
           labelStyle: TextStyle(
             color: Colors.black54,
           ),
