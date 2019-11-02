@@ -29,13 +29,16 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
   @override
   void didChangeDependencies() {
     this._httpService = Provider.of<HttpService>(context);
-    this._checkinUnirsonBloc = CheckinUnirsonBloc(this._httpService);
-    this._checkinUnirsonBloc.getData();
+    if (this._checkinUnirsonBloc == null) {
+      this._checkinUnirsonBloc = CheckinUnirsonBloc(this._httpService);
+      this._checkinUnirsonBloc.getData();
+    }
     super.didChangeDependencies();
   }
 
   @override
   void initState() {
+    print('init state');
     super.initState();
   }
 
@@ -56,7 +59,7 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
     }
 
     return Scaffold(
-       backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         brightness: Brightness.light,
@@ -70,7 +73,7 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
             letterSpacing: 1.1,
           ),
         ),
-         elevation: 0.0,
+        elevation: 0.0,
         actions: <Widget>[
           StreamBuilder<CheckinUnirsonState>(
               stream: this._checkinUnirsonBloc.checkinStateObservable,

@@ -7,6 +7,7 @@ import 'package:foore/data/model/sequence.dart';
 import 'package:rxdart/rxdart.dart';
 
 class CheckinUnirsonBloc {
+  bool isFetched = false;
   CheckinUnirsonState _checkinUnirsonState = new CheckinUnirsonState();
   final nameEditController = TextEditingController();
   final phoneNumberEditController = TextEditingController();
@@ -14,7 +15,7 @@ class CheckinUnirsonBloc {
 
   BehaviorSubject<CheckinUnirsonState> _subjectCheckinUnirsonState;
 
-  CheckinUnirsonBloc( this._httpService) {
+  CheckinUnirsonBloc(this._httpService) {
     this._subjectCheckinUnirsonState =
         new BehaviorSubject<CheckinUnirsonState>.seeded(_checkinUnirsonState);
   }
@@ -31,9 +32,7 @@ class CheckinUnirsonBloc {
     this._checkinUnirsonState.isLoadingUiHelper = true;
     this._checkinUnirsonState.uiHelperResponse = null;
     this._updateState();
-    _httpService
-        .foGet('ui/helper/account/?locations')
-        .then((httpResponse) {
+    _httpService.foGet('ui/helper/account/?locations').then((httpResponse) {
       if (httpResponse.statusCode == 200) {
         this._checkinUnirsonState.isLoadingFailedUiHelper = false;
         this._checkinUnirsonState.isLoadingUiHelper = false;

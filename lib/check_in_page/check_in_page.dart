@@ -37,8 +37,10 @@ class CheckInPageState extends State<CheckInPage> {
   @override
   void didChangeDependencies() {
     this._httpService = Provider.of<HttpService>(context);
-    this._checkinUnirsonBloc = CheckinUnirsonBloc(this._httpService);
-    this._checkinUnirsonBloc.getData();
+    if (this._checkinUnirsonBloc == null) {
+      this._checkinUnirsonBloc = CheckinUnirsonBloc(this._httpService);
+      this._checkinUnirsonBloc.getData();
+    }
     super.didChangeDependencies();
   }
 
@@ -65,7 +67,7 @@ class CheckInPageState extends State<CheckInPage> {
     }
 
     return Scaffold(
-       backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         brightness: Brightness.light,
@@ -97,7 +99,8 @@ class CheckInPageState extends State<CheckInPage> {
                               backgroundColor: Colors.white,
                             ))
                           : Text(
-                              AppTranslations.of(context).text("checkin_page_button_submit"),
+                              AppTranslations.of(context)
+                                  .text("checkin_page_button_submit"),
                               style: TextStyle(
                                 color: Colors.blue,
                               ),
@@ -135,7 +138,8 @@ class CheckInPageState extends State<CheckInPage> {
                         ),
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          AppTranslations.of(context).text("checkin_page_select_a_store_to_check_in"),
+                          AppTranslations.of(context)
+                              .text("checkin_page_select_a_store_to_check_in"),
                           style: TextStyle(color: Colors.black54),
                         ),
                       ),
@@ -166,7 +170,8 @@ class CheckInPageState extends State<CheckInPage> {
                         ),
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          AppTranslations.of(context).text("checkin_page_feedback_and_google_review"),
+                          AppTranslations.of(context)
+                              .text("checkin_page_feedback_and_google_review"),
                           style: TextStyle(color: Colors.black54),
                         ),
                       ),
@@ -174,7 +179,8 @@ class CheckInPageState extends State<CheckInPage> {
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         alignment: Alignment.bottomLeft,
                         child: CheckboxListTile(
-                          title: Text(AppTranslations.of(context).text("checkin_page_collect_feedback_and_review")),
+                          title: Text(AppTranslations.of(context).text(
+                              "checkin_page_collect_feedback_and_review")),
                           value: snapshot.data.isGmbReviewSelected,
                           onChanged:
                               this._checkinUnirsonBloc.setIsGmbReviewSelected,
@@ -207,7 +213,8 @@ class CheckInPageState extends State<CheckInPage> {
             ),
             alignment: Alignment.bottomLeft,
             child: Text(
-              AppTranslations.of(context).text("checkin_page_subscribe_contact_to_sequences"),
+              AppTranslations.of(context)
+                  .text("checkin_page_subscribe_contact_to_sequences"),
               style: TextStyle(color: Colors.black54),
             ),
           ),
@@ -319,8 +326,8 @@ class CheckInPageState extends State<CheckInPage> {
             ),
             validator: (String value) {
               return value.length < 1
-                    ? 'Please enter a valid phone number.'
-                    : null;
+                  ? 'Please enter a valid phone number.'
+                  : null;
             },
           ),
           const SizedBox(height: 20),
