@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/language_selection_page/language_selection_page.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/auth.dart';
 
@@ -59,8 +60,21 @@ class AppDrawer extends StatelessWidget {
             flex: 1,
           ),
           ListTile(
+            leading: Icon(Icons.language),
+            title: Text('Language'),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => LanguageSelectionPage()),
+              );
+            },
+          ),
+          ListTile(
             leading: Icon(Icons.power_settings_new),
-            title: Text(AppTranslations.of(context).text("drawer_button_logout")),
+            title:
+                Text(AppTranslations.of(context).text("drawer_button_logout")),
             onTap: () {
               authBloc.logout();
             },

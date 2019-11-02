@@ -3,8 +3,7 @@ import 'package:foore/logo_page/logo_page.dart';
 import 'package:foore/home_page/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'app_translations_delegate.dart';
-import 'application.dart';
+import 'data/bloc/app_translations_bloc.dart';
 import 'data/bloc/auth.dart';
 import 'data/http_service.dart';
 import 'data/push_notification_listener.dart';
@@ -19,6 +18,9 @@ void main() => runApp(
           ProxyProvider<AuthBloc, HttpService>(
             builder: (_, authBloc, __) => HttpService(authBloc),
           ),
+          Provider<AppTranslationsBloc>(
+              builder: (context) => AppTranslationsBloc(),
+              dispose: (context, value) => value.dispose()),
         ],
         child: ReviewApp(),
       ),
@@ -31,61 +33,56 @@ class ReviewApp extends StatefulWidget {
 }
 
 class _ReviewAppState extends State<ReviewApp> {
-  AppTranslationsDelegate _newLocaleDelegate;
-
-   @override
+  @override
   void initState() {
     super.initState();
-    _newLocaleDelegate = AppTranslationsDelegate(newLocale: Locale('hi', ''));
-    application.onLocaleChanged = onLocaleChange;
   }
-
 
   @override
   Widget build(BuildContext context) {
     final authBloc = Provider.of<AuthBloc>(context);
+    final appTranslationsBloc = Provider.of<AppTranslationsBloc>(context);
 
-    return MaterialApp(
-      title: 'Foore',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        appBarTheme: AppBarTheme(
-          elevation: 0.5,
-        ),
-      ),
-      home: StreamBuilder<AuthState>(
-          stream: authBloc.authStateObservable,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data.isLoading) {
-                return LogoPage();
-              } else if (snapshot.data.isLoadingFailed) {
-                return LoginPage();
-              } else if (snapshot.data.isLoggedIn) {
-                return PushNotificationListener(child: HomePage());
-              } else {
-                return LoginPage();
-              }
-            }
+    return StreamBuilder<AppTranslationsState>(
+        stream: appTranslationsBloc.appTranslationsStateObservable,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
             return Container();
-          }),
-      localizationsDelegates: [
-        _newLocaleDelegate,
-        //provides localised strings
-        GlobalMaterialLocalizations.delegate,
-        //provides RTL support
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale("en", ""),
-        const Locale("hi", ""),
-      ],
-    );
-  }
-
-  void onLocaleChange(Locale locale) {
-    setState(() {
-      _newLocaleDelegate = AppTranslationsDelegate(newLocale: locale);
-    });
+          }
+          return MaterialApp(
+            title: 'Foore',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+              appBarTheme: AppBarTheme(
+                elevation: 0.5,
+              ),
+            ),
+            home: StreamBuilder<AuthState>(
+                stream: authBloc.authStateObservable,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data.isLoading) {
+                      return LogoPage();
+                    } else if (snapshot.data.isLoadingFailed) {
+                      return LoginPage();
+                    } else if (snapshot.data.isLoggedIn) {
+                      return PushNotificationListener(child: HomePage());
+                    } else {
+                      return LoginPage();
+                    }
+                  }
+                  return Container();
+                }),
+            localizationsDelegates: [
+              snapshot.data.localeDelegate,
+              //provides localized strings
+              GlobalMaterialLocalizations.delegate,
+              //provides RTL support
+              GlobalWidgetsLocalizations.delegate,
+            ],
+            supportedLocales: AppTranslationsBloc.supportedLocales(),
+          );
+        });
   }
 }
+  

@@ -7,7 +7,7 @@ import 'package:flutter/services.dart' show rootBundle;
 
 class AppTranslations {
   Locale locale;
-  static Map<dynamic, dynamic> _localisedValues;
+  static Map<dynamic, dynamic> _localizedValues;
 
   AppTranslations(Locale locale) {
     this.locale = locale;
@@ -21,13 +21,13 @@ class AppTranslations {
     AppTranslations appTranslations = AppTranslations(locale);
     String jsonContent =
     await rootBundle.loadString("assets/locale/localization_${locale.languageCode}.json");
-    _localisedValues = json.decode(jsonContent);
+    _localizedValues = json.decode(jsonContent);
     return appTranslations;
   }
 
   get currentLanguage => locale.languageCode;
 
   String text(String key) {
-    return _localisedValues[key] ?? "$key not found";
+    return _localizedValues[key] ?? "$key not found";
   }
 }
