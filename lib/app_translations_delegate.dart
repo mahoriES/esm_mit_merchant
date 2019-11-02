@@ -6,11 +6,14 @@ import 'data/bloc/app_translations_bloc.dart';
 
 class AppTranslationsDelegate extends LocalizationsDelegate<AppTranslations> {
   Locale newLocale;
+  AppTranslations _appTranslations;
+
+  get currentLanguage =>
+      _appTranslations != null ? _appTranslations.currentLanguage : null;
 
   AppTranslationsDelegate({Locale newLocale}) {
     this.newLocale = newLocale;
     if (newLocale != null) {
-      print(newLocale.languageCode);
       storeLanguageCode(newLocale.languageCode);
     }
   }
@@ -26,13 +29,14 @@ class AppTranslationsDelegate extends LocalizationsDelegate<AppTranslations> {
     if (newLocale == null) {
       var code = await getLanguageCode();
       if (code != null) {
-        return await AppTranslations.load(Locale(code));
+        this._appTranslations = await AppTranslations.load(Locale(code));
       } else {
-        return await AppTranslations.load(locale);
+        this._appTranslations = await AppTranslations.load(locale);
       }
     } else {
-      return await AppTranslations.load(newLocale);
+      this._appTranslations = await AppTranslations.load(newLocale);
     }
+    return this._appTranslations;
   }
 
   storeLanguageCode(String languageCode) async {

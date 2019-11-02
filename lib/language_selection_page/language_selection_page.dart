@@ -60,17 +60,25 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
   _buildLanguageItem(
       String language, String languageCode, BuildContext context) {
     final appTranslationsBloc = Provider.of<AppTranslationsBloc>(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      alignment: Alignment.bottomLeft,
-      child: CheckboxListTile(
-        title: Text(language),
-        value: false,
-        onChanged: (bool value) {
-          appTranslationsBloc.onLocaleChanged(Locale(languageCode));
-          Navigator.pop(context);
-        },
-      ),
-    );
+    return StreamBuilder<AppTranslationsState>(
+        stream: appTranslationsBloc.appTranslationsStateObservable,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Container();
+          }
+          return Container(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            alignment: Alignment.bottomLeft,
+            child: CheckboxListTile(
+              title: Text(language),
+              value:
+                  snapshot.data.localeDelegate.currentLanguage == languageCode,
+              onChanged: (bool value) {
+                appTranslationsBloc.onLocaleChanged(Locale(languageCode));
+                Navigator.pop(context);
+              },
+            ),
+          );
+        });
   }
 }
