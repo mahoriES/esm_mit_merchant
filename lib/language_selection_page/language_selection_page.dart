@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/app_translations_bloc.dart';
 import 'package:provider/provider.dart';
 
+import '../app_translations.dart';
+
 class LanguageSelectionPage extends StatefulWidget {
   LanguageSelectionPage({Key key}) : super(key: key);
 
@@ -32,7 +34,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
           },
         ),
         title: Text(
-          'Change language',
+          AppTranslations.of(context).text("language_selection_page_change_language"),
           style: TextStyle(
             color: Colors.black54,
             fontSize: 24.0,

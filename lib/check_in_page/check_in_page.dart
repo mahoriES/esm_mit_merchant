@@ -281,7 +281,8 @@ class CheckInPageState extends State<CheckInPage> {
                     color: Colors.white,
                     style: BorderStyle.solid,
                   )),
-              labelText: 'Name',
+              labelText:  AppTranslations.of(context)
+                  .text("checkin_page_name_label"),
               labelStyle: TextStyle(
                 color: Colors.black54,
               ),
@@ -319,14 +320,16 @@ class CheckInPageState extends State<CheckInPage> {
                     color: Colors.white,
                     style: BorderStyle.solid,
                   )),
-              labelText: 'Phone Number',
+              labelText:  AppTranslations.of(context)
+                  .text("checkin_page_phone_number_label"),
               labelStyle: TextStyle(
                 color: Colors.black54,
               ),
             ),
             validator: (String value) {
               return value.length < 1
-                  ? 'Please enter a valid phone number.'
+                  ? AppTranslations.of(context)
+                  .text("checkin_page_phone_number_validation")
                   : null;
             },
           ),

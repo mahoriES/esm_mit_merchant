@@ -138,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               validator: (String value) {
                 return value.length < 1
-                    ? 'Please enter a valid email address.'
+                    ? AppTranslations.of(context).text("login_page_email_address_validation")
                     : null;
               },
             ),
@@ -288,7 +288,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               validator: (String value) {
-                return value.length < 1 ? 'Please enter a valid otp.' : null;
+                return value.length < 1 ?  AppTranslations.of(context).text("otp_page_enter_otp_validation") : null;
               },
             ),
             const SizedBox(height: 20),

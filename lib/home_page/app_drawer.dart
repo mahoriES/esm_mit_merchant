@@ -61,7 +61,7 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.language),
-            title: Text('Language'),
+            title: Text(AppTranslations.of(context).text("drawer_button_language")),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.push(
