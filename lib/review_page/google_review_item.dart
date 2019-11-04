@@ -70,7 +70,9 @@ class GoogleItemWidget extends StatelessWidget {
                     RaisedButton(
                       elevation: 0.0,
                       child: Text(
-                        GmbReviewHelper.getReplyButtonText(this._feedbackItem),
+                        GmbReviewHelper.isShowGmbReply(this._feedbackItem)
+                            ? AppTranslations.of(context).text("review_page_button_edit_reply")
+                            : AppTranslations.of(context).text("review_page_button_reply"),
                         style: TextStyle(
                           fontSize: 12.0,
                           color: Colors.white,

@@ -146,7 +146,8 @@ class ReplyGmbState extends State<ReplyGmb> {
                   },
                   validator: (String value) {
                     return value.length > 4000
-                        ? 'Please keep the length less than 4000 characters.'
+                        ? AppTranslations.of(context)
+                          .text("reply_page_reply_validation")
                         : null;
                   },
                 ),

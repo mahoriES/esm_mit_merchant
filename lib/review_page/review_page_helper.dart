@@ -61,13 +61,6 @@ class GmbReviewHelper {
         : '';
   }
 
-  static String getReplyButtonText(FeedbackItem feedbackItem) {
-    if (isShowGmbReply(feedbackItem)) {
-      return 'Edit reply';
-    }
-    return 'Reply';
-  }
-
   static int getStarRating(FeedbackItem feedbackItem) {
     if (feedbackItem.gmbReview == null) {
       return 0;
