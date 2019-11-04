@@ -35,7 +35,7 @@
   "reply_page_title": "जवाब दें",
   "reply_page_submit": "सहेजें",
   "reply_page_reply_hint": "यहाँ अपना उत्तर दर्ज करें। [[NAME]] को ग्राहकों के नाम से बदल दिया जाएगा।",
-  "reply_page_reply_validation": "Please keep the length less than 4000 characters.",  
+  "reply_page_reply_validation": "Please keep the length less than 4000 characters.",
   "reply_page_reply_label": "Enter your reply here. Keep it less than 4000 characters. Leave empty to delete existing reply.",
   "language_selection_page_change_language": "भाषा बदलें"
 }

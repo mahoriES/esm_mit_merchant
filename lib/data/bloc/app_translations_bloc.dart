@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'dart:ui';
 import 'package:rxdart/rxdart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../app_translations_delegate.dart';
 
@@ -11,11 +9,25 @@ class AppTranslationsBloc {
   static final List<String> supportedLanguages = [
     "English",
     "हिन्दी (Hindi)",
+    "मराठी (Marathi)",
+    "ગુજરાતી (Gujrati)",
+    "ਪੰਜਾਬੀ (Punjabi)",
+    "தமிழ் (Tamil)",
+    "മലയാളം (Malayalum)",
+    "తెలుగు (Telugu)",
+    "ಕನ್ನಡ (Kannada)"
   ];
 
   static final List<String> supportedLanguageCodes = [
     "en",
     "hi",
+    "mr",
+    "gu",
+    "pa",
+    "ta",
+    "ml",
+    "te",
+    "kn"
   ];
 
   //returns the list of supported Locales
@@ -27,7 +39,6 @@ class AppTranslationsBloc {
   AppTranslationsBloc() {
     this._subjectAppTranslationsState =
         new BehaviorSubject<AppTranslationsState>.seeded(appTranslationsState);
-    this._loadAuthState();
   }
 
   Observable<AppTranslationsState> get appTranslationsStateObservable =>
@@ -45,18 +56,6 @@ class AppTranslationsBloc {
 
   dispose() {
     this._subjectAppTranslationsState.close();
-  }
-
-  _loadAuthState() async {}
-
-  _storeAppTranslationsState() async {
-    // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    // if (this._appTranslationsState.authData != null) {
-    //   await sharedPreferences.setString(
-    //       'auth', json.encode(this._appTranslationsState.authData.toJson()));
-    // } else {
-    //   await sharedPreferences.setString('auth', '');
-    // }
   }
 }
 
