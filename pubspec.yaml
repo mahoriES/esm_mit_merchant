@@ -61,7 +61,6 @@ flutter:
     - assets/logo-black.png
     - assets/googlelogo.png
     - assets/messengerlogo.png
-    - assets/locale/localization_en.json
     - assets/locale/localization_gu.json
     - assets/locale/localization_hi.json
     - assets/locale/localization_kn.json
@@ -70,6 +69,7 @@ flutter:
     - assets/locale/localization_ta.json
     - assets/locale/localization_te.json
     - assets/locale/localization_pa.json
+    - assets/locale/localization_en.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see
