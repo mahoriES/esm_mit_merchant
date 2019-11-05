@@ -68,7 +68,7 @@ class _IntroPageState extends State<IntroPage> {
                           width: double.infinity,
                           child: Text(
                             AppTranslations.of(context)
-                                .text("login_page_button_create_account"),
+                                .text("intro_page_button_create_account"),
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.white,
@@ -99,7 +99,7 @@ class _IntroPageState extends State<IntroPage> {
                           width: double.infinity,
                           child: Text(
                             AppTranslations.of(context)
-                                .text("otp_page_button_login"),
+                                .text("intro_page_button_login"),
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.black87,

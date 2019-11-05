@@ -37,5 +37,7 @@
   "reply_page_reply_hint": "Enter your reply here. [[NAME]] will be replaced by customers name.",
   "reply_page_reply_validation": "Please keep the length less than 4000 characters.",
   "reply_page_reply_label": "Enter your reply here. Keep it less than 4000 characters. Leave empty to delete existing reply.",
-  "language_selection_page_change_language": "Change language"
+  "language_selection_page_change_language": "Change language",
+  "intro_page_button_create_account": "Create Account",
+  "intro_page_button_login": "Login"
 }
