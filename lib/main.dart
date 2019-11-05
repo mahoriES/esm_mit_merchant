@@ -7,6 +7,7 @@ import 'data/bloc/app_translations_bloc.dart';
 import 'data/bloc/auth.dart';
 import 'data/http_service.dart';
 import 'data/push_notification_listener.dart';
+import 'intro_page/intro_page.dart';
 import 'login_page/login_page.dart';
 
 void main() => runApp(
@@ -64,11 +65,11 @@ class _ReviewAppState extends State<ReviewApp> {
                     if (snapshot.data.isLoading) {
                       return LogoPage();
                     } else if (snapshot.data.isLoadingFailed) {
-                      return LoginPage();
+                      return IntroPage();
                     } else if (snapshot.data.isLoggedIn) {
                       return PushNotificationListener(child: HomePage());
                     } else {
-                      return LoginPage();
+                      return IntroPage();
                     }
                   }
                   return Container();
@@ -85,4 +86,3 @@ class _ReviewAppState extends State<ReviewApp> {
         });
   }
 }
-  

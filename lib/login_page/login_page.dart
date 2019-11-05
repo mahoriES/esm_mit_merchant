@@ -318,37 +318,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
               ),
             ),
-            // Expanded(
-            //   flex: 1,
-            //   child: Container(),
-            // ),
-            // Container(
-            //   width: double.infinity,
-            //   child: Text(
-            //     "Didn't receive OTP?",
-            //     style: TextStyle(
-            //       color: Colors.black54,
-            //       fontSize: 16,
-            //     ),
-            //     textAlign: TextAlign.center,
-            //   ),
-            // ),
-            // FlatButton(
-            //   onPressed: () {
-            //     /*...*/
-            //   },
-            //   child: Container(
-            //     width: double.infinity,
-            //     child: Text(
-            //       "Resend OTP",
-            //       style: TextStyle(
-            //         fontSize: 18,
-            //         decoration: TextDecoration.underline,
-            //       ),
-            //       textAlign: TextAlign.center,
-            //     ),
-            //   ),
-            // ),
             Expanded(
               flex: 2,
               child: Container(),
