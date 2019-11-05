@@ -7,6 +7,8 @@ import 'package:foore/data/model/locations.dart';
 import 'package:foore/data/model/unirson.dart';
 import 'package:foore/people_page/unisonItem.dart';
 
+import '../app_translations.dart';
+
 class UnirsonCheckInPage extends StatefulWidget {
   final UnirsonItem _unirsonItem;
 
@@ -38,7 +40,6 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
 
   @override
   void initState() {
-    print('init state');
     super.initState();
   }
 
@@ -66,7 +67,7 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
         textTheme: Typography.blackMountainView,
         iconTheme: IconThemeData.fallback(),
         title: Text(
-          'Check In',
+          AppTranslations.of(context).text("checkin_page_title"),
           style: TextStyle(
             color: Colors.black54,
             fontSize: 24.0,
@@ -91,7 +92,8 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
                               backgroundColor: Colors.white,
                             ))
                           : Text(
-                              'SUBMIT',
+                              AppTranslations.of(context)
+                                  .text("checkin_page_button_submit"),
                               style: TextStyle(
                                 color: Colors.blue,
                               ),
@@ -129,7 +131,8 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
                         ),
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          'Select a store to Check In',
+                          AppTranslations.of(context)
+                              .text("checkin_page_select_a_store_to_check_in"),
                           style: TextStyle(color: Colors.black54),
                         ),
                       ),
@@ -160,7 +163,8 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
                         ),
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          'Feedback and Google Review',
+                          AppTranslations.of(context)
+                              .text("checkin_page_feedback_and_google_review"),
                           style: TextStyle(color: Colors.black54),
                         ),
                       ),
@@ -168,7 +172,8 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         alignment: Alignment.bottomLeft,
                         child: CheckboxListTile(
-                          title: const Text('Collect Feedback and Review'),
+                          title: Text(AppTranslations.of(context).text(
+                              "checkin_page_collect_feedback_and_review")),
                           value: snapshot.data.isGmbReviewSelected,
                           onChanged:
                               this._checkinUnirsonBloc.setIsGmbReviewSelected,
@@ -201,7 +206,8 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
             ),
             alignment: Alignment.bottomLeft,
             child: Text(
-              'Subscribe contact to message sequences',
+              AppTranslations.of(context)
+                  .text("checkin_page_subscribe_contact_to_sequences"),
               style: TextStyle(color: Colors.black54),
             ),
           ),

@@ -21,8 +21,10 @@ class _ReviewPageState extends State<ReviewPage> {
   @override
   void didChangeDependencies() {
     final httpService = Provider.of<HttpService>(context);
-    this._reviewBloc = ReviewBloc(httpService);
-    this._reviewBloc.getFeedbacks();
+    if (this._reviewBloc == null) {
+      this._reviewBloc = ReviewBloc(httpService);
+      this._reviewBloc.getFeedbacks();
+    }
     super.didChangeDependencies();
   }
 

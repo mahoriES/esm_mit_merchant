@@ -22,7 +22,9 @@ class _LoginPageState extends State<LoginPage> {
   void didChangeDependencies() {
     final httpService = Provider.of<HttpService>(context);
     final authBloc = Provider.of<AuthBloc>(context);
-    this._loginBloc = LoginBloc(httpService, authBloc);
+    if (this._loginBloc == null) {
+      this._loginBloc = LoginBloc(httpService, authBloc);
+    }
     super.didChangeDependencies();
   }
 
@@ -131,14 +133,16 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.white,
                       style: BorderStyle.solid,
                     )),
-                labelText:  AppTranslations.of(context).text("login_page_email_address_label"),
+                labelText: AppTranslations.of(context)
+                    .text("login_page_email_address_label"),
                 labelStyle: TextStyle(
                   color: Colors.black54,
                 ),
               ),
               validator: (String value) {
                 return value.length < 1
-                    ? AppTranslations.of(context).text("login_page_email_address_validation")
+                    ? AppTranslations.of(context)
+                        .text("login_page_email_address_validation")
                     : null;
               },
             ),
@@ -160,7 +164,8 @@ class _LoginPageState extends State<LoginPage> {
                         backgroundColor: Colors.white,
                       ))
                     : Text(
-                         AppTranslations.of(context).text("login_page_button_get_otp"),
+                        AppTranslations.of(context)
+                            .text("login_page_button_get_otp"),
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.white,
@@ -176,7 +181,8 @@ class _LoginPageState extends State<LoginPage> {
             Container(
               width: double.infinity,
               child: Text(
-                AppTranslations.of(context).text("login_page_don't_have_an_account"),
+                AppTranslations.of(context)
+                    .text("login_page_don't_have_an_account"),
                 style: TextStyle(
                   color: Colors.black54,
                   fontSize: 16,
@@ -196,7 +202,8 @@ class _LoginPageState extends State<LoginPage> {
               child: Container(
                 width: double.infinity,
                 child: Text(
-                 AppTranslations.of(context).text("login_page_button_create_account"),
+                  AppTranslations.of(context)
+                      .text("login_page_button_create_account"),
                   style: TextStyle(
                     fontSize: 18,
                     decoration: TextDecoration.underline,
@@ -282,13 +289,17 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.white,
                       style: BorderStyle.solid,
                     )),
-                labelText:  AppTranslations.of(context).text("otp_page_enter_otp_label"),
+                labelText: AppTranslations.of(context)
+                    .text("otp_page_enter_otp_label"),
                 labelStyle: TextStyle(
                   color: Colors.black54,
                 ),
               ),
               validator: (String value) {
-                return value.length < 1 ?  AppTranslations.of(context).text("otp_page_enter_otp_validation") : null;
+                return value.length < 1
+                    ? AppTranslations.of(context)
+                        .text("otp_page_enter_otp_validation")
+                    : null;
               },
             ),
             const SizedBox(height: 20),
@@ -309,7 +320,8 @@ class _LoginPageState extends State<LoginPage> {
                         backgroundColor: Colors.white,
                       ))
                     : Text(
-                       AppTranslations.of(context).text("otp_page_button_login"),
+                        AppTranslations.of(context)
+                            .text("otp_page_button_login"),
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.white,

@@ -18,8 +18,10 @@ class _PeoplePageState extends State<PeoplePage> {
   @override
   void didChangeDependencies() {
     final httpService = Provider.of<HttpService>(context);
-    this._peopleBloc = PeopleBloc(httpService);
-    this._peopleBloc.getPeopleFromSearch();
+    if (this._peopleBloc == null) {
+      this._peopleBloc = PeopleBloc(httpService);
+      this._peopleBloc.getPeopleFromSearch();
+    }
     super.didChangeDependencies();
   }
 
@@ -79,7 +81,8 @@ class _PeoplePageState extends State<PeoplePage> {
                 onPressed: this.onGetReviews,
                 child: Container(
                   child: Text(
-                    AppTranslations.of(context).text("people_page_button_check_in"),
+                    AppTranslations.of(context)
+                        .text("people_page_button_check_in"),
                     style: TextStyle(
                       color: Colors.white,
                     ),
