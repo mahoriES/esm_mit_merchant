@@ -38,6 +38,55 @@ class _ReviewAppState extends State<ReviewApp> {
     super.initState();
   }
 
+  ThemeData _buildFooreTheme() {
+    final primaryColor = Colors.blue;
+    final appBackground = Colors.white;
+    final ThemeData base = ThemeData.light();
+    final TextTheme baseTextTheme = _buildFooreTextTheme(base.textTheme);
+    return base.copyWith(
+      primaryColor: primaryColor,
+      buttonTheme: base.buttonTheme.copyWith(
+        buttonColor: primaryColor,
+        textTheme: ButtonTextTheme.primary,
+        colorScheme: ColorScheme.light().copyWith(
+          primary: primaryColor,
+        ),
+      ),
+      scaffoldBackgroundColor: appBackground,
+      textTheme: baseTextTheme,
+      accentColor: Colors.blueAccent,
+      dividerColor: Color.fromRGBO(233, 233, 233, 0.50),
+      appBarTheme: _buildFooreAppBarTheme(base.appBarTheme),
+    );
+  }
+
+  TextTheme _buildFooreTextTheme(TextTheme base) {
+    return base
+        .copyWith(
+          subtitle: base.subtitle.copyWith(
+            color: Colors.black54,
+          ),
+        )
+        .apply(
+          fontFamily: 'Lato',
+        );
+  }
+
+  AppBarTheme _buildFooreAppBarTheme(AppBarTheme base) {
+    return base.copyWith(
+      color: Colors.white,
+      brightness: Brightness.light,
+      elevation: 0.0,
+      iconTheme: IconThemeData.fallback(),
+      textTheme: Typography.englishLike2018.copyWith(
+        title: Typography.englishLike2018.title.copyWith(
+          fontFamily: 'Lato',
+          color: Colors.black87,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final authBloc = Provider.of<AuthBloc>(context);
@@ -51,36 +100,7 @@ class _ReviewAppState extends State<ReviewApp> {
           }
           return MaterialApp(
             title: 'Foore',
-            theme: ThemeData(
-              // Define the default brightness and colors.
-              brightness: Brightness.light,
-              primaryColor: Colors.blue,
-              accentColor: Colors.blueAccent,
-              // Define the default font family.
-              fontFamily: 'Lato',
-              textTheme: TextTheme().copyWith(
-                subtitle: TextStyle(
-                  color: Colors.black54,
-                ),
-              ),
-              buttonTheme: ButtonTheme.of(context).copyWith(
-                buttonColor: Colors.blue,
-                shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(5.0),
-                ),
-              ),
-              appBarTheme: AppBarTheme(
-                  color: Colors.white,
-                  brightness: Brightness.light,
-                  elevation: 0.0,
-                  iconTheme: Theme.of(context)
-                      .primaryIconTheme
-                      .copyWith(color: Colors.black87),
-                  textTheme: Typography.englishLike2018.copyWith(
-                      title: Typography.englishLike2018.title.copyWith(
-                          fontFamily: 'Lato', color: Colors.black87))),
-              scaffoldBackgroundColor: Colors.white,
-            ),
+            theme: _buildFooreTheme(),
             home: StreamBuilder<AuthState>(
                 stream: authBloc.authStateObservable,
                 builder: (context, snapshot) {
