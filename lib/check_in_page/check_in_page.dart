@@ -121,7 +121,7 @@ class CheckInPageState extends State<CheckInPage> {
                       checkInFormWidget(snapshot.data),
                       Container(
                         padding: const EdgeInsets.only(
-                          top: 32.0,
+                          top: 16.0,
                           left: 16.0,
                           right: 16.0,
                         ),
@@ -129,7 +129,7 @@ class CheckInPageState extends State<CheckInPage> {
                         child: Text(
                           AppTranslations.of(context)
                               .text("checkin_page_select_a_store_to_check_in"),
-                          style: TextStyle(color: Colors.black54),
+                          style: Theme.of(context).textTheme.subtitle,
                         ),
                       ),
                       Padding(
@@ -153,7 +153,7 @@ class CheckInPageState extends State<CheckInPage> {
                       ),
                       Container(
                         padding: const EdgeInsets.only(
-                          top: 32.0,
+                          top: 16.0,
                           left: 16.0,
                           right: 16.0,
                         ),
@@ -161,7 +161,7 @@ class CheckInPageState extends State<CheckInPage> {
                         child: Text(
                           AppTranslations.of(context)
                               .text("checkin_page_feedback_and_google_review"),
-                          style: TextStyle(color: Colors.black54),
+                          style: Theme.of(context).textTheme.subtitle,
                         ),
                       ),
                       Container(
@@ -204,7 +204,7 @@ class CheckInPageState extends State<CheckInPage> {
             child: Text(
               AppTranslations.of(context)
                   .text("checkin_page_subscribe_contact_to_sequences"),
-              style: TextStyle(color: Colors.black54),
+              style: Theme.of(context).textTheme.subtitle,
             ),
           ),
           Container(
@@ -245,36 +245,10 @@ class CheckInPageState extends State<CheckInPage> {
           const SizedBox(height: 20),
           TextFormField(
             controller: this._checkinUnirsonBloc.nameEditController,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-            cursorColor: Colors.black87,
             decoration: InputDecoration(
-              filled: true,
-              fillColor: Color.fromARGB(80, 233, 233, 233),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                  borderSide: BorderSide(
-                    color: Colors.white,
-                    style: BorderStyle.solid,
-                  )),
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                  borderSide: BorderSide(
-                    color: Colors.white,
-                    style: BorderStyle.solid,
-                  )),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                  borderSide: BorderSide(
-                    color: Colors.white,
-                    style: BorderStyle.solid,
-                  )),
-              labelText:  AppTranslations.of(context)
-                  .text("checkin_page_name_label"),
-              labelStyle: TextStyle(
-                color: Colors.black54,
-              ),
+              border: OutlineInputBorder(),
+              labelText:
+                  AppTranslations.of(context).text("checkin_page_name_label"),
               suffixIcon: IconButton(
                 onPressed: this.onContactPicked,
                 icon: Icon(Icons.contacts),
@@ -284,41 +258,15 @@ class CheckInPageState extends State<CheckInPage> {
           const SizedBox(height: 20),
           TextFormField(
             controller: this._checkinUnirsonBloc.phoneNumberEditController,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-            cursorColor: Colors.black87,
             decoration: InputDecoration(
-              filled: true,
-              fillColor: Color.fromARGB(80, 233, 233, 233),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                  borderSide: BorderSide(
-                    color: Colors.white,
-                    style: BorderStyle.solid,
-                  )),
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                  borderSide: BorderSide(
-                    color: Colors.white,
-                    style: BorderStyle.solid,
-                  )),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                  borderSide: BorderSide(
-                    color: Colors.white,
-                    style: BorderStyle.solid,
-                  )),
-              labelText:  AppTranslations.of(context)
+              border: OutlineInputBorder(),
+              labelText: AppTranslations.of(context)
                   .text("checkin_page_phone_number_label"),
-              labelStyle: TextStyle(
-                color: Colors.black54,
-              ),
             ),
             validator: (String value) {
               return value.length < 1
                   ? AppTranslations.of(context)
-                  .text("checkin_page_phone_number_validation")
+                      .text("checkin_page_phone_number_validation")
                   : null;
             },
           ),
