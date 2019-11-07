@@ -196,7 +196,7 @@ class CheckInPageState extends State<CheckInPage> {
         children: <Widget>[
           Container(
             padding: const EdgeInsets.only(
-              top: 32.0,
+              top: 16.0,
               left: 16.0,
               right: 16.0,
             ),

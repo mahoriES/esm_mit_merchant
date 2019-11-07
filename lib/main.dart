@@ -58,22 +58,21 @@ class _ReviewAppState extends State<ReviewApp> {
               accentColor: Colors.blueAccent,
               // Define the default font family.
               fontFamily: 'Lato',
-              textTheme:
-                  TextTheme().copyWith(subtitle: TextStyle(color: Colors.blue)),
-              appBarTheme: AppBarTheme(
-                color: Colors.white,
-                brightness: Brightness.light,
-                elevation: 0.0,
-                iconTheme: Theme.of(context)
-                    .primaryIconTheme
-                    .copyWith(color: Colors.black87),
-                textTheme: Typography.englishLike2018.copyWith(
-                  title: Typography.englishLike2018.title.copyWith(
-                    fontFamily: 'Lato',
-                    color: Colors.black87
-                  )
-                )
+              textTheme: TextTheme().copyWith(
+                subtitle: TextStyle(
+                  color: Colors.blueGrey,
+                ),
               ),
+              appBarTheme: AppBarTheme(
+                  color: Colors.white,
+                  brightness: Brightness.light,
+                  elevation: 0.0,
+                  iconTheme: Theme.of(context)
+                      .primaryIconTheme
+                      .copyWith(color: Colors.black87),
+                  textTheme: Typography.englishLike2018.copyWith(
+                      title: Typography.englishLike2018.title.copyWith(
+                          fontFamily: 'Lato', color: Colors.black87))),
               scaffoldBackgroundColor: Colors.white,
             ),
             home: StreamBuilder<AuthState>(

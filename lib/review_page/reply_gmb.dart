@@ -85,13 +85,15 @@ class ReplyGmbState extends State<ReplyGmb> {
               ),
               Container(
                 padding: const EdgeInsets.only(
-                  top: 16.0,
+                  top: 32.0,
                   left: 16.0,
                   right: 16.0,
                 ),
                 alignment: Alignment.bottomLeft,
                 child: Text(
-                    AppTranslations.of(context).text("reply_page_reply_label")),
+                  AppTranslations.of(context).text("reply_page_reply_label"),
+                  style: Theme.of(context).textTheme.subtitle,
+                ),
               ),
               Container(
                 padding:
@@ -103,31 +105,10 @@ class ReplyGmbState extends State<ReplyGmb> {
                   autovalidate: true,
                   autofocus: true,
                   decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Color.fromARGB(80, 233, 233, 233),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                            style: BorderStyle.solid,
-                          )),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                            style: BorderStyle.solid,
-                          )),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                            style: BorderStyle.solid,
-                          )),
-                      hintText: AppTranslations.of(context)
-                          .text("reply_page_reply_hint"),
-                      labelStyle: TextStyle(
-                        color: Colors.black54,
-                      )),
+                    border: OutlineInputBorder(),
+                    hintText: AppTranslations.of(context)
+                        .text("reply_page_reply_hint"),
+                  ),
                   onChanged: (String value) {
                     setState(() {
                       this._reply = value;
