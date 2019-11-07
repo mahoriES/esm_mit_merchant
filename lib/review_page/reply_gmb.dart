@@ -44,21 +44,10 @@ class ReplyGmbState extends State<ReplyGmb> {
   Widget build(BuildContext context) {
     final FeedbackItem feedbackItem = this.widget._feedbackItem;
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        brightness: Brightness.light,
-        textTheme: Typography.blackMountainView,
-        iconTheme: IconThemeData.fallback(),
         title: Text(
-           AppTranslations.of(context).text("reply_page_title"),
-          style: TextStyle(
-            color: Colors.black54,
-            fontSize: 24.0,
-            letterSpacing: 1.1,
-          ),
+          AppTranslations.of(context).text("reply_page_title"),
         ),
-        elevation: 0.0,
         actions: <Widget>[
           Container(
             child: Center(
@@ -68,7 +57,7 @@ class ReplyGmbState extends State<ReplyGmb> {
                       child: CircularProgressIndicator())
                   : FlatButton(
                       child: Text(
-                         AppTranslations.of(context).text("reply_page_submit"),
+                        AppTranslations.of(context).text("reply_page_submit"),
                         style: TextStyle(color: Colors.blue),
                       ),
                       onPressed: () {
@@ -147,7 +136,7 @@ class ReplyGmbState extends State<ReplyGmb> {
                   validator: (String value) {
                     return value.length > 4000
                         ? AppTranslations.of(context)
-                          .text("reply_page_reply_validation")
+                            .text("reply_page_reply_validation")
                         : null;
                   },
                 ),

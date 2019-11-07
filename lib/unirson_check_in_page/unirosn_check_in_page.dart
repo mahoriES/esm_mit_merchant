@@ -60,21 +60,10 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        brightness: Brightness.light,
-        textTheme: Typography.blackMountainView,
-        iconTheme: IconThemeData.fallback(),
         title: Text(
           AppTranslations.of(context).text("checkin_page_title"),
-          style: TextStyle(
-            color: Colors.black54,
-            fontSize: 24.0,
-            letterSpacing: 1.1,
-          ),
         ),
-        elevation: 0.0,
         actions: <Widget>[
           StreamBuilder<CheckinUnirsonState>(
               stream: this._checkinUnirsonBloc.checkinStateObservable,

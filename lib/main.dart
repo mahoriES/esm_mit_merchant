@@ -53,10 +53,26 @@ class _ReviewAppState extends State<ReviewApp> {
           return MaterialApp(
             title: 'Foore',
             theme: ThemeData(
-              primarySwatch: Colors.blue,
+              // Define the default brightness and colors.
+              brightness: Brightness.light,
+              primaryColor: Colors.blue,
+              accentColor: Colors.cyan[600],
+              // Define the default font family.
+              fontFamily: 'Lato',
+              textTheme:
+                  TextTheme().copyWith(subtitle: TextStyle(color: Colors.blue)),
               appBarTheme: AppBarTheme(
-                elevation: 0.5,
+                color: Colors.white,
+                brightness: Brightness.light,
+                elevation: 0.0,
+                iconTheme: Theme.of(context)
+                    .primaryIconTheme
+                    .copyWith(color: Colors.black87),
+                textTheme: Theme.of(context).textTheme.copyWith(
+                      subtitle: TextStyle(color: Colors.black87),
+                    ),
               ),
+              scaffoldBackgroundColor: Colors.white,
             ),
             home: StreamBuilder<AuthState>(
                 stream: authBloc.authStateObservable,
