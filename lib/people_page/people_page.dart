@@ -69,14 +69,8 @@ class _PeoplePageState extends State<PeoplePage> {
                 color: Colors.blue,
                 onPressed: this.onGetReviews,
                 child: Container(
-                  child: Text(
-                    AppTranslations.of(context)
-                        .text("people_page_button_check_in"),
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                  child: Text(AppTranslations.of(context)
+                      .text("people_page_button_check_in")),
                 ),
               ),
             ),

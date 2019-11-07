@@ -56,10 +56,8 @@ class ReplyGmbState extends State<ReplyGmb> {
                       padding: EdgeInsets.only(right: 30.0),
                       child: CircularProgressIndicator())
                   : FlatButton(
-                      child: Text(
-                        AppTranslations.of(context).text("reply_page_submit"),
-                        style: TextStyle(color: Colors.blue),
-                      ),
+                      child: Text(AppTranslations.of(context)
+                          .text("reply_page_submit")),
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
                           this.postReply(GmbReplyPayload(

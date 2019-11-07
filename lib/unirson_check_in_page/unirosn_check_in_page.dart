@@ -80,14 +80,8 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
                               child: CircularProgressIndicator(
                               backgroundColor: Colors.white,
                             ))
-                          : Text(
-                              AppTranslations.of(context)
-                                  .text("checkin_page_button_submit"),
-                              style: TextStyle(
-                                color: Colors.blue,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
+                          : Text(AppTranslations.of(context)
+                              .text("checkin_page_button_submit")),
                     ),
                   ),
                 );

@@ -71,14 +71,8 @@ class _ReviewPageState extends State<ReviewPage> {
                 color: Colors.blue,
                 onPressed: this.onGetReviews,
                 child: Container(
-                  child: Text(
-                    AppTranslations.of(context)
-                        .text("review_page_button_get_reviews"),
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                  child: Text(AppTranslations.of(context)
+                      .text("review_page_button_get_reviews")),
                 ),
               ),
             ),
