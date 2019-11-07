@@ -60,7 +60,7 @@ class _ReviewAppState extends State<ReviewApp> {
               fontFamily: 'Lato',
               textTheme: TextTheme().copyWith(
                 subtitle: TextStyle(
-                  color: Colors.blueGrey,
+                  color: Colors.black54,
                 ),
               ),
               appBarTheme: AppBarTheme(

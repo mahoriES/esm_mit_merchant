@@ -122,12 +122,14 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
                         child: Text(
                           AppTranslations.of(context)
                               .text("checkin_page_select_a_store_to_check_in"),
-                          style: TextStyle(color: Colors.black54),
+                          style: Theme.of(context).textTheme.subtitle,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 4.0),
+                          horizontal: 16.0,
+                          vertical: 4.0,
+                        ),
                         child: DropdownButton<LocationItem>(
                           value: snapshot.data.selectedLocation,
                           elevation: 4,
@@ -154,7 +156,7 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
                         child: Text(
                           AppTranslations.of(context)
                               .text("checkin_page_feedback_and_google_review"),
-                          style: TextStyle(color: Colors.black54),
+                          style: Theme.of(context).textTheme.subtitle,
                         ),
                       ),
                       Container(
@@ -197,7 +199,7 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
             child: Text(
               AppTranslations.of(context)
                   .text("checkin_page_subscribe_contact_to_sequences"),
-              style: TextStyle(color: Colors.black54),
+              style: Theme.of(context).textTheme.subtitle,
             ),
           ),
           Container(
