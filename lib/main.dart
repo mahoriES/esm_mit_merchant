@@ -63,6 +63,12 @@ class _ReviewAppState extends State<ReviewApp> {
                   color: Colors.black54,
                 ),
               ),
+              buttonTheme: ButtonTheme.of(context).copyWith(
+                buttonColor: Colors.blue,
+                shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(5.0),
+                ),
+              ),
               appBarTheme: AppBarTheme(
                   color: Colors.white,
                   brightness: Brightness.light,
