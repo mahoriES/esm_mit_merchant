@@ -9,6 +9,7 @@ import 'data/http_service.dart';
 import 'data/push_notification_listener.dart';
 import 'intro_page/intro_page.dart';
 import 'login_page/login_page.dart';
+import 'onboarding_page/onboarding_page.dart';
 
 void main() => runApp(
       MultiProvider(
@@ -58,22 +59,23 @@ class _ReviewAppState extends State<ReviewApp> {
                 elevation: 0.5,
               ),
             ),
-            home: StreamBuilder<AuthState>(
-                stream: authBloc.authStateObservable,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data.isLoading) {
-                      return LogoPage();
-                    } else if (snapshot.data.isLoadingFailed) {
-                      return IntroPage();
-                    } else if (snapshot.data.isLoggedIn) {
-                      return PushNotificationListener(child: HomePage());
-                    } else {
-                      return IntroPage();
-                    }
-                  }
-                  return Container();
-                }),
+            home: OnboardingPage(),
+            // home: StreamBuilder<AuthState>(
+            //     stream: authBloc.authStateObservable,
+            //     builder: (context, snapshot) {
+            //       if (snapshot.hasData) {
+            //         if (snapshot.data.isLoading) {
+            //           return LogoPage();
+            //         } else if (snapshot.data.isLoadingFailed) {
+            //           return IntroPage();
+            //         } else if (snapshot.data.isLoggedIn) {
+            //           return PushNotificationListener(child: HomePage());
+            //         } else {
+            //           return IntroPage();
+            //         }
+            //       }
+            //       return Container();
+            //     }),
             localizationsDelegates: [
               snapshot.data.localeDelegate,
               //provides localized strings
