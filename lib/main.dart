@@ -8,7 +8,6 @@ import 'data/bloc/auth.dart';
 import 'data/http_service.dart';
 import 'data/push_notification_listener.dart';
 import 'intro_page/intro_page.dart';
-import 'login_page/login_page.dart';
 
 void main() => runApp(
       MultiProvider(
@@ -56,7 +55,7 @@ class _ReviewAppState extends State<ReviewApp> {
               // Define the default brightness and colors.
               brightness: Brightness.light,
               primaryColor: Colors.blue,
-              accentColor: Colors.cyan[600],
+              accentColor: Colors.blueAccent,
               // Define the default font family.
               fontFamily: 'Lato',
               textTheme:
@@ -68,9 +67,12 @@ class _ReviewAppState extends State<ReviewApp> {
                 iconTheme: Theme.of(context)
                     .primaryIconTheme
                     .copyWith(color: Colors.black87),
-                textTheme: Theme.of(context).textTheme.copyWith(
-                      subtitle: TextStyle(color: Colors.black87),
-                    ),
+                textTheme: Typography.englishLike2018.copyWith(
+                  title: Typography.englishLike2018.title.copyWith(
+                    fontFamily: 'Lato',
+                    color: Colors.black87
+                  )
+                )
               ),
               scaffoldBackgroundColor: Colors.white,
             ),
