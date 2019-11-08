@@ -252,6 +252,7 @@ class CheckInPageState extends State<CheckInPage> {
           const SizedBox(height: 20),
           TextFormField(
             controller: this._checkinUnirsonBloc.phoneNumberEditController,
+            keyboardType: TextInputType.phone,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: AppTranslations.of(context)
