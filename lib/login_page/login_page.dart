@@ -49,7 +49,6 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: StreamBuilder<LoginState>(
             stream: _loginBloc.loginStateObservable,
@@ -71,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
       height: double.infinity,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(
-        horizontal: 30.0,
+        horizontal: 32.0,
       ),
       child: Form(
         key: _formKeySendCode,
@@ -80,8 +79,8 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              width: 70,
-              padding: EdgeInsets.only(top: 50, bottom: 10),
+              width: 70.0,
+              padding: EdgeInsets.only(top: 50.0, bottom: 10.0),
               child: Image(
                 image: AssetImage('assets/logo-black.png'),
               ),
@@ -91,21 +90,14 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Text(
               AppTranslations.of(context).text("login_page_title"),
-              style: TextStyle(
-                color: Colors.black54,
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-              ),
+              style: Theme.of(context).textTheme.headline,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 32.0),
             Text(
               AppTranslations.of(context).text("login_page_sub_title"),
-              style: TextStyle(
-                color: Colors.black54,
-                fontSize: 16,
-              ),
+              style: Theme.of(context).textTheme.subtitle,
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 16.0),
             TextFormField(
               controller: this._loginBloc.emailEditController,
               style: TextStyle(
@@ -113,31 +105,9 @@ class _LoginPageState extends State<LoginPage> {
               ),
               cursorColor: Colors.black87,
               decoration: InputDecoration(
-                filled: true,
-                fillColor: Color.fromARGB(80, 233, 233, 233),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                      style: BorderStyle.solid,
-                    )),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                      style: BorderStyle.solid,
-                    )),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                      style: BorderStyle.solid,
-                    )),
+                border: OutlineInputBorder(),
                 labelText: AppTranslations.of(context)
                     .text("login_page_email_address_label"),
-                labelStyle: TextStyle(
-                  color: Colors.black54,
-                ),
               ),
               validator: (String value) {
                 return value.length < 1
@@ -148,13 +118,9 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 20),
             RaisedButton(
-              shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(5.0)),
               padding: EdgeInsets.symmetric(
-                vertical: 15,
+                vertical: 20.0,
               ),
-              elevation: 0,
-              color: Colors.blue,
               onPressed: onSendCode,
               child: Container(
                 width: double.infinity,
@@ -166,10 +132,9 @@ class _LoginPageState extends State<LoginPage> {
                     : Text(
                         AppTranslations.of(context)
                             .text("login_page_button_get_otp"),
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
+                        style: Theme.of(context).textTheme.button.copyWith(
+                              color: Colors.white,
+                            ),
                         textAlign: TextAlign.center,
                       ),
               ),
@@ -183,10 +148,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Text(
                 AppTranslations.of(context)
                     .text("login_page_don't_have_an_account"),
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16,
-                ),
+                style: Theme.of(context).textTheme.caption,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -204,10 +166,9 @@ class _LoginPageState extends State<LoginPage> {
                 child: Text(
                   AppTranslations.of(context)
                       .text("login_page_button_create_account"),
-                  style: TextStyle(
-                    fontSize: 18,
-                    decoration: TextDecoration.underline,
-                  ),
+                  style: Theme.of(context).textTheme.button.copyWith(
+                        decoration: TextDecoration.underline,
+                      ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -247,21 +208,14 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Text(
               AppTranslations.of(context).text("otp_page_title"),
-              style: TextStyle(
-                color: Colors.black54,
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-              ),
+              style: Theme.of(context).textTheme.headline,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 32.0),
             Text(
               'OTP sent to ' + this._loginBloc.emailEditController.text,
-              style: TextStyle(
-                color: Colors.black45,
-                fontSize: 16,
-              ),
+              style: Theme.of(context).textTheme.subtitle,
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 16.0),
             TextFormField(
               controller: this._loginBloc.otpEditController,
               style: TextStyle(
@@ -269,31 +223,9 @@ class _LoginPageState extends State<LoginPage> {
               ),
               cursorColor: Colors.black87,
               decoration: InputDecoration(
-                filled: true,
-                fillColor: Color.fromARGB(80, 233, 233, 233),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                      style: BorderStyle.solid,
-                    )),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                      style: BorderStyle.solid,
-                    )),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                      style: BorderStyle.solid,
-                    )),
+                border: OutlineInputBorder(),
                 labelText: AppTranslations.of(context)
                     .text("otp_page_enter_otp_label"),
-                labelStyle: TextStyle(
-                  color: Colors.black54,
-                ),
               ),
               validator: (String value) {
                 return value.length < 1
@@ -304,13 +236,9 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 20),
             RaisedButton(
-              shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(5.0)),
               padding: EdgeInsets.symmetric(
-                vertical: 15,
+                vertical: 20.0,
               ),
-              elevation: 0,
-              color: Colors.blue,
               onPressed: onLoginWithOtp,
               child: Container(
                 width: double.infinity,
@@ -322,10 +250,9 @@ class _LoginPageState extends State<LoginPage> {
                     : Text(
                         AppTranslations.of(context)
                             .text("otp_page_button_login"),
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
+                        style: Theme.of(context).textTheme.button.copyWith(
+                              color: Colors.white,
+                            ),
                         textAlign: TextAlign.center,
                       ),
               ),

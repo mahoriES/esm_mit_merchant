@@ -46,28 +46,16 @@ class _ReviewPageState extends State<ReviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        brightness: Brightness.light,
-        textTheme: Typography.blackMountainView,
-        iconTheme: IconThemeData.fallback(),
         leading: IconButton(
           icon: Icon(Icons.dehaze),
-          color: Colors.black54,
           onPressed: () {
             Scaffold.of(context).openDrawer();
           },
         ),
         title: Text(
           AppTranslations.of(context).text("reviews_page_title"),
-          style: TextStyle(
-            color: Colors.black54,
-            fontSize: 24.0,
-            letterSpacing: 1.1,
-          ),
         ),
-        elevation: 0.0,
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
@@ -83,14 +71,8 @@ class _ReviewPageState extends State<ReviewPage> {
                 color: Colors.blue,
                 onPressed: this.onGetReviews,
                 child: Container(
-                  child: Text(
-                    AppTranslations.of(context)
-                        .text("review_page_button_get_reviews"),
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                  child: Text(AppTranslations.of(context)
+                      .text("review_page_button_get_reviews")),
                 ),
               ),
             ),

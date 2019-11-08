@@ -44,21 +44,10 @@ class ReplyGmbState extends State<ReplyGmb> {
   Widget build(BuildContext context) {
     final FeedbackItem feedbackItem = this.widget._feedbackItem;
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        brightness: Brightness.light,
-        textTheme: Typography.blackMountainView,
-        iconTheme: IconThemeData.fallback(),
         title: Text(
-           AppTranslations.of(context).text("reply_page_title"),
-          style: TextStyle(
-            color: Colors.black54,
-            fontSize: 24.0,
-            letterSpacing: 1.1,
-          ),
+          AppTranslations.of(context).text("reply_page_title"),
         ),
-        elevation: 0.0,
         actions: <Widget>[
           Container(
             child: Center(
@@ -67,10 +56,8 @@ class ReplyGmbState extends State<ReplyGmb> {
                       padding: EdgeInsets.only(right: 30.0),
                       child: CircularProgressIndicator())
                   : FlatButton(
-                      child: Text(
-                         AppTranslations.of(context).text("reply_page_submit"),
-                        style: TextStyle(color: Colors.blue),
-                      ),
+                      child: Text(AppTranslations.of(context)
+                          .text("reply_page_submit")),
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
                           this.postReply(GmbReplyPayload(
@@ -96,13 +83,15 @@ class ReplyGmbState extends State<ReplyGmb> {
               ),
               Container(
                 padding: const EdgeInsets.only(
-                  top: 16.0,
+                  top: 32.0,
                   left: 16.0,
                   right: 16.0,
                 ),
                 alignment: Alignment.bottomLeft,
                 child: Text(
-                    AppTranslations.of(context).text("reply_page_reply_label")),
+                  AppTranslations.of(context).text("reply_page_reply_label"),
+                  style: Theme.of(context).textTheme.subtitle,
+                ),
               ),
               Container(
                 padding:
@@ -114,31 +103,10 @@ class ReplyGmbState extends State<ReplyGmb> {
                   autovalidate: true,
                   autofocus: true,
                   decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Color.fromARGB(80, 233, 233, 233),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                            style: BorderStyle.solid,
-                          )),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                            style: BorderStyle.solid,
-                          )),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                            style: BorderStyle.solid,
-                          )),
-                      hintText: AppTranslations.of(context)
-                          .text("reply_page_reply_hint"),
-                      labelStyle: TextStyle(
-                        color: Colors.black54,
-                      )),
+                    border: OutlineInputBorder(),
+                    hintText: AppTranslations.of(context)
+                        .text("reply_page_reply_hint"),
+                  ),
                   onChanged: (String value) {
                     setState(() {
                       this._reply = value;
@@ -147,7 +115,7 @@ class ReplyGmbState extends State<ReplyGmb> {
                   validator: (String value) {
                     return value.length > 4000
                         ? AppTranslations.of(context)
-                          .text("reply_page_reply_validation")
+                            .text("reply_page_reply_validation")
                         : null;
                   },
                 ),

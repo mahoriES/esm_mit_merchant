@@ -22,26 +22,16 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        brightness: Brightness.light,
-        textTheme: Typography.blackMountainView,
-        iconTheme: IconThemeData.fallback(),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          color: Colors.black54,
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         title: Text(
-          AppTranslations.of(context).text("language_selection_page_change_language"),
-          style: TextStyle(
-            color: Colors.black54,
-            fontSize: 24.0,
-            letterSpacing: 1.1,
-          ),
+          AppTranslations.of(context)
+              .text("language_selection_page_change_language"),
         ),
-        elevation: 0.0,
       ),
       body: SafeArea(
         child: _buildLanguagesList(context),

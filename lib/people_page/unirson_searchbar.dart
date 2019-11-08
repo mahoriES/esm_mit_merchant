@@ -40,44 +40,24 @@ class _UnirsonSearchBarState extends State<UnirsonSearchBar> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: TextField(
-        controller: searchController,
-        style: TextStyle(
-          color: Colors.black54,
+      child: Container(
+        padding: const EdgeInsets.only(
+          left: 22.0,
+          right: 8.0,
         ),
-        cursorColor: Colors.black54,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Color.fromARGB(80, 233, 233, 233),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(100)),
-            borderSide: BorderSide(
-              color: Colors.white,
-              style: BorderStyle.solid,
-            ),
-            gapPadding: 10.0,
+        decoration: BoxDecoration(
+          color: Theme.of(context).canvasColor,
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        child: TextField(
+          controller: searchController,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            isDense: true,
+            labelText:
+                AppTranslations.of(context).text("people_page_search_label"),
+            suffixIcon: Icon(Icons.search),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(100)),
-            borderSide: BorderSide(
-              color: Colors.white,
-              style: BorderStyle.solid,
-            ),
-            gapPadding: 10.0,
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(100)),
-            borderSide: BorderSide(
-              color: Colors.white,
-              style: BorderStyle.solid,
-            ),
-            gapPadding: 10.0,
-          ),
-          labelText: AppTranslations.of(context).text("people_page_search_label"),
-          labelStyle: TextStyle(
-            color: Colors.black54,
-          ),
-          suffixIcon: Icon(Icons.search),
         ),
       ),
     );

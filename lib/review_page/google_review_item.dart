@@ -28,7 +28,7 @@ class GoogleItemWidget extends StatelessWidget {
         Container(
           width: double.infinity,
           height: 1.0,
-          color: Color.fromRGBO(233, 233, 233, 0.50),
+          color: Theme.of(context).dividerColor,
         ),
         SizedBox(
           height: 20.0,
@@ -64,23 +64,27 @@ class GoogleItemWidget extends StatelessWidget {
         ),
         reply(this._feedbackItem, context),
         this.isShowReplyButton
-            ? ButtonTheme.bar(
-                child: ButtonBar(
-                  children: <Widget>[
-                    RaisedButton(
-                      elevation: 0.0,
-                      child: Text(
-                        GmbReviewHelper.isShowGmbReply(this._feedbackItem)
-                            ? AppTranslations.of(context).text("review_page_button_edit_reply")
-                            : AppTranslations.of(context).text("review_page_button_reply"),
-                        style: TextStyle(
-                          fontSize: 12.0,
-                          color: Colors.white,
+            ? Padding(
+                padding: EdgeInsets.only(right: 8.0),
+                child: ButtonTheme.bar(
+                  child: ButtonBar(
+                    children: <Widget>[
+                      RaisedButton(
+                        elevation: 0.0,
+                        child: Text(
+                          GmbReviewHelper.isShowGmbReply(this._feedbackItem)
+                              ? AppTranslations.of(context)
+                                  .text("review_page_button_edit_reply")
+                              : AppTranslations.of(context)
+                                  .text("review_page_button_reply"),
+                          style: Theme.of(context).textTheme.button.copyWith(
+                                color: Colors.white,
+                              ),
                         ),
+                        onPressed: onReply,
                       ),
-                      onPressed: onReply,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               )
             : Container(),
