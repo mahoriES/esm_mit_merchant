@@ -100,6 +100,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 16.0),
             TextFormField(
               controller: this._loginBloc.emailEditController,
+              keyboardType: TextInputType.emailAddress,
               style: TextStyle(
                 color: Colors.black87,
               ),
@@ -222,6 +223,7 @@ class _LoginPageState extends State<LoginPage> {
                 color: Colors.black87,
               ),
               cursorColor: Colors.black87,
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: AppTranslations.of(context)
