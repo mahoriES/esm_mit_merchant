@@ -45,10 +45,7 @@ class GoogleItemWidget extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
                     ReviewPageHelper.getCreatedTimeText(this._feedbackItem),
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.black54,
-                    ),
+                    style: Theme.of(context).textTheme.caption,
                   ),
                 ),
               ),
@@ -121,19 +118,14 @@ class GoogleItemWidget extends StatelessWidget {
           children: <Widget>[
             Text(
               AppTranslations.of(context).text("review_page_reply_posted"),
-              style: TextStyle(
-                fontSize: 12.0,
-                color: Colors.black45,
-              ),
+              style: Theme.of(context).textTheme.caption,
             ),
             SizedBox(
               height: 8.0,
             ),
             Text(
               GmbReviewHelper.gmbReplyText(feedbackItem),
-              style: TextStyle(
-                fontSize: 14.0,
-              ),
+              style: Theme.of(context).textTheme.body1,
             ),
           ],
         ),

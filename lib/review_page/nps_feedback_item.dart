@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foore/data/constants/feedback.dart';
 import 'package:foore/data/model/feedback.dart';
-import '../app_translations.dart';
 import 'review_page_helper.dart';
 
 class NpsFeedbackItemWidget extends StatelessWidget {
@@ -49,19 +48,14 @@ class NpsFeedbackItemWidget extends StatelessWidget {
               ),
               Text(
                 NpsFeedbackHelper.getNpsRespondent(this._feedbackItem),
-                style: TextStyle(
-                  fontSize: 12.0,
-                ),
+                style: Theme.of(context).textTheme.caption,
               ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
                     ReviewPageHelper.getCreatedTimeText(this._feedbackItem),
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.black54,
-                    ),
+                    style: Theme.of(context).textTheme.caption,
                   ),
                 ),
               ),
@@ -106,36 +100,5 @@ class NpsFeedbackItemWidget extends StatelessWidget {
       );
     }
     return null;
-  }
-
-  Widget reply(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Container(
-        color: Color.fromRGBO(233, 233, 233, 0.50),
-        padding: EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              AppTranslations.of(context).text("review_page_reply_posted"),
-              style: TextStyle(
-                fontSize: 12.0,
-                color: Colors.black45,
-              ),
-            ),
-            SizedBox(
-              height: 8.0,
-            ),
-            Text(
-              'Contrary to popular belief, Lorem Ipsum is not simply random text.',
-              style: TextStyle(
-                fontSize: 14.0,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
