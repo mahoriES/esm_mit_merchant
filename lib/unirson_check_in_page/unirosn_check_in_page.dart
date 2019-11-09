@@ -127,7 +127,6 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
                         child: DropdownButton<LocationItem>(
                           value: snapshot.data.selectedLocation,
                           elevation: 4,
-                          style: TextStyle(color: Colors.black87),
                           onChanged:
                               this._checkinUnirsonBloc.setSelectedLocation,
                           items: snapshot.data.locations
