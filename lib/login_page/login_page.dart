@@ -101,10 +101,6 @@ class _LoginPageState extends State<LoginPage> {
             TextFormField(
               controller: this._loginBloc.emailEditController,
               keyboardType: TextInputType.emailAddress,
-              style: TextStyle(
-                color: Colors.black87,
-              ),
-              cursorColor: Colors.black87,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: AppTranslations.of(context)
@@ -219,10 +215,6 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 16.0),
             TextFormField(
               controller: this._loginBloc.otpEditController,
-              style: TextStyle(
-                color: Colors.black87,
-              ),
-              cursorColor: Colors.black87,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),

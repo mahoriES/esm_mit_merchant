@@ -18,7 +18,6 @@ class _IntroPageState extends State<IntroPage> {
     return _isShowLogin
         ? LoginPage()
         : Scaffold(
-            backgroundColor: Colors.white,
             body: SafeArea(
               child: Container(
                 height: double.infinity,
@@ -209,7 +208,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
               bottomRight: Radius.circular(50.0),
             ),
             child: Container(
-              color: Color.fromRGBO(249, 249, 249, 1),
+              color: Theme.of(context).canvasColor,
             ),
           )),
       CarouselSlider(

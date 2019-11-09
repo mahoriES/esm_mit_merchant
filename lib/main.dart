@@ -53,7 +53,7 @@ class _ReviewAppState extends State<ReviewApp> {
           }
           return MaterialApp(
             title: 'Foore',
-            theme: FooreLightTheme.themeData,
+            theme: FooreDarkTheme.themeData,
             home: StreamBuilder<AuthState>(
                 stream: authBloc.authStateObservable,
                 builder: (context, snapshot) {
