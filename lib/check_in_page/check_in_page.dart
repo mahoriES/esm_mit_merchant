@@ -9,7 +9,7 @@ import 'package:foore/data/model/locations.dart';
 import '../app_translations.dart';
 
 class CheckInPage extends StatefulWidget {
-  CheckInPage();
+  static const routeName = '/checkin';
 
   @override
   CheckInPageState createState() => CheckInPageState();

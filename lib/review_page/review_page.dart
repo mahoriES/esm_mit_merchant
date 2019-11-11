@@ -35,12 +35,10 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   onGetReviews() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => CheckInPage(),
-          fullscreenDialog: true,
-        ));
+    Navigator.pushNamed(
+      context,
+      CheckInPage.routeName,
+    );
   }
 
   @override

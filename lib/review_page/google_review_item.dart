@@ -15,12 +15,11 @@ class GoogleItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var onReply = () {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => ReplyGmb(this._feedbackItem),
-            fullscreenDialog: true,
-          ));
+      Navigator.pushNamed(
+        context,
+        ReplyGmb.routeName,
+        arguments: this._feedbackItem,
+      );
     };
 
     return Column(

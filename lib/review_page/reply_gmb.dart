@@ -9,6 +9,7 @@ import '../app_translations.dart';
 import 'google_review_item.dart';
 
 class ReplyGmb extends StatefulWidget {
+  static const routeName = '/reply-gmb';
   final FeedbackItem _feedbackItem;
 
   ReplyGmb(this._feedbackItem);

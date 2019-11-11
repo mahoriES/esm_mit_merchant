@@ -10,6 +10,7 @@ import 'package:foore/people_page/unisonItem.dart';
 import '../app_translations.dart';
 
 class UnirsonCheckInPage extends StatefulWidget {
+  static const routeName = '/unirson-checkin';
   final UnirsonItem _unirsonItem;
 
   UnirsonCheckInPage(this._unirsonItem);

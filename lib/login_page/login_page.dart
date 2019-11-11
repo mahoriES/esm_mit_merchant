@@ -8,6 +8,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../app_translations.dart';
 
 class LoginPage extends StatefulWidget {
+  static const routeName = '/login';
+
   LoginPage({Key key}) : super(key: key);
 
   _LoginPageState createState() => _LoginPageState();

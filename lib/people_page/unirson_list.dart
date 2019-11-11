@@ -12,12 +12,11 @@ class UnirsonListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     onUnirsonSelected(UnirsonItem unirsonItem) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => UnirsonCheckInPage(unirsonItem),
-            fullscreenDialog: true,
-          ));
+      Navigator.pushNamed(
+        context,
+        UnirsonCheckInPage.routeName,
+        arguments: unirsonItem,
+      );
     }
 
     return StreamBuilder<PeopleState>(

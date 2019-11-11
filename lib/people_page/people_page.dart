@@ -32,12 +32,10 @@ class _PeoplePageState extends State<PeoplePage> {
   }
 
   onGetReviews() {
-    Navigator.push(
+    Navigator.pushNamed(
         context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => CheckInPage(),
-          fullscreenDialog: true,
-        ));
+        CheckInPage.routeName
+      );
   }
 
   @override

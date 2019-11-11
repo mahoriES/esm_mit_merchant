@@ -6,6 +6,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../app_translations.dart';
 
 class IntroPage extends StatefulWidget {
+  static const routeName = '/intro';
+
   IntroPage({Key key}) : super(key: key);
 
   _IntroPageState createState() => _IntroPageState();
