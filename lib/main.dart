@@ -5,6 +5,7 @@ import 'package:foore/review_page/reply_gmb.dart';
 import 'package:foore/theme/light.dart';
 import 'package:foore/unirson_check_in_page/unirosn_check_in_page.dart';
 import 'package:provider/provider.dart';
+import 'router.dart';
 import 'auth_guard/auth_guard.dart';
 import 'check_in_page/check_in_page.dart';
 import 'data/bloc/app_translations_bloc.dart';
@@ -47,6 +48,7 @@ class _ReviewAppState extends State<ReviewApp> {
   @override
   Widget build(BuildContext context) {
     final appTranslationsBloc = Provider.of<AppTranslationsBloc>(context);
+    final router = Router(context: context);
     final unauthenticatedHandler = (BuildContext context) =>
         Navigator.of(context).pushReplacementNamed(IntroPage.routeName);
 
@@ -62,48 +64,7 @@ class _ReviewAppState extends State<ReviewApp> {
               unauthenticatedHandler: unauthenticatedHandler,
               child: PushNotificationListener(child: HomePage()),
             ),
-            onGenerateRoute: (RouteSettings settings) {
-              switch (settings.name) {
-                case '/':
-                  return MaterialPageRoute(
-                      builder: (context) => AuthGuard(
-                            unauthenticatedHandler: unauthenticatedHandler,
-                            child: PushNotificationListener(child: HomePage()),
-                          ));
-                  break;
-                case IntroPage.routeName:
-                  return MaterialPageRoute(
-                    builder: (context) => IntroPage(),
-                  );
-                case ReplyGmb.routeName:
-                  FeedbackItem feedbackItem = settings.arguments;
-                  return MaterialPageRoute(
-                    builder: (context) => AuthGuard(
-                      unauthenticatedHandler: unauthenticatedHandler,
-                      child: ReplyGmb(feedbackItem),
-                    ),
-                    fullscreenDialog: true,
-                  );
-                case UnirsonCheckInPage.routeName:
-                  UnirsonItem unirsonItem = settings.arguments;
-                  return MaterialPageRoute(
-                    builder: (context) => AuthGuard(
-                      unauthenticatedHandler: unauthenticatedHandler,
-                      child: UnirsonCheckInPage(unirsonItem),
-                    ),
-                    fullscreenDialog: true,
-                  );
-                case CheckInPage.routeName:
-                  return MaterialPageRoute(
-                    builder: (context) => AuthGuard(
-                      unauthenticatedHandler: unauthenticatedHandler,
-                      child: CheckInPage(),
-                    ),
-                    fullscreenDialog: true,
-                  );
-                  break;
-              }
-            },
+            onGenerateRoute: router.routeGenerator,
             localizationsDelegates: [
               snapshot.data.localeDelegate,
               GlobalMaterialLocalizations.delegate,
