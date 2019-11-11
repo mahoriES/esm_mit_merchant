@@ -8,26 +8,35 @@ import 'data/model/unirson.dart';
 import 'data/push_notification_listener.dart';
 import 'home_page/home_page.dart';
 import 'intro_page/intro_page.dart';
+import 'onboarding_guard/onboarding_guard.dart';
 import 'review_page/reply_gmb.dart';
 import 'unirson_check_in_page/unirosn_check_in_page.dart';
 
 class Router {
+  static const homeRoute = '/';
   final BuildContext context;
   Function unauthenticatedHandler;
+  Function onboardingRequiredHandler;
 
   Router({@required this.context}) {
-   unauthenticatedHandler = (BuildContext context) =>
+    unauthenticatedHandler = (BuildContext context) =>
+        Navigator.of(context).pushReplacementNamed(IntroPage.routeName);
+    onboardingRequiredHandler = (BuildContext context) =>
         Navigator.of(context).pushReplacementNamed(IntroPage.routeName);
   }
 
-  routeGenerator(RouteSettings settings) {
+  Route<dynamic> routeGenerator(RouteSettings settings) {
     switch (settings.name) {
-      case '/':
+      case homeRoute:
         return MaterialPageRoute(
-            builder: (context) => AuthGuard(
-                  unauthenticatedHandler: unauthenticatedHandler,
-                  child: PushNotificationListener(child: HomePage()),
-                ));
+          builder: (context) => AuthGuard(
+            unauthenticatedHandler: unauthenticatedHandler,
+            child: OnboardingGuard(
+              onboardingRequiredHandler: onboardingRequiredHandler,
+              child: PushNotificationListener(child: HomePage()),
+            ),
+          ),
+        );
         break;
       case IntroPage.routeName:
         return MaterialPageRoute(
@@ -60,6 +69,12 @@ class Router {
           fullscreenDialog: true,
         );
         break;
+      default:
+        return MaterialPageRoute(
+            builder: (_) => Scaffold(
+                  body: Center(
+                      child: Text('No route defined for ${settings.name}')),
+                ));
     }
   }
 }

@@ -1,33 +1,31 @@
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:foore/home_page/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:foore/review_page/reply_gmb.dart';
 import 'package:foore/theme/light.dart';
-import 'package:foore/unirson_check_in_page/unirosn_check_in_page.dart';
 import 'package:provider/provider.dart';
+import 'data/bloc/onboarding.dart';
 import 'router.dart';
-import 'auth_guard/auth_guard.dart';
-import 'check_in_page/check_in_page.dart';
 import 'data/bloc/app_translations_bloc.dart';
 import 'data/bloc/auth.dart';
 import 'data/http_service.dart';
-import 'data/model/feedback.dart';
-import 'data/model/unirson.dart';
-import 'data/push_notification_listener.dart';
-import 'intro_page/intro_page.dart';
 
 void main() => runApp(
       MultiProvider(
         providers: [
           Provider<AuthBloc>(
-              builder: (context) => AuthBloc(),
-              dispose: (context, value) => value.dispose()),
+            builder: (context) => AuthBloc(),
+            dispose: (context, value) => value.dispose(),
+          ),
           ProxyProvider<AuthBloc, HttpService>(
             builder: (_, authBloc, __) => HttpService(authBloc),
           ),
+          ProxyProvider<HttpService, OnboardingBloc>(
+            builder: (_, http, __) => OnboardingBloc(http),
+            dispose: (context, value) => value.dispose(),
+          ),
           Provider<AppTranslationsBloc>(
-              builder: (context) => AppTranslationsBloc(),
-              dispose: (context, value) => value.dispose()),
+            builder: (context) => AppTranslationsBloc(),
+            dispose: (context, value) => value.dispose(),
+          ),
         ],
         child: ReviewApp(),
       ),
@@ -49,8 +47,6 @@ class _ReviewAppState extends State<ReviewApp> {
   Widget build(BuildContext context) {
     final appTranslationsBloc = Provider.of<AppTranslationsBloc>(context);
     final router = Router(context: context);
-    final unauthenticatedHandler = (BuildContext context) =>
-        Navigator.of(context).pushReplacementNamed(IntroPage.routeName);
 
     return StreamBuilder<AppTranslationsState>(
         stream: appTranslationsBloc.appTranslationsStateObservable,
@@ -60,10 +56,7 @@ class _ReviewAppState extends State<ReviewApp> {
           }
           return MaterialApp(
             title: 'Foore',
-            home: AuthGuard(
-              unauthenticatedHandler: unauthenticatedHandler,
-              child: PushNotificationListener(child: HomePage()),
-            ),
+            initialRoute: Router.homeRoute,
             onGenerateRoute: router.routeGenerator,
             localizationsDelegates: [
               snapshot.data.localeDelegate,
