@@ -78,18 +78,27 @@ class _ReviewAppState extends State<ReviewApp> {
                 case ReplyGmb.routeName:
                   FeedbackItem feedbackItem = settings.arguments;
                   return MaterialPageRoute(
-                    builder: (context) => ReplyGmb(feedbackItem),
+                    builder: (context) => AuthGuard(
+                      unauthenticatedHandler: unauthenticatedHandler,
+                      child: ReplyGmb(feedbackItem),
+                    ),
                     fullscreenDialog: true,
                   );
                 case UnirsonCheckInPage.routeName:
                   UnirsonItem unirsonItem = settings.arguments;
                   return MaterialPageRoute(
-                    builder: (context) => UnirsonCheckInPage(unirsonItem),
+                    builder: (context) => AuthGuard(
+                      unauthenticatedHandler: unauthenticatedHandler,
+                      child: UnirsonCheckInPage(unirsonItem),
+                    ),
                     fullscreenDialog: true,
                   );
                 case CheckInPage.routeName:
                   return MaterialPageRoute(
-                    builder: (context) => CheckInPage(),
+                    builder: (context) => AuthGuard(
+                      unauthenticatedHandler: unauthenticatedHandler,
+                      child: CheckInPage(),
+                    ),
                     fullscreenDialog: true,
                   );
                   break;
