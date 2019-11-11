@@ -26,7 +26,6 @@ class AuthBloc {
       this.authState.authData = authData;
     }
     this.authState.isLoading = false;
-    this.authState.isLoadingFailed = false;
     this._updateState();
     this._storeAuthState();
   }
@@ -34,7 +33,6 @@ class AuthBloc {
   logout() {
     this.authState.authData = null;
     this.authState.isLoading = false;
-    this.authState.isLoadingFailed = false;
     this._updateState();
     this._storeAuthState();
   }
@@ -58,7 +56,9 @@ class AuthBloc {
     // } else {
     //   this.logout();
     // }
-    this.login(AuthData(token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMjgsInVzZXJuYW1lIjoidGVzdF9wYXJhZ0Bmb29yZS5pbiIsImV4cCI6MTU3ODA0OTQwMSwiZW1haWwiOiJ0ZXN0X3BhcmFnQGZvb3JlLmluIiwib3JpZ19pYXQiOjE1NzAyNzM0MDF9.5JHbCABlSrumJIxpOpQ_d9CHz1G5uwlWMMTjPLpAQ24"));
+    this.login(AuthData(
+        token:
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMjgsInVzZXJuYW1lIjoidGVzdF9wYXJhZ0Bmb29yZS5pbiIsImV4cCI6MTU3ODA0OTQwMSwiZW1haWwiOiJ0ZXN0X3BhcmFnQGZvb3JlLmluIiwib3JpZ19pYXQiOjE1NzAyNzM0MDF9.5JHbCABlSrumJIxpOpQ_d9CHz1G5uwlWMMTjPLpAQ24"));
     this.authState.isLoading = false;
     this._updateState();
   }
@@ -77,12 +77,11 @@ class AuthBloc {
 class AuthState {
   bool isLoading = true;
   AuthData authData;
-  bool isLoadingFailed = false;
   bool get isLoggedIn => authData != null ? authData.token != null : false;
+  bool get isLoggedOut => isLoading == false && isLoggedIn == false;
 
   AuthState() {
     this.isLoading = false;
-    this.isLoadingFailed = false;
   }
 }
 

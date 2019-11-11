@@ -1,10 +1,9 @@
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:foore/logo_page/logo_page.dart';
 import 'package:foore/home_page/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:foore/theme/dark.dart';
 import 'package:foore/theme/light.dart';
 import 'package:provider/provider.dart';
+import 'auth_guard/auth_guard.dart';
 import 'data/bloc/app_translations_bloc.dart';
 import 'data/bloc/auth.dart';
 import 'data/http_service.dart';
@@ -42,8 +41,9 @@ class _ReviewAppState extends State<ReviewApp> {
 
   @override
   Widget build(BuildContext context) {
-    final authBloc = Provider.of<AuthBloc>(context);
     final appTranslationsBloc = Provider.of<AppTranslationsBloc>(context);
+    final unauthenticatedHandler = (BuildContext context) =>
+        Navigator.of(context).pushReplacementNamed('/intro');
 
     return StreamBuilder<AppTranslationsState>(
         stream: appTranslationsBloc.appTranslationsStateObservable,
@@ -53,31 +53,21 @@ class _ReviewAppState extends State<ReviewApp> {
           }
           return MaterialApp(
             title: 'Foore',
-            theme: FooreLightTheme.themeData,
-            home: StreamBuilder<AuthState>(
-                stream: authBloc.authStateObservable,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data.isLoading) {
-                      return LogoPage();
-                    } else if (snapshot.data.isLoadingFailed) {
-                      return IntroPage();
-                    } else if (snapshot.data.isLoggedIn) {
-                      return PushNotificationListener(child: HomePage());
-                    } else {
-                      return IntroPage();
-                    }
-                  }
-                  return Container();
-                }),
+            initialRoute: '/',
+            routes: {
+              '/': (context) => AuthGuard(
+                    unauthenticatedHandler: unauthenticatedHandler,
+                    child: PushNotificationListener(child: HomePage()),
+                  ),
+              '/intro': (context) => IntroPage(),
+            },
             localizationsDelegates: [
               snapshot.data.localeDelegate,
-              //provides localized strings
               GlobalMaterialLocalizations.delegate,
-              //provides RTL support
               GlobalWidgetsLocalizations.delegate,
             ],
             supportedLocales: AppTranslationsBloc.supportedLocales(),
+            theme: FooreLightTheme.themeData,
           );
         });
   }
