@@ -53,13 +53,25 @@ class _ReviewAppState extends State<ReviewApp> {
           }
           return MaterialApp(
             title: 'Foore',
-            initialRoute: '/',
-            routes: {
-              '/': (context) => AuthGuard(
-                    unauthenticatedHandler: unauthenticatedHandler,
-                    child: PushNotificationListener(child: HomePage()),
-                  ),
-              '/intro': (context) => IntroPage(),
+            home: AuthGuard(
+              unauthenticatedHandler: unauthenticatedHandler,
+              child: PushNotificationListener(child: HomePage()),
+            ),
+            onGenerateRoute: (RouteSettings settings) {
+              switch (settings.name) {
+                case '/':
+                  return MaterialPageRoute(
+                      builder: (context) => AuthGuard(
+                            unauthenticatedHandler: unauthenticatedHandler,
+                            child: PushNotificationListener(child: HomePage()),
+                          ));
+                  break;
+                case '/intro':
+                  return MaterialPageRoute(
+                    builder: (context) => IntroPage(),
+                  );
+                  break;
+              }
             },
             localizationsDelegates: [
               snapshot.data.localeDelegate,
