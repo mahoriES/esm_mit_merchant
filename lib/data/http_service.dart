@@ -76,6 +76,16 @@ class HttpService {
     return httpResponse;
   }
 
+  Future<http.Response> foGetWithoutAuth(url) async {
+    Map<String, String> requestHeaders = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+    };
+    final httpResponse =
+        await http.get(apiUrl + url, headers: requestHeaders);
+    return httpResponse;
+  }
+
   Future<http.Response> foPostUrl(url, body) async {
     if (this._authBloc.authState.authData != null) {
       Map<String, String> requestHeaders = {

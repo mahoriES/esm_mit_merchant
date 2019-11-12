@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/login.dart';
 import 'package:foore/login_page/login_page.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../app_translations.dart';
@@ -17,6 +19,8 @@ class _IntroPageState extends State<IntroPage> {
   bool _isShowLogin = false;
   @override
   Widget build(BuildContext context) {
+    final loginBloc = Provider.of<LoginBloc>(context);
+
     return _isShowLogin
         ? LoginPage()
         : Scaffold(
@@ -92,9 +96,7 @@ class _IntroPageState extends State<IntroPage> {
                         elevation: 0,
                         color: Colors.white,
                         onPressed: () {
-                          setState(() {
-                            _isShowLogin = true;
-                          });
+                          loginBloc.signInWithGoogle();
                         },
                         child: Container(
                           width: double.infinity,

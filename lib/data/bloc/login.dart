@@ -1,11 +1,21 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/data/model/login.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'auth.dart';
 
 class LoginBloc {
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: <String>[
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/business.manage',
+      'https://www.googleapis.com/auth/userinfo.profile'
+    ],
+  );
+
   final LoginState _loginState = new LoginState();
 
   final emailEditController = TextEditingController();
@@ -18,11 +28,80 @@ class LoginBloc {
   HttpService _httpService;
 
   LoginBloc(this._httpService, this._authBloc) {
-    this._subjectLoginState = new BehaviorSubject<LoginState>.seeded(
-        _loginState); //initializes the subject with element already
+    this._subjectLoginState =
+        new BehaviorSubject<LoginState>.seeded(_loginState);
+    // this
+    //     ._googleSignIn
+    //     .onCurrentUserChanged
+    //     .listen((GoogleSignInAccount account) {
+    //   account.authentication.then((value) {
+    //     print("AccessToken: " + value.accessToken);
+    //     print("IdToken: " + value.idToken);
+    //     print("ServerAuthCode: " + value.serverAuthCode);
+    //   });
+    //   print("Email: " + account.email);
+    //   print("PhotoUrl: " + account.photoUrl);
+    //   print("DisplayName: " + account.displayName);
+    //   print("Id: " + account.id);
+    // });
   }
 
   Observable<LoginState> get loginStateObservable => _subjectLoginState.stream;
+
+  Future<void> signInWithGoogle() async {
+    if (this._loginState.isLoading == false) {
+      this._loginState.isLoading = true;
+      this._updateState();
+      try {
+        GoogleSignInAccount account = await _googleSignIn.signIn();
+        GoogleSignInAuthentication authentication =
+            await account.authentication;
+        GoogleAuthStateIdResponse authStateResponse =
+            await getGoogleAuthStateId(authentication.serverAuthCode);
+        AuthInfo loginInfo = await getAuthInfoWithGoogleAuthStateId(
+            authStateResponse.authStateId);
+        this._authBloc.login(loginInfo);
+      } catch (error) {
+        ///////////
+      } finally {
+        this._loginState.isLoading = false;
+        this._updateState();
+      }
+    }
+  }
+
+  Future<GoogleAuthStateIdResponse> getGoogleAuthStateId(
+      String serverAuthCode) async {
+    this._updateState();
+    var authStateIdHttpResponse = await _httpService.foPostWithoutAuth(
+        'google/account/login/init/', '{"gcode": "$serverAuthCode"}');
+    if (authStateIdHttpResponse.statusCode == 200 ||
+        authStateIdHttpResponse.statusCode == 202) {
+      var authStateIdResponse = GoogleAuthStateIdResponse.fromJson(
+          json.decode(authStateIdHttpResponse.body));
+      return authStateIdResponse;
+    } else {
+      throw "Err";
+    }
+  }
+
+  Future<AuthInfo> getAuthInfoWithGoogleAuthStateId(String authStateId) async {
+    var httpResponse = await _httpService.foGetWithoutAuth(
+        'google/account/login/info/?auth_state_id=$authStateId');
+    print(httpResponse.statusCode);
+    print(httpResponse.reasonPhrase);
+    if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+      var loginInfo = AuthInfo.fromJson(json.decode(httpResponse.body));
+      if (loginInfo.code == 2) {
+        var result = await getAuthInfoWithGoogleAuthStateId(authStateId);
+        return result;
+      } else {
+        return loginInfo;
+      }
+    } else {
+      throw "Err";
+    }
+  }
 
   sendCode() {
     this._loginState.isLoading = true;
@@ -57,7 +136,7 @@ class LoginBloc {
                 .toJson()))
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
-        this._authBloc.login(AuthData.fromJson(json.decode(httpResponse.body)));
+        this._authBloc.login(AuthInfo.fromJson(json.decode(httpResponse.body)));
       } else {
         this._loginState.isSubmitOtp = false;
       }
@@ -121,6 +200,22 @@ class UseCodePayload {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['email'] = this.email;
     data['token'] = this.token;
+    return data;
+  }
+}
+
+class GoogleAuthStateIdResponse {
+  String authStateId;
+
+  GoogleAuthStateIdResponse({this.authStateId});
+
+  GoogleAuthStateIdResponse.fromJson(Map<String, dynamic> json) {
+    authStateId = json['auth_state_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['auth_state_id'] = this.authStateId;
     return data;
   }
 }

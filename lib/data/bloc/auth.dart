@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:foore/data/model/login.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,7 +16,7 @@ class AuthBloc {
 
   Observable<AuthState> get authStateObservable => _subjectAuthState.stream;
 
-  login(AuthData authData) {
+  login(AuthInfo authData) {
     if (authData != null) {
       if (authData.token == null || authData.token == '') {
         this.authState.authData = null;
@@ -56,7 +57,7 @@ class AuthBloc {
     // } else {
     //   this.logout();
     // }
-    this.login(AuthData(
+    this.login(AuthInfo(
         token:
             "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMjgsInVzZXJuYW1lIjoidGVzdF9wYXJhZ0Bmb29yZS5pbiIsImV4cCI6MTU3ODA0OTQwMSwiZW1haWwiOiJ0ZXN0X3BhcmFnQGZvb3JlLmluIiwib3JpZ19pYXQiOjE1NzAyNzM0MDF9.5JHbCABlSrumJIxpOpQ_d9CHz1G5uwlWMMTjPLpAQ24"));
     this.authState.isLoading = false;
@@ -76,34 +77,11 @@ class AuthBloc {
 
 class AuthState {
   bool isLoading = true;
-  AuthData authData;
+  AuthInfo authData;
   bool get isLoggedIn => authData != null ? authData.token != null : false;
   bool get isLoggedOut => isLoading == false && isLoggedIn == false;
 
   AuthState() {
     this.isLoading = false;
-  }
-}
-
-class AuthData {
-  final String token;
-
-  AuthData({this.token});
-
-  factory AuthData.fromJson(Map<String, dynamic> json) {
-    return AuthData(
-      token: json['token'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    var map = new Map<String, dynamic>();
-    map['token'] = this.token;
-    return map;
-  }
-
-  @override
-  String toString() {
-    return 'token ' + token;
   }
 }
