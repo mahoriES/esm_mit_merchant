@@ -45,6 +45,39 @@ class OnboardingBloc {
     }
   }
 
+  createStoreForGmbLocations(Function onCreate) {
+    final gmbLocationIds =
+        this._onboardingState.locations.takeWhile((location) {
+      return location.isSelectedUi != null ? location.isSelectedUi : false;
+    }).map((location) {
+      return location.gmbLocationId;
+    }).toList();
+
+    if (this._onboardingState.isSubmitting == false &&
+        gmbLocationIds.length > 0) {
+      this._onboardingState.isSubmitting = true;
+      this._updateState();
+      var payload = CreateStorePayload(gmbLocationIds: gmbLocationIds);
+      var payloadString = json.encode(payload.toJson());
+      _httpService
+          .foPost('gmb/create/store/', payloadString)
+          .then((httpResponse) {
+        if (httpResponse.statusCode == 200) {
+          this._onboardingState.response =
+              UiHelperResponse.fromJson(json.decode(httpResponse.body));
+          this._onboardingState.isSubmitting = false;
+          onCreate();
+        } else {
+          this._onboardingState.isSubmitting = false;
+        }
+        this._updateState();
+      }).catchError((onError) {
+        this._onboardingState.isSubmitting = false;
+        this._updateState();
+      });
+    }
+  }
+
   _updateState() {
     this._subjectOnboardingState.sink.add(this._onboardingState);
   }
@@ -63,6 +96,7 @@ class OnboardingState {
   bool isLoading;
   bool isLoadingFailed;
   UiHelperResponse response;
+  bool isSubmitting;
 
   get shouldFetch => isLoading == false && response == null;
 
@@ -78,6 +112,7 @@ class OnboardingState {
   OnboardingState() {
     this.isLoading = false;
     this.isLoadingFailed = false;
+    this.isSubmitting = false;
   }
 }
 
@@ -110,6 +145,24 @@ class UiHelperResponse {
     if (this.gmbLocations != null) {
       data['gmb_locations'] = this.gmbLocations.map((v) => v.toJson()).toList();
     }
+    return data;
+  }
+}
+
+class CreateStorePayload {
+  List<String> gmbLocationIds;
+
+  CreateStorePayload({
+    this.gmbLocationIds,
+  });
+
+  CreateStorePayload.fromJson(Map<String, dynamic> json) {
+    gmbLocationIds = json['gmb_location_ids'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['gmb_location_ids'] = this.gmbLocationIds;
     return data;
   }
 }

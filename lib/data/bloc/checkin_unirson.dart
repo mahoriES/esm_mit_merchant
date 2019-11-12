@@ -129,7 +129,6 @@ class CheckinUnirsonBloc {
       }).toList(),
     );
     var payloadString = json.encode(payload.toJson());
-    print(payloadString);
     this
         ._httpService
         .foPost('instore/checkin/add/', payloadString)
