@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:provider/provider.dart';
 
 import 'auth_guard/auth_guard.dart';
@@ -24,7 +25,8 @@ class Router {
       Navigator.of(context).pushReplacementNamed(OnboardingPage.routeName);
 
   final HttpService httpServiceBloc;
-  Router({this.httpServiceBloc}) {}
+  final OnboardingGuardBloc onboardingGuardBloc;
+  Router({this.httpServiceBloc, this.onboardingGuardBloc}) {}
 
   Route<dynamic> routeGenerator(RouteSettings settings) {
     switch (settings.name) {
@@ -76,7 +78,7 @@ class Router {
           builder: (context) => AuthGuard(
               unauthenticatedHandler: unauthenticatedHandler,
               child: Provider<OnboardingBloc>(
-                builder: (context) => OnboardingBloc(httpServiceBloc),
+                builder: (context) => OnboardingBloc(httpServiceBloc, onboardingGuardBloc),
                 dispose: (context, value) => value.dispose(),
                 child: OnboardingPage(),
               )),

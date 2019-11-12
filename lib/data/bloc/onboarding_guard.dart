@@ -41,6 +41,13 @@ class OnboardingGuardBloc {
     }
   }
 
+  setOnboardingDone() {
+    if (this._onboardingState.response != null) {
+      this._onboardingState.response.onboarding = 0;
+      this._updateState();
+    }
+  }
+
   _updateState() {
     this._subjectOnboardingState.sink.add(this._onboardingState);
   }
@@ -56,7 +63,10 @@ class OnboardingGuardState {
   UiHelperResponse response;
   get onboarding => response?.onboarding;
   get isOnboardingRequired =>
-      isLoading == false && isLoadingFailed == false && onboarding != 0 && onboarding != null;
+      isLoading == false &&
+      isLoadingFailed == false &&
+      onboarding != 0 &&
+      onboarding != null;
 
   // get isOnboardingRequired => isLoading == false;
 

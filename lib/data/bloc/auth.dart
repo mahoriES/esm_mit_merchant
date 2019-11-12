@@ -35,7 +35,12 @@ class AuthBloc {
     this.authState.authData = null;
     this.authState.isLoading = false;
     this._updateState();
-    this._storeAuthState();
+    clearSharedPreferences();
+  }
+
+  clearSharedPreferences() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.clear();
   }
 
   _updateState() {
@@ -49,17 +54,17 @@ class AuthBloc {
   _loadAuthState() async {
     this.authState.isLoading = true;
     this._updateState();
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // final authString = prefs.getString('auth') ?? '';
-    // if (authString != '') {
-    //   var authData = json.decode(authString);
-    //   this.login(AuthData.fromJson(authData));
-    // } else {
-    //   this.logout();
-    // }
-    this.login(AuthInfo(
-        token:
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMjgsInVzZXJuYW1lIjoidGVzdF9wYXJhZ0Bmb29yZS5pbiIsImV4cCI6MTU3ODA0OTQwMSwiZW1haWwiOiJ0ZXN0X3BhcmFnQGZvb3JlLmluIiwib3JpZ19pYXQiOjE1NzAyNzM0MDF9.5JHbCABlSrumJIxpOpQ_d9CHz1G5uwlWMMTjPLpAQ24"));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final authString = prefs.getString('authInfo') ?? '';
+    if (authString != '') {
+      var authData = json.decode(authString);
+      this.login(AuthInfo.fromJson(authData));
+    } else {
+      this.logout();
+    }
+    // this.login(AuthInfo(
+    //     token:
+    //         "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMjgsInVzZXJuYW1lIjoidGVzdF9wYXJhZ0Bmb29yZS5pbiIsImV4cCI6MTU3ODA0OTQwMSwiZW1haWwiOiJ0ZXN0X3BhcmFnQGZvb3JlLmluIiwib3JpZ19pYXQiOjE1NzAyNzM0MDF9.5JHbCABlSrumJIxpOpQ_d9CHz1G5uwlWMMTjPLpAQ24"));
     this.authState.isLoading = false;
     this._updateState();
   }
@@ -74,6 +79,8 @@ class AuthBloc {
     }
   }
 }
+
+class AuthData {}
 
 class AuthState {
   bool isLoading = true;

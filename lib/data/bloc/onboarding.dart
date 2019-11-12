@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/gmb_location.dart';
 import 'package:foore/data/model/google_account.dart';
@@ -7,10 +8,11 @@ import 'package:rxdart/rxdart.dart';
 class OnboardingBloc {
   final OnboardingState _onboardingState = new OnboardingState();
   final HttpService _httpService;
+  final OnboardingGuardBloc _onboardingGuardBloc;
 
   BehaviorSubject<OnboardingState> _subjectOnboardingState;
 
-  OnboardingBloc(this._httpService) {
+  OnboardingBloc(this._httpService, this._onboardingGuardBloc) {
     this._subjectOnboardingState = new BehaviorSubject<OnboardingState>.seeded(
         _onboardingState); //initializes the subject with element already
   }
@@ -62,10 +64,11 @@ class OnboardingBloc {
       _httpService
           .foPost('gmb/create/store/', payloadString)
           .then((httpResponse) {
-        if (httpResponse.statusCode == 200) {
+        if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
           this._onboardingState.response =
               UiHelperResponse.fromJson(json.decode(httpResponse.body));
           this._onboardingState.isSubmitting = false;
+          this._onboardingGuardBloc.setOnboardingDone();
           onCreate();
         } else {
           this._onboardingState.isSubmitting = false;
