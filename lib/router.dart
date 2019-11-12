@@ -9,8 +9,9 @@ import 'data/push_notification_listener.dart';
 import 'home_page/home_page.dart';
 import 'intro_page/intro_page.dart';
 import 'onboarding_guard/onboarding_guard.dart';
+import 'onboarding_page/onboarding_page.dart';
 import 'review_page/reply_gmb.dart';
-import 'unirson_check_in_page/unirosn_check_in_page.dart';
+import 'unirson_check_in_page/unirson_check_in_page.dart';
 
 class Router {
   static const homeRoute = '/';
@@ -22,7 +23,7 @@ class Router {
     unauthenticatedHandler = (BuildContext context) =>
         Navigator.of(context).pushReplacementNamed(IntroPage.routeName);
     onboardingRequiredHandler = (BuildContext context) =>
-        Navigator.of(context).pushReplacementNamed(IntroPage.routeName);
+        Navigator.of(context).pushReplacementNamed(OnboardingPage.routeName);
   }
 
   Route<dynamic> routeGenerator(RouteSettings settings) {
@@ -67,6 +68,14 @@ class Router {
             child: CheckInPage(),
           ),
           fullscreenDialog: true,
+        );
+        break;
+      case OnboardingPage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => AuthGuard(
+            unauthenticatedHandler: unauthenticatedHandler,
+            child: OnboardingPage(),
+          ),
         );
         break;
       default:

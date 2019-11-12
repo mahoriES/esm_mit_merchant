@@ -2,7 +2,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/theme/light.dart';
 import 'package:provider/provider.dart';
-import 'data/bloc/onboarding.dart';
+import 'data/bloc/onboarding_guard.dart';
 import 'router.dart';
 import 'data/bloc/app_translations_bloc.dart';
 import 'data/bloc/auth.dart';
@@ -18,8 +18,8 @@ void main() => runApp(
           ProxyProvider<AuthBloc, HttpService>(
             builder: (_, authBloc, __) => HttpService(authBloc),
           ),
-          ProxyProvider<HttpService, OnboardingBloc>(
-            builder: (_, http, __) => OnboardingBloc(http),
+          ProxyProvider<HttpService, OnboardingGuardBloc>(
+            builder: (_, http, __) => OnboardingGuardBloc(http),
             dispose: (context, value) => value.dispose(),
           ),
           Provider<AppTranslationsBloc>(

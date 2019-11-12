@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/people.dart';
 import 'package:foore/data/model/unirson.dart';
 import 'package:foore/people_page/unisonItem.dart';
-import 'package:foore/unirson_check_in_page/unirosn_check_in_page.dart';
+import 'package:foore/unirson_check_in_page/unirson_check_in_page.dart';
 
 class UnirsonListWidget extends StatelessWidget {
   final PeopleBloc _peopleBloc;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class OnboardingPage extends StatefulWidget {
+  static const routeName = '/onboarding';
   OnboardingPage({Key key}) : super(key: key);
 
   @override

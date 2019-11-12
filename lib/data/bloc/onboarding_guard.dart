@@ -2,18 +2,18 @@ import 'dart:convert';
 import 'package:foore/data/http_service.dart';
 import 'package:rxdart/rxdart.dart';
 
-class OnboardingBloc {
-  final OnboardingState _onboardingState = new OnboardingState();
+class OnboardingGuardBloc {
+  final OnboardingGuardState _onboardingState = new OnboardingGuardState();
   final HttpService _httpService;
 
-  BehaviorSubject<OnboardingState> _subjectOnboardingState;
+  BehaviorSubject<OnboardingGuardState> _subjectOnboardingState;
 
-  OnboardingBloc(this._httpService) {
-    this._subjectOnboardingState = new BehaviorSubject<OnboardingState>.seeded(
+  OnboardingGuardBloc(this._httpService) {
+    this._subjectOnboardingState = new BehaviorSubject<OnboardingGuardState>.seeded(
         _onboardingState); //initializes the subject with element already
   }
 
-  Observable<OnboardingState> get onboardingStateObservable =>
+  Observable<OnboardingGuardState> get onboardingStateObservable =>
       _subjectOnboardingState.stream;
 
   getData() {
@@ -49,20 +49,23 @@ class OnboardingBloc {
   }
 }
 
-class OnboardingState {
+class OnboardingGuardState {
   bool isLoading;
   bool isLoadingFailed;
   UiHelperResponse response;
   get onboarding => response?.onboarding;
   get isOnboardingRequired => 
       isLoading == false && isLoadingFailed == false && onboarding != 0 && onboarding != null;
+  
+  // get isOnboardingRequired => 
+  //     isLoading == false ;
 
   get isShowChild =>
       response != null && isLoading == false && isLoadingFailed == false;
 
   get shouldFetch => isLoading == false && response == null;
 
-  OnboardingState() {
+  OnboardingGuardState() {
     this.isLoading = false;
     this.isLoadingFailed = false;
   }

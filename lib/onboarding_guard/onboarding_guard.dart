@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:foore/data/bloc/onboarding.dart';
+import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/logo_page/logo_page.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +27,7 @@ class OnboardingGuard extends StatefulWidget {
 
 class _OnboardingGuardState extends State<OnboardingGuard> {
   Widget currentWidget;
-  StreamSubscription<OnboardingState> _subscription;
+  StreamSubscription<OnboardingGuardState> _subscription;
 
   @override
   void initState() {
@@ -46,12 +46,12 @@ class _OnboardingGuardState extends State<OnboardingGuard> {
 
   @override
   Widget build(BuildContext context) {
-    final onboardingBloc = Provider.of<OnboardingBloc>(context);
+    final onboardingBloc = Provider.of<OnboardingGuardBloc>(context);
     onboardingBloc.getData();
     _subscription = onboardingBloc.onboardingStateObservable
         .listen(_onOnboardingChange);
 
-    return StreamBuilder<OnboardingState>(
+    return StreamBuilder<OnboardingGuardState>(
       stream: onboardingBloc.onboardingStateObservable,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -64,7 +64,7 @@ class _OnboardingGuardState extends State<OnboardingGuard> {
     );
   }
 
-  _onOnboardingChange(OnboardingState onboardingState) {
+  _onOnboardingChange(OnboardingGuardState onboardingState) {
     if (onboardingState.isOnboardingRequired) {
       widget.onboardingRequiredHandler(context);
     }
