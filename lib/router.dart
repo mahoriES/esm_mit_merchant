@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'auth_guard/auth_guard.dart';
 import 'check_in_page/check_in_page.dart';
+import 'data/bloc/onboarding.dart';
+import 'data/http_service.dart';
 import 'data/model/feedback.dart';
 import 'data/model/unirson.dart';
 import 'data/push_notification_listener.dart';
@@ -15,16 +18,13 @@ import 'unirson_check_in_page/unirson_check_in_page.dart';
 
 class Router {
   static const homeRoute = '/';
-  final BuildContext context;
-  Function unauthenticatedHandler;
-  Function onboardingRequiredHandler;
+  final unauthenticatedHandler = (BuildContext context) =>
+      Navigator.of(context).pushReplacementNamed(IntroPage.routeName);
+  final onboardingRequiredHandler = (BuildContext context) =>
+      Navigator.of(context).pushReplacementNamed(OnboardingPage.routeName);
 
-  Router({@required this.context}) {
-    unauthenticatedHandler = (BuildContext context) =>
-        Navigator.of(context).pushReplacementNamed(IntroPage.routeName);
-    onboardingRequiredHandler = (BuildContext context) =>
-        Navigator.of(context).pushReplacementNamed(OnboardingPage.routeName);
-  }
+  final HttpService httpServiceBloc;
+  Router({this.httpServiceBloc}) {}
 
   Route<dynamic> routeGenerator(RouteSettings settings) {
     switch (settings.name) {
@@ -73,9 +73,12 @@ class Router {
       case OnboardingPage.routeName:
         return MaterialPageRoute(
           builder: (context) => AuthGuard(
-            unauthenticatedHandler: unauthenticatedHandler,
-            child: OnboardingPage(),
-          ),
+              unauthenticatedHandler: unauthenticatedHandler,
+              child: Provider<OnboardingBloc>(
+                builder: (context) => OnboardingBloc(httpServiceBloc),
+                dispose: (context, value) => value.dispose(),
+                child: OnboardingPage(),
+              )),
         );
         break;
       default:

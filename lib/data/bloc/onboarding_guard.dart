@@ -9,8 +9,9 @@ class OnboardingGuardBloc {
   BehaviorSubject<OnboardingGuardState> _subjectOnboardingState;
 
   OnboardingGuardBloc(this._httpService) {
-    this._subjectOnboardingState = new BehaviorSubject<OnboardingGuardState>.seeded(
-        _onboardingState); //initializes the subject with element already
+    this._subjectOnboardingState =
+        new BehaviorSubject<OnboardingGuardState>.seeded(
+            _onboardingState); //initializes the subject with element already
   }
 
   Observable<OnboardingGuardState> get onboardingStateObservable =>
@@ -54,11 +55,10 @@ class OnboardingGuardState {
   bool isLoadingFailed;
   UiHelperResponse response;
   get onboarding => response?.onboarding;
-  get isOnboardingRequired => 
-      isLoading == false && isLoadingFailed == false && onboarding != 0 && onboarding != null;
-  
-  // get isOnboardingRequired => 
-  //     isLoading == false ;
+  // get isOnboardingRequired =>
+  //     isLoading == false && isLoadingFailed == false && onboarding != 0 && onboarding != null;
+
+  get isOnboardingRequired => isLoading == false;
 
   get isShowChild =>
       response != null && isLoading == false && isLoadingFailed == false;
