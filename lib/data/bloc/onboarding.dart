@@ -52,6 +52,11 @@ class OnboardingBloc {
   dispose() {
     this._subjectOnboardingState.close();
   }
+
+  setLocationSelected(GmbLocation locationItem, bool isSelected) {
+    locationItem.isSelectedUi = isSelected;
+    this._updateState();
+  }
 }
 
 class OnboardingState {

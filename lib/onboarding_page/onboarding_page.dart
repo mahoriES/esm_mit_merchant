@@ -25,12 +25,6 @@ class _OnboardingPageState extends State<OnboardingPage>
     final onboardingBloc = Provider.of<OnboardingBloc>(context);
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
         title: Text(
           "Locations",
         ),
@@ -57,6 +51,7 @@ class SelectLocations extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onboardingBloc = Provider.of<OnboardingBloc>(context);
     return SafeArea(
       child: Container(
         child: Column(
@@ -78,8 +73,11 @@ class SelectLocations extends StatelessWidget {
                 itemBuilder: (BuildContext ctxt, int index) {
                   return CheckboxListTile(
                     title: Text(locations[index].gmbLocationName),
-                    value: true,
-                    onChanged: (bool value) {},
+                    value: locations[index].isSelectedUi == true,
+                    onChanged: (bool value) {
+                      onboardingBloc.setLocationSelected(
+                          locations[index], value);
+                    },
                   );
                 },
               ),

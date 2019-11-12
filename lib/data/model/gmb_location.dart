@@ -4,6 +4,7 @@ class GmbLocation {
   GmbLocationAddress gmbLocationAddress;
   String gmbLocationName;
   String gmbLocationMapUrl;
+  bool isSelectedUi;
 
   GmbLocation(
       {this.gmbLocationId,
