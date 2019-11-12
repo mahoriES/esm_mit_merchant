@@ -8,7 +8,6 @@ import 'data/bloc/onboarding.dart';
 import 'data/http_service.dart';
 import 'data/model/feedback.dart';
 import 'data/model/unirson.dart';
-import 'data/push_notification_listener.dart';
 import 'home_page/home_page.dart';
 import 'intro_page/intro_page.dart';
 import 'onboarding_guard/onboarding_guard.dart';
@@ -34,7 +33,8 @@ class Router {
             unauthenticatedHandler: unauthenticatedHandler,
             child: OnboardingGuard(
               onboardingRequiredHandler: onboardingRequiredHandler,
-              child: PushNotificationListener(child: HomePage()),
+              child: HomePage(),
+              // child: PushNotificationListener(child: HomePage()),
             ),
           ),
         );

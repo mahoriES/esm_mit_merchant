@@ -40,7 +40,7 @@ dependencies:
 
   contact_picker: ^0.0.2
 
-  firebase_messaging: ^5.1.6
+  #firebase_messaging: ^5.1.6
 
   url_launcher: ^5.2.5
 
