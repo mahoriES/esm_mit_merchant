@@ -150,7 +150,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "191833713865-4a0rrmn9opmcjbc1k7os9vae1hiadbi8.apps.googleusercontent.com",
+          "client_id": "191833713865-cbuppn3an0ifl63kmipg9pb07k08rl64.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.foore.mobile",
+            "certificate_hash": "42f03c0d50f9372e168b8c131756429e4aa6c0bd"
+          }
+        },
+        {
+          "client_id": "191833713865-5jcqtbg13a0ial6q19o8b56hooa9il00.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -163,7 +171,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "191833713865-9ltjd66sffp1ooqka2jhrdhlsb44nm30.apps.googleusercontent.com",
+              "client_id": "191833713865-5jcqtbg13a0ial6q19o8b56hooa9il00.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
