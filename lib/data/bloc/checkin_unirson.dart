@@ -207,7 +207,7 @@ class CheckinUnirsonState {
     this.isLoadingUiHelper = false;
     this.isLoadingFailedUiHelper = false;
     this.isSubmitting = false;
-    this.isGmbReviewSelected = false;
+    this.isGmbReviewSelected = true;
     this.locations = new List<LocationItem>();
   }
 }
