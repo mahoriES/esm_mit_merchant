@@ -82,7 +82,7 @@ class AuthBloc {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (this.authState.authData != null) {
       await sharedPreferences.setString(
-          'auth', json.encode(this.authState.authData.toJson()));
+          'authInfo', json.encode(this.authState.authData.toJson()));
     } else {
       await sharedPreferences.setString('authInfo', '');
     }

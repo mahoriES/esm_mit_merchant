@@ -24,6 +24,13 @@ class _OnboardingPageState extends State<OnboardingPage>
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    Provider.of<OnboardingBloc>(context).dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final onboardingBloc = Provider.of<OnboardingBloc>(context);
     return Scaffold(
@@ -110,8 +117,7 @@ class SelectLocations extends StatelessWidget {
                                 .text("checkin_page_button_submit")),
                         onPressed: () {
                           onboardingBloc.createStoreForGmbLocations(() {
-                            Navigator.of(context)
-                                .pushNamed(Router.homeRoute);
+                            Navigator.of(context).pushNamed(Router.homeRoute);
                           });
                         },
                       ),
