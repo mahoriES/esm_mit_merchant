@@ -40,13 +40,13 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     onSendCode() {
       if (_formKeySendCode.currentState.validate()) {
-        this._loginBloc.signInWithGoogle();
+        this._loginBloc.sendCode();
       }
     }
 
     onLoginWithOtp() {
       if (_formKeyLoginWithOtp.currentState.validate()) {
-        this._loginBloc.useCode();
+        this._loginBloc.useCode(context);
       }
     }
 

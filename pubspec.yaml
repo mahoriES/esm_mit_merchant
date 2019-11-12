@@ -67,6 +67,7 @@ flutter:
   assets:
     - assets/logo-black.png
     - assets/googlelogo.png
+    - assets/google-icon.png
     - assets/messengerlogo.png
     - assets/button-click.png
     - assets/growth.png

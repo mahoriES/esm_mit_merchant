@@ -10,6 +10,7 @@ import 'data/model/feedback.dart';
 import 'data/model/unirson.dart';
 import 'home_page/home_page.dart';
 import 'intro_page/intro_page.dart';
+import 'login_page/login_page.dart';
 import 'onboarding_guard/onboarding_guard.dart';
 import 'onboarding_page/onboarding_page.dart';
 import 'review_page/reply_gmb.dart';
@@ -79,6 +80,11 @@ class Router {
                 dispose: (context, value) => value.dispose(),
                 child: OnboardingPage(),
               )),
+        );
+        break;
+      case LoginPage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => LoginPage(),
         );
         break;
       default:

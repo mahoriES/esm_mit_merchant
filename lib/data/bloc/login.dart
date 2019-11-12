@@ -5,6 +5,7 @@ import 'package:foore/data/model/login.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../router.dart';
 import 'auth.dart';
 
 class LoginBloc {
@@ -48,7 +49,7 @@ class LoginBloc {
 
   Observable<LoginState> get loginStateObservable => _subjectLoginState.stream;
 
-  Future<void> signInWithGoogle() async {
+  Future<void> signInWithGoogle(BuildContext context) async {
     if (this._loginState.isLoading == false) {
       this._loginState.isLoading = true;
       this._updateState();
@@ -61,6 +62,7 @@ class LoginBloc {
         AuthInfo loginInfo = await getAuthInfoWithGoogleAuthStateId(
             authStateResponse.authStateId);
         this._authBloc.login(loginInfo);
+        Navigator.of(context).pushReplacementNamed(Router.homeRoute);
       } catch (error) {
         ///////////
       } finally {
@@ -75,6 +77,8 @@ class LoginBloc {
     this._updateState();
     var authStateIdHttpResponse = await _httpService.foPostWithoutAuth(
         'google/account/login/init/', '{"gcode": "$serverAuthCode"}');
+    print(authStateIdHttpResponse.statusCode);
+    print(authStateIdHttpResponse.reasonPhrase);
     if (authStateIdHttpResponse.statusCode == 200 ||
         authStateIdHttpResponse.statusCode == 202) {
       var authStateIdResponse = GoogleAuthStateIdResponse.fromJson(
@@ -91,6 +95,7 @@ class LoginBloc {
     print(httpResponse.statusCode);
     print(httpResponse.reasonPhrase);
     if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+      print(httpResponse.body);
       var loginInfo = AuthInfo.fromJson(json.decode(httpResponse.body));
       if (loginInfo.code == 2) {
         var result = await getAuthInfoWithGoogleAuthStateId(authStateId);
@@ -124,7 +129,7 @@ class LoginBloc {
     });
   }
 
-  useCode() {
+  useCode(BuildContext context) {
     this._loginState.isSubmitOtp = true;
     this._updateState();
     _httpService
@@ -136,7 +141,9 @@ class LoginBloc {
                 .toJson()))
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+        print(httpResponse.body);
         this._authBloc.login(AuthInfo.fromJson(json.decode(httpResponse.body)));
+        Navigator.of(context).pushReplacementNamed(Router.homeRoute);
       } else {
         this._loginState.isSubmitOtp = false;
       }

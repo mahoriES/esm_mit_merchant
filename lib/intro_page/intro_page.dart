@@ -51,70 +51,92 @@ class _IntroPageState extends State<IntroPage> {
                       flex: 5,
                       child: Container(),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                      child: RaisedButton(
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(5.0)),
-                        padding: EdgeInsets.symmetric(
-                          vertical: 15,
-                        ),
-                        elevation: 0,
-                        color: Colors.blue,
-                        onPressed: () async {
-                          const url = 'https://app.foore.in/signup/';
-                          if (await canLaunch(url)) {
-                            await launch(url);
-                          } else {
-                            throw 'Could not launch $url';
-                          }
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          child: Text(
-                            AppTranslations.of(context)
-                                .text("intro_page_button_create_account"),
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ),
                     const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                      child: RaisedButton(
-                        shape: new RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.black45),
-                            borderRadius: new BorderRadius.circular(5.0)),
-                        padding: EdgeInsets.symmetric(
-                          vertical: 15,
-                        ),
-                        elevation: 0,
-                        color: Colors.white,
-                        onPressed: () {
-                          loginBloc.signInWithGoogle();
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          child: Text(
-                            AppTranslations.of(context)
-                                .text("intro_page_button_login"),
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.black87,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                    //   child: RaisedButton(
+                    //     shape: new RoundedRectangleBorder(
+                    //         side: BorderSide(color: Colors.black45),
+                    //         borderRadius: new BorderRadius.circular(5.0)),
+                    //     padding: EdgeInsets.symmetric(
+                    //       vertical: 15,
+                    //     ),
+                    //     elevation: 0,
+                    //     color: Colors.white,
+
+                    //     child: Container(
+                    //       width: double.infinity,
+                    //       child: Text(
+                    //         AppTranslations.of(context)
+                    //             .text("intro_page_button_login"),
+                    //         style: TextStyle(
+                    //           fontSize: 18,
+                    //           color: Colors.black87,
+                    //         ),
+                    //         textAlign: TextAlign.center,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    Center(
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(30.0, 5.0, 30.0, 5.0),
+                        child: RaisedButton(
+                            padding: EdgeInsets.all(0.0),
+                            color: const Color(0xFF4285F4),
+                            onPressed: () {
+                              loginBloc.signInWithGoogle(context);
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Container(
+                                  color: Colors.white,
+                                  margin: EdgeInsets.all(1.0),
+                                  padding: EdgeInsets.all(4.0),
+                                  child: Image.asset(
+                                    'assets/google-icon.png',
+                                    height: 48.0,
+                                  ),
+                                ),
+                                Container(
+                                    color: const Color(0xFF4285F4),
+                                    padding: EdgeInsets.only(
+                                      left: 15.0,
+                                      right: 15.0,
+                                      top: 20.0,
+                                      bottom: 20.0,
+                                    ),
+                                    child: new Text(
+                                      "Continue with Google",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    )),
+                              ],
+                            )),
                       ),
                     ),
                     Expanded(
                       flex: 1,
                       child: Container(),
+                    ),
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed(LoginPage.routeName);
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        child: Text(
+                          AppTranslations.of(context)
+                              .text("intro_page_button_login"),
+                          style: Theme.of(context).textTheme.button.copyWith(
+                                decoration: TextDecoration.underline,
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 30),
                   ],
