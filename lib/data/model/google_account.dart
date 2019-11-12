@@ -1,3 +1,10 @@
+class GoogleAccountState {
+  static const loggedIn = 2;
+  static const loggedOut = 3;
+  static const loggedInsufficientPerm = 4;
+  static const loggedAuthError = 6;
+  static const disconnected = 8;
+}
 
 class GoogleAccount {
   GoogleProfile profile;
@@ -7,8 +14,9 @@ class GoogleAccount {
   GoogleAccount({this.profile, this.state, this.created});
 
   GoogleAccount.fromJson(Map<String, dynamic> json) {
-    profile =
-        json['profile'] != null ? new GoogleProfile.fromJson(json['profile']) : null;
+    profile = json['profile'] != null
+        ? new GoogleProfile.fromJson(json['profile'])
+        : null;
     state = json['state'];
     created = json['created'];
   }

@@ -84,7 +84,7 @@ class AuthBloc {
       await sharedPreferences.setString(
           'auth', json.encode(this.authState.authData.toJson()));
     } else {
-      await sharedPreferences.setString('auth', '');
+      await sharedPreferences.setString('authInfo', '');
     }
   }
 }

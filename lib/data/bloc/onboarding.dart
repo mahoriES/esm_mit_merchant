@@ -103,14 +103,21 @@ class OnboardingState {
 
   get shouldFetch => isLoading == false && response == null;
 
-  get isShowLocationList => true;
-
-  get isShowInsufficientPermissions => false;
-
-  get isShowNoGmbLocations => false;
-
   List<GmbLocation> get locations =>
       response != null ? response.gmbLocations : [];
+
+  get isShowLocationList =>
+      locations.length != 0 && isLoading == false && isLoadingFailed == false;
+
+  get _googleAccountState => response?.googleAccount?.state;
+
+  get isShowInsufficientPermissions =>
+      _googleAccountState != GoogleAccountState.loggedIn &&
+      isLoading == false &&
+      isLoadingFailed == false;
+
+  get isShowNoGmbLocations =>
+      locations.length == 0 && isLoading == false && isLoadingFailed == false;
 
   OnboardingState() {
     this.isLoading = false;
