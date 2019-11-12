@@ -139,8 +139,8 @@ class UiHelperResponse {
     googleAccount = json['google_account'] != null
         ? new GoogleAccount.fromJson(json['google_account'])
         : null;
+    gmbLocations = new List<GmbLocation>();
     if (json['gmb_locations'] != null) {
-      gmbLocations = new List<GmbLocation>();
       json['gmb_locations'].forEach((v) {
         gmbLocations.add(new GmbLocation.fromJson(v));
       });
