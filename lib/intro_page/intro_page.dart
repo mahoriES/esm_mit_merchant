@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/login.dart';
 import 'package:foore/login_page/login_page.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../app_translations.dart';
 
@@ -16,15 +15,17 @@ class IntroPage extends StatefulWidget {
 }
 
 class _IntroPageState extends State<IntroPage> {
-  bool _isShowLogin = false;
   @override
   Widget build(BuildContext context) {
     final loginBloc = Provider.of<LoginBloc>(context);
-
-    return _isShowLogin
-        ? LoginPage()
-        : Scaffold(
-            body: SafeArea(
+    return Scaffold(
+      body: StreamBuilder<LoginState>(
+          stream: loginBloc.loginStateObservable,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Container();
+            }
+            return SafeArea(
               child: Container(
                 height: double.infinity,
                 width: double.infinity,
@@ -51,80 +52,67 @@ class _IntroPageState extends State<IntroPage> {
                       flex: 5,
                       child: Container(),
                     ),
-                    const SizedBox(height: 20),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                    //   child: RaisedButton(
-                    //     shape: new RoundedRectangleBorder(
-                    //         side: BorderSide(color: Colors.black45),
-                    //         borderRadius: new BorderRadius.circular(5.0)),
-                    //     padding: EdgeInsets.symmetric(
-                    //       vertical: 15,
-                    //     ),
-                    //     elevation: 0,
-                    //     color: Colors.white,
-
-                    //     child: Container(
-                    //       width: double.infinity,
-                    //       child: Text(
-                    //         AppTranslations.of(context)
-                    //             .text("intro_page_button_login"),
-                    //         style: TextStyle(
-                    //           fontSize: 18,
-                    //           color: Colors.black87,
-                    //         ),
-                    //         textAlign: TextAlign.center,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                     Center(
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(30.0, 5.0, 30.0, 5.0),
-                        child: RaisedButton(
-                            padding: EdgeInsets.all(0.0),
-                            color: const Color(0xFF4285F4),
-                            onPressed: () {
-                              loginBloc.signInWithGoogle(context);
-                            },
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Container(
-                                  color: Colors.white,
-                                  margin: EdgeInsets.all(1.0),
-                                  padding: EdgeInsets.all(4.0),
-                                  child: Image.asset(
-                                    'assets/google-icon.png',
-                                    height: 48.0,
-                                  ),
-                                ),
-                                Container(
-                                    color: const Color(0xFF4285F4),
-                                    padding: EdgeInsets.only(
-                                      left: 15.0,
-                                      right: 15.0,
-                                      top: 20.0,
-                                      bottom: 20.0,
-                                    ),
-                                    child: new Text(
-                                      "Continue with Google",
-                                      style: TextStyle(
+                      child: Stack(
+                        children: <Widget>[
+                          Opacity(
+                            opacity: snapshot.data.isLoading ? 0.5 : 1.0,
+                            child: Container(
+                              margin:
+                                  EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 30.0),
+                              child: RaisedButton(
+                                  padding: EdgeInsets.all(0.0),
+                                  color: const Color(0xFF4285F4),
+                                  onPressed: () {
+                                    loginBloc.signInWithGoogle(context);
+                                  },
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Container(
                                         color: Colors.white,
+                                        margin: EdgeInsets.all(1.0),
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Image.asset(
+                                          'assets/google-icon.png',
+                                          height: 48.0,
+                                        ),
                                       ),
-                                    )),
-                              ],
-                            )),
+                                      Container(
+                                          color: const Color(0xFF4285F4),
+                                          padding: EdgeInsets.only(
+                                            left: 15.0,
+                                            right: 15.0,
+                                            top: 20.0,
+                                            bottom: 20.0,
+                                          ),
+                                          child: new Text(
+                                            "Continue with Google",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          )),
+                                    ],
+                                  )),
+                            ),
+                          ),
+                          Positioned(
+                            left: 130.0,
+                            top: 8.0,
+                            child: snapshot.data.isLoading
+                                ? CircularProgressIndicator(
+                                    backgroundColor: Colors.white,
+                                  )
+                                : Container(),
+                          ),
+                        ],
                       ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Container(),
                     ),
                     FlatButton(
                       onPressed: () {
-                        Navigator.of(context)
-                            .pushReplacementNamed(LoginPage.routeName);
+                        if (!snapshot.data.isLoading) {
+                          Navigator.of(context).pushNamed(LoginPage.routeName);
+                        }
                       },
                       child: Container(
                         width: double.infinity,
@@ -142,8 +130,9 @@ class _IntroPageState extends State<IntroPage> {
                   ],
                 ),
               ),
-            ),
-          );
+            );
+          }),
+    );
   }
 }
 
