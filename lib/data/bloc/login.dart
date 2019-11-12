@@ -9,14 +9,6 @@ import '../../router.dart';
 import 'auth.dart';
 
 class LoginBloc {
-  GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: <String>[
-      'https://www.googleapis.com/auth/userinfo.email',
-      'https://www.googleapis.com/auth/business.manage',
-      'https://www.googleapis.com/auth/userinfo.profile'
-    ],
-  );
-
   final LoginState _loginState = new LoginState();
 
   final emailEditController = TextEditingController();
@@ -31,20 +23,6 @@ class LoginBloc {
   LoginBloc(this._httpService, this._authBloc) {
     this._subjectLoginState =
         new BehaviorSubject<LoginState>.seeded(_loginState);
-    // this
-    //     ._googleSignIn
-    //     .onCurrentUserChanged
-    //     .listen((GoogleSignInAccount account) {
-    //   account.authentication.then((value) {
-    //     print("AccessToken: " + value.accessToken);
-    //     print("IdToken: " + value.idToken);
-    //     print("ServerAuthCode: " + value.serverAuthCode);
-    //   });
-    //   print("Email: " + account.email);
-    //   print("PhotoUrl: " + account.photoUrl);
-    //   print("DisplayName: " + account.displayName);
-    //   print("Id: " + account.id);
-    // });
   }
 
   Observable<LoginState> get loginStateObservable => _subjectLoginState.stream;
@@ -54,7 +32,7 @@ class LoginBloc {
       this._loginState.isLoading = true;
       this._updateState();
       try {
-        GoogleSignInAccount account = await _googleSignIn.signIn();
+        GoogleSignInAccount account = await _authBloc.googleSignIn.signIn();
         GoogleSignInAuthentication authentication =
             await account.authentication;
         GoogleAuthStateIdResponse authStateResponse =

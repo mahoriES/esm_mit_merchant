@@ -2,15 +2,23 @@ import 'dart:convert';
 import 'package:foore/data/model/login.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthBloc {
+  GoogleSignIn googleSignIn = GoogleSignIn(
+    scopes: <String>[
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/business.manage',
+      'https://www.googleapis.com/auth/userinfo.profile'
+    ],
+  );
+
   final AuthState authState = new AuthState();
 
   BehaviorSubject<AuthState> _subjectAuthState;
 
   AuthBloc() {
-    this._subjectAuthState = new BehaviorSubject<AuthState>.seeded(
-        authState); //initializes the subject with element already
+    this._subjectAuthState = new BehaviorSubject<AuthState>.seeded(authState);
     this._loadAuthState();
   }
 
@@ -35,6 +43,7 @@ class AuthBloc {
     this.authState.authData = null;
     this.authState.isLoading = false;
     this._updateState();
+    this.googleSignIn.signOut();
     clearSharedPreferences();
   }
 
