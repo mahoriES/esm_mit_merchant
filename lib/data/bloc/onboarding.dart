@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/data/model/gmb_location.dart';
+import 'package:foore/data/model/google_account.dart';
 import 'package:rxdart/rxdart.dart';
-
-import 'gmb_location.dart';
-import 'google_account.dart';
 
 class OnboardingBloc {
   final OnboardingState _onboardingState = new OnboardingState();

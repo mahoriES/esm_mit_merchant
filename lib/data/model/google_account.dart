@@ -1,5 +1,6 @@
+
 class GoogleAccount {
-  GmbProfile profile;
+  GoogleProfile profile;
   int state;
   String created;
 
@@ -7,7 +8,7 @@ class GoogleAccount {
 
   GoogleAccount.fromJson(Map<String, dynamic> json) {
     profile =
-        json['profile'] != null ? new GmbProfile.fromJson(json['profile']) : null;
+        json['profile'] != null ? new GoogleProfile.fromJson(json['profile']) : null;
     state = json['state'];
     created = json['created'];
   }
@@ -23,14 +24,14 @@ class GoogleAccount {
   }
 }
 
-class GmbProfile {
+class GoogleProfile {
   String email;
   String name;
   String picture;
 
-  GmbProfile({this.email, this.name, this.picture});
+  GoogleProfile({this.email, this.name, this.picture});
 
-  GmbProfile.fromJson(Map<String, dynamic> json) {
+  GoogleProfile.fromJson(Map<String, dynamic> json) {
     email = json['email'];
     name = json['name'];
     picture = json['picture'];

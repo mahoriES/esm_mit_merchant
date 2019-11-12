@@ -1,7 +1,7 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:foore/data/bloc/gmb_location.dart';
 import 'package:foore/data/bloc/onboarding.dart';
+import 'package:foore/data/model/gmb_location.dart';
 import 'package:provider/provider.dart';
 
 class OnboardingPage extends StatefulWidget {
