@@ -37,7 +37,7 @@ class _OnboardingPageState extends State<OnboardingPage>
             Widget child = Container();
             if (snapshot.hasData) {
               if (snapshot.data.isShowLocationList) {
-                child = SelectLocations();
+                child = SelectLocations(locations: snapshot.data.locations);
               } else if (snapshot.data.isLoading) {
                 child = Center(
                   child: CircularProgressIndicator(),

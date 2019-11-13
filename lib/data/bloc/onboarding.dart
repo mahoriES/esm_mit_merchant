@@ -35,6 +35,8 @@ class OnboardingBloc {
         if (httpResponse.statusCode == 200) {
           this._onboardingState.response =
               UiHelperResponse.fromJson(json.decode(httpResponse.body));
+          print(this._onboardingState.response);
+          print(httpResponse.body);
           this._onboardingState.isLoadingFailed = false;
           this._onboardingState.isLoading = false;
         } else {
@@ -43,6 +45,7 @@ class OnboardingBloc {
         }
         this._updateState();
       }).catchError((onError) {
+        print(onError.toString());
         this._onboardingState.isLoadingFailed = true;
         this._onboardingState.isLoading = false;
         this._updateState();
