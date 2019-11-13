@@ -64,7 +64,6 @@ class _PeoplePageState extends State<PeoplePage>
           vertical: 15,
           horizontal: 25,
         ),
-        color: Colors.blue,
         onPressed: this.onGetReviews,
         child: Container(
           child: Text(
