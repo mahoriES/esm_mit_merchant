@@ -5,7 +5,8 @@ import 'package:provider/provider.dart';
 import '../app_translations.dart';
 
 class LanguageSelectionPage extends StatefulWidget {
-  LanguageSelectionPage({Key key}) : super(key: key);
+  final Function() onSelectLanguage;
+  LanguageSelectionPage({Key key, this.onSelectLanguage}) : super(key: key);
 
   @override
   _LanguageSelectionPageState createState() => _LanguageSelectionPageState();
@@ -21,12 +22,14 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        leading: widget.onSelectLanguage == null
+            ? IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            : null,
         title: Text(
           AppTranslations.of(context)
               .text("language_selection_page_change_language"),
@@ -66,7 +69,11 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                   snapshot.data.localeDelegate.currentLanguage == languageCode,
               onChanged: (bool value) {
                 appTranslationsBloc.onLocaleChanged(Locale(languageCode));
-                Navigator.pop(context);
+                if (widget.onSelectLanguage != null) {
+                  widget.onSelectLanguage();
+                } else {
+                  Navigator.pop(context);
+                }
               },
             ),
           );

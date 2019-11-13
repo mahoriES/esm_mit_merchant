@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/login.dart';
+import 'package:foore/language_selection_page/language_selection_page.dart';
 import 'package:foore/login_page/login_page.dart';
 import 'package:provider/provider.dart';
 
@@ -15,8 +16,36 @@ class IntroPage extends StatefulWidget {
 }
 
 class _IntroPageState extends State<IntroPage> {
+  var isShowLogin = false;
+
+  Future<bool> _onWillPop() async {
+    if (isShowLogin) {
+      setState(() {
+        isShowLogin = false;
+      });
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    onSelectLanguage() {
+      setState(() {
+        isShowLogin = true;
+      });
+    }
+
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: isShowLogin
+          ? introLogin(context)
+          : LanguageSelectionPage(onSelectLanguage: onSelectLanguage),
+    );
+  }
+
+  Widget introLogin(BuildContext context) {
     final loginBloc = Provider.of<LoginBloc>(context);
     return Scaffold(
       body: StreamBuilder<LoginState>(
