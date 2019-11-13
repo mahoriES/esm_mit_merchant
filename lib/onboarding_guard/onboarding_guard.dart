@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/logo_page/logo_page.dart';
@@ -25,9 +26,17 @@ class OnboardingGuard extends StatefulWidget {
   }
 }
 
-class _OnboardingGuardState extends State<OnboardingGuard> {
+class _OnboardingGuardState extends State<OnboardingGuard>  with AfterLayoutMixin<OnboardingGuard> {
+  
   Widget currentWidget;
   StreamSubscription<OnboardingGuardState> _subscription;
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+     final onboardingBloc = Provider.of<OnboardingGuardBloc>(context);
+    onboardingBloc.getData();
+  }
+
 
   @override
   void initState() {
@@ -47,7 +56,6 @@ class _OnboardingGuardState extends State<OnboardingGuard> {
   @override
   Widget build(BuildContext context) {
     final onboardingBloc = Provider.of<OnboardingGuardBloc>(context);
-    onboardingBloc.getData();
     _subscription = onboardingBloc.onboardingStateObservable
         .listen(_onOnboardingChange);
 

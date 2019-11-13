@@ -81,7 +81,9 @@ class PeopleBloc {
   }
 
   _updateState() {
-    this._subjectPeopleState.sink.add(this._peopleState);
+    if (!this._subjectPeopleState.isClosed) {
+      this._subjectPeopleState.sink.add(this._peopleState);
+    }
   }
 
   dispose() {

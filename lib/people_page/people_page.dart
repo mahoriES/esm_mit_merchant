@@ -2,44 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/check_in_page/check_in_page.dart';
 import 'package:foore/data/bloc/people.dart';
-import 'package:foore/data/http_service.dart';
 import '../app_translations.dart';
 import 'unirson_list.dart';
 import 'unirson_searchbar.dart';
+import 'package:after_layout/after_layout.dart';
 
 class PeoplePage extends StatefulWidget {
   @override
   _PeoplePageState createState() => _PeoplePageState();
 }
 
-class _PeoplePageState extends State<PeoplePage> {
-  PeopleBloc _peopleBloc;
-
+class _PeoplePageState extends State<PeoplePage>
+    with AfterLayoutMixin<PeoplePage> {
   @override
-  void didChangeDependencies() {
-    final httpService = Provider.of<HttpService>(context);
-    if (this._peopleBloc == null) {
-      this._peopleBloc = PeopleBloc(httpService);
-      this._peopleBloc.getPeopleFromSearch();
-    }
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    this._peopleBloc.dispose();
-    super.dispose();
+  void afterFirstLayout(BuildContext context) {
+    final peopleBloc = Provider.of<PeopleBloc>(context);
+    peopleBloc.getPeopleFromSearch();
   }
 
   onGetReviews() {
-    Navigator.pushNamed(
-        context,
-        CheckInPage.routeName
-      );
+    Navigator.pushNamed(context, CheckInPage.routeName);
   }
 
   @override
   Widget build(BuildContext context) {
+    final peopleBloc = Provider.of<PeopleBloc>(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -83,9 +70,9 @@ class _PeoplePageState extends State<PeoplePage> {
               SizedBox(
                 height: 10.0,
               ),
-              new UnirsonSearchBar(this._peopleBloc),
+              new UnirsonSearchBar(),
               Expanded(
-                child: UnirsonListWidget(this._peopleBloc),
+                child: UnirsonListWidget(peopleBloc),
               )
             ],
           ),

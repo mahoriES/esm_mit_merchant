@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'auth_guard/auth_guard.dart';
 import 'check_in_page/check_in_page.dart';
 import 'data/bloc/onboarding.dart';
+import 'data/bloc/people.dart';
 import 'data/http_service.dart';
 import 'data/model/feedback.dart';
 import 'data/model/unirson.dart';
@@ -36,7 +37,15 @@ class Router {
             unauthenticatedHandler: unauthenticatedHandler,
             child: OnboardingGuard(
               onboardingRequiredHandler: onboardingRequiredHandler,
-              child: HomePage(),
+              child: MultiProvider(
+                providers: [
+                  Provider<PeopleBloc>(
+                    builder: (context) => PeopleBloc(httpServiceBloc),
+                    dispose: (context, value) => value.dispose(),
+                  ),
+                ],
+                child: HomePage(),
+              ),
               // child: PushNotificationListener(child: HomePage()),
             ),
           ),
@@ -78,7 +87,8 @@ class Router {
           builder: (context) => AuthGuard(
               unauthenticatedHandler: unauthenticatedHandler,
               child: Provider<OnboardingBloc>(
-                builder: (context) => OnboardingBloc(httpServiceBloc, onboardingGuardBloc),
+                builder: (context) =>
+                    OnboardingBloc(httpServiceBloc, onboardingGuardBloc),
                 dispose: (context, value) => value.dispose(),
                 child: OnboardingPage(),
               )),

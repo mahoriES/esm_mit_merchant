@@ -15,8 +15,7 @@ class OnboardingPage extends StatefulWidget {
   _OnboardingPageState createState() => _OnboardingPageState();
 }
 
-class _OnboardingPageState extends State<OnboardingPage>
-    with AfterLayoutMixin<OnboardingPage> {
+class _OnboardingPageState extends State<OnboardingPage> with AfterLayoutMixin<OnboardingPage> {
   @override
   void afterFirstLayout(BuildContext context) {
     final onboardingBloc = Provider.of<OnboardingBloc>(context);
@@ -117,7 +116,8 @@ class SelectLocations extends StatelessWidget {
                                 .text("checkin_page_button_submit")),
                         onPressed: () {
                           onboardingBloc.createStoreForGmbLocations(() {
-                            Navigator.of(context).pushNamed(Router.homeRoute);
+                            Navigator.of(context).pushReplacementNamed(Router.homeRoute);
+                            print('home route is pushed');
                           });
                         },
                       ),
