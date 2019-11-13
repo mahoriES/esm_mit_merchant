@@ -139,40 +139,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Expanded(
-              flex: 1,
-              child: Container(),
-            ),
-            Container(
-              width: double.infinity,
-              child: Text(
-                AppTranslations.of(context)
-                    .text("login_page_don't_have_an_account"),
-                style: Theme.of(context).textTheme.caption,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            FlatButton(
-              onPressed: () async {
-                const url = 'https://app.foore.in/signup/';
-                if (await canLaunch(url)) {
-                  await launch(url);
-                } else {
-                  throw 'Could not launch $url';
-                }
-              },
-              child: Container(
-                width: double.infinity,
-                child: Text(
-                  AppTranslations.of(context)
-                      .text("login_page_button_create_account"),
-                  style: Theme.of(context).textTheme.button.copyWith(
-                        decoration: TextDecoration.underline,
-                      ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            Expanded(
               flex: 2,
               child: Container(),
             ),
