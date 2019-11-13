@@ -67,7 +67,7 @@ class _PeoplePageState extends State<PeoplePage>
         onPressed: this.onGetReviews,
         child: Container(
           child: Text(
-            AppTranslations.of(context).text("people_page_button_check_in"),
+            AppTranslations.of(context).text("review_page_button_get_reviews"),
             style: Theme.of(context).textTheme.subhead.copyWith(
                   color: Colors.white,
                 ),
