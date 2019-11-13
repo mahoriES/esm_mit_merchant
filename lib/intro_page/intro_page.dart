@@ -87,7 +87,8 @@ class _IntroPageState extends State<IntroPage> {
                                             bottom: 20.0,
                                           ),
                                           child: new Text(
-                                            "Continue with Google",
+                                            AppTranslations.of(context).text(
+                                                "intro_page_button_google"),
                                             style: TextStyle(
                                               color: Colors.white,
                                             ),

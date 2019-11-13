@@ -70,13 +70,13 @@ class OnboardingBloc {
         print(httpResponse.statusCode);
         if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
           this._onboardingState.isSubmitting = false;
-          this._onboardingGuardBloc.setOnboardingDone();
           Navigator.of(context).pushReplacementNamed(Router.homeRoute);
         } else {
           this._onboardingState.isSubmitting = false;
         }
         this._updateState();
       }).catchError((onError) {
+         print(onError.toString());
         this._onboardingState.isSubmitting = false;
         this._updateState();
       });
