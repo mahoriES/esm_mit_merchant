@@ -24,33 +24,31 @@ class OnboardingBloc {
       _subjectOnboardingState.stream;
 
   getData() {
-    if (this._onboardingState.shouldFetch) {
-      this._onboardingState.isLoading = true;
-      this._onboardingState.isLoadingFailed = false;
-      this._updateState();
-      _httpService
-          .foGet(
-              'ui/helper/account/?verified&onboarding&google_account&gmb_locations&location_connections')
-          .then((httpResponse) {
-        if (httpResponse.statusCode == 200) {
-          this._onboardingState.response =
-              UiHelperResponse.fromJson(json.decode(httpResponse.body));
-          print(this._onboardingState.response);
-          print(httpResponse.body);
-          this._onboardingState.isLoadingFailed = false;
-          this._onboardingState.isLoading = false;
-        } else {
-          this._onboardingState.isLoadingFailed = true;
-          this._onboardingState.isLoading = false;
-        }
-        this._updateState();
-      }).catchError((onError) {
-        print(onError.toString());
+    this._onboardingState.isLoading = true;
+    this._onboardingState.isLoadingFailed = false;
+    this._updateState();
+    _httpService
+        .foGet(
+            'ui/helper/account/?verified&onboarding&google_account&gmb_locations&location_connections')
+        .then((httpResponse) {
+      if (httpResponse.statusCode == 200) {
+        this._onboardingState.response =
+            UiHelperResponse.fromJson(json.decode(httpResponse.body));
+        print(this._onboardingState.response);
+        print(httpResponse.body);
+        this._onboardingState.isLoadingFailed = false;
+        this._onboardingState.isLoading = false;
+      } else {
         this._onboardingState.isLoadingFailed = true;
         this._onboardingState.isLoading = false;
-        this._updateState();
-      });
-    }
+      }
+      this._updateState();
+    }).catchError((onError) {
+      print(onError.toString());
+      this._onboardingState.isLoadingFailed = true;
+      this._onboardingState.isLoading = false;
+      this._updateState();
+    });
   }
 
   createStoreForGmbLocations(BuildContext context) {
@@ -79,7 +77,7 @@ class OnboardingBloc {
         }
         this._updateState();
       }).catchError((onError) {
-         print(onError.toString());
+        print(onError.toString());
         this._onboardingState.isSubmitting = false;
         this._updateState();
       });
