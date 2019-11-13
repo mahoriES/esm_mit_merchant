@@ -42,6 +42,8 @@ dependencies:
 
   #firebase_messaging: ^5.1.6
 
+  youtube_player: ^3.5.0
+
   google_sign_in:
     path: ./google_sign_in/
 

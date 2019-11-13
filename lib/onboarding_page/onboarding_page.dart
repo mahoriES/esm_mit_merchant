@@ -5,6 +5,7 @@ import 'package:foore/data/bloc/onboarding.dart';
 import 'package:foore/data/model/gmb_location.dart';
 import 'package:provider/provider.dart';
 import '../app_translations.dart';
+import 'package:youtube_player/youtube_player.dart';
 
 class OnboardingPage extends StatefulWidget {
   static const routeName = '/onboarding';
@@ -74,6 +75,15 @@ class _OnboardingPageState extends State<OnboardingPage>
                 AppTranslations.of(context)
                     .text("onboarding_page_no_location_message"),
                 style: Theme.of(context).textTheme.headline,
+              ),
+              Expanded(
+                child: Container(),
+              ),
+              YoutubePlayer(
+                context: context,
+                source: "T2mqrx20_Sg",
+                quality: YoutubeQuality.HD,
+                autoPlay: false,
               ),
               Expanded(
                 child: Container(),

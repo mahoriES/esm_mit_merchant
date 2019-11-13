@@ -149,6 +149,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.22.2"
+  share:
+    dependency: transitive
+    description:
+      name: share
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.3+1"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -231,6 +238,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.8"
+  youtube_player:
+    dependency: "direct main"
+    description:
+      name: youtube_player
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.5.0"
 sdks:
   dart: ">=2.2.2 <3.0.0"
   flutter: ">=1.9.1+hotfix.4 <2.0.0"
