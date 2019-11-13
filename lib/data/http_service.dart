@@ -27,7 +27,7 @@ class HttpService {
       final httpResponse =
           await http.get(apiUrl + url, headers: requestHeaders);
 
-      if (httpResponse.statusCode == 200) {
+      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
         // If the call to the server was successful, parse the JSON.
         return httpResponse;
       }

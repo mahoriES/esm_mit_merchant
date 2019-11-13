@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/gmb_location.dart';
 import 'package:foore/data/model/google_account.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../../router.dart';
 
 class OnboardingBloc {
   final OnboardingState _onboardingState = new OnboardingState();
@@ -47,7 +50,7 @@ class OnboardingBloc {
     }
   }
 
-  createStoreForGmbLocations(Function onCreate) {
+  createStoreForGmbLocations(BuildContext context) {
     final gmbLocationIds =
         this._onboardingState.locations.takeWhile((location) {
       return location.isSelectedUi != null ? location.isSelectedUi : false;
@@ -64,12 +67,11 @@ class OnboardingBloc {
       _httpService
           .foPost('gmb/create/store/', payloadString)
           .then((httpResponse) {
+        print(httpResponse.statusCode);
         if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
-          this._onboardingState.response =
-              UiHelperResponse.fromJson(json.decode(httpResponse.body));
           this._onboardingState.isSubmitting = false;
           this._onboardingGuardBloc.setOnboardingDone();
-          onCreate();
+          Navigator.of(context).pushReplacementNamed(Router.homeRoute);
         } else {
           this._onboardingState.isSubmitting = false;
         }

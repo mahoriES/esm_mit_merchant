@@ -34,7 +34,7 @@ class _OnboardingGuardState extends State<OnboardingGuard>  with AfterLayoutMixi
   @override
   void afterFirstLayout(BuildContext context) {
      final onboardingBloc = Provider.of<OnboardingGuardBloc>(context);
-    onboardingBloc.getData();
+     onboardingBloc.getData();
   }
 
 

@@ -115,10 +115,7 @@ class SelectLocations extends StatelessWidget {
                             : Text(AppTranslations.of(context)
                                 .text("checkin_page_button_submit")),
                         onPressed: () {
-                          onboardingBloc.createStoreForGmbLocations(() {
-                            Navigator.of(context).pushReplacementNamed(Router.homeRoute);
-                            print('home route is pushed');
-                          });
+                          onboardingBloc.createStoreForGmbLocations(context);
                         },
                       ),
                     ),
