@@ -15,12 +15,24 @@ class AppDrawer extends StatelessWidget {
         children: <Widget>[
           Container(
             child: DrawerHeader(
-              padding: EdgeInsets.symmetric(vertical: 32, horizontal: 16),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: Image(
-                  image: AssetImage('assets/logo-black.png'),
-                ),
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    height: 28.0,
+                    margin: EdgeInsets.only(bottom: 5.0),
+                    alignment: Alignment.centerLeft,
+                    child: Image(
+                      image: AssetImage('assets/logo-black.png'),
+                    ),
+                  ),
+                  Text(
+                    'Version: 0.0.5',
+                    style: Theme.of(context).textTheme.caption,
+                  )
+                ],
               ),
               decoration: BoxDecoration(
                 color: Color.fromARGB(80, 233, 233, 233),
