@@ -38,28 +38,6 @@ class _PeoplePageState extends State<PeoplePage>
         title: Text(
           AppTranslations.of(context).text("people_page_title"),
         ),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Center(
-              child: RaisedButton(
-                shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(50.0),
-                ),
-                padding: EdgeInsets.symmetric(
-                  vertical: 0,
-                  horizontal: 12,
-                ),
-                color: Colors.blue,
-                onPressed: this.onGetReviews,
-                child: Container(
-                  child: Text(AppTranslations.of(context)
-                      .text("people_page_button_check_in")),
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: Container(
@@ -70,7 +48,7 @@ class _PeoplePageState extends State<PeoplePage>
               SizedBox(
                 height: 10.0,
               ),
-              new UnirsonSearchBar(),
+              UnirsonSearchBar(),
               Expanded(
                 child: UnirsonListWidget(peopleBloc),
               )
@@ -78,6 +56,26 @@ class _PeoplePageState extends State<PeoplePage>
           ),
         ),
       ),
+      floatingActionButton: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50.0),
+        ),
+        padding: EdgeInsets.symmetric(
+          vertical: 15,
+          horizontal: 25,
+        ),
+        color: Colors.blue,
+        onPressed: this.onGetReviews,
+        child: Container(
+          child: Text(
+            AppTranslations.of(context).text("people_page_button_check_in"),
+            style: Theme.of(context).textTheme.subhead.copyWith(
+                  color: Colors.white,
+                ),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

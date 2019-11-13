@@ -54,28 +54,6 @@ class _ReviewPageState extends State<ReviewPage> {
         title: Text(
           AppTranslations.of(context).text("reviews_page_title"),
         ),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Center(
-              child: RaisedButton(
-                shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(50.0),
-                ),
-                padding: EdgeInsets.symmetric(
-                  vertical: 0,
-                  horizontal: 12,
-                ),
-                color: Colors.blue,
-                onPressed: this.onGetReviews,
-                child: Container(
-                  child: Text(AppTranslations.of(context)
-                      .text("review_page_button_get_reviews")),
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: Container(
@@ -103,6 +81,25 @@ class _ReviewPageState extends State<ReviewPage> {
               }),
         ),
       ),
+      floatingActionButton: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50.0),
+        ),
+        padding: EdgeInsets.symmetric(
+          vertical: 15,
+          horizontal: 25,
+        ),
+        onPressed: this.onGetReviews,
+        child: Container(
+          child: Text(
+            AppTranslations.of(context).text("review_page_button_get_reviews"),
+            style: Theme.of(context).textTheme.subhead.copyWith(
+                  color: Colors.white,
+                ),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
