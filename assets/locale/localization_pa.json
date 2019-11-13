@@ -39,5 +39,11 @@
   "reply_page_reply_label": "ਆਪਣਾ ਜਵਾਬ ਇੱਥੇ ਦਿਓ. ਇਸ ਨੂੰ 4000 ਅੱਖਰਾਂ ਤੋਂ ਘੱਟ ਰੱਖੋ. ਮੌਜੂਦਾ ਜਵਾਬ ਨੂੰ ਮਿਟਾਉਣ ਲਈ ਖਾਲੀ ਛੱਡੋ",
   "language_selection_page_change_language": "ਭਾਸ਼ਾ ਬਦਲੋ",
   "intro_page_button_create_account": "ਖਾਤਾ ਬਣਾਉ",
-  "intro_page_button_login": "ਲਾਗਿਨ"
+ 
+  "intro_page_button_login": "ਕੰਪਨੀ ਈਮੇਲ ਨਾਲ ਲੌਗਇਨ ਕਰੋ",
+  "intro_page_button_google": "ਗੂਗਲ ਦੇ ਨਾਲ ਜਾਰੀ ਰੱਖੋ",
+  "onboarding_page_title": "ਮੇਰੇ ਗੂਗਲ ਵਪਾਰ ਸਥਾਨ",
+  "onboarding_page_no_location_message": "ਤੁਹਾਡੇ ਕੋਲ ਕੋਈ ਵੀ ਗੂਗਲ ਵਪਾਰਕ ਸਥਾਨ ਨਹੀਂ ਹਨ. ਫੂੂਰ ਨਾਲ ਅੱਗੇ ਵਧਣ ਲਈ ਇਕ ਗੂਗਲ ਬਿਜਨਸ ਲੋਕੇਸ਼ਨ ਦੀ ਲੋੜ ਹੈ.",
+  "onboarding_page_select_locations": "ਫੂੂਰ ਦੇ ਨਾਲ ਵਰਤਣ ਲਈ ਗੂਗਲ ਬਿਜਨਸ ਸਥਾਨਾਂ ਦੀ ਚੋਣ ਕਰੋ",
+  "onboarding_page_continue": "ਜਾਰੀ ਰੱਖੋ"
 }

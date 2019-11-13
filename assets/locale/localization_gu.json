@@ -39,5 +39,11 @@
   "reply_page_reply_label": "તમારો જવાબ અહીં દાખલ કરો. [[નામ]] ને ગ્રાહકોના નામથી બદલવામાં આવશે",
   "language_selection_page_change_language": "ભાષા બદલો",
   "intro_page_button_create_account": "ખાતું બનાવો",
-  "intro_page_button_login": "લ .ગિન"
+
+  "intro_page_button_login": "કંપની ઇમેઇલ સાથે પ્રવેશ કરો",
+  "intro_page_button_google": "ગૂગલ સાથે ચાલુ રાખો",
+  "onboarding_page_title": "મારા ગૂગલ વ્યવસાય સ્થાનો",
+  "onboarding_page_no_location_message": "તમારી પાસે કોઈ પણ ગૂગલ વ્યવસાય સ્થાન નથી. ગૂગલ વ્યવસાય સ્થાન ફૂર સાથે આગળ વધવા માટે જરૂરી છે.",
+  "onboarding_page_select_locations": "ફૂર સાથે વાપરવા માટે ગૂગલ વ્યવસાય સ્થાનો પસંદ કરો.",
+  "onboarding_page_continue": "ચાલુ રાખો"
 }

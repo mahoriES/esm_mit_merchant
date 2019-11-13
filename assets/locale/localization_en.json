@@ -37,13 +37,12 @@
   "reply_page_reply_hint": "Enter your reply here. [[NAME]] will be replaced by customers name.",
   "reply_page_reply_validation": "Please keep the length less than 4000 characters.",
   "reply_page_reply_label": "Enter your reply here. Keep it less than 4000 characters. Leave empty to delete existing reply.",
-  "language_selection_page_change_language": "Change language",
-  "intro_page_button_create_account": "Create Account",
+  "language_selection_page_change_language": "Select language",
 
-  "intro_page_button_login": "Login with Business Email",
+  "intro_page_button_login": "Login with Company Email",
   "intro_page_button_google": "Continue with Google",
-  "onboarding_page_title": "Locations",
-  "onboarding_page_no_location_message": "You don't have any Business Locations for your account.Please create and login again.",
-  "onboarding_page_select_locations": "Select your Google Business Locations.",
+  "onboarding_page_title": "My Google Business Locations",
+  "onboarding_page_no_location_message": "You don't have any Google Business Locations.\n\nA Google Business Location is required to proceed with Foore.",
+  "onboarding_page_select_locations": "Select Google Business Locations to use with Foore",
   "onboarding_page_continue": "Continue"
 }

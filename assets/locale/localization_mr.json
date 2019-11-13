@@ -39,5 +39,11 @@
   "reply_page_reply_label": "आपले उत्तर येथे प्रविष्ट करा. ते 4000 वर्णांपेक्षा कमी ठेवा. विद्यमान उत्तर हटविण्यासाठी रिक्त सोडा",
   "language_selection_page_change_language": "भाषा बदला",
   "intro_page_button_create_account": "खाते तयार करा",
-  "intro_page_button_login": "लॉगिन"
+ 
+  "intro_page_button_login": "कंपनी ईमेल लॉग इन करा",
+  "intro_page_button_google": "गूगल सह सुरू ठेवा",
+  "onboarding_page_title": "माझे गूगल व्यवसाय स्थाने",
+  "onboarding_page_no_location_message": "आपल्याकडे कोणतीही गूगल व्यवसाय स्थाने नाहीत. फूरे सह पुढे जाण्यासाठी गूगल व्यवसाय स्थान आवश्यक आहे.",
+  "onboarding_page_select_locations": "फूरे सह वापरण्यासाठी गूगल व्यवसाय स्थाने निवडा.",
+  "onboarding_page_continue": "सुरू"
 }

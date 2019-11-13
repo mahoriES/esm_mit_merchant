@@ -39,5 +39,11 @@
   "reply_page_reply_label": "మీ ప్రత్యుత్తరాన్ని ఇక్కడ నమోదు చేయండి. 4000 అక్షరాల కంటే తక్కువగా ఉంచండి. ఇప్పటికే ఉన్న ప్రత్యుత్తరాన్ని తొలగించడానికి ఖాళీగా ఉంచండి",
   "language_selection_page_change_language": "భాష మార్చు",
   "intro_page_button_create_account": "ఖాతాను సృష్టించండి",
-  "intro_page_button_login": "లాగిన్"
+  
+  "intro_page_button_login": "కంపెనీ ఇమెయిల్‌తో లాగిన్ అవ్వండి",
+  "intro_page_button_google": "Google తో కొనసాగించండి",
+  "onboarding_page_title": "నా Google వ్యాపార స్థానాలు",
+  "onboarding_page_no_location_message": "మీకు Google వ్యాపార స్థానాలు లేవు. ఫూర్‌తో కొనసాగడానికి గూగుల్ బిజినెస్ లాక్షన్ అవసరం.",
+  "onboarding_page_select_locations": "Foore తో ఉపయోగించడానికి Google వ్యాపార స్థానాలను ఎంచుకోండి",
+  "onboarding_page_continue": "కొనసాగించు"
 }
