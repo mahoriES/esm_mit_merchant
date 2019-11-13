@@ -96,6 +96,19 @@ class AuthState {
   AuthInfo authData;
   bool get isLoggedIn => authData != null ? authData.token != null : false;
   bool get isLoggedOut => isLoading == false && isLoggedIn == false;
+  UserProfile get _userProfile => authData?.userProfile;
+  String get userName => _userProfile?.name;
+  String get userEmail => _userProfile?.email;
+  String get firstLetterOfUserName {
+    if (userName != null && userName != '') {
+      if (userName.length > 1) {
+        return userName.substring(0, 1).toUpperCase();
+      } else {
+        return '';
+      }
+    }
+    return '';
+  }
 
   AuthState() {
     this.isLoading = false;

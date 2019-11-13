@@ -28,40 +28,44 @@ class AppDrawer extends StatelessWidget {
             ),
             height: 140,
           ),
-          // ListTile(
-          //   leading: Padding(
-          //     padding: const EdgeInsets.symmetric(vertical: 6),
-          //     child: Container(
-          //         height: double.infinity,
-          //         width: 50,
-          //         alignment: Alignment.center,
-          //         decoration: BoxDecoration(
-          //           color: Color(0xFFECEFF1),
-          //           shape: BoxShape.circle,
-          //         ),
-          //         child: Text(
-          //           'P',
-          //           style: TextStyle(
-          //             color: Colors.orangeAccent,
-          //             fontWeight: FontWeight.w400,
-          //             fontSize: 16,
-          //           ),
-          //         )),
-          //   ),
-          //   title: Text('paragjnath'),
-          //   subtitle: Text('paragjnath@foore.in'),
-          //   onTap: () {
-          //     // Update the state of the app.
-          //     // ...
-          //   },
-          // ),
+          StreamBuilder<AuthState>(
+              stream: authBloc.authStateObservable,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container();
+                }
+                return ListTile(
+                  leading: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Container(
+                      height: double.infinity,
+                      width: 50,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFECEFF1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Text(
+                        snapshot.data.firstLetterOfUserName,
+                        style: TextStyle(
+                          color: Colors.orangeAccent,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                  title: Text(snapshot.data.userName ?? ''),
+                );
+              }),
           Expanded(
             child: Container(),
             flex: 1,
           ),
           ListTile(
             leading: Icon(Icons.language),
-            title: Text(AppTranslations.of(context).text("drawer_button_language")),
+            title: Text(
+                AppTranslations.of(context).text("drawer_button_language")),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.push(
