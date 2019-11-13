@@ -1,3 +1,9 @@
+class AuthInfoCode {
+  static const fail = 1;
+  static const pending = 2;
+  static const success = 3;
+}
+
 class AuthInfo {
   String token;
   UserProfile userProfile;

@@ -75,7 +75,8 @@ class LoginBloc {
     if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
       print(httpResponse.body);
       var loginInfo = AuthInfo.fromJson(json.decode(httpResponse.body));
-      if (loginInfo.code == 2) {
+      if (loginInfo.code == AuthInfoCode.pending) {
+        await Future.delayed(const Duration(seconds: 5));
         var result = await getAuthInfoWithGoogleAuthStateId(authStateId);
         return result;
       } else {
