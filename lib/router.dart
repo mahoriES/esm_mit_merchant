@@ -10,6 +10,7 @@ import 'data/bloc/people.dart';
 import 'data/http_service.dart';
 import 'data/model/feedback.dart';
 import 'data/model/unirson.dart';
+import 'data/push_notification_listener.dart';
 import 'home_page/home_page.dart';
 import 'intro_page/intro_page.dart';
 import 'login_page/login_page.dart';
@@ -37,14 +38,16 @@ class Router {
             unauthenticatedHandler: unauthenticatedHandler,
             child: OnboardingGuard(
               onboardingRequiredHandler: onboardingRequiredHandler,
-              child: MultiProvider(
-                providers: [
-                  Provider<PeopleBloc>(
-                    builder: (context) => PeopleBloc(httpServiceBloc),
-                    dispose: (context, value) => value.dispose(),
-                  ),
-                ],
-                child: HomePage(),
+              child: PushNotificationListener(
+                child: MultiProvider(
+                  providers: [
+                    Provider<PeopleBloc>(
+                      builder: (context) => PeopleBloc(httpServiceBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
+                  ],
+                  child: HomePage(),
+                ),
               ),
               // child: PushNotificationListener(child: HomePage()),
             ),

@@ -40,7 +40,7 @@ dependencies:
 
   contact_picker: ^0.0.2
 
-  #firebase_messaging: ^5.1.6
+  firebase_messaging: ^5.1.6
 
   youtube_player: ^3.5.0
 
