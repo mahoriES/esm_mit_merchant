@@ -31,10 +31,17 @@
             </intent-filter>
             <!-- Branch URI scheme -->
             <intent-filter>
-                <data android:scheme="" android:host="open" />
+                <data android:scheme="foore" android:host="open" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+               <!-- Branch App Links -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="foore.app.link" />
             </intent-filter>
         </activity>
         <!-- Branch init -->
