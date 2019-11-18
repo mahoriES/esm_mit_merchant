@@ -67,7 +67,6 @@ class AuthBloc {
     this.authState.isLoading = false;
     this._updateState();
     this.googleSignIn.signOut();
-    Intercom.logout();
     clearSharedPreferences();
   }
 
