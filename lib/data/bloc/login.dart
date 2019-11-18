@@ -70,8 +70,6 @@ class LoginBloc {
   Future<AuthInfo> getAuthInfoWithGoogleAuthStateId(String authStateId) async {
     var httpResponse = await _httpService.foGetWithoutAuth(
         'google/account/login/info/?auth_state_id=$authStateId');
-    print(httpResponse.statusCode);
-    print(httpResponse.reasonPhrase);
     if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
       print(httpResponse.body);
       var loginInfo = AuthInfo.fromJson(json.decode(httpResponse.body));

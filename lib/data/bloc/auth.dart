@@ -51,11 +51,14 @@ class AuthBloc {
     print(authData.userProfile.email);
     await Intercom.registerIdentifiedUser(
         userId: authData.userProfile.userUuid);
+    var customAtt = Map<String, dynamic>();
+    customAtt['mobile_app'] = true;
     await Intercom.updateUser(
       email: authData.userProfile.email,
       name: authData.userProfile.name,
       company: authData.companyInfo.name,
       companyId: authData.companyInfo.companyUuid,
+      customAttributes: customAtt,
     );
   }
 

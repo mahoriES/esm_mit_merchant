@@ -1,3 +1,5 @@
+import 'package:package_info/package_info.dart';
+
 class Environment {
   static get apiUrl =>
       isProd ? EnvironmentProd._apiUrl : EnvironmentPreprod._apiUrl;
@@ -14,9 +16,14 @@ class Environment {
       ? EnvironmentProd._intercom_ios_api_key
       : EnvironmentPreprod._intercom_ios_api_key;
 
-  static get isProd => bool.fromEnvironment('dart.vm.product');
-}
+  static get isProd => const bool.fromEnvironment('dart.vm.product');
 
+  static Future<String> get version async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+        return packageInfo.version;
+      }
+    }
+    
 class EnvironmentPreprod {
   static const _apiUrl = 'https://www.api.test.foore.io/api/v1/';
 
@@ -30,7 +37,7 @@ class EnvironmentPreprod {
 }
 
 class EnvironmentProd {
-  static const _apiUrl = 'https://www.api.test.foore.io/api/v1/';
+  static const _apiUrl = 'https://www.api.foore.io/api/v1/';
 
   static const _intercom_app_id = 'p6exnkrf';
 

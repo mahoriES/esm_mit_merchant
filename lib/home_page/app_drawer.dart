@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/environments/environment.dart';
 import 'package:foore/language_selection_page/language_selection_page.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/auth.dart';
@@ -28,10 +29,7 @@ class AppDrawer extends StatelessWidget {
                       image: AssetImage('assets/logo-black.png'),
                     ),
                   ),
-                  Text(
-                    'Version: 0.0.6',
-                    style: Theme.of(context).textTheme.caption,
-                  )
+                  new VersionName()
                 ],
               ),
               decoration: BoxDecoration(
@@ -99,5 +97,34 @@ class AppDrawer extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class VersionName extends StatefulWidget {
+  const VersionName({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _VersionNameState createState() => _VersionNameState();
+}
+
+class _VersionNameState extends State<VersionName> {
+  var _versionName = '0.0.0';
+
+  @override
+  Widget build(BuildContext context) {
+    getVersionName();
+    return Text(
+      'Version: $_versionName',
+      style: Theme.of(context).textTheme.caption,
+    );
+  }
+
+  getVersionName() async {
+    var versionName = await Environment.version;
+    setState(() {
+      this._versionName = versionName;
+    });
   }
 }
