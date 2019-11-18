@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/environments/environment.dart';
 import 'package:foore/theme/light.dart';
 import 'package:provider/provider.dart';
 import 'data/bloc/login.dart';
@@ -53,11 +54,12 @@ class ReviewApp extends StatefulWidget {
 }
 
 class _ReviewAppState extends State<ReviewApp> {
-    FirebaseAnalytics analytics;
+  FirebaseAnalytics analytics;
 
   @override
   void initState() {
     analytics = FirebaseAnalytics();
+    analytics.setAnalyticsCollectionEnabled(Environment.isProd);
     super.initState();
   }
 
