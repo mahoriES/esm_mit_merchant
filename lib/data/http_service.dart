@@ -1,3 +1,4 @@
+import 'package:foore/environments/environment.dart';
 import 'package:http/http.dart' as http;
 import 'package:foore/data/bloc/auth.dart';
 
@@ -8,9 +9,7 @@ class HttpService {
 
   HttpService(AuthBloc authBloc) {
     this._authBloc = authBloc;
-    if (const bool.fromEnvironment('dart.vm.product')) {
-      this.apiUrl = 'https://www.api.foore.io/api/v1/';
-    }
+    this.apiUrl =  Environment.apiUrl;
   }
 
   Future<http.Response> get(url, {Map<String, String> headers}) =>

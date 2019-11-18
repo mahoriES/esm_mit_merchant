@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:foore/data/model/login.dart';
+import 'package:foore/environments/environment.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,9 +44,9 @@ class AuthBloc {
 
   intercomInit(AuthInfo authData) async {
     await Intercom.initialize(
-      'qwul6hvd',
-      iosApiKey: 'ios_sdk-0e7d3f1f7eb3cbd8a33ae596b231fbdbb2bd33f1',
-      androidApiKey: 'android_sdk-de027a749a8e3ee29cf5ea1fde0391c512823bbf',
+      Environment.intercomAppId,
+      iosApiKey: Environment.intercomIosApiKey,
+      androidApiKey: Environment.intercomAndroidApiKey,
     );
     print(authData.userProfile.email);
     await Intercom.registerIdentifiedUser(
