@@ -90,6 +90,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     def multidex_version = "2.0.1"
     implementation 'androidx.multidex:multidex:$multidex_version'
+    implementation 'io.branch.sdk.android:library:4.+'
 }
 
 apply plugin: 'io.fabric'
