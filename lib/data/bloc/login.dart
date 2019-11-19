@@ -55,8 +55,6 @@ class LoginBloc {
     this._updateState();
     var authStateIdHttpResponse = await _httpService.foPostWithoutAuth(
         'google/account/login/init/', '{"gcode": "$serverAuthCode"}');
-    print(authStateIdHttpResponse.statusCode);
-    print(authStateIdHttpResponse.reasonPhrase);
     if (authStateIdHttpResponse.statusCode == 200 ||
         authStateIdHttpResponse.statusCode == 202) {
       var authStateIdResponse = GoogleAuthStateIdResponse.fromJson(
@@ -71,7 +69,6 @@ class LoginBloc {
     var httpResponse = await _httpService.foGetWithoutAuth(
         'google/account/login/info/?auth_state_id=$authStateId');
     if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
-      print(httpResponse.body);
       var loginInfo = AuthInfo.fromJson(json.decode(httpResponse.body));
       if (loginInfo.code == AuthInfoCode.pending) {
         await Future.delayed(const Duration(seconds: 5));
@@ -81,6 +78,7 @@ class LoginBloc {
         return loginInfo;
       }
     } else {
+      this._authBloc.googleSignIn.signOut();
       throw "Err";
     }
   }
@@ -100,7 +98,6 @@ class LoginBloc {
       }
       this._updateState();
     }).catchError((onError) {
-      print(onError.toString());
       this._loginState.isLoading = false;
       this._updateState();
     });
