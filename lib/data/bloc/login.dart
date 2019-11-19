@@ -35,6 +35,7 @@ class LoginBloc {
         GoogleSignInAccount account = await _authBloc.googleSignIn.signIn();
         GoogleSignInAuthentication authentication =
             await account.authentication;
+        print('GOOGLE_ACCESS_TOKEN: ' + authentication.accessToken);
         GoogleAuthStateIdResponse authStateResponse =
             await getGoogleAuthStateId(authentication.serverAuthCode);
         AuthInfo loginInfo = await getAuthInfoWithGoogleAuthStateId(
@@ -115,7 +116,6 @@ class LoginBloc {
                 .toJson()))
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
-        print(httpResponse.body);
         this._authBloc.login(AuthInfo.fromJson(json.decode(httpResponse.body)));
         Navigator.of(context).pushReplacementNamed(Router.homeRoute);
       } else {
