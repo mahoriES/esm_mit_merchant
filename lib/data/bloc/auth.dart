@@ -26,6 +26,8 @@ class AuthBloc {
 
   Observable<AuthState> get authStateObservable => _subjectAuthState.stream;
 
+  Future<Map<String, String>> get googleAuthHeaders => googleSignIn.currentUser.authHeaders;
+
   login(AuthInfo authData) {
     if (authData != null) {
       if (authData.token == null || authData.token == '') {
