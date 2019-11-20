@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/onboarding_guard.dart';
+import 'package:foore/onboarding_page/location_claim.dart';
 import 'package:provider/provider.dart';
 
 import 'auth_guard/auth_guard.dart';
@@ -22,7 +23,7 @@ import 'unirson_check_in_page/unirson_check_in_page.dart';
 
 class Router {
   static const homeRoute = '/';
-  static const testRoute = LocationSearchPage.routeName;
+  static const testRoute = LocationClaimPage.routeName;
   // static const homeRoute = '/';
   final unauthenticatedHandler = (BuildContext context) =>
       Navigator.of(context).pushReplacementNamed(IntroPage.routeName);
@@ -108,6 +109,11 @@ class Router {
       case LocationSearchPage.routeName:
         return MaterialPageRoute(
           builder: (context) => LocationSearchPage(),
+        );
+        break;
+      case LocationClaimPage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => LocationClaimPage(),
         );
         break;
       default:

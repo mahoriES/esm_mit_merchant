@@ -54,5 +54,7 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyBGRrg0YVy9U3SUF34GoAeGbUP_s5RAYAY"/>
     </application>
 </manifest>

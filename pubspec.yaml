@@ -59,6 +59,8 @@ dependencies:
 
   firebase_analytics: ^5.0.6
 
+  google_maps_flutter: ^0.5.21+11
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
