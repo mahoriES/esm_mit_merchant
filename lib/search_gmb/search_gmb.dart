@@ -57,12 +57,15 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
         parent: _animationController,
       ),
     );
+    widget.authBloc.googleSignIn.signInSilently(
+      suppressErrors: false,
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) => Container(
-        width: MediaQuery.of(context).size.width * 0.9,
+        // width: MediaQuery.of(context).size.width * 0.9,
         child: _searchContainer(
           child: _searchInput(context),
         ),
@@ -75,8 +78,8 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
         builder: (context, _) {
           return Container(
             height: _containerHeight.value,
-            decoration: _containerDecoration(),
-            padding: EdgeInsets.only(left: 0, right: 0, top: 15),
+            decoration: _containerDecoration(context),
+            padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 15),
             alignment: Alignment.center,
             child: Column(
               children: <Widget>[
@@ -109,15 +112,18 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
             child: TextField(
               decoration: _inputStyle(),
               controller: _textEditingController,
-              style:
-                  TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04),
+              // style:
+              //     TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04),
               onChanged: (value) => setState(() => _autocompletePlace(value)),
             ),
           ),
           Container(width: 15),
           GestureDetector(
             child: Icon(Icons.search, color: Colors.blue),
-            onTap: () => widget.onSearch(_selectedGoogleLocation),
+            onTap: () => {
+              if (widget.onSearch != null)
+                {widget.onSearch(_selectedGoogleLocation)}
+            },
           )
         ],
       ),
@@ -151,17 +157,16 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
     return InputDecoration(
       hintText: "Search",
       border: InputBorder.none,
+      isDense: true,
       contentPadding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
     );
   }
 
-  BoxDecoration _containerDecoration() {
+  BoxDecoration _containerDecoration(BuildContext context) {
     return BoxDecoration(
-      color: Colors.white,
+      // color: Theme.of(context).canvasColor,
+      border: Border.all(width: 1.0,color: Colors.black45),
       borderRadius: BorderRadius.all(Radius.circular(6.0)),
-      boxShadow: [
-        BoxShadow(color: Colors.black12, blurRadius: 20, spreadRadius: 10)
-      ],
     );
   }
 
@@ -175,11 +180,14 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
           "https://mybusiness.googleapis.com/v4/googleLocations:search";
       final body = '{"resultCount": 10,"query": "$input"}';
       final headers = await widget.authBloc.googleAuthHeaders;
+      print(headers);
       final httpResponse = await http.post(
         url,
         body: body,
         headers: headers,
       );
+      print(httpResponse.statusCode);
+      print(httpResponse.body);
       var googleLocationsResponse =
           GoogleLocationsResponse.fromJson(json.decode(httpResponse.body));
       final predictions = googleLocationsResponse.googleLocations;
@@ -213,6 +221,8 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
     _animationController.reverse();
 
     // Calls the `onSelected` callback
-    widget.onSelected(prediction);
+    if (widget.onSelected != null) {
+      widget.onSelected(prediction);
+    }
   }
 }

@@ -15,12 +15,15 @@ import 'home_page/home_page.dart';
 import 'intro_page/intro_page.dart';
 import 'login_page/login_page.dart';
 import 'onboarding_guard/onboarding_guard.dart';
+import 'onboarding_page/location_search_page.dart';
 import 'onboarding_page/onboarding_page.dart';
 import 'review_page/reply_gmb.dart';
 import 'unirson_check_in_page/unirson_check_in_page.dart';
 
 class Router {
   static const homeRoute = '/';
+  static const testRoute = LocationSearchPage.routeName;
+  // static const homeRoute = '/';
   final unauthenticatedHandler = (BuildContext context) =>
       Navigator.of(context).pushReplacementNamed(IntroPage.routeName);
   final onboardingRequiredHandler = (BuildContext context) =>
@@ -100,6 +103,11 @@ class Router {
       case LoginPage.routeName:
         return MaterialPageRoute(
           builder: (context) => LoginPage(),
+        );
+        break;
+      case LocationSearchPage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => LocationSearchPage(),
         );
         break;
       default:

@@ -179,7 +179,9 @@ class Address {
     postalCode = json['postalCode'];
     administrativeArea = json['administrativeArea'];
     locality = json['locality'];
-    addressLines = json['addressLines'].cast<String>();
+    if (json['addressLines'] != null) {
+      addressLines = json['addressLines'].cast<String>();
+    }
   }
 
   Map<String, dynamic> toJson() {
