@@ -26,6 +26,7 @@ class _LocationSearchPageState extends State<LocationSearchPage>
         title: Text(
           AppTranslations.of(context).text("onboarding_page_title"),
         ),
+        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
