@@ -11,13 +11,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class LocationClaimPage extends StatefulWidget {
-  static const responseString =
-      '{ "googleLocations": [ { "name": "googleLocations/ChIJ3a2l4X0RrjsRggWzPz6Q0xM", "location": { "locationName": "Mukesh Realtors", "primaryCategory": { "displayName": "Property management company", "categoryId": "gcid:property_management_company" }, "locationKey": { "placeId": "ChIJ3a2l4X0RrjsRggWzPz6Q0xM" }, "latlng": { "latitude": 12.969414, "longitude": 77.705732 }, "languageCode": "en", "address": { "regionCode": "IN", "languageCode": "en", "postalCode": "560037", "administrativeArea": "Karnataka", "locality": "Bengaluru", "addressLines": [ "# 51, Shanti Nivas 7th Cross chinapanahalli", "Doddanekundi, Ext" ] } }, "requestAdminRightsUrl": "https://business.google.com/arc/p/ChIJ3a2l4X0RrjsRggWzPz6Q0xM" } ] }';
-  static GoogleLocationsResponse googleLocationsResponse =
-      GoogleLocationsResponse.fromJson(json.decode(responseString));
+  // static const responseString =
+  //     '{ "googleLocations": [ { "name": "googleLocations/ChIJ3a2l4X0RrjsRggWzPz6Q0xM", "location": { "locationName": "Mukesh Realtors", "primaryCategory": { "displayName": "Property management company", "categoryId": "gcid:property_management_company" }, "locationKey": { "placeId": "ChIJ3a2l4X0RrjsRggWzPz6Q0xM" }, "latlng": { "latitude": 12.969414, "longitude": 77.705732 }, "languageCode": "en", "address": { "regionCode": "IN", "languageCode": "en", "postalCode": "560037", "administrativeArea": "Karnataka", "locality": "Bengaluru", "addressLines": [ "# 51, Shanti Nivas 7th Cross chinapanahalli", "Doddanekundi, Ext" ] } }, "requestAdminRightsUrl": "https://business.google.com/arc/p/ChIJ3a2l4X0RrjsRggWzPz6Q0xM" } ] }';
+  // static GoogleLocationsResponse googleLocationsResponse =
+  //     GoogleLocationsResponse.fromJson(json.decode(responseString));
 
-  final GoogleLocation googleLocation =
-      googleLocationsResponse.googleLocations[0];
+  // final GoogleLocation googleLocation =
+  //     googleLocationsResponse.googleLocations[0];
 
   static const routeName = '/location-claim';
   LocationClaimPage({Key key}) : super(key: key);
@@ -88,9 +88,9 @@ class _LocationClaimPageState extends State<LocationClaimPage>
               var child = Container();
               if (snapshot.hasData) {
                 if (snapshot.data.isShowClaimed) {
-                  child = claimedBusiness();
+                  child = claimedBusiness(snapshot.data.locationItem);
                 } else if (snapshot.data.isShowLocation) {
-                  child = claimBusiness();
+                  child = claimBusiness(snapshot.data.locationItem);
                 }
               }
               return child;
@@ -99,7 +99,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
     );
   }
 
-  Widget claimedBusiness() {
+  Widget claimedBusiness(GmbLocationItem locationItem) {
     return Column(
       children: <Widget>[
         SizedBox(
@@ -132,7 +132,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
     );
   }
 
-  Widget claimBusiness() {
+  Widget claimBusiness(GmbLocationItem locationItem) {
     return Column(
       children: <Widget>[
         SizedBox(
@@ -151,13 +151,13 @@ class _LocationClaimPageState extends State<LocationClaimPage>
     );
   }
 
-  Container locationDetail() {
+  Container locationDetail(GmbLocationItem locationItem) {
     return Container(
       child: Column(
         children: <Widget>[
           Container(
             child: ListTile(
-              title: Text(widget.googleLocation.location.locationName ?? ''),
+              title: Text(locationItem.locationName ?? ''),
               subtitle: Text(
                   '# 51, Shanti Nivas 7th Cross chinapanahalli, "Doddanekundi, Ext, Bengaluru, Karnataka'),
             ),
@@ -171,16 +171,16 @@ class _LocationClaimPageState extends State<LocationClaimPage>
               mapType: MapType.normal,
               initialCameraPosition: CameraPosition(
                 target: LatLng(
-                  widget.googleLocation.location.latlng.latitude,
-                  widget.googleLocation.location.latlng.longitude,
+                  locationItem.latlng.latitude,
+                  locationItem.latlng.longitude,
                 ),
                 zoom: 14.4746,
               ),
               markers: Set.from([
                 Marker(
                   position: LatLng(
-                    widget.googleLocation.location.latlng.latitude,
-                    widget.googleLocation.location.latlng.longitude,
+                    locationItem.latlng.latitude,
+                    locationItem.latlng.longitude,
                   ),
                   markerId: MarkerId('fooreMarker'),
                 )
