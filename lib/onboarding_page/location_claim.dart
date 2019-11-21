@@ -48,66 +48,149 @@ class LocationClaimPage extends StatefulWidget {
 class _LocationClaimPageState extends State<LocationClaimPage>
     with AfterLayoutMixin<LocationClaimPage> {
   Completer<GoogleMapController> _controller = Completer();
+  StreamSubscription<LocationClaimState> _subscription;
+
   @override
-  void afterFirstLayout(BuildContext context) {}
+  void afterFirstLayout(BuildContext context) {
+    final LocationClaimBloc locationClaimBloc =
+        Provider.of<LocationClaimBloc>(context);
+    _subscription = locationClaimBloc.onboardingStateObservable
+        .listen(_onLocationClaimChange);
+  }
+
+  _onLocationClaimChange(LocationClaimState state) {
+    if (state.isShowVerificationPending) {
+      // navigate away from this page.
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (_subscription != null) {
+      _subscription.cancel();
+      _subscription = null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final LocationClaimBloc locationClaimBloc =
+        Provider.of<LocationClaimBloc>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Claim business"),
       ),
       body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: 32.0,
+        child: StreamBuilder<LocationClaimState>(
+            stream: locationClaimBloc.onboardingStateObservable,
+            builder: (context, snapshot) {
+              var child = Container();
+              if (snapshot.hasData) {
+                if (snapshot.data.isShowClaimed) {
+                  child = claimedBusiness();
+                } else if (snapshot.data.isShowLocation) {
+                  child = claimBusiness();
+                }
+              }
+              return child;
+            }),
+      ),
+    );
+  }
+
+  Widget claimedBusiness() {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 32.0,
+        ),
+        locationDetail(),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+          decoration: BoxDecoration(
+            color: Theme.of(context).errorColor.withOpacity(0.2),
+          ),
+          child: Text(
+            "This business is managed by another Google account.If they are your friend or college please ask them to give permission to access to this location and come back here.",
+            style: Theme.of(context)
+                .textTheme
+                .body1
+                .copyWith(color: Theme.of(context).errorColor),
+          ),
+        ),
+        FlatButton(
+          child: Text(
+            'Request Access to manage this business',
+            style: Theme.of(context).textTheme.button.copyWith(
+                  decoration: TextDecoration.underline,
+                ),
+          ),
+          onPressed: () {},
+        ),
+      ],
+    );
+  }
+
+  Widget claimBusiness() {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 32.0,
+        ),
+        locationDetail(),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+          width: double.infinity,
+          child: RaisedButton(
+            onPressed: () {},
+            child: Text('Manage this business'),
+          ),
+        )
+      ],
+    );
+  }
+
+  Container locationDetail() {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Container(
+            child: ListTile(
+              title: Text(widget.googleLocation.location.locationName ?? ''),
+              subtitle: Text(
+                  '# 51, Shanti Nivas 7th Cross chinapanahalli, "Doddanekundi, Ext, Bengaluru, Karnataka'),
             ),
-            Container(
-              child: ListTile(
-                title: Text(widget.googleLocation.location.locationName ?? ''),
-                subtitle: Text(
-                    '# 51, Shanti Nivas 7th Cross chinapanahalli, "Doddanekundi, Ext, Bengaluru, Karnataka'),
+          ),
+          Container(
+            height: 200.0,
+            margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(12.0))),
+            child: GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: CameraPosition(
+                target: LatLng(
+                  widget.googleLocation.location.latlng.latitude,
+                  widget.googleLocation.location.latlng.longitude,
+                ),
+                zoom: 14.4746,
               ),
-            ),
-            Container(
-              height: 200.0,
-              margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(12.0))),
-              child: GoogleMap(
-                mapType: MapType.normal,
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(
+              markers: Set.from([
+                Marker(
+                  position: LatLng(
                     widget.googleLocation.location.latlng.latitude,
                     widget.googleLocation.location.latlng.longitude,
                   ),
-                  zoom: 14.4746,
-                ),
-                markers: Set.from([
-                  Marker(
-                    position: LatLng(
-                      widget.googleLocation.location.latlng.latitude,
-                      widget.googleLocation.location.latlng.longitude,
-                    ),
-                    markerId: MarkerId('fooreMarker'),
-                  )
-                ]),
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
-              ),
+                  markerId: MarkerId('fooreMarker'),
+                )
+              ]),
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+              },
             ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-              width: double.infinity,
-              child: RaisedButton(
-                onPressed: () {},
-                child: Text('Manage this business'),
-              ),
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
