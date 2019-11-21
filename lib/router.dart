@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
 import 'package:provider/provider.dart';
@@ -25,15 +26,15 @@ import 'unirson_check_in_page/unirson_check_in_page.dart';
 class Router {
   static const homeRoute = '/';
   static const testRoute = LocationSearchPage.routeName;
-  // static const homeRoute = '/';
   final unauthenticatedHandler = (BuildContext context) =>
       Navigator.of(context).pushReplacementNamed(IntroPage.routeName);
   final onboardingRequiredHandler = (BuildContext context) =>
       Navigator.of(context).pushReplacementNamed(OnboardingPage.routeName);
 
   final HttpService httpServiceBloc;
-  final OnboardingGuardBloc onboardingGuardBloc;
-  Router({this.httpServiceBloc, this.onboardingGuardBloc}) {}
+  final AuthBloc authBloc;
+
+  Router({@required this.httpServiceBloc, @required this.authBloc});
 
   Route<dynamic> routeGenerator(RouteSettings settings) {
     switch (settings.name) {
@@ -54,7 +55,6 @@ class Router {
                   child: HomePage(),
                 ),
               ),
-              // child: PushNotificationListener(child: HomePage()),
             ),
           ),
         );
@@ -95,8 +95,7 @@ class Router {
           builder: (context) => AuthGuard(
               unauthenticatedHandler: unauthenticatedHandler,
               child: Provider<OnboardingBloc>(
-                builder: (context) =>
-                    OnboardingBloc(httpServiceBloc, onboardingGuardBloc),
+                builder: (context) => OnboardingBloc(httpServiceBloc),
                 dispose: (context, value) => value.dispose(),
                 child: OnboardingPage(),
               )),

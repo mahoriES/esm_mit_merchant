@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
@@ -15,9 +16,9 @@ class LocationClaimBloc {
   final AuthBloc authBloc;
 
   LocationClaimBloc(
-      {this.httpService,
-      this.authBloc,
-      GmbLocationItem locationItem,
+      {@required this.httpService,
+      @required this.authBloc,
+      @required GmbLocationItem locationItem,
       GoogleLocation googleLocation}) {
     this._onboardingState.locationItem = locationItem;
     this._onboardingState.googleLocation = googleLocation;

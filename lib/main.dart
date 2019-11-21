@@ -66,7 +66,10 @@ class _ReviewAppState extends State<ReviewApp> {
   @override
   Widget build(BuildContext context) {
     final appTranslationsBloc = Provider.of<AppTranslationsBloc>(context);
-    final router = Router(httpServiceBloc: Provider.of<HttpService>(context));
+    final router = Router(
+      httpServiceBloc: Provider.of<HttpService>(context),
+      authBloc: Provider.of<AuthBloc>(context),
+    );
 
     return StreamBuilder<AppTranslationsState>(
         stream: appTranslationsBloc.appTranslationsStateObservable,

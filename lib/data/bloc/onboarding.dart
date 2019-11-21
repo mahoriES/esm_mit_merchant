@@ -11,11 +11,10 @@ import '../../router.dart';
 class OnboardingBloc {
   final OnboardingState _onboardingState = new OnboardingState();
   final HttpService _httpService;
-  final OnboardingGuardBloc _onboardingGuardBloc;
 
   BehaviorSubject<OnboardingState> _subjectOnboardingState;
 
-  OnboardingBloc(this._httpService, this._onboardingGuardBloc) {
+  OnboardingBloc(this._httpService) {
     this._subjectOnboardingState = new BehaviorSubject<OnboardingState>.seeded(
         _onboardingState); //initializes the subject with element already
   }

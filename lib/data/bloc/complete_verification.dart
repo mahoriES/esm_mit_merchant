@@ -19,7 +19,9 @@ class CompleteVerificationBloc {
   BehaviorSubject<CompleteVerificationState> _subjectCompleteVerificationState;
 
   CompleteVerificationBloc(
-      {this.httpService, this.authBloc, GmbLocationItem locationItem}) {
+      {@required this.httpService,
+      @required this.authBloc,
+      @required GmbLocationItem locationItem}) {
     this._completeVerificationState.locationItem = locationItem;
 
     this._subjectCompleteVerificationState =
