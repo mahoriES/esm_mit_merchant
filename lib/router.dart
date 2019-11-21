@@ -17,13 +17,14 @@ import 'intro_page/intro_page.dart';
 import 'login_page/login_page.dart';
 import 'onboarding_guard/onboarding_guard.dart';
 import 'onboarding_page/location_search_page.dart';
+import 'onboarding_page/location_verify.dart';
 import 'onboarding_page/onboarding_page.dart';
 import 'review_page/reply_gmb.dart';
 import 'unirson_check_in_page/unirson_check_in_page.dart';
 
 class Router {
   static const homeRoute = '/';
-  static const testRoute = LocationClaimPage.routeName;
+  static const testRoute = LocationVerifyPage.routeName;
   // static const homeRoute = '/';
   final unauthenticatedHandler = (BuildContext context) =>
       Navigator.of(context).pushReplacementNamed(IntroPage.routeName);
@@ -114,6 +115,11 @@ class Router {
       case LocationClaimPage.routeName:
         return MaterialPageRoute(
           builder: (context) => LocationClaimPage(),
+        );
+        break;
+      case LocationVerifyPage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => LocationVerifyPage(),
         );
         break;
       default:
