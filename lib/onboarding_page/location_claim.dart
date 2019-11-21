@@ -25,12 +25,6 @@ class LocationClaimPage extends StatefulWidget {
 class _LocationClaimPageState extends State<LocationClaimPage>
     with AfterLayoutMixin<LocationClaimPage> {
   Completer<GoogleMapController> _controller = Completer();
-
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-
   @override
   void afterFirstLayout(BuildContext context) {}
 
@@ -39,11 +33,13 @@ class _LocationClaimPageState extends State<LocationClaimPage>
     return Scaffold(
       appBar: AppBar(
         title: Text("Claim business"),
-        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: Column(
           children: <Widget>[
+            SizedBox(
+              height: 32.0,
+            ),
             Container(
               child: ListTile(
                 title: Text(widget.googleLocation.location.locationName ?? ''),
@@ -77,6 +73,14 @@ class _LocationClaimPageState extends State<LocationClaimPage>
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
                 },
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              width: double.infinity,
+              child: RaisedButton(
+                onPressed: () {},
+                child: Text('Manage this business'),
               ),
             )
           ],
