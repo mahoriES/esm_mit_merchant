@@ -24,7 +24,7 @@ class GoogleLocationsResponse {
 
 class GoogleLocation {
   String name;
-  Location location;
+  GmbLocationItem location;
   String requestAdminRightsUrl;
 
   GoogleLocation({this.name, this.location, this.requestAdminRightsUrl});
@@ -32,7 +32,7 @@ class GoogleLocation {
   GoogleLocation.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     location = json['location'] != null
-        ? new Location.fromJson(json['location'])
+        ? new GmbLocationItem.fromJson(json['location'])
         : null;
     requestAdminRightsUrl = json['requestAdminRightsUrl'];
   }
@@ -48,7 +48,8 @@ class GoogleLocation {
   }
 }
 
-class Location {
+class GmbLocationItem {
+  String name;
   String locationName;
   PrimaryCategory primaryCategory;
   String websiteUrl;
@@ -56,17 +57,22 @@ class Location {
   Latlng latlng;
   String languageCode;
   Address address;
+  LocationState locationState;
 
-  Location(
-      {this.locationName,
-      this.primaryCategory,
-      this.websiteUrl,
-      this.locationKey,
-      this.latlng,
-      this.languageCode,
-      this.address});
+  GmbLocationItem({
+    this.name,
+    this.locationName,
+    this.primaryCategory,
+    this.websiteUrl,
+    this.locationKey,
+    this.latlng,
+    this.languageCode,
+    this.address,
+    this.locationState,
+  });
 
-  Location.fromJson(Map<String, dynamic> json) {
+  GmbLocationItem.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
     locationName = json['locationName'];
     primaryCategory = json['primaryCategory'] != null
         ? new PrimaryCategory.fromJson(json['primaryCategory'])
@@ -80,10 +86,14 @@ class Location {
     languageCode = json['languageCode'];
     address =
         json['address'] != null ? new Address.fromJson(json['address']) : null;
+    locationState = json['locationState'] != null
+        ? new LocationState.fromJson(json['locationState'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
     data['locationName'] = this.locationName;
     if (this.primaryCategory != null) {
       data['primaryCategory'] = this.primaryCategory.toJson();
@@ -98,6 +108,9 @@ class Location {
     data['languageCode'] = this.languageCode;
     if (this.address != null) {
       data['address'] = this.address.toJson();
+    }
+    if (this.locationState != null) {
+      data['locationState'] = this.locationState.toJson();
     }
     return data;
   }
@@ -192,6 +205,35 @@ class Address {
     data['administrativeArea'] = this.administrativeArea;
     data['locality'] = this.locality;
     data['addressLines'] = this.addressLines;
+    return data;
+  }
+}
+
+class LocationState {
+  bool canUpdate;
+  bool canDelete;
+  bool isDisconnected;
+  bool hasPendingVerification;
+
+  LocationState(
+      {this.canUpdate,
+      this.canDelete,
+      this.isDisconnected,
+      this.hasPendingVerification});
+
+  LocationState.fromJson(Map<String, dynamic> json) {
+    canUpdate = json['canUpdate'];
+    canDelete = json['canDelete'];
+    isDisconnected = json['isDisconnected'];
+    hasPendingVerification = json['hasPendingVerification'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['canUpdate'] = this.canUpdate;
+    data['canDelete'] = this.canDelete;
+    data['isDisconnected'] = this.isDisconnected;
+    data['hasPendingVerification'] = this.hasPendingVerification;
     return data;
   }
 }

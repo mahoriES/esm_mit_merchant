@@ -24,7 +24,7 @@ import 'unirson_check_in_page/unirson_check_in_page.dart';
 
 class Router {
   static const homeRoute = '/';
-  static const testRoute = LocationVerifyPage.routeName;
+  static const testRoute = LocationSearchPage.routeName;
   // static const homeRoute = '/';
   final unauthenticatedHandler = (BuildContext context) =>
       Navigator.of(context).pushReplacementNamed(IntroPage.routeName);
