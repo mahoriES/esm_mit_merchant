@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
@@ -176,7 +176,7 @@ class GmbAccount {
   String name;
   String accountName;
   String type;
-  State state;
+  LocationState state;
   String profilePhotoUrl;
   String role;
   String accountNumber;
@@ -196,7 +196,7 @@ class GmbAccount {
     name = json['name'];
     accountName = json['accountName'];
     type = json['type'];
-    state = json['state'] != null ? new State.fromJson(json['state']) : null;
+    state = json['state'] != null ? new LocationState.fromJson(json['state']) : null;
     profilePhotoUrl = json['profilePhotoUrl'];
     role = json['role'];
     accountNumber = json['accountNumber'];
@@ -219,13 +219,13 @@ class GmbAccount {
   }
 }
 
-class State {
+class LocationState {
   String status;
   String vettedStatus;
 
-  State({this.status, this.vettedStatus});
+  LocationState({this.status, this.vettedStatus});
 
-  State.fromJson(Map<String, dynamic> json) {
+  LocationState.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     vettedStatus = json['vettedStatus'];
   }

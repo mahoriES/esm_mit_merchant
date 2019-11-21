@@ -2,11 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/onboarding_guard.dart';
+import 'package:foore/data/model/locations.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
+import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:provider/provider.dart';
 
 import 'auth_guard/auth_guard.dart';
 import 'check_in_page/check_in_page.dart';
+import 'data/bloc/location_claim.dart';
 import 'data/bloc/onboarding.dart';
 import 'data/bloc/people.dart';
 import 'data/http_service.dart';
@@ -112,8 +115,10 @@ class Router {
         );
         break;
       case LocationClaimPage.routeName:
-        return MaterialPageRoute(
-          builder: (context) => LocationClaimPage(),
+        return LocationClaimPage.generateRoute(
+          settings,
+          authBloc: this.authBloc,
+          httpService: this.httpServiceBloc,
         );
         break;
       case LocationVerifyPage.routeName:

@@ -3,8 +3,12 @@ import 'dart:convert';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/auth.dart';
+import 'package:foore/data/bloc/location_claim.dart';
+import 'package:foore/data/http_service.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 class LocationClaimPage extends StatefulWidget {
   static const responseString =
@@ -20,6 +24,25 @@ class LocationClaimPage extends StatefulWidget {
 
   @override
   _LocationClaimPageState createState() => _LocationClaimPageState();
+
+  static Route generateRoute(RouteSettings settings,
+      {@required HttpService httpService, @required AuthBloc authBloc}) {
+    var argumentsForLocationClaim = settings.arguments as Map<String, dynamic>;
+    GoogleLocation googleLocation = argumentsForLocationClaim['googleLocation'];
+    GmbLocationItem locationItem = argumentsForLocationClaim['locationItem'];
+    return MaterialPageRoute(
+      builder: (context) => Provider<LocationClaimBloc>(
+        builder: (context) => LocationClaimBloc(
+          httpService: httpService,
+          authBloc: authBloc,
+          googleLocation: googleLocation,
+          locationItem: locationItem,
+        ),
+        dispose: (context, value) => value.dispose(),
+        child: LocationClaimPage(),
+      ),
+    );
+  }
 }
 
 class _LocationClaimPageState extends State<LocationClaimPage>
