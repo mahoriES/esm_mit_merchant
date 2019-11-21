@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:rxdart/rxdart.dart';
@@ -13,6 +14,7 @@ class CompleteVerificationBloc {
       new CompleteVerificationState();
   final HttpService httpService;
   final AuthBloc authBloc;
+  final pinEditController = TextEditingController();
 
   BehaviorSubject<CompleteVerificationState> _subjectCompleteVerificationState;
 
@@ -69,6 +71,28 @@ class CompleteVerificationBloc {
     }
   }
 
+  completeVerification(BuildContext context) async {
+    this._completeVerificationState.isSubmitting = true;
+    this._updateState();
+
+    String url = "https://mybusiness.googleapis.com/v4/" +
+        _completeVerificationState.verification.name +
+        ":complete";
+    final code = this.pinEditController.text;
+    final body = '{"pin": "$code"}';
+    final headers = await authBloc.googleAuthHeaders;
+    final httpResponse = await http.post(
+      url,
+      body: body,
+      headers: headers,
+    );
+    if (httpResponse.statusCode == 200) {
+      //////////navigate away
+    }
+    this._completeVerificationState.isSubmitting = true;
+    this._updateState();
+  }
+
   _updateState() {
     this
         ._subjectCompleteVerificationState
@@ -85,6 +109,7 @@ class CompleteVerificationState {
   bool isLoading;
   GmbLocationItem locationItem;
   Verification verification;
+  bool isSubmitting;
 }
 
 class LocationVerificationsResponse {
