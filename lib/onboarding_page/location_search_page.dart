@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
+import 'package:foore/onboarding_page/location_claim.dart';
+import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:foore/search_gmb/search_gmb.dart';
 import 'package:provider/provider.dart';
 import '../app_translations.dart';
@@ -68,7 +72,9 @@ class _LocationSearchPageState extends State<LocationSearchPage>
                   authBloc: authBloc,
                 ),
               ),
-              SizedBox(height: 100.0,),
+              SizedBox(
+                height: 100.0,
+              ),
               Text(
                 "Can't find your business ?",
                 style: Theme.of(context).textTheme.caption,
@@ -80,7 +86,22 @@ class _LocationSearchPageState extends State<LocationSearchPage>
                         decoration: TextDecoration.underline,
                       ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  final responseString =
+                      '{ "googleLocations": [ { "name": "googleLocations/ChIJ3a2l4X0RrjsRggWzPz6Q0xM", "location": { "locationName": "Mukesh Realtors", "primaryCategory": { "displayName": "Property management company", "categoryId": "gcid:property_management_company" }, "locationKey": { "placeId": "ChIJ3a2l4X0RrjsRggWzPz6Q0xM" }, "latlng": { "latitude": 12.969414, "longitude": 77.705732 }, "languageCode": "en", "locationState": {"hasPendingVerification": true }, "address": { "regionCode": "IN", "languageCode": "en", "postalCode": "560037", "administrativeArea": "Karnataka", "locality": "Bengaluru", "addressLines": [ "# 51, Shanti Nivas 7th Cross chinapanahalli", "Doddanekundi, Ext" ] } } } ] }';
+                  GoogleLocationsResponse googleLocationsResponse =
+                      GoogleLocationsResponse.fromJson(
+                          json.decode(responseString));
+
+                  final GoogleLocation googleLocation =
+                      googleLocationsResponse.googleLocations[0];
+                  final Map<String, dynamic> arguments =
+                      new Map<String, dynamic>();
+                  // arguments['googleLocation'] = googleLocation;
+                  arguments['locationItem'] = googleLocation.location;
+                  Navigator.pushNamed(context, LocationClaimPage.routeName,
+                      arguments: arguments);
+                },
               ),
               SizedBox(height: 16.0),
             ],

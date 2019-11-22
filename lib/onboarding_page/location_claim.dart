@@ -11,14 +11,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class LocationClaimPage extends StatefulWidget {
-  // static const responseString =
-  //     '{ "googleLocations": [ { "name": "googleLocations/ChIJ3a2l4X0RrjsRggWzPz6Q0xM", "location": { "locationName": "Mukesh Realtors", "primaryCategory": { "displayName": "Property management company", "categoryId": "gcid:property_management_company" }, "locationKey": { "placeId": "ChIJ3a2l4X0RrjsRggWzPz6Q0xM" }, "latlng": { "latitude": 12.969414, "longitude": 77.705732 }, "languageCode": "en", "address": { "regionCode": "IN", "languageCode": "en", "postalCode": "560037", "administrativeArea": "Karnataka", "locality": "Bengaluru", "addressLines": [ "# 51, Shanti Nivas 7th Cross chinapanahalli", "Doddanekundi, Ext" ] } }, "requestAdminRightsUrl": "https://business.google.com/arc/p/ChIJ3a2l4X0RrjsRggWzPz6Q0xM" } ] }';
-  // static GoogleLocationsResponse googleLocationsResponse =
-  //     GoogleLocationsResponse.fromJson(json.decode(responseString));
-
-  // final GoogleLocation googleLocation =
-  //     googleLocationsResponse.googleLocations[0];
-
   static const routeName = '/location-claim';
   LocationClaimPage({Key key}) : super(key: key);
 
@@ -85,8 +77,11 @@ class _LocationClaimPageState extends State<LocationClaimPage>
         child: StreamBuilder<LocationClaimState>(
             stream: locationClaimBloc.onboardingStateObservable,
             builder: (context, snapshot) {
-              var child = Container();
+              Widget child = Container();
               if (snapshot.hasData) {
+                print(snapshot.data.isShowClaimed);
+                print(snapshot.data.isShowVerificationPending);
+                print(snapshot.data.isShowLocation);
                 if (snapshot.data.isShowClaimed) {
                   child = claimedBusiness(snapshot.data.locationItem);
                 } else if (snapshot.data.isShowLocation) {
@@ -105,14 +100,14 @@ class _LocationClaimPageState extends State<LocationClaimPage>
         SizedBox(
           height: 32.0,
         ),
-        locationDetail(),
+        locationDetail(locationItem),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           decoration: BoxDecoration(
             color: Theme.of(context).errorColor.withOpacity(0.2),
           ),
           child: Text(
-            "This business is managed by another Google account.If they are your friend or college please ask them to give permission to access to this location and come back here.",
+            "This business is managed by another Google account.If they are your friend or college please ask them to give permission to access this location and come back here.",
             style: Theme.of(context)
                 .textTheme
                 .body1
@@ -138,7 +133,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
         SizedBox(
           height: 32.0,
         ),
-        locationDetail(),
+        locationDetail(locationItem),
         Container(
           margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           width: double.infinity,
