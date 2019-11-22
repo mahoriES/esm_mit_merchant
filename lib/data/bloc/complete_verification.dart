@@ -46,7 +46,7 @@ class CompleteVerificationBloc {
   getVerificationListForLocation() async {
     String url = "https://mybusiness.googleapis.com/v4/" +
         _completeVerificationState.locationItem.name +
-        "/verifications";``
+        "/verifications";
     final headers = await authBloc.googleAuthHeaders;
     final httpResponse = await http.get(
       url,
