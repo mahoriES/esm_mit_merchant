@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:http/http.dart' as http;
+import 'package:rxdart/rxdart.dart';
 import 'dart:convert';
 
 import 'model/google_locations.dart';
@@ -36,13 +37,15 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
   List<dynamic> _googleLocationPredictions = [];
   GoogleLocation _selectedGoogleLocation;
 
+  final searchOnChange = new BehaviorSubject<String>();
+
   @override
   void initState() {
     _selectedGoogleLocation = null;
     _googleLocationPredictions = [];
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
-    _containerHeight = Tween<double>(begin: 55, end: 360).animate(
+    _containerHeight = Tween<double>(begin: 55, end: 420).animate(
       CurvedAnimation(
         curve: Interval(0.0, 0.5, curve: Curves.easeInOut),
         parent: _animationController,
@@ -60,6 +63,9 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
     widget.authBloc.googleSignIn.signInSilently(
       suppressErrors: false,
     );
+    searchOnChange
+        .debounceTime(Duration(seconds: 1))
+        .listen((value) => _autocompletePlace(value));
     super.initState();
   }
 
@@ -114,7 +120,7 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
               controller: _textEditingController,
               // style:
               //     TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04),
-              onChanged: (value) => setState(() => _autocompletePlace(value)),
+              onChanged: (value) => searchOnChange.add(value),
             ),
           ),
           Container(width: 15),
@@ -131,18 +137,21 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
   }
 
   Widget _placeOption(GoogleLocation prediction) {
-    String place = prediction.location.locationName;
+    String locationName = prediction.location.locationName;
 
     return MaterialButton(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 3),
       onPressed: () => _selectPlace(prediction),
       child: ListTile(
         title: Text(
-          place.length < 45
-              ? "$place"
-              : "${place.replaceRange(45, place.length, "")} ...",
-          style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04),
+          locationName,
+          overflow: TextOverflow.ellipsis,
           maxLines: 1,
+        ),
+        subtitle: Text(
+          'Murgesh pallya , Airview coloney, Bangalore, karnataka aofafoa ,f aofam , india',
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
         ),
         contentPadding: EdgeInsets.symmetric(
           horizontal: 10,
@@ -165,20 +174,18 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
   BoxDecoration _containerDecoration(BuildContext context) {
     return BoxDecoration(
       // color: Theme.of(context).canvasColor,
-      border: Border.all(width: 1.0,color: Colors.black45),
+      border: Border.all(width: 1.0, color: Colors.black45),
       borderRadius: BorderRadius.all(Radius.circular(6.0)),
     );
   }
 
   // Methods
   void _autocompletePlace(String input) async {
-    /// Will be called everytime the input changes. Making callbacks to the Places
-    /// Api and giving the user Place options
-
-    if (input.length > 0) {
+    setState(() {});
+    if (input.length > 5) {
       String url =
           "https://mybusiness.googleapis.com/v4/googleLocations:search";
-      final body = '{"resultCount": 10,"query": "$input"}';
+      final body = '{"resultCount": 5,"query": "$input"}';
       final headers = await widget.authBloc.googleAuthHeaders;
       print(headers);
       final httpResponse = await http.post(
@@ -194,6 +201,7 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
       await _animationController.animateTo(0.5);
       setState(() => _googleLocationPredictions = predictions);
       await _animationController.forward();
+    } else if (input.length > 0) {
     } else {
       await _animationController.animateTo(0.5);
       setState(() => _googleLocationPredictions = []);
