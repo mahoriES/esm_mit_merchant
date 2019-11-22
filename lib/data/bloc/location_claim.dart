@@ -196,7 +196,9 @@ class GmbAccount {
     name = json['name'];
     accountName = json['accountName'];
     type = json['type'];
-    state = json['state'] != null ? new LocationState.fromJson(json['state']) : null;
+    state = json['state'] != null
+        ? new LocationState.fromJson(json['state'])
+        : null;
     profilePhotoUrl = json['profilePhotoUrl'];
     role = json['role'];
     accountNumber = json['accountNumber'];

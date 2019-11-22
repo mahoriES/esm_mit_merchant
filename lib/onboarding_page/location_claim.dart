@@ -69,6 +69,11 @@ class _LocationClaimPageState extends State<LocationClaimPage>
   Widget build(BuildContext context) {
     final LocationClaimBloc locationClaimBloc =
         Provider.of<LocationClaimBloc>(context);
+
+    onClaim() {
+      locationClaimBloc.manageLocation();
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Claim business"),
@@ -85,7 +90,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
                 if (snapshot.data.isShowClaimed) {
                   child = claimedBusiness(snapshot.data.locationItem);
                 } else if (snapshot.data.isShowLocation) {
-                  child = claimBusiness(snapshot.data.locationItem);
+                  child = claimBusiness(snapshot.data.locationItem, onClaim);
                 }
               }
               return child;
@@ -127,7 +132,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
     );
   }
 
-  Widget claimBusiness(GmbLocationItem locationItem) {
+  Widget claimBusiness(GmbLocationItem locationItem, Function onClaim) {
     return Column(
       children: <Widget>[
         SizedBox(
@@ -138,7 +143,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
           margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           width: double.infinity,
           child: RaisedButton(
-            onPressed: () {},
+            onPressed: onClaim,
             child: Text('Manage this business'),
           ),
         )
