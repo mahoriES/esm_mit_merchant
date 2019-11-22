@@ -89,9 +89,9 @@ class _LocationClaimPageState extends State<LocationClaimPage>
                 print(snapshot.data.isShowVerificationPending);
                 print(snapshot.data.isShowLocation);
                 if (snapshot.data.isShowClaimed) {
-                  child = claimedBusiness(snapshot.data.locationItem);
+                  child = claimedBusiness(snapshot.data);
                 } else if (snapshot.data.isShowLocation) {
-                  child = claimBusiness(snapshot.data.locationItem, onClaim);
+                  child = claimBusiness(snapshot.data, onClaim);
                 }
               }
               return child;
@@ -100,13 +100,13 @@ class _LocationClaimPageState extends State<LocationClaimPage>
     );
   }
 
-  Widget claimedBusiness(GmbLocationItem locationItem) {
+  Widget claimedBusiness(LocationClaimState state) {
     return Column(
       children: <Widget>[
         SizedBox(
           height: 32.0,
         ),
-        locationDetail(locationItem),
+        locationDetail(state),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           decoration: BoxDecoration(
@@ -133,32 +133,43 @@ class _LocationClaimPageState extends State<LocationClaimPage>
     );
   }
 
-  Widget claimBusiness(GmbLocationItem locationItem, Function onClaim) {
+  Widget claimBusiness(LocationClaimState state, Function onClaim) {
     return Column(
       children: <Widget>[
         SizedBox(
           height: 32.0,
         ),
-        locationDetail(locationItem),
+        locationDetail(state),
         Container(
           margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           width: double.infinity,
           child: RaisedButton(
             onPressed: onClaim,
-            child: Text('Manage this business'),
+            child: state.isSubmitting
+                ? Center(
+                    child: CircularProgressIndicator(
+                    backgroundColor: Colors.white,
+                  ))
+                : Text(
+                    'Manage this business',
+                    style: Theme.of(context).textTheme.button.copyWith(
+                          color: Colors.white,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
           ),
         )
       ],
     );
   }
 
-  Container locationDetail(GmbLocationItem locationItem) {
+  Container locationDetail(LocationClaimState state) {
     return Container(
       child: Column(
         children: <Widget>[
           Container(
             child: ListTile(
-              title: Text(locationItem.locationName ?? ''),
+              title: Text(state.locationItem.locationName ?? ''),
               subtitle: Text(
                   '# 51, Shanti Nivas 7th Cross chinapanahalli, "Doddanekundi, Ext, Bengaluru, Karnataka'),
             ),
@@ -172,16 +183,16 @@ class _LocationClaimPageState extends State<LocationClaimPage>
               mapType: MapType.normal,
               initialCameraPosition: CameraPosition(
                 target: LatLng(
-                  locationItem.latlng.latitude,
-                  locationItem.latlng.longitude,
+                  state.locationItem.latlng.latitude,
+                  state.locationItem.latlng.longitude,
                 ),
                 zoom: 14.4746,
               ),
               markers: Set.from([
                 Marker(
                   position: LatLng(
-                    locationItem.latlng.latitude,
-                    locationItem.latlng.longitude,
+                    state.locationItem.latlng.latitude,
+                    state.locationItem.latlng.longitude,
                   ),
                   markerId: MarkerId('fooreMarker'),
                 )

@@ -113,7 +113,7 @@ class CompleteVerificationState {
   bool isLoading = false;
   GmbLocationItem locationItem;
   Verification verification;
-  bool isSubmitting;
+  bool isSubmitting = false;
 }
 
 class LocationVerificationsResponse {

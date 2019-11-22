@@ -113,6 +113,7 @@ class LocationClaimBloc {
       body: body,
       headers: headers,
     );
+    print(httpResponse.statusCode);
     if (httpResponse.statusCode == 200) {
       this._onboardingState.locationItem.locationState.hasPendingVerification =
           true;
