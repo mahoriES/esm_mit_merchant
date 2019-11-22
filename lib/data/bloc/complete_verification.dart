@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/router.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -92,6 +93,7 @@ class CompleteVerificationBloc {
     print(httpResponse.statusCode);
     if (httpResponse.statusCode == 200) {
       //////////navigate away
+      Navigator.pushReplacementNamed(context, Router.homeRoute);
     }
     this._completeVerificationState.isSubmitting = false;
     this._updateState();

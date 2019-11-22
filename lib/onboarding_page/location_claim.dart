@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/location_claim.dart';
 import 'package:foore/data/http_service.dart';
-import 'package:foore/data/model/locations.dart';
 import 'package:foore/onboarding_page/location_verify.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -74,7 +73,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
         Provider.of<LocationClaimBloc>(context);
 
     onClaim() {
-      locationClaimBloc.manageLocation();
+      locationClaimBloc.manageLocation(context);
     }
 
     return Scaffold(

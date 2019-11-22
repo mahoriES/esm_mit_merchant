@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/onboarding_page/location_verify.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
@@ -37,15 +38,19 @@ class LocationClaimBloc {
     this._subjectLocationClaimState.close();
   }
 
-  manageLocation() async {
+  manageLocation(BuildContext context) async {
     try {
       this._onboardingState.isSubmitting = true;
       this._updateState();
       if (this._onboardingState.googleLocation != null) {
         await createLocation();
         await startVerification();
+        Navigator.pushNamed(context, LocationVerifyPage.routeName,
+            arguments: this._onboardingState.locationItem);
       } else {
         await startVerification();
+        Navigator.pushNamed(context, LocationVerifyPage.routeName,
+            arguments: this._onboardingState.locationItem);
       }
     } finally {
       this._onboardingState.isSubmitting = false;
@@ -97,7 +102,7 @@ class LocationClaimBloc {
   createLocation() async {
     String url = 'https://mybusiness.googleapis.com/v4/' +
         _onboardingState.accountName +
-        '/locations?requestId=request1';
+        '/locations?requestId=requestee1';
     final body =
         json.encode(this._onboardingState.googleLocation.location.toJson());
     final headers = await authBloc.googleAuthHeaders;
