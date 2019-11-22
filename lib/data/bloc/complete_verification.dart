@@ -53,6 +53,7 @@ class CompleteVerificationBloc {
       headers: headers,
     );
     Verification verification;
+    print(httpResponse.statusCode);
     if (httpResponse.statusCode == 200) {
       final locationVerificationsResponse =
           LocationVerificationsResponse.fromJson(
@@ -88,10 +89,11 @@ class CompleteVerificationBloc {
       body: body,
       headers: headers,
     );
+    print(httpResponse.statusCode);
     if (httpResponse.statusCode == 200) {
       //////////navigate away
     }
-    this._completeVerificationState.isSubmitting = true;
+    this._completeVerificationState.isSubmitting = false;
     this._updateState();
   }
 

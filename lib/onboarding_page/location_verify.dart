@@ -68,7 +68,7 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
                 if (snapshot.data.isLoading) {
                 } else {
                   child = verificationWidget(
-                      context, snapshot.data.locationItem, onVerify);
+                      context, snapshot.data, onVerify);
                 }
               }
               return child;
@@ -77,8 +77,8 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
     );
   }
 
-  Widget verificationWidget(
-      BuildContext context, GmbLocationItem location, Function onVerify) {
+  Widget verificationWidget(BuildContext context,
+      CompleteVerificationState state, Function onVerify) {
     final completeVerificationBloc =
         Provider.of<CompleteVerificationBloc>(context);
     return Form(
@@ -90,7 +90,7 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
           ),
           Container(
             child: ListTile(
-              title: Text(location?.locationName ?? ''),
+              title: Text(state.locationItem?.locationName ?? ''),
               subtitle: Text(
                   '# 51, Shanti Nivas 7th Cross chinapanahalli, "Doddanekundi, Ext, Bengaluru, Karnataka'),
             ),
@@ -133,7 +133,21 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
             width: double.infinity,
             child: RaisedButton(
               onPressed: onVerify,
-              child: Text('Verify'),
+              child: Container(
+                width: double.infinity,
+                child: state.isSubmitting
+                    ? Center(
+                        child: CircularProgressIndicator(
+                        backgroundColor: Colors.white,
+                      ))
+                    : Text(
+                        'Verify',
+                        style: Theme.of(context).textTheme.button.copyWith(
+                              color: Colors.white,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
+              ),
             ),
           )
         ],
