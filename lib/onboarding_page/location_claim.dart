@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/location_claim.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/data/model/locations.dart';
 import 'package:foore/onboarding_page/location_verify.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -175,9 +176,8 @@ class _LocationClaimPageState extends State<LocationClaimPage>
         children: <Widget>[
           Container(
             child: ListTile(
-              title: Text(state.locationItem.locationName ?? ''),
-              subtitle: Text(
-                  '# 51, Shanti Nivas 7th Cross chinapanahalli, "Doddanekundi, Ext, Bengaluru, Karnataka'),
+              title: Text(state.locationName ?? ''),
+              subtitle: Text(state.locationAddress ?? ''),
             ),
           ),
           Container(
@@ -189,16 +189,16 @@ class _LocationClaimPageState extends State<LocationClaimPage>
               mapType: MapType.normal,
               initialCameraPosition: CameraPosition(
                 target: LatLng(
-                  state.locationItem.latlng.latitude,
-                  state.locationItem.latlng.longitude,
+                  state.locationLatLang?.latitude,
+                  state.locationLatLang?.longitude,
                 ),
                 zoom: 14.4746,
               ),
               markers: Set.from([
                 Marker(
                   position: LatLng(
-                    state.locationItem.latlng.latitude,
-                    state.locationItem.latlng.longitude,
+                    state.locationLatLang?.latitude,
+                    state.locationLatLang?.longitude,
                   ),
                   markerId: MarkerId('fooreMarker'),
                 )

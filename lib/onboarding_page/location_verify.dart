@@ -67,8 +67,7 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
               if (snapshot.hasData) {
                 if (snapshot.data.isLoading) {
                 } else {
-                  child = verificationWidget(
-                      context, snapshot.data, onVerify);
+                  child = verificationWidget(context, snapshot.data, onVerify);
                 }
               }
               return child;
@@ -90,9 +89,8 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
           ),
           Container(
             child: ListTile(
-              title: Text(state.locationItem?.locationName ?? ''),
-              subtitle: Text(
-                  '# 51, Shanti Nivas 7th Cross chinapanahalli, "Doddanekundi, Ext, Bengaluru, Karnataka'),
+              title: Text(state.locationName ?? ''),
+              subtitle: Text(state.locationAddress ?? ''),
             ),
           ),
           Divider(

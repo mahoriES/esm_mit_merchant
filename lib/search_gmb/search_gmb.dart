@@ -136,6 +136,46 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
     );
   }
 
+  String getLocationAddress(GmbLocationItem locationItem) {
+    var address = '';
+    if (locationItem.address != null) {
+      if (locationItem.address.addressLines != null) {
+        for (var line in locationItem.address.addressLines) {
+          if (address == '') {
+            address = line;
+          } else {
+            address = address + ', ' + line;
+          }
+        }
+      }
+    }
+
+    if (locationItem.address.locality != null) {
+      if (address == '') {
+        address = locationItem.address.locality;
+      } else {
+        address = address + ', ' + locationItem.address.locality;
+      }
+    }
+
+    if (locationItem.address.administrativeArea != null) {
+      if (address == '') {
+        address = locationItem.address.administrativeArea;
+      } else {
+        address = address + ', ' + locationItem.address.administrativeArea;
+      }
+    }
+
+    if (locationItem.address.postalCode != null) {
+      if (address == '') {
+        address = locationItem.address.postalCode;
+      } else {
+        address = address + ', ' + locationItem.address.postalCode;
+      }
+    }
+    return address;
+  }
+
   Widget _placeOption(GoogleLocation prediction) {
     String locationName = prediction.location.locationName;
 
@@ -149,7 +189,7 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
           maxLines: 1,
         ),
         subtitle: Text(
-          'Murgesh pallya , Airview coloney, Bangalore, karnataka aofafoa ,f aofam , india',
+          getLocationAddress(prediction.location),
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
         ),

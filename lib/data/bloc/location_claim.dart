@@ -168,6 +168,53 @@ class LocationClaimState {
   bool get isShowLocation {
     return !isShowVerificationPending && !isShowClaimed;
   }
+
+  get locationAddress =>
+      locationItem != null ? getLocationAddress(locationItem) : null;
+
+  get locationName => locationItem != null ? locationItem.locationName : null;
+
+  get locationLatLang => locationItem != null ? locationItem.latlng : null;
+
+  String getLocationAddress(GmbLocationItem locationItem) {
+    var address = '';
+    if (locationItem.address != null) {
+      if (locationItem.address.addressLines != null) {
+        for (var line in locationItem.address.addressLines) {
+          if (address == '') {
+            address = line;
+          } else {
+            address = address + ', ' + line;
+          }
+        }
+      }
+    }
+
+    if (locationItem.address.locality != null) {
+      if (address == '') {
+        address = locationItem.address.locality;
+      } else {
+        address = address + ', ' + locationItem.address.locality;
+      }
+    }
+
+    if (locationItem.address.administrativeArea != null) {
+      if (address == '') {
+        address = locationItem.address.administrativeArea;
+      } else {
+        address = address + ', ' + locationItem.address.administrativeArea;
+      }
+    }
+
+    if (locationItem.address.postalCode != null) {
+      if (address == '') {
+        address = locationItem.address.postalCode;
+      } else {
+        address = address + ', ' + locationItem.address.postalCode;
+      }
+    }
+    return address;
+  }
 }
 
 class GoogleAccountResponse {
