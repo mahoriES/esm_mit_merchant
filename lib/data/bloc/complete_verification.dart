@@ -37,8 +37,9 @@ class CompleteVerificationBloc {
   getData() async {
     this._completeVerificationState.isLoading = true;
     this._updateState();
-    await getVerificationListForLocation();
-    try {} finally {
+    try {
+      await getVerificationListForLocation();
+    } finally {
       this._completeVerificationState.isLoading = false;
       this._updateState();
     }
@@ -136,9 +137,7 @@ class CompleteVerificationState {
           }
         }
       }
-    }
-
-    if (locationItem.address.locality != null) {
+      if (locationItem.address.locality != null) {
       if (address == '') {
         address = locationItem.address.locality;
       } else {
@@ -160,6 +159,7 @@ class CompleteVerificationState {
       } else {
         address = address + ', ' + locationItem.address.postalCode;
       }
+    }
     }
     return address;
   }

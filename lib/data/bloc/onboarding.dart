@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/gmb_location.dart';
 import 'package:foore/data/model/google_account.dart';
@@ -22,6 +21,55 @@ class OnboardingBloc {
   Observable<OnboardingState> get onboardingStateObservable =>
       _subjectOnboardingState.stream;
 
+  getIsLocationVerified(GmbLocation gmbLocation) {
+    if (gmbLocation.gmbLocationState == null) {
+      return false;
+    }
+    return gmbLocation.gmbLocationState.isVerified ?? false;
+  }
+
+  String getLocationAddress(GmbLocation gmbLocation) {
+    var address = '';
+    if (gmbLocation.gmbLocationAddress != null) {
+      if (gmbLocation.gmbLocationAddress.addressLines != null) {
+        for (var line in gmbLocation.gmbLocationAddress.addressLines) {
+          if (address == '') {
+            address = line;
+          } else {
+            address = address + ', ' + line;
+          }
+        }
+      }
+
+      if (gmbLocation.gmbLocationAddress.locality != null) {
+        if (address == '') {
+          address = gmbLocation.gmbLocationAddress.locality;
+        } else {
+          address = address + ', ' + gmbLocation.gmbLocationAddress.locality;
+        }
+      }
+
+      if (gmbLocation.gmbLocationAddress.administrativeArea != null) {
+        if (address == '') {
+          address = gmbLocation.gmbLocationAddress.administrativeArea;
+        } else {
+          address = address +
+              ', ' +
+              gmbLocation.gmbLocationAddress.administrativeArea;
+        }
+      }
+
+      if (gmbLocation.gmbLocationAddress.postalCode != null) {
+        if (address == '') {
+          address = gmbLocation.gmbLocationAddress.postalCode;
+        } else {
+          address = address + ', ' + gmbLocation.gmbLocationAddress.postalCode;
+        }
+      }
+    }
+    return address;
+  }
+
   getData() {
     this._onboardingState.isLoading = true;
     this._onboardingState.isLoadingFailed = false;
@@ -31,6 +79,7 @@ class OnboardingBloc {
             'ui/helper/account/?verified&onboarding&google_account&gmb_locations&location_connections')
         .then((httpResponse) {
       if (httpResponse.statusCode == 200) {
+        print(httpResponse.body);
         this._onboardingState.response =
             UiHelperResponse.fromJson(json.decode(httpResponse.body));
         print(this._onboardingState.response);

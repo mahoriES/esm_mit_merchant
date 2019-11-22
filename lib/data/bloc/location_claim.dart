@@ -193,31 +193,31 @@ class LocationClaimState {
           }
         }
       }
-    }
+      if (locationItem.address.locality != null) {
+        if (address == '') {
+          address = locationItem.address.locality;
+        } else {
+          address = address + ', ' + locationItem.address.locality;
+        }
+      }
 
-    if (locationItem.address.locality != null) {
-      if (address == '') {
-        address = locationItem.address.locality;
-      } else {
-        address = address + ', ' + locationItem.address.locality;
+      if (locationItem.address.administrativeArea != null) {
+        if (address == '') {
+          address = locationItem.address.administrativeArea;
+        } else {
+          address = address + ', ' + locationItem.address.administrativeArea;
+        }
+      }
+
+      if (locationItem.address.postalCode != null) {
+        if (address == '') {
+          address = locationItem.address.postalCode;
+        } else {
+          address = address + ', ' + locationItem.address.postalCode;
+        }
       }
     }
 
-    if (locationItem.address.administrativeArea != null) {
-      if (address == '') {
-        address = locationItem.address.administrativeArea;
-      } else {
-        address = address + ', ' + locationItem.address.administrativeArea;
-      }
-    }
-
-    if (locationItem.address.postalCode != null) {
-      if (address == '') {
-        address = locationItem.address.postalCode;
-      } else {
-        address = address + ', ' + locationItem.address.postalCode;
-      }
-    }
     return address;
   }
 }

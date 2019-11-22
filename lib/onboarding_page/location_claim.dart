@@ -184,28 +184,30 @@ class _LocationClaimPageState extends State<LocationClaimPage>
             margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(12.0))),
-            child: GoogleMap(
-              mapType: MapType.normal,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(
-                  state.locationLatLang?.latitude,
-                  state.locationLatLang?.longitude,
-                ),
-                zoom: 14.4746,
-              ),
-              markers: Set.from([
-                Marker(
-                  position: LatLng(
-                    state.locationLatLang?.latitude,
-                    state.locationLatLang?.longitude,
-                  ),
-                  markerId: MarkerId('fooreMarker'),
-                )
-              ]),
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
-            ),
+            child: state.locationLatLang != null
+                ? GoogleMap(
+                    mapType: MapType.normal,
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(
+                        state.locationLatLang.latitude,
+                        state.locationLatLang.longitude,
+                      ),
+                      zoom: 14.4746,
+                    ),
+                    markers: Set.from([
+                      Marker(
+                        position: LatLng(
+                          state.locationLatLang.latitude,
+                          state.locationLatLang.longitude,
+                        ),
+                        markerId: MarkerId('fooreMarker'),
+                      )
+                    ]),
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
+                    },
+                  )
+                : null,
           ),
         ],
       ),

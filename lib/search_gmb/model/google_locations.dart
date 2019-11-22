@@ -1,3 +1,5 @@
+import 'package:foore/data/model/gmb_location.dart';
+
 class GoogleLocationsResponse {
   List<GoogleLocation> googleLocations;
 
@@ -88,6 +90,20 @@ class GmbLocationItem {
         json['address'] != null ? new Address.fromJson(json['address']) : null;
     locationState = json['locationState'] != null
         ? new LocationState.fromJson(json['locationState'])
+        : null;
+  }
+
+  GmbLocationItem.fromGmbLocation(GmbLocation location) {
+    name = location.gmbLocationTpId;
+    locationName = location.gmbLocationName;
+    latlng = location.gmbLocationLatLong != null
+        ? new Latlng.fromJson(location.gmbLocationLatLong.toJson())
+        : null;
+    address = location.gmbLocationAddress != null
+        ? new Address.fromJson(location.gmbLocationAddress.toJson())
+        : null;
+    locationState = location.gmbLocationState != null
+        ? new LocationState.fromJson(location.gmbLocationState.toJson())
         : null;
   }
 

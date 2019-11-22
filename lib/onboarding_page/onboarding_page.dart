@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/onboarding.dart';
 import 'package:foore/data/model/gmb_location.dart';
+import 'package:foore/onboarding_page/location_claim.dart';
+import 'package:foore/onboarding_page/location_search_page.dart';
+import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:provider/provider.dart';
 import '../app_translations.dart';
 import 'package:youtube_player/youtube_player.dart';
@@ -17,10 +22,28 @@ class OnboardingPage extends StatefulWidget {
 
 class _OnboardingPageState extends State<OnboardingPage>
     with AfterLayoutMixin<OnboardingPage> {
+  StreamSubscription<OnboardingState> _subscription;
   @override
   void afterFirstLayout(BuildContext context) {
     final onboardingBloc = Provider.of<OnboardingBloc>(context);
+    _subscription =
+        onboardingBloc.onboardingStateObservable.listen(_onOnboardingChange);
     onboardingBloc.getData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (_subscription != null) {
+      _subscription.cancel();
+      _subscription = null;
+    }
+  }
+
+  _onOnboardingChange(OnboardingState state) {
+    if (state.isShowNoGmbLocations) {
+      Navigator.pushNamed(context, LocationSearchPage.routeName);
+    }
   }
 
   @override
@@ -136,6 +159,12 @@ class SelectLocations extends StatelessWidget {
 
   Widget locationList(BuildContext context, OnboardingBloc onboardingBloc,
       AsyncSnapshot<OnboardingState> snapshot) {
+    onVerify(GmbLocation location) {
+      final arguments = Map<String, dynamic>();
+      arguments['locationItem'] = GmbLocationItem.fromGmbLocation(location);
+      Navigator.pushNamed(context, LocationClaimPage.routeName, arguments:  arguments);
+    }
+
     return SafeArea(
       child: Container(
         child: Column(
@@ -156,14 +185,28 @@ class SelectLocations extends StatelessWidget {
               child: ListView.builder(
                 itemCount: locations.length,
                 itemBuilder: (BuildContext ctxt, int index) {
-                  return CheckboxListTile(
-                    title: Text(locations[index].gmbLocationName),
-                    value: locations[index].isSelectedUi == true,
-                    onChanged: (bool value) {
-                      onboardingBloc.setLocationSelected(
-                          locations[index], value);
-                    },
-                  );
+                  if (onboardingBloc.getIsLocationVerified(locations[index])) {
+                    return CheckboxListTile(
+                      title: Text(locations[index].gmbLocationName),
+                      subtitle: Text(
+                          onboardingBloc.getLocationAddress(locations[index])),
+                      value: locations[index].isSelectedUi == true,
+                      onChanged: (bool value) {
+                        onboardingBloc.setLocationSelected(
+                            locations[index], value);
+                      },
+                    );
+                  } else {
+                    return ListTile(
+                      title: Text(locations[index].gmbLocationName),
+                      subtitle: Text(
+                          onboardingBloc.getLocationAddress(locations[index])),
+                      trailing: FlatButton(
+                        onPressed: () => onVerify(locations[index]),
+                        child: Text('Verify'),
+                      ),
+                    );
+                  }
                 },
               ),
             ),
