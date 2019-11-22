@@ -53,6 +53,21 @@ class LocationClaimBloc {
     }
   }
 
+  getData() async {
+    this._onboardingState.isLoading = true;
+    this._onboardingState.isLoadingFailed = false;
+    this._updateState();
+    try {
+      getAccounts();
+      this._onboardingState.isLoadingFailed = false;
+    } catch (err) {
+      this._onboardingState.isLoadingFailed = true;
+    } finally {
+      this._onboardingState.isLoading = false;
+      this._updateState();
+    }
+  }
+
   getAccounts() async {
     String url = "https://mybusiness.googleapis.com/v4/accounts";
     final headers = await authBloc.googleAuthHeaders;
@@ -83,13 +98,16 @@ class LocationClaimBloc {
     String url = 'https://mybusiness.googleapis.com/v4/' +
         _onboardingState.accountName +
         '/locations?requestId=request1';
-    final body = json.encode(this._onboardingState.googleLocation.toJson());
+    final body =
+        json.encode(this._onboardingState.googleLocation.location.toJson());
     final headers = await authBloc.googleAuthHeaders;
     final httpResponse = await http.post(
       url,
       body: body,
       headers: headers,
     );
+    print(httpResponse.body);
+    print(httpResponse.statusCode);
     if (httpResponse.statusCode == 200) {
       this._onboardingState.locationItem =
           GmbLocationItem.fromJson(json.decode(httpResponse.body));
@@ -129,13 +147,15 @@ class LocationClaimState {
   GoogleLocation googleLocation;
   String accountName;
   bool isSubmitting = false;
+  bool isLoading = false;
+  bool isLoadingFailed = false;
 
   bool get isShowVerificationPending {
     if (googleLocation != null) {
       return false;
     }
     return locationItem.locationState != null
-        ? locationItem.locationState.hasPendingVerification
+        ? (locationItem.locationState.hasPendingVerification ?? false)
         : false;
   }
 

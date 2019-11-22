@@ -25,6 +25,14 @@ class _LocationSearchPageState extends State<LocationSearchPage>
   @override
   Widget build(BuildContext context) {
     final authBloc = Provider.of<AuthBloc>(context);
+    onGoogleLocationSelected(GoogleLocation googleLocation) {
+      var arguments = new Map<String, dynamic>();
+      arguments['googleLocation'] = googleLocation;
+      arguments['locationItem'] = googleLocation.location;
+      Navigator.pushNamed(context, LocationClaimPage.routeName,
+          arguments: arguments);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -70,6 +78,7 @@ class _LocationSearchPageState extends State<LocationSearchPage>
                 ),
                 child: SearchMapPlaceWidget(
                   authBloc: authBloc,
+                  onSelected: onGoogleLocationSelected,
                 ),
               ),
               SizedBox(

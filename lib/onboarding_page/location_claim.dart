@@ -48,6 +48,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
         Provider.of<LocationClaimBloc>(context);
     _subscription = locationClaimBloc.onboardingStateObservable
         .listen(_onLocationClaimChange);
+    locationClaimBloc.getData();
   }
 
   _onLocationClaimChange(LocationClaimState state) {
@@ -85,10 +86,15 @@ class _LocationClaimPageState extends State<LocationClaimPage>
             builder: (context, snapshot) {
               Widget child = Container();
               if (snapshot.hasData) {
-                print(snapshot.data.isShowClaimed);
-                print(snapshot.data.isShowVerificationPending);
-                print(snapshot.data.isShowLocation);
-                if (snapshot.data.isShowClaimed) {
+                if (snapshot.data.isLoading) {
+                  child = Container(
+                    child: Text('loading....'),
+                  );
+                } else if (snapshot.data.isLoadingFailed) {
+                  child = Container(
+                    child: Text('Loading Failed...'),
+                  );
+                } else if (snapshot.data.isShowClaimed) {
                   child = claimedBusiness(snapshot.data);
                 } else if (snapshot.data.isShowLocation) {
                   child = claimBusiness(snapshot.data, onClaim);

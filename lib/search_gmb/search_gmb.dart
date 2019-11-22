@@ -212,13 +212,13 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
   void _selectPlace(GoogleLocation prediction) async {
     /// Will be called when a user selects one of the Place options.
 
-    // Sets TextField value to be the location selected
-    _textEditingController.value = TextEditingValue(
-      text: prediction.location.locationName,
-      selection: TextSelection.collapsed(
-        offset: prediction.location.locationName.length,
-      ),
-    );
+    // // Sets TextField value to be the location selected
+    // _textEditingController.value = TextEditingValue(
+    //   text: prediction.location.locationName,
+    //   selection: TextSelection.collapsed(
+    //     offset: prediction.location.locationName.length,
+    //   ),
+    // );
 
     // Makes animation
     await _animationController.animateTo(0.5);
