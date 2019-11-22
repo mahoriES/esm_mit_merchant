@@ -37,7 +37,11 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
     with AfterLayoutMixin<LocationVerifyPage> {
   Completer<GoogleMapController> _controller = Completer();
   @override
-  void afterFirstLayout(BuildContext context) {}
+  void afterFirstLayout(BuildContext context) {
+    final completeVerificationBloc =
+        Provider.of<CompleteVerificationBloc>(context);
+    completeVerificationBloc.getData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +57,8 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
       ),
       body: SafeArea(
         child: StreamBuilder<CompleteVerificationState>(
-            stream: completeVerificationBloc.checkinStateObservable,
+            stream:
+                completeVerificationBloc.completeVerificationStateObservable,
             builder: (context, snapshot) {
               Widget child = Container(child: Text('Loading...'));
               if (snapshot.hasData) {

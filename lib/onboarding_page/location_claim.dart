@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +53,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
   _onLocationClaimChange(LocationClaimState state) {
     if (state.isShowVerificationPending) {
       Navigator.pushNamed(context, LocationVerifyPage.routeName,
-          arguments: state.googleLocation);
+          arguments: state.locationItem);
     }
   }
 

@@ -10,8 +10,8 @@ import 'package:http/http.dart' as http;
 import 'auth.dart';
 
 class CompleteVerificationBloc {
-  CompleteVerificationState _completeVerificationState =
-      new CompleteVerificationState();
+  final CompleteVerificationState _completeVerificationState =
+      CompleteVerificationState();
   final HttpService httpService;
   final AuthBloc authBloc;
   final pinEditController = TextEditingController();
@@ -23,17 +23,18 @@ class CompleteVerificationBloc {
       @required this.authBloc,
       @required GmbLocationItem locationItem}) {
     this._completeVerificationState.locationItem = locationItem;
-
     this._subjectCompleteVerificationState =
         new BehaviorSubject<CompleteVerificationState>.seeded(
             _completeVerificationState);
+    authBloc.googleSignIn.signInSilently();
   }
 
-  Observable<CompleteVerificationState> get checkinStateObservable =>
-      _subjectCompleteVerificationState.stream;
+  Observable<CompleteVerificationState>
+      get completeVerificationStateObservable =>
+          _subjectCompleteVerificationState.stream;
 
   getData() async {
-    this._completeVerificationState.isLoading = false;
+    this._completeVerificationState.isLoading = true;
     this._updateState();
     try {
       await getVerificationListForLocation();
