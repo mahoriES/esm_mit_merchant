@@ -122,8 +122,10 @@ class Router {
         );
         break;
       case LocationVerifyPage.routeName:
-        return MaterialPageRoute(
-          builder: (context) => LocationVerifyPage(),
+        return LocationVerifyPage.generateRoute(
+          settings,
+          authBloc: this.authBloc,
+          httpService: this.httpServiceBloc,
         );
         break;
       default:

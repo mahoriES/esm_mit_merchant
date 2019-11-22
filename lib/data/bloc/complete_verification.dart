@@ -108,7 +108,7 @@ class CompleteVerificationBloc {
 }
 
 class CompleteVerificationState {
-  bool isLoading;
+  bool isLoading = false;
   GmbLocationItem locationItem;
   Verification verification;
   bool isSubmitting;

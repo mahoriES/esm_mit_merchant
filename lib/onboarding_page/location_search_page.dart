@@ -88,7 +88,7 @@ class _LocationSearchPageState extends State<LocationSearchPage>
                 ),
                 onPressed: () {
                   final responseString =
-                      '{ "googleLocations": [ { "name": "googleLocations/ChIJ3a2l4X0RrjsRggWzPz6Q0xM", "location": { "locationName": "Mukesh Realtors", "primaryCategory": { "displayName": "Property management company", "categoryId": "gcid:property_management_company" }, "locationKey": { "placeId": "ChIJ3a2l4X0RrjsRggWzPz6Q0xM" }, "latlng": { "latitude": 12.969414, "longitude": 77.705732 }, "languageCode": "en", "locationState": {"hasPendingVerification": false }, "address": { "regionCode": "IN", "languageCode": "en", "postalCode": "560037", "administrativeArea": "Karnataka", "locality": "Bengaluru", "addressLines": [ "# 51, Shanti Nivas 7th Cross chinapanahalli", "Doddanekundi, Ext" ] } } } ] }';
+                      '{ "googleLocations": [ { "name": "googleLocations/ChIJ3a2l4X0RrjsRggWzPz6Q0xM", "location": { "locationName": "Mukesh Realtors", "primaryCategory": { "displayName": "Property management company", "categoryId": "gcid:property_management_company" }, "locationKey": { "placeId": "ChIJ3a2l4X0RrjsRggWzPz6Q0xM" }, "latlng": { "latitude": 12.969414, "longitude": 77.705732 }, "languageCode": "en", "locationState": {"hasPendingVerification": true }, "address": { "regionCode": "IN", "languageCode": "en", "postalCode": "560037", "administrativeArea": "Karnataka", "locality": "Bengaluru", "addressLines": [ "# 51, Shanti Nivas 7th Cross chinapanahalli", "Doddanekundi, Ext" ] } } } ] }';
                   GoogleLocationsResponse googleLocationsResponse =
                       GoogleLocationsResponse.fromJson(
                           json.decode(responseString));
@@ -97,7 +97,7 @@ class _LocationSearchPageState extends State<LocationSearchPage>
                       googleLocationsResponse.googleLocations[0];
                   final Map<String, dynamic> arguments =
                       new Map<String, dynamic>();
-                  arguments['googleLocation'] = googleLocation;
+                  // arguments['googleLocation'] = googleLocation;
                   arguments['locationItem'] = googleLocation.location;
                   Navigator.pushNamed(context, LocationClaimPage.routeName,
                       arguments: arguments);

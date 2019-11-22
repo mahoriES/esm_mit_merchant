@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/location_claim.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/onboarding_page/location_verify.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +53,8 @@ class _LocationClaimPageState extends State<LocationClaimPage>
 
   _onLocationClaimChange(LocationClaimState state) {
     if (state.isShowVerificationPending) {
-      // navigate away from this page.
+      Navigator.pushNamed(context, LocationVerifyPage.routeName,
+          arguments: state.googleLocation);
     }
   }
 
