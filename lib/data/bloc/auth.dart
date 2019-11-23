@@ -29,7 +29,7 @@ class AuthBloc {
   Observable<AuthState> get authStateObservable => _subjectAuthState.stream;
 
   Future<Map<String, String>> get googleAuthHeaders =>
-      googleSignIn.currentUser.authHeaders;
+      googleSignIn.currentUser?.authHeaders;
 
   login(AuthInfo authData, {AuthType authType}) {
     if (authData != null) {
@@ -125,7 +125,7 @@ class AuthBloc {
 
   _storeAuthTypeGoogle(bool isAuthTypeGoogle) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    await sharedPreferences.setBool('googleSignIn', true);
+    await sharedPreferences.setBool('googleSignIn', isAuthTypeGoogle);
   }
 
   _getIsAuthTypeGoogle() async {
@@ -134,6 +134,11 @@ class AuthBloc {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       isAuthTypeGoogle = sharedPreferences.getBool('googleSignIn') ?? false;
+      if (isAuthTypeGoogle) {
+        print('Auth type google');
+      } else {
+        print('Auth type not google');
+      }
     } catch (exception) {}
     return isAuthTypeGoogle;
   }

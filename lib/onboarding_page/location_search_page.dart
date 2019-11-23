@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
+import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:foore/search_gmb/search_gmb.dart';
@@ -27,7 +28,9 @@ class _LocationSearchPageState extends State<LocationSearchPage>
 
   loginToGoogleSilently(AuthBloc authBloc) async {
     bool isSignedInWithGoogle = await authBloc.googleLoginSilently();
-    if (!isSignedInWithGoogle) {}
+    if (!isSignedInWithGoogle) {
+      Navigator.pushReplacementNamed(context, GoogleLoginNotDonePage.routeName);
+    }
   }
 
   @override

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/data/model/locations.dart';
+import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:provider/provider.dart';
@@ -127,6 +128,9 @@ class Router {
           authBloc: this.authBloc,
           httpService: this.httpServiceBloc,
         );
+        break;
+      case GoogleLoginNotDonePage.routeName:
+        return GoogleLoginNotDonePage.generateRoute(settings);
         break;
       default:
         return MaterialPageRoute(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/location_claim.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart';
 import 'package:foore/onboarding_page/location_verify.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -55,6 +56,8 @@ class _LocationClaimPageState extends State<LocationClaimPage>
     if (state.isShowVerificationPending) {
       Navigator.pushNamed(context, LocationVerifyPage.routeName,
           arguments: state.locationItem);
+    } else if (state.isShowNotLoggedInWithGoogle) {
+      Navigator.pushReplacementNamed(context, GoogleLoginNotDonePage.routeName);
     }
   }
 

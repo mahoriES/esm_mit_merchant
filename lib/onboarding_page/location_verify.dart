@@ -1,10 +1,10 @@
 import 'dart:async';
-
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/complete_verification.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +21,7 @@ class LocationVerifyPage extends StatefulWidget {
     GmbLocationItem locationItem = settings.arguments;
     return MaterialPageRoute(
       builder: (context) => Provider<CompleteVerificationBloc>(
-        builder: (context) => CompleteVerificationBloc(
+        builder: (context) => CompleteVerificationBloc( 
           httpService: httpService,
           authBloc: authBloc,
           locationItem: locationItem,
@@ -36,12 +36,21 @@ class LocationVerifyPage extends StatefulWidget {
 class _LocationVerifyPageState extends State<LocationVerifyPage>
     with AfterLayoutMixin<LocationVerifyPage> {
   Completer<GoogleMapController> _controller = Completer();
+  StreamSubscription<CompleteVerificationState> _subscription;
   final _formVerifyWithPin = GlobalKey<FormState>();
   @override
   void afterFirstLayout(BuildContext context) {
     final completeVerificationBloc =
         Provider.of<CompleteVerificationBloc>(context);
+    _subscription = completeVerificationBloc.completeVerificationStateObservable
+        .listen(_onCompleteVerificationStateChange);
     completeVerificationBloc.getData();
+  }
+
+  _onCompleteVerificationStateChange(CompleteVerificationState state) {
+    if (state.isShowNotLoggedInWithGoogle) {
+      Navigator.pushReplacementNamed(context, GoogleLoginNotDonePage.routeName);
+    }
   }
 
   @override
