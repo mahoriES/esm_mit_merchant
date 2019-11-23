@@ -45,5 +45,26 @@
   "onboarding_page_title": "ನನ್ನ Google ವ್ಯಾಪಾರ ಸ್ಥಳಗಳು",
   "onboarding_page_no_location_message": "ನೀವು ಯಾವುದೇ Google ವ್ಯಾಪಾರ ಸ್ಥಳಗಳನ್ನು ಹೊಂದಿಲ್ಲ. ಫೂರ್‌ನೊಂದಿಗೆ ಮುಂದುವರಿಯಲು ಗೂಗಲ್ ಬಿಸಿನೆಸ್ ಲೊಕ್ಷನ್ ಅಗತ್ಯವಿದೆ.",
   "onboarding_page_select_locations": "ಫೂರ್‌ನೊಂದಿಗೆ ಬಳಸಲು Google ವ್ಯಾಪಾರ ಸ್ಥಳಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-  "onboarding_page_continue": "ಮುಂದುವರಿಸಿ"
+  "onboarding_page_continue": "ಮುಂದುವರಿಸಿ",
+
+  "location_verify_page_title": "ವ್ಯವಹಾರವನ್ನು ಪರಿಶೀಲಿಸಿ",
+  "location_verify_page_pin_label": "ನವೆಂಬರ್ %s ರಂದು ಈ ವಿಳಾಸಕ್ಕೆ ಕಳುಹಿಸಲಾದ 5-ಅಂಕಿಯ ಪರಿಶೀಲನಾ ಕೋಡ್ ಅನ್ನು ನಮೂದಿಸಿ. ಪೋಸ್ಟ್‌ಕಾರ್ಡ್‌ಗಳು ಬರಲು ಸುಮಾರು 12 ದಿನಗಳು ಬೇಕಾಗುತ್ತದೆ.",
+  "location_verify_page_pin_hint": "ಕೋಡ್ ನಮೂದಿಸಿ",
+  "location_verify_page_pin_validation": "ಕೋಡ್ 5 ಅಂಕೆಗಳಾಗಿರಬೇಕು",
+  "location_verify_page_button_verify": "ಪರಿಶೀಲಿಸಿ",
+
+  "location_claim_page_title": "ವ್ಯವಹಾರವನ್ನು ಕ್ಲೈಮ್ ಮಾಡಿ",
+  "location_claim_page_button_manage": "ಈ ವ್ಯವಹಾರವನ್ನು ನಿರ್ವಹಿಸಿ",
+  "location_claim_page_err_taken": "ಈ ವ್ಯವಹಾರವನ್ನು ಮತ್ತೊಂದು Google ಖಾತೆಯಿಂದ ನಿರ್ವಹಿಸಲಾಗುತ್ತದೆ. ಅವರು ನಿಮ್ಮ ಸ್ನೇಹಿತ ಅಥವಾ ಸಹೋದ್ಯೋಗಿಯಾಗಿದ್ದರೆ ದಯವಿಟ್ಟು ಈ ಸ್ಥಳವನ್ನು ಪ್ರವೇಶಿಸಲು ಅನುಮತಿ ನೀಡುವಂತೆ ಕೇಳಿ ಮತ್ತು ಇಲ್ಲಿಗೆ ಹಿಂತಿರುಗಿ.",
+  "location_claim_page_button_request_access": "ಈ ವ್ಯವಹಾರವನ್ನು ನಿರ್ವಹಿಸಲು ಪ್ರವೇಶವನ್ನು ವಿನಂತಿಸಿ",
+
+  "location_search_page_title": "My Google Business Locations",
+  "location_search_page_search_label": "Search for your Business and claim to manage that business.",
+  "location_search_page_search_hint": "Search",
+  "location_search_page_no_business": "ನಿಮ್ಮ Google ಖಾತೆಗಾಗಿ ನೀವು ಯಾವುದೇ Google ವ್ಯಾಪಾರ ಸ್ಥಳವನ್ನು ಹೊಂದಿಲ್ಲ %s",
+  "location_search_page_cant_find_your_business": "Can't find your business ?",
+  "location_search_page_button_create_on_google": "Create a business on Google",
+
+  "google_login_not_done_page_message": "Google ಸ್ಥಳಗಳನ್ನು ರಚಿಸಲು ಅಥವಾ ನಿರ್ವಹಿಸಲು ನೀವು Google ನೊಂದಿಗೆ ಲಾಗಿನ್ ಆಗಬೇಕು",
+  "onboarding_page_button_verify": "Verify"
 }

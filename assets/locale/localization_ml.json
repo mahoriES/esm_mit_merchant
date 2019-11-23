@@ -45,5 +45,26 @@
   "onboarding_page_title": "എന്റെ Google ബിസിനസ്സ് ലൊക്കേഷനുകൾ",
   "onboarding_page_no_location_message": "നിങ്ങൾക്ക് Google ബിസിനസ്സ് ലൊക്കേഷനുകളൊന്നുമില്ല. ഫൂറുമായി തുടരാൻ ഒരു Google ബിസിനസ് ലോഷൻ ആവശ്യമാണ്.",
   "onboarding_page_select_locations": "ഫൂറിനൊപ്പം ഉപയോഗിക്കാൻ Google ബിസിനസ്സ് ലൊക്കേഷനുകൾ തിരഞ്ഞെടുക്കുക",
-  "onboarding_page_continue": "തുടരുക"
+  "onboarding_page_continue": "തുടരുക",
+
+  "location_verify_page_title": "ബിസിനസ്സ് പരിശോധിക്കുക",
+  "location_verify_page_pin_label": "നവംബർ %s ന് ഈ വിലാസത്തിലേക്ക് മെയിൽ ചെയ്ത 5 അക്ക പരിശോധന കോഡ് നൽകുക. പോസ്റ്റ്കാർഡുകൾ വരാൻ ഏകദേശം 12 ദിവസമെടുക്കും.",
+  "location_verify_page_pin_hint": "കോഡ് നൽകുക",
+  "location_verify_page_pin_validation": "കോഡ് 5 അക്കങ്ങളായിരിക്കണം",
+  "location_verify_page_button_verify": "പരിശോധിക്കുക",
+
+  "location_claim_page_title": "ബിസിനസ്സ് ക്ലെയിം ചെയ്യുക",
+  "location_claim_page_button_manage": "ഈ ബിസിനസ്സ് നിയന്ത്രിക്കുക",
+  "location_claim_page_err_taken": "ഈ ബിസിനസ്സ് നിയന്ത്രിക്കുന്നത് മറ്റൊരു Google അക്ക by ണ്ടാണ്. അവർ നിങ്ങളുടെ ചങ്ങാതിയോ സഹപ്രവർത്തകനോ ആണെങ്കിൽ ദയവായി ഈ സ്ഥലം ആക്സസ് ചെയ്യുന്നതിന് അനുമതി നൽകാൻ ആവശ്യപ്പെടുക.",
+  "location_claim_page_button_request_access": "ഈ ബിസിനസ്സ് മാനേജുചെയ്യുന്നതിന് ആക്‌സസ്സ് അഭ്യർത്ഥിക്കുക",
+
+  "location_search_page_title": "My Google Business Locations",
+  "location_search_page_search_label": "Search for your Business and claim to manage that business.",
+  "location_search_page_search_hint": "Search",
+  "location_search_page_no_business": "നിങ്ങളുടെ Google അക്കൗണ്ടിനായി %s എന്നതിന് Google ബിസിനസ്സ് ലൊക്കേഷനുകളൊന്നുമില്ല.",
+  "location_search_page_cant_find_your_business": "Can't find your business ?",
+  "location_search_page_button_create_on_google": "Create a business on Google",
+
+  "google_login_not_done_page_message": "Google ലൊക്കേഷനുകൾ സൃഷ്‌ടിക്കുന്നതിനോ നിയന്ത്രിക്കുന്നതിനോ നിങ്ങൾ Google- ൽ ലോഗിൻ ചെയ്യേണ്ടതുണ്ട്",
+  "onboarding_page_button_verify": "Verify"
 }

@@ -45,5 +45,26 @@
   "onboarding_page_title": "મારા ગૂગલ વ્યવસાય સ્થાનો",
   "onboarding_page_no_location_message": "તમારી પાસે કોઈ પણ ગૂગલ વ્યવસાય સ્થાન નથી. ગૂગલ વ્યવસાય સ્થાન ફૂર સાથે આગળ વધવા માટે જરૂરી છે.",
   "onboarding_page_select_locations": "ફૂર સાથે વાપરવા માટે ગૂગલ વ્યવસાય સ્થાનો પસંદ કરો.",
-  "onboarding_page_continue": "ચાલુ રાખો"
+  "onboarding_page_continue": "ચાલુ રાખો",
+
+  "location_verify_page_title": "વ્યવસાય ચકાસો",
+  "location_verify_page_pin_label": "%s ના રોજ આ સરનામાં પર મેઇલ કરેલા 5-અંકનો ચકાસણી કોડ દાખલ કરો. પોસ્ટકાર્ડ્સ આવવામાં લગભગ 12 દિવસનો સમય લે છે.",
+  "location_verify_page_pin_hint": "કોડ દાખલ કરો",
+  "location_verify_page_pin_validation": "કોડ અંકોનો 5 હોવો આવશ્યક છે",
+  "location_verify_page_button_verify": "ચકાસો",
+
+  "location_claim_page_title": "દાવો ધંધો",
+  "location_claim_page_button_manage": "આ વ્યવસાયનું સંચાલન કરો",
+  "location_claim_page_err_taken": "આ વ્યવસાય બીજા ગૂગલ એકાઉન્ટ દ્વારા સંચાલિત છે. જો તે તમારા મિત્ર અથવા સાથીદાર છે, તો કૃપા કરીને તેમને આ સ્થાનને toક્સેસ કરવાની પરવાનગી આપવા પૂછો અને અહીં પાછા આવો.",
+  "location_claim_page_button_request_access": "આ વ્યવસાયને સંચાલિત કરવા માટે accessક્સેસની વિનંતી કરો",
+
+  "location_search_page_title": "My Google Business Locations",
+  "location_search_page_search_label": "Search for your Business and claim to manage that business.",
+  "location_search_page_search_hint": "Search",
+  "location_search_page_no_business": "તમારા ગૂગલ એકાઉન્ટ માટે %s કોઈ પણ ગૂગલ વ્યવસાય સ્થાન નથી.",
+  "location_search_page_cant_find_your_business": "Can't find your business ?",
+  "location_search_page_button_create_on_google": "Create a business on Google",
+
+  "google_login_not_done_page_message": "ગૂગલ સ્થાનો બનાવવા અથવા સંચાલિત કરવા માટે તમારે ગૂગલ સાથે લ loginગિન કરવાની જરૂર છે",
+  "onboarding_page_button_verify": "Verify"
 }
