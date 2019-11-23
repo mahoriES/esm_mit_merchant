@@ -44,5 +44,11 @@
   "onboarding_page_title": "My Google Business Locations",
   "onboarding_page_no_location_message": "You don't have any Google Business Locations.\n\nA Google Business Location is required to proceed with Foore.",
   "onboarding_page_select_locations": "Select Google Business Locations to use with Foore",
-  "onboarding_page_continue": "Continue"
+  "onboarding_page_continue": "Continue",
+
+  "location_verify_page_title": "Verify business",
+  "location_verify_page_pin_label": "Enter the 5-digit verification code mailed to this address on ${date}. Postcards take about 12 days to arrive.",
+  "location_verify_page_pin_hint": "Enter code",
+  "location_verify_page_pin_validation": "Code must be 5 of digits",
+  "location_verify_page_button_verify": "Verify"
 }

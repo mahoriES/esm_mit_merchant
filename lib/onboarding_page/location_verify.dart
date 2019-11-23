@@ -9,6 +9,8 @@ import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../app_translations.dart';
+
 class LocationVerifyPage extends StatefulWidget {
   static const routeName = '/location-verify';
   LocationVerifyPage({Key key}) : super(key: key);
@@ -65,7 +67,8 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Verify business"),
+        title:
+            Text(AppTranslations.of(context).text("location_verify_page_title")),
       ),
       body: SafeArea(
         child: StreamBuilder<CompleteVerificationState>(

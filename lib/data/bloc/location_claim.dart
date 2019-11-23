@@ -61,10 +61,19 @@ class LocationClaimBloc {
         Navigator.pushNamed(context, LocationVerifyPage.routeName,
             arguments: this._onboardingState.locationItem);
       }
+      refreshBackend();
     } finally {
       this._onboardingState.isSubmitting = false;
       this._updateState();
     }
+  }
+
+  refreshBackend() async {
+    try {
+      final response =
+          await httpService.foPost('google/account/user/refresh/', null);
+      print(response.statusCode);
+    } catch (err) {}
   }
 
   getData() async {

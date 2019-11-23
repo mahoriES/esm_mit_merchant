@@ -101,13 +101,19 @@ class CompleteVerificationBloc {
       body: body,
       headers: headers,
     );
-    print(httpResponse.statusCode);
+    await refreshBackend();
     if (httpResponse.statusCode == 200) {
       //////////navigate away
       Navigator.pushReplacementNamed(context, Router.homeRoute);
     }
     this._completeVerificationState.isSubmitting = false;
     this._updateState();
+  }
+
+  refreshBackend() async {
+    try {
+      await httpService.foPost('google/account/user/refresh/', null);
+    } catch (err) {}
   }
 
   _updateState() {
@@ -127,7 +133,7 @@ class CompleteVerificationState {
   GmbLocationItem locationItem;
   Verification verification;
   bool isSubmitting = false;
-  bool isShowNotLoggedInWithGoogle = true;
+  bool isShowNotLoggedInWithGoogle = false;
 
   get locationAddress =>
       locationItem != null ? getLocationAddress(locationItem) : null;
