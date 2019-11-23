@@ -45,5 +45,11 @@
   "onboarding_page_title": "मेरा गूगल बिज़नेस स्थान",
   "onboarding_page_no_location_message": "आपके पास कोई गूगल बिज़नेस स्थान नहीं है। फूरे के साथ आगे बढ़ने के लिए गूगल बिज़नेस स्थान आवश्यक है।",
   "onboarding_page_select_locations": "फूरे के साथ उपयोग करने के लिए गूगल बिज़नेस स्थान चुनें",
-  "onboarding_page_continue": "जारी रखें"
+  "onboarding_page_continue": "जारी रखें",
+
+  "location_verify_page_title": "बिज़नेस प्रमाणित करें",
+  "location_verify_page_pin_label": "इस पते पर %s को मेल किए गए 5-अंकीय सत्यापन कोड को दर्ज करें। पोस्टकार्ड आने में लगभग 12 दिन लगते हैं।",
+  "location_verify_page_pin_hint": "कोड दर्ज करें",
+  "location_verify_page_pin_validation": "कोड 5 अंकों का होना चाहिए",
+  "location_verify_page_button_verify": "प्रमाणित करें"
 }
