@@ -51,5 +51,11 @@
   "location_verify_page_pin_label": "इस पते पर %s को मेल किए गए 5-अंकीय सत्यापन कोड को दर्ज करें। पोस्टकार्ड आने में लगभग 12 दिन लगते हैं।",
   "location_verify_page_pin_hint": "कोड दर्ज करें",
   "location_verify_page_pin_validation": "कोड 5 अंकों का होना चाहिए",
-  "location_verify_page_button_verify": "प्रमाणित करें"
+  "location_verify_page_button_verify": "प्रमाणित करें",
+
+  "location_claim_page_title": "बिज़नेस का दावा करें",
+  "location_claim_page_button_manage": "इस बिज़नेस को प्रबंधित करें",
+  "location_claim_page_err_taken": "यह बिज़नेस किसी अन्य गूगल खाते द्वारा प्रबंधित किया जाता है। यदि वे आपके मित्र या सहकर्मी हैं, कृपया उन्हें इस बिज़नेस की अनुमति देने के लिए कहें और यहाँ वापस आओ।",
+  "location_claim_page_button_request_access": "इस बिज़नेस को प्रबंधित करने के लिए अनुरोध करें।"
+
 }

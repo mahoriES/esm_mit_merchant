@@ -50,5 +50,12 @@
   "location_verify_page_pin_label": "Enter the 5-digit verification code mailed to this address on %s. Postcards take about 12 days to arrive.",
   "location_verify_page_pin_hint": "Enter code",
   "location_verify_page_pin_validation": "Code must be 5 of digits",
-  "location_verify_page_button_verify": "Verify"
+  "location_verify_page_button_verify": "Verify",
+
+  "location_claim_page_title": "Claim business",
+  "location_claim_page_button_manage": "Manage this business",
+  "location_claim_page_err_taken": "This business is managed by another Google account. If they are your friend or colleague please ask them to give permission to access this location and come back here.",
+  "location_claim_page_button_request_access": "Request Access to manage this business"
+
+
 }

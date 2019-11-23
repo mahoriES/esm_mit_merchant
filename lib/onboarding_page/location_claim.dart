@@ -12,6 +12,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../app_translations.dart';
+
 class LocationClaimPage extends StatefulWidget {
   static const routeName = '/location-claim';
   LocationClaimPage({Key key}) : super(key: key);
@@ -82,7 +84,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Claim business"),
+        title: Text(AppTranslations.of(context).text("location_claim_page_title")),
       ),
       body: SafeArea(
         child: StreamBuilder<LocationClaimState>(
@@ -130,7 +132,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
             color: Theme.of(context).errorColor.withOpacity(0.2),
           ),
           child: Text(
-            "This business is managed by another Google account.If they are your friend or college please ask them to give permission to access this location and come back here.",
+            AppTranslations.of(context).text("location_claim_page_err_taken"),
             style: Theme.of(context)
                 .textTheme
                 .body1
@@ -139,7 +141,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
         ),
         FlatButton(
           child: Text(
-            'Request Access to manage this business',
+            AppTranslations.of(context).text("location_claim_page_button_request_access"),
             style: Theme.of(context).textTheme.button.copyWith(
                   decoration: TextDecoration.underline,
                 ),
@@ -168,7 +170,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
                     backgroundColor: Colors.white,
                   ))
                 : Text(
-                    'Manage this business',
+                    AppTranslations.of(context).text("location_claim_page_button_manage"),
                     style: Theme.of(context).textTheme.button.copyWith(
                           color: Colors.white,
                         ),
