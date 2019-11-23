@@ -21,7 +21,7 @@ class LocationVerifyPage extends StatefulWidget {
     GmbLocationItem locationItem = settings.arguments;
     return MaterialPageRoute(
       builder: (context) => Provider<CompleteVerificationBloc>(
-        builder: (context) => CompleteVerificationBloc( 
+        builder: (context) => CompleteVerificationBloc(
           httpService: httpService,
           authBloc: authBloc,
           locationItem: locationItem,
@@ -75,6 +75,9 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
               Widget child = Container(child: Text('Loading...'));
               if (snapshot.hasData) {
                 if (snapshot.data.isLoading) {
+                  child = Center(
+                    child: CircularProgressIndicator(),
+                  );
                 } else {
                   child = verificationWidget(context, snapshot.data, onVerify);
                 }

@@ -90,8 +90,8 @@ class _LocationClaimPageState extends State<LocationClaimPage>
               Widget child = Container();
               if (snapshot.hasData) {
                 if (snapshot.data.isLoading) {
-                  child = Container(
-                    child: Text('loading....'),
+                  child = Center(
+                    child: CircularProgressIndicator(),
                   );
                 } else if (snapshot.data.isLoadingFailed) {
                   child = Container(
