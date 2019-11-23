@@ -8,6 +8,7 @@ import 'package:foore/onboarding_page/location_claim.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:foore/search_gmb/search_gmb.dart';
 import 'package:provider/provider.dart';
+import 'package:sprintf/sprintf.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../app_translations.dart';
 
@@ -55,7 +56,7 @@ class _LocationSearchPageState extends State<LocationSearchPage>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppTranslations.of(context).text("onboarding_page_title"),
+          AppTranslations.of(context).text("location_search_page_title"),
         ),
         automaticallyImplyLeading: false,
       ),
@@ -69,13 +70,23 @@ class _LocationSearchPageState extends State<LocationSearchPage>
                 decoration: BoxDecoration(
                   color: Theme.of(context).errorColor.withOpacity(0.2),
                 ),
-                child: Text(
-                  "You don't have any Google Business location for your Google account paragjnath@foore.in.",
-                  style: Theme.of(context)
-                      .textTheme
-                      .body1
-                      .copyWith(color: Theme.of(context).errorColor),
-                ),
+                child: StreamBuilder<AuthState>(
+                    stream: authBloc.authStateObservable,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return null;
+                      }
+                      return Text(
+                        sprintf(
+                            AppTranslations.of(context)
+                                .text("location_search_page_no_business"),
+                            [snapshot.data.userEmail]),
+                        style: Theme.of(context)
+                            .textTheme
+                            .body1
+                            .copyWith(color: Theme.of(context).errorColor),
+                      );
+                    }),
               ),
               Container(
                 padding: const EdgeInsets.only(
@@ -85,7 +96,8 @@ class _LocationSearchPageState extends State<LocationSearchPage>
                 ),
                 alignment: Alignment.bottomLeft,
                 child: Text(
-                  "Search for your Business and claim to manage that business.",
+                  AppTranslations.of(context)
+                      .text("location_search_page_search_label"),
                   style: Theme.of(context).textTheme.subtitle,
                 ),
               ),
@@ -104,32 +116,18 @@ class _LocationSearchPageState extends State<LocationSearchPage>
                 height: 100.0,
               ),
               Text(
-                "Can't find your business ?",
+                AppTranslations.of(context)
+                    .text("location_search_page_cant_find_your_business"),
                 style: Theme.of(context).textTheme.caption,
               ),
               FlatButton(
                 child: Text(
-                  'Create a business on Google',
+                  AppTranslations.of(context)
+                      .text("location_search_page_button_create_on_google"),
                   style: Theme.of(context).textTheme.button.copyWith(
                         decoration: TextDecoration.underline,
                       ),
                 ),
-                // onPressed: () {
-                //   final responseString =
-                //       '{ "googleLocations": [ { "name": "googleLocations/ChIJ3a2l4X0RrjsRggWzPz6Q0xM", "location": { "name": "accounts/100175924515635207658/locations/12164510788088057585", "locationName": "Mukesh Realtors", "primaryCategory": { "displayName": "Property management company", "categoryId": "gcid:property_management_company" }, "locationKey": { "placeId": "ChIJ3a2l4X0RrjsRggWzPz6Q0xM" }, "latlng": { "latitude": 12.969414, "longitude": 77.705732 }, "languageCode": "en", "locationState": {"hasPendingVerification": true }, "address": { "regionCode": "IN", "languageCode": "en", "postalCode": "560037", "administrativeArea": "Karnataka", "locality": "Bengaluru", "addressLines": [ "# 51, Shanti Nivas 7th Cross chinapanahalli", "Doddanekundi, Ext" ] } } } ] }';
-                //   GoogleLocationsResponse googleLocationsResponse =
-                //       GoogleLocationsResponse.fromJson(
-                //           json.decode(responseString));
-
-                //   final GoogleLocation googleLocation =
-                //       googleLocationsResponse.googleLocations[0];
-                //   final Map<String, dynamic> arguments =
-                //       new Map<String, dynamic>();
-                //   // arguments['googleLocation'] = googleLocation;
-                //   arguments['locationItem'] = googleLocation.location;
-                //   Navigator.pushNamed(context, LocationClaimPage.routeName,
-                //       arguments: arguments);
-                // },
                 onPressed: _launchGmbURL,
               ),
               SizedBox(height: 16.0),

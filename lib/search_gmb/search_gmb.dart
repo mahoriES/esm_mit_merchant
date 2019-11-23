@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
 import 'dart:convert';
 
+import '../app_translations.dart';
 import 'model/google_locations.dart';
 
 class SearchMapPlaceWidget extends StatefulWidget {
@@ -204,7 +205,8 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
   // Styling
   InputDecoration _inputStyle() {
     return InputDecoration(
-      hintText: "Search",
+      hintText:
+          AppTranslations.of(context).text("location_search_page_search_hint"),
       border: InputBorder.none,
       isDense: true,
       contentPadding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
@@ -261,7 +263,7 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
     // );
 
     // Makes animation
-    await _animationController.animateTo(0.5);
+    // await _animationController.animateTo(0.5);
     setState(() {
       _googleLocationPredictions = [];
       _selectedGoogleLocation = prediction;

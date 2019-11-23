@@ -33,7 +33,8 @@ class GoogleLoginNotDonePage extends StatelessWidget {
               children: <Widget>[
                 Container(
                   child: Text(
-                    'You need to login with Google to create or manage Google locations',
+                    AppTranslations.of(context)
+                        .text("google_login_not_done_page_message"),
                     style: Theme.of(context).textTheme.title,
                   ),
                 ),

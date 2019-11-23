@@ -55,7 +55,16 @@
 
   "location_claim_page_title": "बिज़नेस का दावा करें",
   "location_claim_page_button_manage": "इस बिज़नेस को प्रबंधित करें",
-  "location_claim_page_err_taken": "यह बिज़नेस किसी अन्य गूगल खाते द्वारा प्रबंधित किया जाता है। यदि वे आपके मित्र या सहकर्मी हैं, कृपया उन्हें इस बिज़नेस की अनुमति देने के लिए कहें और यहाँ वापस आओ।",
-  "location_claim_page_button_request_access": "इस बिज़नेस को प्रबंधित करने के लिए अनुरोध करें।"
+  "location_claim_page_err_taken": "यह बिज़नेस किसी अन्य गूगल खाते द्वारा प्रबंधित किया गया है। यदि वे आपके मित्र या सहकर्मी हैं, कृपया उन्हें इस बिज़नेस की अनुमति देने के लिए कहें और यहाँ वापस आओ।",
+  "location_claim_page_button_request_access": "इस बिज़नेस को प्रबंधित करने के लिए अनुरोध करें।",
 
+  "location_search_page_title": "मेरा गूगल बिज़नेस स्थान",
+  "location_search_page_search_label": "अपने बिज़नेस की खोज करें और उस बिज़नेस को प्रबंधित करने का दावा करें।",
+  "location_search_page_search_hint": "खोजे",
+  "location_search_page_no_business": "आपके पास अपने गूगल खाते %s के लिए कोई गूगल व्यवसाय स्थान नहीं है।",
+  "location_search_page_cant_find_your_business": "अपना बिज़नेस नहीं ढूंढ सकते ?",
+  "location_search_page_button_create_on_google": "गूगल पर एक बिज़नेस बनाएँ",
+  
+  "google_login_not_done_page_message": "गूगल स्थान बनाने या प्रबंधित करने के लिए आपको गूगल के साथ लॉगिन करने की आवश्यकता है",
+  "onboarding_page_button_verify": "प्रमाणित करें"
 }

@@ -162,7 +162,8 @@ class SelectLocations extends StatelessWidget {
     onVerify(GmbLocation location) {
       final arguments = Map<String, dynamic>();
       arguments['locationItem'] = GmbLocationItem.fromGmbLocation(location);
-      Navigator.pushNamed(context, LocationClaimPage.routeName, arguments:  arguments);
+      Navigator.pushNamed(context, LocationClaimPage.routeName,
+          arguments: arguments);
     }
 
     return SafeArea(
@@ -203,7 +204,8 @@ class SelectLocations extends StatelessWidget {
                           onboardingBloc.getLocationAddress(locations[index])),
                       trailing: FlatButton(
                         onPressed: () => onVerify(locations[index]),
-                        child: Text('Verify'),
+                        child: Text(AppTranslations.of(context)
+                            .text("onboarding_page_button_verify")),
                       ),
                     );
                   }
