@@ -130,6 +130,7 @@ class LocationClaimBloc {
         ':verify';
     final body =
         '{"method": "ADDRESS","languageCode": "en","addressInput": {"mailerContactName": "$customerName"}}';
+    print(body);
     final headers = await authBloc.googleAuthHeaders;
     final httpResponse = await http.post(
       url,

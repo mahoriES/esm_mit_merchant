@@ -56,7 +56,7 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Verify business."),
+        title: Text("Verify business"),
       ),
       body: SafeArea(
         child: StreamBuilder<CompleteVerificationState>(
