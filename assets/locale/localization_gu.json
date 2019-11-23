@@ -58,13 +58,13 @@
   "location_claim_page_err_taken": "આ વ્યવસાય બીજા ગૂગલ એકાઉન્ટ દ્વારા સંચાલિત છે. જો તે તમારા મિત્ર અથવા સાથીદાર છે, તો કૃપા કરીને તેમને આ સ્થાનને toક્સેસ કરવાની પરવાનગી આપવા પૂછો અને અહીં પાછા આવો.",
   "location_claim_page_button_request_access": "આ વ્યવસાયને સંચાલિત કરવા માટે accessક્સેસની વિનંતી કરો",
 
-  "location_search_page_title": "My Google Business Locations",
-  "location_search_page_search_label": "Search for your Business and claim to manage that business.",
-  "location_search_page_search_hint": "Search",
+  "location_search_page_title": "મારા ગૂગલ વ્યવસાય સ્થાનો",
+  "location_search_page_search_label": "તમારા વ્યવસાયની શોધ કરો અને તે વ્યવસાયને સંચાલિત કરવા માટે દાવો કરો.",
+  "location_search_page_search_hint": "શોધો",
   "location_search_page_no_business": "તમારા ગૂગલ એકાઉન્ટ માટે %s કોઈ પણ ગૂગલ વ્યવસાય સ્થાન નથી.",
-  "location_search_page_cant_find_your_business": "Can't find your business ?",
-  "location_search_page_button_create_on_google": "Create a business on Google",
+  "location_search_page_cant_find_your_business": "તમારો વ્યવસાય શોધી શક્યા નથી?",
+  "location_search_page_button_create_on_google": "ગૂગલ પર કોઈ વ્યવસાય બનાવો",
 
   "google_login_not_done_page_message": "ગૂગલ સ્થાનો બનાવવા અથવા સંચાલિત કરવા માટે તમારે ગૂગલ સાથે લ loginગિન કરવાની જરૂર છે",
-  "onboarding_page_button_verify": "Verify"
+  "onboarding_page_button_verify": "ચકાસો"
 }

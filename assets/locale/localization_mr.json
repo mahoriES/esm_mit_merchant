@@ -58,13 +58,13 @@
   "location_claim_page_err_taken": "हा व्यवसाय दुसर्‍या गूगल खात्याने व्यवस्थापित केला आहे. ते आपले मित्र किंवा सहकारी असल्यास कृपया त्यांना या ठिकाणी प्रवेश करण्याची परवानगी देण्यास सांगा आणि येथून परत या.",
   "location_claim_page_button_request_access": "हा व्यवसाय व्यवस्थापित करण्यासाठी प्रवेशाची विनंती करा",
 
-  "location_search_page_title": "My Google Business Locations",
-  "location_search_page_search_label": "Search for your Business and claim to manage that business.",
-  "location_search_page_search_hint": "Search",
+  "location_search_page_title": "माझे गूगल व्यवसाय स्थाने",
+  "location_search_page_search_label": "आपला व्यवसाय शोधा आणि तो व्यवसाय व्यवस्थापित करण्यासाठी हक्क सांगा.",
+  "location_search_page_search_hint": "शोधा",
   "location_search_page_no_business": "आपल्याकडे आपल्या गूगल खात्यासाठी %s कोणतेही गूगल व्यवसाय स्थान नाही",
-  "location_search_page_cant_find_your_business": "Can't find your business ?",
-  "location_search_page_button_create_on_google": "Create a business on Google",
+  "location_search_page_cant_find_your_business": "आपला व्यवसाय सापडत नाही?",
+  "location_search_page_button_create_on_google": "गूगल वर एक व्यवसाय तयार करा",
 
   "google_login_not_done_page_message": "गूगल स्थाने तयार करण्यासाठी किंवा व्यवस्थापित करण्यासाठी आपल्याला गूगल सह लॉग इन करण्याची आवश्यकता आहे",
-  "onboarding_page_button_verify": "Verify"
+  "onboarding_page_button_verify": "सत्यापित करा"
 }
