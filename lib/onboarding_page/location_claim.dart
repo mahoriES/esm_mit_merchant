@@ -10,6 +10,7 @@ import 'package:foore/onboarding_page/location_verify.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LocationClaimPage extends StatefulWidget {
   static const routeName = '/location-claim';
@@ -110,6 +111,13 @@ class _LocationClaimPageState extends State<LocationClaimPage>
   }
 
   Widget claimedBusiness(LocationClaimState state) {
+    _launchAdminRightsURL() async {
+      final url = state.googleLocation?.requestAdminRightsUrl;
+      if (await canLaunch(url)) {
+        await launch(url);
+      }
+    }
+
     return Column(
       children: <Widget>[
         SizedBox(
@@ -136,7 +144,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
                   decoration: TextDecoration.underline,
                 ),
           ),
-          onPressed: () {},
+          onPressed: _launchAdminRightsURL,
         ),
       ],
     );

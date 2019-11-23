@@ -46,8 +46,6 @@ class AuthBloc {
     this._storeAuthState();
     if (authType == AuthType.Google) {
       this._storeAuthTypeGoogle(true);
-    } else {
-      this._storeAuthTypeGoogle(false);
     }
     intercomInit(authData);
   }

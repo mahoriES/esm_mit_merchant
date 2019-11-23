@@ -8,6 +8,7 @@ import 'package:foore/onboarding_page/location_claim.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:foore/search_gmb/search_gmb.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../app_translations.dart';
 
 class LocationSearchPage extends StatefulWidget {
@@ -42,6 +43,13 @@ class _LocationSearchPageState extends State<LocationSearchPage>
       arguments['locationItem'] = googleLocation.location;
       Navigator.pushNamed(context, LocationClaimPage.routeName,
           arguments: arguments);
+    }
+
+    _launchGmbURL() async {
+      final url = 'https://business.google.com/create';
+      if (await canLaunch(url)) {
+        await launch(url);
+      }
     }
 
     return Scaffold(
@@ -106,22 +114,23 @@ class _LocationSearchPageState extends State<LocationSearchPage>
                         decoration: TextDecoration.underline,
                       ),
                 ),
-                onPressed: () {
-                  final responseString =
-                      '{ "googleLocations": [ { "name": "googleLocations/ChIJ3a2l4X0RrjsRggWzPz6Q0xM", "location": { "name": "accounts/100175924515635207658/locations/12164510788088057585", "locationName": "Mukesh Realtors", "primaryCategory": { "displayName": "Property management company", "categoryId": "gcid:property_management_company" }, "locationKey": { "placeId": "ChIJ3a2l4X0RrjsRggWzPz6Q0xM" }, "latlng": { "latitude": 12.969414, "longitude": 77.705732 }, "languageCode": "en", "locationState": {"hasPendingVerification": true }, "address": { "regionCode": "IN", "languageCode": "en", "postalCode": "560037", "administrativeArea": "Karnataka", "locality": "Bengaluru", "addressLines": [ "# 51, Shanti Nivas 7th Cross chinapanahalli", "Doddanekundi, Ext" ] } } } ] }';
-                  GoogleLocationsResponse googleLocationsResponse =
-                      GoogleLocationsResponse.fromJson(
-                          json.decode(responseString));
+                // onPressed: () {
+                //   final responseString =
+                //       '{ "googleLocations": [ { "name": "googleLocations/ChIJ3a2l4X0RrjsRggWzPz6Q0xM", "location": { "name": "accounts/100175924515635207658/locations/12164510788088057585", "locationName": "Mukesh Realtors", "primaryCategory": { "displayName": "Property management company", "categoryId": "gcid:property_management_company" }, "locationKey": { "placeId": "ChIJ3a2l4X0RrjsRggWzPz6Q0xM" }, "latlng": { "latitude": 12.969414, "longitude": 77.705732 }, "languageCode": "en", "locationState": {"hasPendingVerification": true }, "address": { "regionCode": "IN", "languageCode": "en", "postalCode": "560037", "administrativeArea": "Karnataka", "locality": "Bengaluru", "addressLines": [ "# 51, Shanti Nivas 7th Cross chinapanahalli", "Doddanekundi, Ext" ] } } } ] }';
+                //   GoogleLocationsResponse googleLocationsResponse =
+                //       GoogleLocationsResponse.fromJson(
+                //           json.decode(responseString));
 
-                  final GoogleLocation googleLocation =
-                      googleLocationsResponse.googleLocations[0];
-                  final Map<String, dynamic> arguments =
-                      new Map<String, dynamic>();
-                  // arguments['googleLocation'] = googleLocation;
-                  arguments['locationItem'] = googleLocation.location;
-                  Navigator.pushNamed(context, LocationClaimPage.routeName,
-                      arguments: arguments);
-                },
+                //   final GoogleLocation googleLocation =
+                //       googleLocationsResponse.googleLocations[0];
+                //   final Map<String, dynamic> arguments =
+                //       new Map<String, dynamic>();
+                //   // arguments['googleLocation'] = googleLocation;
+                //   arguments['locationItem'] = googleLocation.location;
+                //   Navigator.pushNamed(context, LocationClaimPage.routeName,
+                //       arguments: arguments);
+                // },
+                onPressed: _launchGmbURL,
               ),
               SizedBox(height: 16.0),
             ],
