@@ -53,11 +53,8 @@ class AuthBloc {
   Future<bool> googleLoginSilently() async {
     final isAuthTypeGoogle = await _getIsAuthTypeGoogle();
     if (isAuthTypeGoogle) {
-      final isSignedIn = await this.googleSignIn.isSignedIn();
       try {
-        if (!isSignedIn) {
-          await this.googleSignIn.signInSilently(suppressErrors: false);
-        }
+        await this.googleSignIn.signInSilently(suppressErrors: false);
       } catch (exception) {
         this.logout();
       }

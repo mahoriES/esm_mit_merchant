@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/router.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
+import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:http/http.dart' as http;
@@ -57,6 +58,7 @@ class CompleteVerificationBloc {
     );
     Verification verification;
     print(httpResponse.statusCode);
+    print(httpResponse.reasonPhrase);
     if (httpResponse.statusCode == 200) {
       final locationVerificationsResponse =
           LocationVerificationsResponse.fromJson(
@@ -141,6 +143,16 @@ class CompleteVerificationState {
   get locationName => locationItem != null ? locationItem.locationName : null;
 
   get locationLatLang => locationItem != null ? locationItem.latlng : null;
+
+  get date {
+    if (verification == null) {
+      return '';
+    }
+    var lastInteractionDate = DateTime.parse(verification.createTime);
+    var formatter = new DateFormat('MMM dd, yyyy');
+    String timeText = formatter.format(lastInteractionDate);
+    return timeText;
+  }
 
   String getLocationAddress(GmbLocationItem locationItem) {
     var address = '';

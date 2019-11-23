@@ -8,6 +8,7 @@ import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:sprintf/sprintf.dart';
 
 import '../app_translations.dart';
 
@@ -67,15 +68,17 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
 
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text(AppTranslations.of(context).text("location_verify_page_title")),
+        title: Text(
+            AppTranslations.of(context).text("location_verify_page_title")),
       ),
       body: SafeArea(
         child: StreamBuilder<CompleteVerificationState>(
             stream:
                 completeVerificationBloc.completeVerificationStateObservable,
             builder: (context, snapshot) {
-              Widget child = Container(child: Text('Loading...'));
+              Widget child = Center(
+                child: CircularProgressIndicator(),
+              );
               if (snapshot.hasData) {
                 if (snapshot.data.isLoading) {
                   child = Center(
@@ -120,7 +123,8 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
               vertical: 12.0,
             ),
             child: Text(
-              'Enter the 5-digit verification code mailed to this address on Nov 21, 2019. Postcards take about 12 days to arrive.',
+              sprintf(AppTranslations.of(context)
+                  .text("location_verify_page_pin_label"), [state.date]),
               style: Theme.of(context).textTheme.subtitle,
             ),
           ),
@@ -133,11 +137,15 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: "Enter code",
+                labelText: AppTranslations.of(context)
+                    .text("location_verify_page_pin_hint"),
               ),
               maxLength: 5,
               validator: (String value) {
-                return value.length < 5 ? 'Code must be 5 of digits' : null;
+                return value.length < 5
+                    ? AppTranslations.of(context)
+                        .text("location_verify_page_pin_validation")
+                    : null;
               },
             ),
           ),
@@ -154,7 +162,8 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
                         backgroundColor: Colors.white,
                       ))
                     : Text(
-                        'Verify',
+                        AppTranslations.of(context)
+                            .text("location_verify_page_button_verify"),
                         style: Theme.of(context).textTheme.button.copyWith(
                               color: Colors.white,
                             ),
