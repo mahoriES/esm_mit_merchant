@@ -27,6 +27,14 @@ class LocationClaimBloc {
         new BehaviorSubject<LocationClaimState>.seeded(_onboardingState);
   }
 
+  loginToGoogleSilently() async {
+    bool isSignedInWithGoogle = await this.authBloc.googleLoginSilently();
+    if (!isSignedInWithGoogle) {
+      this._onboardingState.isShowNotLoggedInWithGoogle = true;
+      this._updateState();
+    }
+  }
+
   Observable<LocationClaimState> get onboardingStateObservable =>
       _subjectLocationClaimState.stream;
 
@@ -39,6 +47,7 @@ class LocationClaimBloc {
   }
 
   manageLocation(BuildContext context) async {
+    loginToGoogleSilently();
     try {
       this._onboardingState.isSubmitting = true;
       this._updateState();
@@ -59,6 +68,7 @@ class LocationClaimBloc {
   }
 
   getData() async {
+    await loginToGoogleSilently();
     this._onboardingState.isLoading = true;
     this._onboardingState.isLoadingFailed = false;
     this._updateState();
@@ -155,6 +165,7 @@ class LocationClaimState {
   bool isSubmitting = false;
   bool isLoading = false;
   bool isLoadingFailed = false;
+  bool isShowNotLoggedInWithGoogle = false;
 
   bool get isShowVerificationPending {
     if (googleLocation != null) {

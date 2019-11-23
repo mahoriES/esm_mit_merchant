@@ -35,6 +35,7 @@ class CompleteVerificationBloc {
           _subjectCompleteVerificationState.stream;
 
   getData() async {
+    await loginToGoogleSilently();
     this._completeVerificationState.isLoading = true;
     this._updateState();
     try {
@@ -76,7 +77,16 @@ class CompleteVerificationBloc {
     }
   }
 
+  loginToGoogleSilently() async {
+    bool isSignedInWithGoogle = await this.authBloc.googleLoginSilently();
+    if (!isSignedInWithGoogle) {
+      this._completeVerificationState.isShowNotLoggedInWithGoogle = true;
+      this._updateState();
+    }
+  }
+
   completeVerification(BuildContext context) async {
+    await loginToGoogleSilently();
     this._completeVerificationState.isSubmitting = true;
     this._updateState();
 
@@ -117,6 +127,7 @@ class CompleteVerificationState {
   GmbLocationItem locationItem;
   Verification verification;
   bool isSubmitting = false;
+  bool isShowNotLoggedInWithGoogle = true;
 
   get locationAddress =>
       locationItem != null ? getLocationAddress(locationItem) : null;
@@ -138,28 +149,28 @@ class CompleteVerificationState {
         }
       }
       if (locationItem.address.locality != null) {
-      if (address == '') {
-        address = locationItem.address.locality;
-      } else {
-        address = address + ', ' + locationItem.address.locality;
+        if (address == '') {
+          address = locationItem.address.locality;
+        } else {
+          address = address + ', ' + locationItem.address.locality;
+        }
       }
-    }
 
-    if (locationItem.address.administrativeArea != null) {
-      if (address == '') {
-        address = locationItem.address.administrativeArea;
-      } else {
-        address = address + ', ' + locationItem.address.administrativeArea;
+      if (locationItem.address.administrativeArea != null) {
+        if (address == '') {
+          address = locationItem.address.administrativeArea;
+        } else {
+          address = address + ', ' + locationItem.address.administrativeArea;
+        }
       }
-    }
 
-    if (locationItem.address.postalCode != null) {
-      if (address == '') {
-        address = locationItem.address.postalCode;
-      } else {
-        address = address + ', ' + locationItem.address.postalCode;
+      if (locationItem.address.postalCode != null) {
+        if (address == '') {
+          address = locationItem.address.postalCode;
+        } else {
+          address = address + ', ' + locationItem.address.postalCode;
+        }
       }
-    }
     }
     return address;
   }

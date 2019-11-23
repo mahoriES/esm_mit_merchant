@@ -6,6 +6,8 @@ import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+enum AuthType { Google, Foore }
+
 class AuthBloc {
   GoogleSignIn googleSignIn = GoogleSignIn(
     scopes: <String>[
@@ -26,9 +28,10 @@ class AuthBloc {
 
   Observable<AuthState> get authStateObservable => _subjectAuthState.stream;
 
-  Future<Map<String, String>> get googleAuthHeaders => googleSignIn.currentUser.authHeaders;
+  Future<Map<String, String>> get googleAuthHeaders =>
+      googleSignIn.currentUser.authHeaders;
 
-  login(AuthInfo authData) {
+  login(AuthInfo authData, {AuthType authType}) {
     if (authData != null) {
       if (authData.token == null || authData.token == '') {
         this.authState.authData = null;
@@ -41,7 +44,31 @@ class AuthBloc {
     this.authState.isLoading = false;
     this._updateState();
     this._storeAuthState();
+    if (authType == AuthType.Google) {
+      this._storeAuthTypeGoogle(true);
+    } else {
+      this._storeAuthTypeGoogle(false);
+    }
     intercomInit(authData);
+  }
+
+  Future<bool> googleLoginSilently() async {
+    final isAuthTypeGoogle = await _getIsAuthTypeGoogle();
+    if (isAuthTypeGoogle) {
+      final isSignedIn = await this.googleSignIn.isSignedIn();
+      try {
+        if (!isSignedIn) {
+          await this.googleSignIn.signInSilently(suppressErrors: false);
+        }
+      } catch (exception) {
+        this.logout();
+      }
+      // return false if the login is done by google
+      return true;
+    } else {
+      // return false if the login is not done by google
+      return false;
+    }
   }
 
   intercomInit(AuthInfo authData) async {
@@ -92,11 +119,23 @@ class AuthBloc {
     } else {
       this.logout();
     }
-    // this.login(AuthInfo(
-    //     token:
-    //         "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMjgsInVzZXJuYW1lIjoidGVzdF9wYXJhZ0Bmb29yZS5pbiIsImV4cCI6MTU3ODA0OTQwMSwiZW1haWwiOiJ0ZXN0X3BhcmFnQGZvb3JlLmluIiwib3JpZ19pYXQiOjE1NzAyNzM0MDF9.5JHbCABlSrumJIxpOpQ_d9CHz1G5uwlWMMTjPLpAQ24"));
     this.authState.isLoading = false;
     this._updateState();
+  }
+
+  _storeAuthTypeGoogle(bool isAuthTypeGoogle) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.setBool('googleSignIn', true);
+  }
+
+  _getIsAuthTypeGoogle() async {
+    var isAuthTypeGoogle = false;
+    try {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      isAuthTypeGoogle = sharedPreferences.getBool('googleSignIn') ?? false;
+    } catch (exception) {}
+    return isAuthTypeGoogle;
   }
 
   _storeAuthState() async {

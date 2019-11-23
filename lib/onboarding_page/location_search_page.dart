@@ -20,7 +20,15 @@ class LocationSearchPage extends StatefulWidget {
 class _LocationSearchPageState extends State<LocationSearchPage>
     with AfterLayoutMixin<LocationSearchPage> {
   @override
-  void afterFirstLayout(BuildContext context) {}
+  void afterFirstLayout(BuildContext context) {
+    AuthBloc authBloc = Provider.of<AuthBloc>(context);
+    this.loginToGoogleSilently(authBloc);
+  }
+
+  loginToGoogleSilently(AuthBloc authBloc) async {
+    bool isSignedInWithGoogle = await authBloc.googleLoginSilently();
+    if (!isSignedInWithGoogle) {}
+  }
 
   @override
   Widget build(BuildContext context) {

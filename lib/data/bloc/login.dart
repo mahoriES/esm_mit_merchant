@@ -40,7 +40,7 @@ class LoginBloc {
             await getGoogleAuthStateId(authentication.serverAuthCode);
         AuthInfo loginInfo = await getAuthInfoWithGoogleAuthStateId(
             authStateResponse.authStateId);
-        this._authBloc.login(loginInfo);
+        this._authBloc.login(loginInfo, authType: AuthType.Google);
         Navigator.of(context).pushReplacementNamed(Router.homeRoute);
       } catch (error) {
         ///////////
