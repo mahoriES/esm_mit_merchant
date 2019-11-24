@@ -60,7 +60,7 @@
   "location_search_page_title": "My Google Business Locations",
   "location_search_page_search_label": "Search for your Business and claim to manage that business.",
   "location_search_page_search_hint": "Search",
-  "location_search_page_no_business": "You don't have any Google Business location for your Google account paragjnath@foore.in.",
+  "location_search_page_no_business": "You don't have any Google Business location for your Google account %s.",
   "location_search_page_cant_find_your_business": "Can't find your business ?",
   "location_search_page_button_create_on_google": "Create a business on Google",
 
