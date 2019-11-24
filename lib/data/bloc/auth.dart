@@ -107,7 +107,7 @@ class AuthBloc {
     this.authState.isLoading = true;
     this._updateState();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final authString = prefs.getString('authInfo') ?? '';
+    final authString = prefs.getString('authenticationInfo') ?? '';
     if (authString != '') {
       var authData = json.decode(authString);
       this.login(AuthInfo.fromJson(authData));
@@ -142,9 +142,9 @@ class AuthBloc {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (this.authState.authData != null) {
       await sharedPreferences.setString(
-          'authInfo', json.encode(this.authState.authData.toJson()));
+          'authenticationInfo', json.encode(this.authState.authData.toJson()));
     } else {
-      await sharedPreferences.setString('authInfo', '');
+      await sharedPreferences.setString('authenticationInfo', '');
     }
   }
 }

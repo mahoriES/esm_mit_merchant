@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/router.dart';
@@ -70,6 +71,10 @@ class CompleteVerificationBloc {
           }
         }
       }
+    } else {
+       Crashlytics.instance.log(
+          'url: $url , responseCode: ${httpResponse.statusCode} , response: ${httpResponse.body ?? ''}');
+    
     }
     if (verification != null) {
       this._completeVerificationState.verification = verification;
@@ -107,6 +112,10 @@ class CompleteVerificationBloc {
     if (httpResponse.statusCode == 200) {
       //////////navigate away
       Navigator.pushReplacementNamed(context, Router.homeRoute);
+    } else {
+       Crashlytics.instance.log(
+          'url: $url , responseCode: ${httpResponse.statusCode} , body: $body , response: ${httpResponse.body ?? ''}');
+    
     }
     this._completeVerificationState.isSubmitting = false;
     this._updateState();
