@@ -58,13 +58,13 @@
   "location_claim_page_err_taken": "ఈ వ్యాపారాన్ని మరొక Google ఖాతా నిర్వహిస్తుంది. వారు మీ స్నేహితుడు లేదా సహోద్యోగి అయితే దయచేసి ఈ స్థానాన్ని యాక్సెస్ చేయడానికి అనుమతి ఇవ్వమని వారిని అడగండి మరియు ఇక్కడకు తిరిగి రండి.",
   "location_claim_page_button_request_access": "ఈ వ్యాపారాన్ని నిర్వహించడానికి ప్రాప్యతను అభ్యర్థించండి",
 
-  "location_search_page_title": "My Google Business Locations",
-  "location_search_page_search_label": "Search for your Business and claim to manage that business.",
-  "location_search_page_search_hint": "Search",
+  "location_search_page_title": "నా Google వ్యాపార స్థానాలు",
+  "location_search_page_search_label": "మీ వ్యాపారం కోసం శోధించండి మరియు ఆ వ్యాపారాన్ని నిర్వహించడానికి దావా వేయండి.",
+  "location_search_page_search_hint": "శోధన",
   "location_search_page_no_business": "మీ Google ఖాతా %s కోసం మీకు Google వ్యాపార స్థానం లేదు.",
-  "location_search_page_cant_find_your_business": "Can't find your business ?",
-  "location_search_page_button_create_on_google": "Create a business on Google",
+  "location_search_page_cant_find_your_business": "మీ వ్యాపారాన్ని కనుగొనలేదా?",
+  "location_search_page_button_create_on_google": "Google లో వ్యాపారాన్ని సృష్టించండి",
 
   "google_login_not_done_page_message": "Google స్థానాలను సృష్టించడానికి లేదా నిర్వహించడానికి మీరు Google తో లాగిన్ అవ్వాలి",
-  "onboarding_page_button_verify": "Verify"
+  "onboarding_page_button_verify": "నిర్ధారించండి"
 }

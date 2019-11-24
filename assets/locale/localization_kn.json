@@ -58,13 +58,13 @@
   "location_claim_page_err_taken": "ಈ ವ್ಯವಹಾರವನ್ನು ಮತ್ತೊಂದು Google ಖಾತೆಯಿಂದ ನಿರ್ವಹಿಸಲಾಗುತ್ತದೆ. ಅವರು ನಿಮ್ಮ ಸ್ನೇಹಿತ ಅಥವಾ ಸಹೋದ್ಯೋಗಿಯಾಗಿದ್ದರೆ ದಯವಿಟ್ಟು ಈ ಸ್ಥಳವನ್ನು ಪ್ರವೇಶಿಸಲು ಅನುಮತಿ ನೀಡುವಂತೆ ಕೇಳಿ ಮತ್ತು ಇಲ್ಲಿಗೆ ಹಿಂತಿರುಗಿ.",
   "location_claim_page_button_request_access": "ಈ ವ್ಯವಹಾರವನ್ನು ನಿರ್ವಹಿಸಲು ಪ್ರವೇಶವನ್ನು ವಿನಂತಿಸಿ",
 
-  "location_search_page_title": "My Google Business Locations",
-  "location_search_page_search_label": "Search for your Business and claim to manage that business.",
-  "location_search_page_search_hint": "Search",
+  "location_search_page_title": "ನನ್ನ Google ವ್ಯಾಪಾರ ಸ್ಥಳಗಳು",
+  "location_search_page_search_label": "ನಿಮ್ಮ ವ್ಯವಹಾರಕ್ಕಾಗಿ ಹುಡುಕಿ ಮತ್ತು ಆ ವ್ಯವಹಾರವನ್ನು ನಿರ್ವಹಿಸಲು ಹಕ್ಕು ಪಡೆಯಿರಿ.",
+  "location_search_page_search_hint": "ಹುಡುಕಿ",
   "location_search_page_no_business": "ನಿಮ್ಮ Google ಖಾತೆಗಾಗಿ ನೀವು ಯಾವುದೇ Google ವ್ಯಾಪಾರ ಸ್ಥಳವನ್ನು ಹೊಂದಿಲ್ಲ %s",
-  "location_search_page_cant_find_your_business": "Can't find your business ?",
-  "location_search_page_button_create_on_google": "Create a business on Google",
+  "location_search_page_cant_find_your_business": "ನಿಮ್ಮ ವ್ಯವಹಾರವನ್ನು ಕಂಡುಹಿಡಿಯಲಾಗುತ್ತಿಲ್ಲವೇ?",
+  "location_search_page_button_create_on_google": "ನಿಮ್ಮ ವ್ಯವಹಾರವನ್ನು ಕಂಡುಹಿಡಿಯಲಾಗುತ್ತಿಲ್ಲವೇ?",
 
   "google_login_not_done_page_message": "Google ಸ್ಥಳಗಳನ್ನು ರಚಿಸಲು ಅಥವಾ ನಿರ್ವಹಿಸಲು ನೀವು Google ನೊಂದಿಗೆ ಲಾಗಿನ್ ಆಗಬೇಕು",
-  "onboarding_page_button_verify": "Verify"
+  "onboarding_page_button_verify": "ಪರಿಶೀಲಿಸಿ"
 }

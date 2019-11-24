@@ -58,13 +58,13 @@
   "location_claim_page_err_taken": "ਇਹ ਕਾਰੋਬਾਰ ਕਿਸੇ ਹੋਰ ਗੂਗਲ ਖਾਤੇ ਦੁਆਰਾ ਪ੍ਰਬੰਧਿਤ ਕੀਤਾ ਜਾਂਦਾ ਹੈ. ਜੇ ਉਹ ਤੁਹਾਡੇ ਦੋਸਤ ਜਾਂ ਸਹਿਯੋਗੀ ਹਨ ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਉਨ੍ਹਾਂ ਨੂੰ ਇਸ ਸਥਾਨ ਤੇ ਪਹੁੰਚ ਦੀ ਆਗਿਆ ਦੇਣ ਲਈ ਕਹੋ ਅਤੇ ਇੱਥੇ ਵਾਪਸ ਆਓ.",
   "location_claim_page_button_request_access": "ਇਸ ਕਾਰੋਬਾਰ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰਨ ਲਈ ਪਹੁੰਚ ਦੀ ਬੇਨਤੀ ਕਰੋ",
 
-  "location_search_page_title": "My Google Business Locations",
-  "location_search_page_search_label": "Search for your Business and claim to manage that business.",
-  "location_search_page_search_hint": "Search",
+  "location_search_page_title": "ਮੇਰੇ ਗੂਗਲ ਵਪਾਰ ਸਥਾਨ",
+  "location_search_page_search_label": "ਆਪਣੇ ਕਾਰੋਬਾਰ ਦੀ ਭਾਲ ਕਰੋ ਅਤੇ ਉਸ ਕਾਰੋਬਾਰ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰਨ ਦਾ ਦਾਅਵਾ ਕਰੋ.",
+  "location_search_page_search_hint": "ਖੋਜ",
   "location_search_page_no_business": "ਤੁਹਾਡੇ ਕੋਲ ਤੁਹਾਡੇ ਗੂਗਲ ਖਾਤੇ %s ਲਈ ਕੋਈ ਗੂਗਲ ਬਿਜਨਸ ਟਿਕਾਣਾ ਨਹੀਂ ਹੈ.",
-  "location_search_page_cant_find_your_business": "Can't find your business ?",
-  "location_search_page_button_create_on_google": "Create a business on Google",
+  "location_search_page_cant_find_your_business": "ਆਪਣਾ ਕਾਰੋਬਾਰ ਨਹੀਂ ਲੱਭ ਸਕਦੇ?",
+  "location_search_page_button_create_on_google": "ਗੂਗਲ 'ਤੇ ਇੱਕ ਕਾਰੋਬਾਰ ਬਣਾਓ",
 
   "google_login_not_done_page_message": "ਗੂਗਲ ਨਿਰਧਾਰਿਤ ਸਥਾਨਾਂ ਨੂੰ ਬਣਾਉਣ ਅਤੇ ਪ੍ਰਬੰਧਿਤ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਗੂਗਲ ਨਾਲ ਲੌਗਇਨ ਕਰਨ ਦੀ ਜ਼ਰੂਰਤ ਹੈ",
-  "onboarding_page_button_verify": "Verify"
+  "onboarding_page_button_verify": "ਪੜਤਾਲ ਕਰੋ"
 }
