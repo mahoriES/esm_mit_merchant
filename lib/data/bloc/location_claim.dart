@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
@@ -119,9 +120,11 @@ class LocationClaimBloc {
   }
 
   createLocation() async {
+    final rand = Random();
+    final randomString = rand.nextInt(100000000).toString();
     String url = 'https://mybusiness.googleapis.com/v4/' +
         _onboardingState.accountName +
-        '/locations?requestId=requestee1';
+        '/locations?requestId=$randomString';
     final body =
         json.encode(this._onboardingState.googleLocation.location.toJson());
     final headers = await authBloc.googleAuthHeaders;
