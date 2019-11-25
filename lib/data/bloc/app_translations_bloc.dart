@@ -10,10 +10,10 @@ class AppTranslationsBloc {
     "English",
     "हिन्दी (Hindi)",
     "मराठी (Marathi)",
-    "ગુજરાતી (Gujrati)",
+    "ગુજરાતી (Gujarati)",
     "ਪੰਜਾਬੀ (Punjabi)",
     "தமிழ் (Tamil)",
-    "മലയാളം (Malayalum)",
+    "മലയാളം (Malayalam)",
     "తెలుగు (Telugu)",
     "ಕನ್ನಡ (Kannada)"
   ];
