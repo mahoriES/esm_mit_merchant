@@ -49,28 +49,6 @@ class ReplyGmbState extends State<ReplyGmb> {
         title: Text(
           AppTranslations.of(context).text("reply_page_title"),
         ),
-        actions: <Widget>[
-          Container(
-            child: Center(
-              child: this._isLoading
-                  ? Container(
-                      padding: EdgeInsets.only(right: 30.0),
-                      child: CircularProgressIndicator())
-                  : FlatButton(
-                      child: Text(AppTranslations.of(context)
-                          .text("reply_page_submit")),
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          this.postReply(GmbReplyPayload(
-                              feedbackId: feedbackItem.feedbackId,
-                              reply: this._reply));
-                          // Process data.
-                        }
-                      },
-                    ),
-            ),
-          ),
-        ],
       ),
       body: Form(
         key: _formKey,
@@ -121,10 +99,38 @@ class ReplyGmbState extends State<ReplyGmb> {
                   },
                 ),
               ),
+              SizedBox(
+                height: 60.0,
+              ),
             ],
           ),
         ),
       ),
+      floatingActionButton: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50.0),
+        ),
+        padding: EdgeInsets.symmetric(
+          vertical: 15,
+          horizontal: 45,
+        ),
+        onPressed: () {
+          if (_formKey.currentState.validate()) {
+            this.postReply(GmbReplyPayload(
+                feedbackId: feedbackItem.feedbackId, reply: this._reply));
+            // Process data.
+          }
+        },
+        child: Container(
+          child: this._isLoading
+              ? Center(
+                  child: CircularProgressIndicator(
+                  backgroundColor: Colors.white,
+                ))
+              : Text(AppTranslations.of(context).text("reply_page_submit")),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
