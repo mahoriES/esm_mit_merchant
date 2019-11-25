@@ -71,29 +71,6 @@ class CheckInPageState extends State<CheckInPage> {
         title: Text(
           AppTranslations.of(context).text("checkin_page_title"),
         ),
-        actions: <Widget>[
-          StreamBuilder<CheckinUnirsonState>(
-              stream: this._checkinUnirsonBloc.checkinStateObservable,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Container();
-                }
-                return FlatButton(
-                  onPressed: checkIn,
-                  child: Container(
-                    child: Center(
-                      child: snapshot.data.isSubmitting
-                          ? Center(
-                              child: CircularProgressIndicator(
-                              backgroundColor: Colors.white,
-                            ))
-                          : Text(AppTranslations.of(context)
-                              .text("checkin_page_button_submit")),
-                    ),
-                  ),
-                );
-              }),
-        ],
       ),
       body: Form(
         key: _formKey,
@@ -169,6 +146,9 @@ class CheckInPageState extends State<CheckInPage> {
                         ),
                       ),
                       sequenceItemsWidget(snapshot.data),
+                      SizedBox(
+                        height: 60.0,
+                      ),
                     ],
                   ),
                 );
@@ -177,6 +157,33 @@ class CheckInPageState extends State<CheckInPage> {
               }
             }),
       ),
+      floatingActionButton: StreamBuilder<CheckinUnirsonState>(
+          stream: this._checkinUnirsonBloc.checkinStateObservable,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Container();
+            }
+            return RaisedButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50.0),
+              ),
+              padding: EdgeInsets.symmetric(
+                vertical: 15,
+                horizontal: 45,
+              ),
+              onPressed: checkIn,
+              child: Container(
+                child: snapshot.data.isSubmitting
+                    ? Center(
+                        child: CircularProgressIndicator(
+                        backgroundColor: Colors.white,
+                      ))
+                    : Text(AppTranslations.of(context)
+                        .text("checkin_page_button_submit")),
+              ),
+            );
+          }),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
