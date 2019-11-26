@@ -77,7 +77,9 @@ class ReviewBloc {
   }
 
   _updateState() {
-    this._subjectReviewState.sink.add(this._reviewState);
+    if (!this._subjectReviewState.isClosed) {
+      this._subjectReviewState.sink.add(this._reviewState);
+    }
   }
 
   dispose() {
