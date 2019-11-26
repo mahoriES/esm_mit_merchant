@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
-import 'package:contact_picker/contact_picker.dart';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
+import 'package:foore/contacts_page/contacts_page.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/checkin_unirson.dart';
@@ -25,7 +26,20 @@ class CheckInPageState extends State<CheckInPage>
   CheckinUnirsonBloc _checkinUnirsonBloc;
   StreamSubscription<CheckinUnirsonState> _subscription;
 
-  final ContactPicker _contactPicker = new ContactPicker();
+  openContactPicker() async {
+    List<Contact> results =
+        await Navigator.of(context).push(new MaterialPageRoute<List<Contact>>(
+            builder: (BuildContext context) {
+              return new ContactsPage();
+            },
+            fullscreenDialog: true));
+    if (results.length > 0) {
+      var contact = results[0];
+      this
+          ._checkinUnirsonBloc
+          .setNameAndPhoneNumber(contact.displayName, 'waffo');
+    }
+  }
 
   _showFailedAlertDialog() async {
     await showDialog(
@@ -65,12 +79,12 @@ class CheckInPageState extends State<CheckInPage>
     }
   }
 
-  onContactPicked() async {
-    Contact contact = await _contactPicker.selectContact();
-    this
-        ._checkinUnirsonBloc
-        .setNameAndPhoneNumber(contact.fullName, contact.phoneNumber.number);
-  }
+  // onContactPicked() async {
+  //   Contact contact = await _contactPicker.selectContact();
+  //   this
+  //       ._checkinUnirsonBloc
+  //       .setNameAndPhoneNumber(contact.fullName, contact.phoneNumber.number);
+  // }
 
   Future<bool> _onWillPop() async {
     Navigator.pop(context);
@@ -287,7 +301,7 @@ class CheckInPageState extends State<CheckInPage>
               labelText:
                   AppTranslations.of(context).text("checkin_page_name_label"),
               suffixIcon: IconButton(
-                onPressed: this.onContactPicked,
+                onPressed: this.openContactPicker,
                 icon: Icon(Icons.contacts),
               ),
             ),
