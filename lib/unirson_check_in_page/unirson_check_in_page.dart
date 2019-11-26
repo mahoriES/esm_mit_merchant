@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/buttons/fo_submit_button.dart';
+import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/checkin_unirson.dart';
 import 'package:foore/data/http_service.dart';
@@ -19,14 +22,54 @@ class UnirsonCheckInPage extends StatefulWidget {
   UnirsonCheckInPageState createState() => UnirsonCheckInPageState();
 }
 
-class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
+class UnirsonCheckInPageState extends State<UnirsonCheckInPage>
+    with AfterLayoutMixin<UnirsonCheckInPage> {
   final _formKey = GlobalKey<FormState>();
   HttpService _httpService;
   CheckinUnirsonBloc _checkinUnirsonBloc;
+  StreamSubscription<CheckinUnirsonState> _subscription;
 
   Future<bool> _onWillPop() async {
     Navigator.pop(context);
     return false;
+  }
+
+  _showFailedAlertDialog() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Submit failed'),
+          content: const Text('Please try again.'),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Dismiss'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    _subscription = this
+        ._checkinUnirsonBloc
+        .checkinStateObservable
+        .listen(this._onCompleteVerificationStateChange);
+    this._checkinUnirsonBloc.getData();
+  }
+
+  _onCompleteVerificationStateChange(
+    CheckinUnirsonState state,
+  ) {
+    if (state.isSubmitFailed) {
+      this._showFailedAlertDialog();
+    }
   }
 
   @override
@@ -55,7 +98,8 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
     final UnirsonItem unirsonItem = this.widget._unirsonItem;
 
     checkIn() {
-      this._checkinUnirsonBloc.checkin(unirsonItem.unirsonId, () {
+      this._checkinUnirsonBloc.checkin(unirsonItem.unirsonId, () async {
+        await Future.delayed(Duration(milliseconds: 300));
         Navigator.pop(context);
       });
     }
@@ -78,7 +122,9 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
                     child: CircularProgressIndicator(),
                   );
                 } else if (snapshot.data.isLoadingFailed) {
-                  return Text('Loading Failed');
+                  return SomethingWentWrong(
+                    onRetry: this._checkinUnirsonBloc.getData,
+                  );
                 }
                 return Scrollbar(
                   child: ListView(
@@ -159,24 +205,12 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage> {
             if (!snapshot.hasData) {
               return Container();
             }
-            return RaisedButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              padding: EdgeInsets.symmetric(
-                vertical: 15,
-                horizontal: 45,
-              ),
+            return FoSubmitButton(
+              text: AppTranslations.of(context)
+                  .text("checkin_page_button_submit"),
               onPressed: checkIn,
-              child: Container(
-                child: snapshot.data.isSubmitting
-                    ? Center(
-                        child: CircularProgressIndicator(
-                        backgroundColor: Colors.white,
-                      ))
-                    : Text(AppTranslations.of(context)
-                        .text("checkin_page_button_submit")),
-              ),
+              isLoading: snapshot.data.isSubmitting,
+              isSuccess: snapshot.data.isSubmitSuccess,
             );
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

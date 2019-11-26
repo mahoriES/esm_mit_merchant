@@ -3,6 +3,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:contact_picker/contact_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
+import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/checkin_unirson.dart';
 import 'package:foore/data/http_service.dart';
@@ -126,7 +127,9 @@ class CheckInPageState extends State<CheckInPage>
                     child: CircularProgressIndicator(),
                   );
                 } else if (snapshot.data.isLoadingFailed) {
-                  return Text('Loading Failed');
+                  return SomethingWentWrong(
+                    onRetry: this._checkinUnirsonBloc.getData,
+                  );
                 }
                 return Scrollbar(
                   child: ListView(
