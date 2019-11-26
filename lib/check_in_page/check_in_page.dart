@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:after_layout/after_layout.dart';
 import 'package:contact_picker/contact_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/checkin_unirson.dart';
 import 'package:foore/data/http_service.dart';
@@ -15,12 +17,52 @@ class CheckInPage extends StatefulWidget {
   CheckInPageState createState() => CheckInPageState();
 }
 
-class CheckInPageState extends State<CheckInPage> {
+class CheckInPageState extends State<CheckInPage>
+    with AfterLayoutMixin<CheckInPage> {
   final _formKey = GlobalKey<FormState>();
   HttpService _httpService;
   CheckinUnirsonBloc _checkinUnirsonBloc;
+  StreamSubscription<CheckinUnirsonState> _subscription;
 
   final ContactPicker _contactPicker = new ContactPicker();
+
+  _showFailedAlertDialog() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Submit failed'),
+          content: const Text('Please try again.'),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Dismiss'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    _subscription = this
+        ._checkinUnirsonBloc
+        .checkinStateObservable
+        .listen(this._onCompleteVerificationStateChange);
+    this._checkinUnirsonBloc.getData();
+  }
+
+  _onCompleteVerificationStateChange(
+    CheckinUnirsonState state,
+  ) {
+    if (state.isSubmitFailed) {
+      this._showFailedAlertDialog();
+    }
+  }
 
   onContactPicked() async {
     Contact contact = await _contactPicker.selectContact();
@@ -39,7 +81,6 @@ class CheckInPageState extends State<CheckInPage> {
     this._httpService = Provider.of<HttpService>(context);
     if (this._checkinUnirsonBloc == null) {
       this._checkinUnirsonBloc = CheckinUnirsonBloc(this._httpService);
-      this._checkinUnirsonBloc.getData();
     }
     super.didChangeDependencies();
   }
@@ -59,7 +100,8 @@ class CheckInPageState extends State<CheckInPage> {
   Widget build(BuildContext context) {
     checkIn() {
       if (_formKey.currentState.validate()) {
-        this._checkinUnirsonBloc.checkinWithPhoneNumber(() {
+        this._checkinUnirsonBloc.checkinWithPhoneNumber(() async {
+          await Future.delayed(Duration(milliseconds: 300));
           Navigator.pop(context);
         }); // Process data.
 
@@ -163,24 +205,12 @@ class CheckInPageState extends State<CheckInPage> {
             if (!snapshot.hasData) {
               return Container();
             }
-            return RaisedButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              padding: EdgeInsets.symmetric(
-                vertical: 15,
-                horizontal: 45,
-              ),
+            return FoSubmitButton(
+              text: AppTranslations.of(context)
+                  .text("checkin_page_button_submit"),
               onPressed: checkIn,
-              child: Container(
-                child: snapshot.data.isSubmitting
-                    ? Center(
-                        child: CircularProgressIndicator(
-                        backgroundColor: Colors.white,
-                      ))
-                    : Text(AppTranslations.of(context)
-                        .text("checkin_page_button_submit")),
-              ),
+              isLoading: snapshot.data.isSubmitting,
+              isSuccess: snapshot.data.isSubmitSuccess,
             );
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

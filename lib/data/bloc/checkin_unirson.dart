@@ -82,6 +82,8 @@ class CheckinUnirsonBloc {
 
   checkin(String unirsonId, Function onCheckInSuccess) {
     this._checkinUnirsonState.isSubmitting = true;
+    this._checkinUnirsonState.isSubmitFailed = false;
+    this._checkinUnirsonState.isSubmitSuccess = false;
     this._updateState();
     var payload = new CheckInPayload(
       unirsonId: unirsonId,
@@ -101,21 +103,29 @@ class CheckinUnirsonBloc {
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
         this._checkinUnirsonState.isSubmitting = false;
+        this._checkinUnirsonState.isSubmitFailed = false;
+        this._checkinUnirsonState.isSubmitSuccess = true;
         if (onCheckInSuccess != null) {
           onCheckInSuccess();
         }
       } else {
         this._checkinUnirsonState.isSubmitting = false;
+        this._checkinUnirsonState.isSubmitFailed = true;
+        this._checkinUnirsonState.isSubmitSuccess = false;
       }
       this._updateState();
     }).catchError((onError) {
       this._checkinUnirsonState.isSubmitting = false;
+      this._checkinUnirsonState.isSubmitFailed = true;
+      this._checkinUnirsonState.isSubmitSuccess = false;
       this._updateState();
     });
   }
 
   checkinWithPhoneNumber(Function onCheckInSuccess) {
     this._checkinUnirsonState.isSubmitting = true;
+    this._checkinUnirsonState.isSubmitFailed = false;
+    this._checkinUnirsonState.isSubmitSuccess = false;
     this._updateState();
     var payload = new CheckInPayload(
       phoneTo: this.phoneNumberEditController.text,
@@ -135,15 +145,21 @@ class CheckinUnirsonBloc {
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
         this._checkinUnirsonState.isSubmitting = false;
+        this._checkinUnirsonState.isSubmitFailed = false;
+        this._checkinUnirsonState.isSubmitSuccess = true;
         if (onCheckInSuccess != null) {
           onCheckInSuccess();
         }
       } else {
         this._checkinUnirsonState.isSubmitting = false;
+        this._checkinUnirsonState.isSubmitFailed = true;
+        this._checkinUnirsonState.isSubmitSuccess = false;
       }
       this._updateState();
     }).catchError((onError) {
       this._checkinUnirsonState.isSubmitting = false;
+      this._checkinUnirsonState.isSubmitFailed = true;
+      this._checkinUnirsonState.isSubmitSuccess = false;
       this._updateState();
     });
   }
@@ -197,6 +213,8 @@ class CheckinUnirsonState {
   List<SequenceItem> sequences;
   LocationItem selectedLocation;
   bool isSubmitting;
+  bool isSubmitSuccess;
+  bool isSubmitFailed;
   bool isGmbReviewSelected;
 
   bool get isLoading => this.isLoadingUiHelper || this.isLoadingSequence;
@@ -207,6 +225,8 @@ class CheckinUnirsonState {
     this.isLoadingUiHelper = false;
     this.isLoadingFailedUiHelper = false;
     this.isSubmitting = false;
+    this.isSubmitFailed = false;
+    this.isSubmitSuccess = false;
     this.isGmbReviewSelected = true;
     this.locations = new List<LocationItem>();
   }
