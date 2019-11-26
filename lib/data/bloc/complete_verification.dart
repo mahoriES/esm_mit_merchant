@@ -72,9 +72,8 @@ class CompleteVerificationBloc {
         }
       }
     } else {
-       Crashlytics.instance.log(
+      Crashlytics.instance.log(
           'url: $url , responseCode: ${httpResponse.statusCode} , response: ${httpResponse.body ?? ''}');
-    
     }
     if (verification != null) {
       this._completeVerificationState.verification = verification;
@@ -95,6 +94,7 @@ class CompleteVerificationBloc {
   completeVerification(BuildContext context) async {
     await loginToGoogleSilently();
     this._completeVerificationState.isSubmitting = true;
+    this._completeVerificationState.isSubmitFailed = false;
     this._updateState();
 
     String url = "https://mybusiness.googleapis.com/v4/" +
@@ -113,9 +113,9 @@ class CompleteVerificationBloc {
       //////////navigate away
       Navigator.pushReplacementNamed(context, Router.homeRoute);
     } else {
-       Crashlytics.instance.log(
+      this._completeVerificationState.isSubmitFailed = true;
+      Crashlytics.instance.log(
           'url: $url , responseCode: ${httpResponse.statusCode} , body: $body , response: ${httpResponse.body ?? ''}');
-    
     }
     this._completeVerificationState.isSubmitting = false;
     this._updateState();
@@ -144,6 +144,7 @@ class CompleteVerificationState {
   GmbLocationItem locationItem;
   Verification verification;
   bool isSubmitting = false;
+  bool isSubmitFailed = false;
   bool isShowNotLoggedInWithGoogle = false;
 
   get locationAddress =>

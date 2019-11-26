@@ -51,9 +51,33 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
     completeVerificationBloc.getData();
   }
 
+  _showFailedAlertDialog() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Submit failed'),
+          content: const Text('Please try again.'),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Dismiss'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
   _onCompleteVerificationStateChange(CompleteVerificationState state) {
     if (state.isShowNotLoggedInWithGoogle) {
       Navigator.pushReplacementNamed(context, GoogleLoginNotDonePage.routeName);
+    }
+    if (state.isSubmitFailed) {
+      _showFailedAlertDialog();
     }
   }
 
