@@ -83,8 +83,8 @@ class _ReviewPageState extends State<ReviewPage> {
                           "Press 'Get reviews' to send review request to your customers.",
                     );
                   }
-                  return FeedbackListWidget(
-                      snapshot.data.items, this._reviewBloc);
+                  return FeedbackListWidget(snapshot.data.items,
+                      this._reviewBloc, snapshot.data.isLoadingMore);
                 }
                 return Center(
                   child: CircularProgressIndicator(),
@@ -118,24 +118,40 @@ class _ReviewPageState extends State<ReviewPage> {
 class FeedbackListWidget extends StatelessWidget {
   final List<FeedbackItem> _feedbackItems;
   final ReviewBloc _reviewBloc;
+  final bool _isLoadingMore;
 
-  FeedbackListWidget(this._feedbackItems, this._reviewBloc);
+  FeedbackListWidget(
+      this._feedbackItems, this._reviewBloc, this._isLoadingMore);
 
   @override
   Widget build(BuildContext context) {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollInfo) {
-        print('onNotification');
         if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
-          print('onNotification: load more');
           this._reviewBloc.loadMore();
         }
         return false;
       },
-      child: ListView(
-          children: this._feedbackItems.map((item) {
-        return feedbackItemWidget(feedbackItem: item);
-      }).toList()),
+      child: ListView.builder(
+          padding: EdgeInsets.only(bottom: 72),
+          itemCount: this._feedbackItems.length + 1,
+          itemBuilder: (context, index) {
+            if (this._feedbackItems.length == index) {
+              if (this._isLoadingMore) {
+                return Container(
+                  margin: EdgeInsets.all(4.0),
+                  height: 36,
+                  width: 36,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              } else {
+                return Container();
+              }
+            }
+            return feedbackItemWidget(feedbackItem: this._feedbackItems[index]);
+          }),
     );
   }
 
