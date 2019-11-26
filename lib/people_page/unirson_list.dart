@@ -47,13 +47,31 @@ class UnirsonListWidget extends StatelessWidget {
                   }
                   return false;
                 },
-                child: ListView(
-                    padding: const EdgeInsets.only(top: 30),
-                    children: snapshot.data.items.map((item) {
+                child: ListView.builder(
+                    padding: EdgeInsets.only(
+                      bottom: 72,
+                      top: 30,
+                    ),
+                    itemCount: snapshot.data.items.length + 1,
+                    itemBuilder: (context, index) {
+                      if (snapshot.data.items.length == index) {
+                        if (snapshot.data.isLoadingMore) {
+                          return Container(
+                            margin: EdgeInsets.all(4.0),
+                            height: 36,
+                            width: 36,
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      }
                       return UnirsonItemWidget(
-                          unirsonItem: item,
+                          unirsonItem: snapshot.data.items[index],
                           onUnirsonSelected: onUnirsonSelected);
-                    }).toList()),
+                    }),
               );
             }
           }
