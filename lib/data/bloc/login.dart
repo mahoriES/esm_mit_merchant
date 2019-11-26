@@ -47,10 +47,11 @@ class LoginBloc {
         this._loginState.isLoading = false;
         this._loginState.isSubmitFailed = false;
         this._updateState();
-      } catch (error) {
+      } catch (error, s) {
         this._loginState.isSubmitFailed = true;
         this._loginState.isLoading = false;
         this._updateState();
+        Crashlytics.instance.recordError(error, s);
       }
     }
   }
