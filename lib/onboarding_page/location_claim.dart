@@ -6,6 +6,7 @@ import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/location_claim.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart';
+import 'package:foore/home_page/app_drawer.dart';
 import 'package:foore/onboarding_page/location_verify.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -86,6 +87,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
       appBar: AppBar(
         title: Text(AppTranslations.of(context).text("location_claim_page_title")),
       ),
+      drawer: AppDrawer(),
       body: SafeArea(
         child: StreamBuilder<LocationClaimState>(
             stream: locationClaimBloc.onboardingStateObservable,

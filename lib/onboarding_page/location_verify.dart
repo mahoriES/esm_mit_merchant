@@ -5,6 +5,7 @@ import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/complete_verification.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart';
+import 'package:foore/home_page/app_drawer.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -71,6 +72,7 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
         title: Text(
             AppTranslations.of(context).text("location_verify_page_title")),
       ),
+      drawer: AppDrawer(),
       body: SafeArea(
         child: StreamBuilder<CompleteVerificationState>(
             stream:
@@ -123,8 +125,10 @@ class _LocationVerifyPageState extends State<LocationVerifyPage>
               vertical: 12.0,
             ),
             child: Text(
-              sprintf(AppTranslations.of(context)
-                  .text("location_verify_page_pin_label"), [state.date]),
+              sprintf(
+                  AppTranslations.of(context)
+                      .text("location_verify_page_pin_label"),
+                  [state.date]),
               style: Theme.of(context).textTheme.subtitle,
             ),
           ),

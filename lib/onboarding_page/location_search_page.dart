@@ -4,6 +4,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart';
+import 'package:foore/home_page/app_drawer.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:foore/search_gmb/search_gmb.dart';
@@ -58,8 +59,8 @@ class _LocationSearchPageState extends State<LocationSearchPage>
         title: Text(
           AppTranslations.of(context).text("location_search_page_title"),
         ),
-        automaticallyImplyLeading: false,
       ),
+      drawer: AppDrawer(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
