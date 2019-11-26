@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/login.dart';
@@ -50,7 +51,6 @@ class LoginBloc {
         this._loginState.isSubmitFailed = true;
         this._loginState.isLoading = false;
         this._updateState();
-        ///////////
       }
     }
   }
@@ -66,6 +66,9 @@ class LoginBloc {
           json.decode(authStateIdHttpResponse.body));
       return authStateIdResponse;
     } else {
+      var responseBody = authStateIdHttpResponse.body ?? '';
+      Crashlytics.instance.log(
+          'url: google/account/login/init/, responseCode: ${authStateIdHttpResponse.statusCode}, response$responseBody');
       throw "Err";
     }
   }
@@ -83,6 +86,9 @@ class LoginBloc {
         return loginInfo;
       }
     } else {
+      var responseBody = httpResponse.body ?? '';
+      Crashlytics.instance.log(
+          'url: google/account/login/info/?auth_state_id=$authStateId, responseCode: ${httpResponse.statusCode}, response$responseBody');
       this._authBloc.googleSignIn.signOut();
       throw "Err";
     }
