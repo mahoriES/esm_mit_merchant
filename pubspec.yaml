@@ -85,6 +85,7 @@ flutter:
     - assets/messengerlogo.png
     - assets/button-click.png
     - assets/growth.png
+    - assets/empty-state.png
     - assets/locale/localization_hi.json
     - assets/locale/localization_kn.json
     - assets/locale/localization_ml.json

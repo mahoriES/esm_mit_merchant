@@ -1,5 +1,6 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/widgets/empty_list.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/check_in_page/check_in_page.dart';
 import 'package:foore/data/bloc/review.dart';
@@ -72,6 +73,12 @@ class _ReviewPageState extends State<ReviewPage> {
                     );
                   } else if (snapshot.data.isLoadingFailed) {
                     return Text('Loading Failed');
+                  } else if (snapshot.data.items.length == 0) {
+                    return EmptyList(
+                      titleText: 'No reviews found',
+                      subtitleText:
+                          "Press 'Get reviews' to send review request to your customers.",
+                    );
                   }
                   return FeedbackListWidget(
                       snapshot.data.items, this._reviewBloc);
