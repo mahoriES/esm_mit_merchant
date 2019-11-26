@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/feedback.dart';
@@ -22,6 +23,7 @@ class ReplyGmbState extends State<ReplyGmb> {
   final _formKey = GlobalKey<FormState>();
   String _reply = '';
   bool _isLoading = false;
+  bool _isSuccess = false;
   HttpService _httpService;
 
   Future<bool> _onWillPop() async {
@@ -106,37 +108,46 @@ class ReplyGmbState extends State<ReplyGmb> {
           ),
         ),
       ),
-      floatingActionButton: RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50.0),
-        ),
-        padding: EdgeInsets.symmetric(
-          vertical: 15,
-          horizontal: 45,
-        ),
+      floatingActionButton: FoSubmitButton(
+        text: AppTranslations.of(context).text("reply_page_submit"),
         onPressed: () {
           if (_formKey.currentState.validate()) {
             this.postReply(GmbReplyPayload(
                 feedbackId: feedbackItem.feedbackId, reply: this._reply));
-            // Process data.
           }
         },
-        child: Container(
-          child: this._isLoading
-              ? Center(
-                  child: CircularProgressIndicator(
-                  backgroundColor: Colors.white,
-                ))
-              : Text(AppTranslations.of(context).text("reply_page_submit")),
-        ),
+        isLoading: this._isLoading,
+        isSuccess: this._isSuccess,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  _showFailedAlertDialog() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Submit failed'),
+          content: const Text('Please try again.'),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Dismiss'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
     );
   }
 
   postReply(GmbReplyPayload payload) {
     setState(() {
       this._isLoading = true;
+      this._isSuccess = false;
     });
     var payloadString = json.encode(payload.toJson());
     this
@@ -146,16 +157,23 @@ class ReplyGmbState extends State<ReplyGmb> {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
         setState(() {
           this._isLoading = false;
+          this._isSuccess = true;
         });
-        Navigator.pop(context);
+        Future.delayed(Duration(milliseconds: 300), () {
+          Navigator.pop(context);
+        });
       } else {
+        _showFailedAlertDialog();
         setState(() {
           this._isLoading = false;
+          this._isSuccess = false;
         });
       }
     }).catchError((onError) {
+      _showFailedAlertDialog();
       setState(() {
         this._isLoading = false;
+        this._isSuccess = false;
       });
     });
   }
