@@ -90,6 +90,10 @@ class UnirsonCheckInPageState extends State<UnirsonCheckInPage>
   @override
   void dispose() {
     this._checkinUnirsonBloc.dispose();
+    if (_subscription != null) {
+      _subscription.cancel();
+      _subscription = null;
+    }
     super.dispose();
   }
 

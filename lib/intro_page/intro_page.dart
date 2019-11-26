@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:after_layout/after_layout.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/login.dart';
@@ -15,8 +18,46 @@ class IntroPage extends StatefulWidget {
   _IntroPageState createState() => _IntroPageState();
 }
 
-class _IntroPageState extends State<IntroPage> {
+class _IntroPageState extends State<IntroPage>
+    with AfterLayoutMixin<IntroPage> {
   var isShowLogin = false;
+  StreamSubscription<LoginState> _subscription;
+
+  _showFailedAlertDialog() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Login failed'),
+          content: const Text('Please try again.'),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Dismiss'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    final loginBloc = Provider.of<LoginBloc>(context);
+    _subscription =
+        loginBloc.loginStateObservable.listen(this._onLoginStateChange);
+  }
+
+  _onLoginStateChange(
+    LoginState state,
+  ) {
+    if (state.isSubmitFailed) {
+      this._showFailedAlertDialog();
+    }
+  }
 
   Future<bool> _onWillPop() async {
     if (isShowLogin) {
@@ -27,6 +68,15 @@ class _IntroPageState extends State<IntroPage> {
     } else {
       return true;
     }
+  }
+
+  @override
+  void dispose() {
+    if (_subscription != null) {
+      _subscription.cancel();
+      _subscription = null;
+    }
+    super.dispose();
   }
 
   @override

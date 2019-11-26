@@ -30,6 +30,7 @@ class LoginBloc {
   Future<void> signInWithGoogle(BuildContext context) async {
     if (this._loginState.isLoading == false) {
       this._loginState.isLoading = true;
+      this._loginState.isSubmitFailed = false;
       this._updateState();
       try {
         GoogleSignInAccount account = await _authBloc.googleSignIn.signIn();
@@ -43,9 +44,13 @@ class LoginBloc {
         this._authBloc.login(loginInfo, authType: AuthType.Google);
         Navigator.of(context).pushReplacementNamed(Router.homeRoute);
       } catch (error) {
+        this._loginState.isSubmitFailed = true;
+        this._loginState.isLoading = false;
+        this._updateState();
         ///////////
       } finally {
         this._loginState.isLoading = false;
+        this._loginState.isSubmitFailed = false;
         this._updateState();
       }
     }
@@ -143,10 +148,12 @@ class LoginState {
   bool isLoading;
   bool isSubmitOtp;
   bool isShowOtp;
+  bool isSubmitFailed;
   LoginState() {
     this.isLoading = false;
     this.isShowOtp = false;
     this.isSubmitOtp = false;
+    this.isSubmitFailed = false;
   }
 }
 
