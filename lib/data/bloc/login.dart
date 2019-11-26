@@ -43,15 +43,14 @@ class LoginBloc {
             authStateResponse.authStateId);
         this._authBloc.login(loginInfo, authType: AuthType.Google);
         Navigator.of(context).pushReplacementNamed(Router.homeRoute);
+        this._loginState.isLoading = false;
+        this._loginState.isSubmitFailed = false;
+        this._updateState();
       } catch (error) {
         this._loginState.isSubmitFailed = true;
         this._loginState.isLoading = false;
         this._updateState();
         ///////////
-      } finally {
-        this._loginState.isLoading = false;
-        this._loginState.isSubmitFailed = false;
-        this._updateState();
       }
     }
   }
