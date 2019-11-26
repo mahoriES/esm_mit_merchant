@@ -4,6 +4,7 @@ import 'package:foore/data/model/unirson.dart';
 import 'package:foore/people_page/unisonItem.dart';
 import 'package:foore/unirson_check_in_page/unirson_check_in_page.dart';
 import 'package:foore/widgets/empty_list.dart';
+import 'package:foore/widgets/something_went_wrong.dart';
 
 class UnirsonListWidget extends StatelessWidget {
   final PeopleBloc _peopleBloc;
@@ -29,9 +30,14 @@ class UnirsonListWidget extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.data.isLoadingFailed) {
-              return Text('Loading Failed');
+              return SomethingWentWrong(
+                onRetry: this._peopleBloc.getPeopleFromSearch,
+              );
             } else if (snapshot.data.items.length == 0) {
-              return EmptyList(titleText: 'No customers found', subtitleText: "Press 'Get reviews' to add new customers",);
+              return EmptyList(
+                titleText: 'No customers found',
+                subtitleText: "Press 'Get reviews' to add new customers",
+              );
             } else {
               return NotificationListener<ScrollNotification>(
                 onNotification: (ScrollNotification scrollInfo) {

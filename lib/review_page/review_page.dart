@@ -1,6 +1,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/widgets/empty_list.dart';
+import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/check_in_page/check_in_page.dart';
 import 'package:foore/data/bloc/review.dart';
@@ -72,7 +73,9 @@ class _ReviewPageState extends State<ReviewPage> {
                       child: CircularProgressIndicator(),
                     );
                   } else if (snapshot.data.isLoadingFailed) {
-                    return Text('Loading Failed');
+                    return SomethingWentWrong(
+                      onRetry: this._reviewBloc.getFeedbacks,
+                    );
                   } else if (snapshot.data.items.length == 0) {
                     return EmptyList(
                       titleText: 'No reviews found',
