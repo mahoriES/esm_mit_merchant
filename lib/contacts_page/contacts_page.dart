@@ -63,7 +63,7 @@ class _ContactsPageState extends State<ContactsPage>
             PermissionStatus.granted.value;
       } else if (permissionDeniedCount > 0) {
         await PermissionHandler().openAppSettings();
-        Navigator.of(context).pop(List<Contact>());
+        Navigator.of(context).pop();
       }
     }
     return isGranted;
@@ -154,14 +154,49 @@ class _ContactsPageState extends State<ContactsPage>
   }
 
   permissionNotGrantedWidget(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text('Permission not Granted'),
-        RaisedButton(
-          onPressed: this.getPermissions,
-          child: Text('Give permissions'),
-        )
-      ],
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        // mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Flexible(
+            flex: 1,
+            child: Container(),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.5,
+            child: Image(
+              image: AssetImage('assets/empty-state.png'),
+            ),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.6,
+            child: Text('Permission is required to display contacts',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.subhead),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          RaisedButton(
+            padding: EdgeInsets.symmetric(
+              vertical: 15,
+              horizontal: 45,
+            ),
+            onPressed: this.getPermissions,
+            child: Container(
+              child: Text('Give permissions'),
+            ),
+          ),
+          Flexible(
+            flex: 3,
+            child: Container(),
+          ),
+        ],
+      ),
     );
   }
 }
