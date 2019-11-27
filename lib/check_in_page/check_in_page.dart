@@ -269,7 +269,11 @@ class CheckInPageState extends State<CheckInPage>
             label: Text(
               contact.name ?? contact.phoneNumber,
             ),
-            onDeleted: () {this._checkinUnirsonBloc.removeContactFromMultipleContacts(contact);} ,
+            onDeleted: () {
+              this
+                  ._checkinUnirsonBloc
+                  .removeContactFromMultipleContacts(contact);
+            },
           ),
         );
       }).toList()),
@@ -329,7 +333,7 @@ class CheckInPageState extends State<CheckInPage>
         vertical: 8.0,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           const SizedBox(height: 20),
           TextFormField(
@@ -338,10 +342,6 @@ class CheckInPageState extends State<CheckInPage>
               border: OutlineInputBorder(),
               labelText:
                   AppTranslations.of(context).text("checkin_page_name_label"),
-              suffixIcon: IconButton(
-                onPressed: this.openContactPicker,
-                icon: Icon(Icons.contacts),
-              ),
             ),
           ),
           const SizedBox(height: 20),
@@ -361,6 +361,32 @@ class CheckInPageState extends State<CheckInPage>
             },
           ),
           const SizedBox(height: 20),
+          Container(
+            padding: EdgeInsets.only(left: 8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'or',
+                  style: Theme.of(context).textTheme.caption,
+                ),
+                SizedBox(
+                  width: 8.0,
+                ),
+                GestureDetector(
+                  onTap: this.openContactPicker,
+                  child: Chip(
+                    onDeleted: this.openContactPicker,
+                    label: Text(
+                      'Select from Contacts',
+                      style: Theme.of(context).textTheme.caption,
+                    ),
+                    deleteIcon: Icon(Icons.add, size: 16.0),
+                  ),
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );
