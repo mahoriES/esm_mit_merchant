@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/contacts_page/contacts_page.dart';
@@ -27,17 +26,19 @@ class CheckInPageState extends State<CheckInPage>
   StreamSubscription<CheckinUnirsonState> _subscription;
 
   openContactPicker() async {
-    List<Contact> results =
-        await Navigator.of(context).push(new MaterialPageRoute<List<Contact>>(
+    List<FoContact> results =
+        await Navigator.of(context).push(new MaterialPageRoute<List<FoContact>>(
             builder: (BuildContext context) {
               return new ContactsPage();
             },
             fullscreenDialog: true));
-    if (results.length > 0) {
-      var contact = results[0];
-      this
-          ._checkinUnirsonBloc
-          .setNameAndPhoneNumber(contact.displayName, 'waffo');
+    if (results != null) {
+      if (results.length > 0) {
+        var contact = results[0];
+        this
+            ._checkinUnirsonBloc
+            .setNameAndPhoneNumber(contact.name, contact.phoneNumber);
+      }
     }
   }
 

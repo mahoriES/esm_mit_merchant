@@ -76,7 +76,13 @@ class _ContactsPageState extends State<ContactsPage>
   }
 
   Future<bool> _onWillPop() async {
-    var contacts = List<FoContact>();
+    Navigator.of(context).pop();
+    return false;
+  }
+
+  Future<bool> _onSelect() async {
+    var contacts =
+        this.contacts.where((contact) => contact.isSelected).toList();
     Navigator.of(context).pop(contacts);
     return false;
   }
@@ -132,7 +138,7 @@ class _ContactsPageState extends State<ContactsPage>
             vertical: 15,
             horizontal: 25,
           ),
-          onPressed: () {},
+          onPressed: _onSelect,
           child: Container(
             child: Text(
               'Select contacts ($numberOfSelectedContacts)',
