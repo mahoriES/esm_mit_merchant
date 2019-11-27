@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/onboarding.dart';
 import 'package:foore/data/model/gmb_location.dart';
+import 'package:foore/home_page/app_drawer.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
 import 'package:foore/onboarding_page/location_search_page.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
@@ -55,6 +56,7 @@ class _OnboardingPageState extends State<OnboardingPage>
           AppTranslations.of(context).text("onboarding_page_title"),
         ),
       ),
+      drawer: AppDrawer(),
       body: StreamBuilder<OnboardingState>(
           stream: onboardingBloc.onboardingStateObservable,
           builder: (context, snapshot) {
