@@ -33,12 +33,18 @@ class CheckInPageState extends State<CheckInPage>
             },
             fullscreenDialog: true));
     if (results != null) {
-      if (results.length > 0) {
+      if (results.length == 1) {
         var contact = results[0];
         this
             ._checkinUnirsonBloc
             .setNameAndPhoneNumber(contact.name, contact.phoneNumber);
+      } else if (results.length > 1) {
+        this._checkinUnirsonBloc.setMultipleContacts(results);
+      } else {
+        this._checkinUnirsonBloc.removeMultipleContacts();
       }
+    } else {
+      this._checkinUnirsonBloc.removeMultipleContacts();
     }
   }
 
@@ -79,13 +85,6 @@ class CheckInPageState extends State<CheckInPage>
       this._showFailedAlertDialog();
     }
   }
-
-  // onContactPicked() async {
-  //   Contact contact = await _contactPicker.selectContact();
-  //   this
-  //       ._checkinUnirsonBloc
-  //       .setNameAndPhoneNumber(contact.fullName, contact.phoneNumber.number);
-  // }
 
   Future<bool> _onWillPop() async {
     Navigator.pop(context);
@@ -163,7 +162,15 @@ class CheckInPageState extends State<CheckInPage>
                 return Scrollbar(
                   child: ListView(
                     children: <Widget>[
-                      checkInFormWidget(snapshot.data),
+                      Visibility(
+                        visible: !snapshot.data.isMultipleContactsSelected,
+                        child: checkInFormWidget(snapshot.data),
+                      ),
+                      Visibility(
+                        visible: snapshot.data.isMultipleContactsSelected,
+                        child: multipleContactsSelectedWidget(
+                            snapshot.data, context),
+                      ),
                       Container(
                         padding: const EdgeInsets.only(
                           top: 32.0,
@@ -248,6 +255,24 @@ class CheckInPageState extends State<CheckInPage>
             );
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  Container multipleContactsSelectedWidget(
+      CheckinUnirsonState data, BuildContext context) {
+    return Container(
+      child: Wrap(
+          children: data.multipleContacts.map((contact) {
+        return Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Chip(
+            label: Text(
+              contact.name ?? contact.phoneNumber,
+            ),
+            onDeleted: () {this._checkinUnirsonBloc.removeContactFromMultipleContacts(contact);} ,
+          ),
+        );
+      }).toList()),
     );
   }
 

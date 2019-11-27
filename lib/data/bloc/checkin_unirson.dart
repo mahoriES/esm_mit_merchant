@@ -248,6 +248,12 @@ class CheckinUnirsonBloc {
     this._updateState();
   }
 
+  removeContactFromMultipleContacts(FoContact contact) {
+    this._checkinUnirsonState.multipleContacts.removeWhere((item) =>
+        contact.name == item.name && contact.phoneNumber == item.phoneNumber);
+    this._updateState();
+  }
+
   removeMultipleContacts() {
     this._checkinUnirsonState.multipleContacts = List<FoContact>();
     this._updateState();
@@ -271,7 +277,7 @@ class CheckinUnirsonState {
   bool isSubmitSuccess;
   bool isSubmitFailed;
   bool isGmbReviewSelected;
-  List<FoContact> multipleContacts= List<FoContact>();
+  List<FoContact> multipleContacts = List<FoContact>();
   bool get isMultipleContactsSelected => multipleContacts.length > 0;
 
   bool get isLoading => this.isLoadingUiHelper || this.isLoadingSequence;
