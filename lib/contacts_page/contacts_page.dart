@@ -214,7 +214,7 @@ class FoContact {
       this.name = contact.givenName;
     }
     if (contact.familyName != null && contact.familyName != '') {
-      if (this.name != null && this.contact != '') {
+      if (this.name != null && this.name != '') {
         this.name = this.name + ' ' + contact.familyName;
       } else {
         this.name = contact.familyName;
