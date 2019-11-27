@@ -85,7 +85,7 @@ class _ContactsPageState extends State<ContactsPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Pick contacts"),
+        title: Text("Select contacts"),
       ),
       body: Form(
         key: _formKey,
@@ -135,7 +135,7 @@ class _ContactsPageState extends State<ContactsPage>
           onPressed: () {},
           child: Container(
             child: Text(
-              "Select contacts",
+              'Select contacts ($numberOfSelectedContacts)',
               style: Theme.of(context).textTheme.subhead.copyWith(
                     color: Colors.white,
                   ),
