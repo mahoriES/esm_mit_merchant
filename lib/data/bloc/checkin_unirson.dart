@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:foore/contacts_page/contacts_page.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/checkin.dart';
 import 'package:foore/data/model/locations.dart';
@@ -164,6 +165,48 @@ class CheckinUnirsonBloc {
     });
   }
 
+  checkinWithMultipleContacts(Function onCheckInSuccess) {
+    this._checkinUnirsonState.isSubmitting = true;
+    this._checkinUnirsonState.isSubmitFailed = false;
+    this._checkinUnirsonState.isSubmitSuccess = false;
+    this._updateState();
+    var payload = new CheckInPayload(
+      phoneTo: this.phoneNumberEditController.text,
+      fullName: this.nameEditController.text,
+      locationId: this._checkinUnirsonState.selectedLocation.fbLocationId,
+      reviewSeq: this._checkinUnirsonState.isGmbReviewSelected ? 1 : 0,
+      seqIds: this._checkinUnirsonState.sequences.takeWhile((sequence) {
+        return sequence.isSelectedUi != null ? sequence.isSelectedUi : false;
+      }).map((sequence) {
+        return sequence.sequenceId;
+      }).toList(),
+    );
+    var payloadString = json.encode(payload.toJson());
+    this
+        ._httpService
+        .foPost('instore/checkin/add/', payloadString)
+        .then((httpResponse) {
+      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+        this._checkinUnirsonState.isSubmitting = false;
+        this._checkinUnirsonState.isSubmitFailed = false;
+        this._checkinUnirsonState.isSubmitSuccess = true;
+        if (onCheckInSuccess != null) {
+          onCheckInSuccess();
+        }
+      } else {
+        this._checkinUnirsonState.isSubmitting = false;
+        this._checkinUnirsonState.isSubmitFailed = true;
+        this._checkinUnirsonState.isSubmitSuccess = false;
+      }
+      this._updateState();
+    }).catchError((onError) {
+      this._checkinUnirsonState.isSubmitting = false;
+      this._checkinUnirsonState.isSubmitFailed = true;
+      this._checkinUnirsonState.isSubmitSuccess = false;
+      this._updateState();
+    });
+  }
+
   setSelectedLocation(LocationItem locationItem) {
     this._checkinUnirsonState.selectedLocation = locationItem;
     this._updateState();
@@ -199,6 +242,16 @@ class CheckinUnirsonBloc {
   dispose() {
     this._subjectCheckinUnirsonState.close();
   }
+
+  setMultipleContacts(List<FoContact> contacts) {
+    this._checkinUnirsonState.multipleContacts = contacts;
+    this._updateState();
+  }
+
+  removeMultipleContacts() {
+    this._checkinUnirsonState.multipleContacts = List<FoContact>();
+    this._updateState();
+  }
 }
 
 class CheckinUnirsonState {
@@ -218,6 +271,8 @@ class CheckinUnirsonState {
   bool isSubmitSuccess;
   bool isSubmitFailed;
   bool isGmbReviewSelected;
+  List<FoContact> multipleContacts= List<FoContact>();
+  bool get isMultipleContactsSelected => multipleContacts.length > 0;
 
   bool get isLoading => this.isLoadingUiHelper || this.isLoadingSequence;
   bool get isLoadingFailed =>

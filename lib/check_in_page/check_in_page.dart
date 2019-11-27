@@ -118,9 +118,19 @@ class CheckInPageState extends State<CheckInPage>
 
   @override
   Widget build(BuildContext context) {
-    checkIn() {
+    checkInWithPhoneNumber() {
       if (_formKey.currentState.validate()) {
         this._checkinUnirsonBloc.checkinWithPhoneNumber(() async {
+          await Future.delayed(Duration(milliseconds: 300));
+          Navigator.pop(context);
+        }); // Process data.
+
+      }
+    }
+
+    checkInWithMultipleContacts() {
+      if (_formKey.currentState.validate()) {
+        this._checkinUnirsonBloc.checkinWithMultipleContacts(() async {
           await Future.delayed(Duration(milliseconds: 300));
           Navigator.pop(context);
         }); // Process data.
@@ -230,7 +240,9 @@ class CheckInPageState extends State<CheckInPage>
             return FoSubmitButton(
               text: AppTranslations.of(context)
                   .text("checkin_page_button_submit"),
-              onPressed: checkIn,
+              onPressed: snapshot.data.isMultipleContactsSelected
+                  ? checkInWithMultipleContacts
+                  : checkInWithPhoneNumber,
               isLoading: snapshot.data.isSubmitting,
               isSuccess: snapshot.data.isSubmitSuccess,
             );
