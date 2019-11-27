@@ -102,19 +102,19 @@ class BulkCheckInPayload {
 }
 
 class ContactInfo {
-  String phoneNum;
+  String phoneTo;
   String fullName;
 
-  ContactInfo({this.phoneNum, this.fullName});
+  ContactInfo({this.phoneTo, this.fullName});
 
   ContactInfo.fromJson(Map<String, dynamic> json) {
-    phoneNum = json['phone_num'];
+    phoneTo = json['phone_to'];
     fullName = json['full_name'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['phone_num'] = this.phoneNum;
+    data['phone_to'] = this.phoneTo;
     data['full_name'] = this.fullName;
     return data;
   }

@@ -172,7 +172,7 @@ class CheckinUnirsonBloc {
     this._updateState();
     var payload = new BulkCheckInPayload(
       contactInfos: this._checkinUnirsonState.multipleContacts.map((contact) =>
-          ContactInfo(phoneNum: contact.phoneNumber, fullName: contact.name)).toList(),
+          ContactInfo(phoneTo: contact.phoneNumber, fullName: contact.name)).toList(),
       locationId: this._checkinUnirsonState.selectedLocation.fbLocationId,
       reviewSeq: this._checkinUnirsonState.isGmbReviewSelected ? 1 : 0,
       seqIds: this._checkinUnirsonState.sequences.takeWhile((sequence) {
