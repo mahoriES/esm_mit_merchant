@@ -189,7 +189,7 @@ class _ContactsPageState extends State<ContactsPage>
               vertical: 15,
               horizontal: 45,
             ),
-            onPressed: this.getPermissions,
+            onPressed: this.getContacts,
             child: Container(
               child: Text('Give permissions'),
             ),
