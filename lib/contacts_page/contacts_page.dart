@@ -11,9 +11,13 @@ class ContactsPage extends StatefulWidget {
 class _ContactsPageState extends State<ContactsPage>
     with AfterLayoutMixin<ContactsPage> {
   final _formKey = GlobalKey<FormState>();
-  List<Contact> contacts = List<Contact>();
+  List<FoContact> contacts = List<FoContact>();
   bool isPermissionGranted = false;
   int permissionDeniedCount = 0;
+
+  int get numberOfSelectedContacts =>
+      this.contacts.where((contact) => contact.isSelected).length;
+
   @override
   void afterFirstLayout(BuildContext context) {
     getContacts();
@@ -31,7 +35,14 @@ class _ContactsPageState extends State<ContactsPage>
       Iterable<Contact> contactsResult =
           await ContactsService.getContacts(withThumbnails: false);
       setState(() {
-        this.contacts = contactsResult.toList();
+        this.contacts = contactsResult
+            .map((contact) => FoContact.fromContact(contact))
+            .where((contact) {
+          if (contact.phoneNumber != null && contact.phoneNumber != '') {
+            return true;
+          }
+          return false;
+        }).toList();
       });
     }
   }
@@ -58,8 +69,14 @@ class _ContactsPageState extends State<ContactsPage>
     return isGranted;
   }
 
+  selectContactWithIndex(bool isSelected, index) {
+    setState(() {
+      this.contacts[index].isSelected = isSelected;
+    });
+  }
+
   Future<bool> _onWillPop() async {
-    var contacts = List<Contact>();
+    var contacts = List<FoContact>();
     Navigator.of(context).pop(contacts);
     return false;
   }
@@ -78,32 +95,51 @@ class _ContactsPageState extends State<ContactsPage>
                 itemCount: this.contacts.length,
                 itemBuilder: (context, index) {
                   return CheckboxListTile(
-                    onChanged: (isSelected) {},
-                    value: false,
-                    title: Text(this.contacts[index].displayName ?? ''),
-                    subtitle: Text(this.contacts[index].phones.length > 0
-                        ? this.contacts[index].phones.toList()[0].value
-                        : ''),
+                    onChanged: (isSelected) {
+                      selectContactWithIndex(isSelected, index);
+                    },
+                    value: this.contacts[index].isSelected,
+                    secondary: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Container(
+                        height: double.infinity,
+                        width: 40,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.blueGrey,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    title: Text(this.contacts[index].name ?? ''),
+                    subtitle: Text(this.contacts[index].phoneNumber ?? ''),
                   );
                 },
               )
             : permissionNotGrantedWidget(context),
       ),
-      floatingActionButton: RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50.0),
-        ),
-        padding: EdgeInsets.symmetric(
-          vertical: 15,
-          horizontal: 25,
-        ),
-        onPressed: () {},
-        child: Container(
-          child: Text(
-            "Select contacts",
-            style: Theme.of(context).textTheme.subhead.copyWith(
-                  color: Colors.white,
-                ),
+      floatingActionButton: Visibility(
+        visible: numberOfSelectedContacts > 0,
+        child: RaisedButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50.0),
+          ),
+          padding: EdgeInsets.symmetric(
+            vertical: 15,
+            horizontal: 25,
+          ),
+          onPressed: () {},
+          child: Container(
+            child: Text(
+              "Select contacts",
+              style: Theme.of(context).textTheme.subhead.copyWith(
+                    color: Colors.white,
+                  ),
+            ),
           ),
         ),
       ),
@@ -121,5 +157,18 @@ class _ContactsPageState extends State<ContactsPage>
         )
       ],
     );
+  }
+}
+
+class FoContact {
+  String name;
+  String phoneNumber;
+  Contact contact;
+  bool isSelected = false;
+  FoContact.fromContact(Contact contact) {
+    this.name = contact.givenName;
+    if (contact.phones.length > 0) {
+      this.phoneNumber = contact.phones.toList()[0].value;
+    }
   }
 }
