@@ -98,6 +98,9 @@ class _ContactsPageState extends State<ContactsPage>
         onWillPop: _onWillPop,
         child: isPermissionGranted
             ? ListView.builder(
+                padding: EdgeInsets.only(
+                  bottom: 72,
+                ),
                 itemCount: this.contacts.length,
                 itemBuilder: (context, index) {
                   return CheckboxListTile(
