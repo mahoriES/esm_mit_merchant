@@ -210,7 +210,16 @@ class FoContact {
   Contact contact;
   bool isSelected = false;
   FoContact.fromContact(Contact contact) {
-    this.name = contact.givenName;
+    if (contact.givenName != null && contact.givenName != '') {
+      this.name = contact.givenName;
+    }
+    if (contact.familyName != null && contact.familyName != '') {
+      if (this.name != null && this.contact != '') {
+        this.name = this.name + ' ' + contact.familyName;
+      } else {
+        this.name = contact.familyName;
+      }
+    }
     if (contact.phones.length > 0) {
       this.phoneNumber = contact.phones.toList()[0].value;
     }
