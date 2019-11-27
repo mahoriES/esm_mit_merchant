@@ -22,10 +22,8 @@ class MainActivity : FlutterActivity() {
 
     // Branch init
     Branch.getInstance().initSession(object : Branch.BranchReferralInitListener {
-      override fun onInitFinished(referringParams: JSONObject, error: BranchError?) {
-        if (error == null) {
-          Log.e("BRANCH SDK", referringParams.toString())
-        } else {
+      override fun onInitFinished(referringParams: JSONObject?, error: BranchError?) {
+        if (error != null) {
           Log.e("BRANCH SDK", error.message)
         }
       }
