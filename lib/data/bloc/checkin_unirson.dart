@@ -191,7 +191,9 @@ class CheckinUnirsonBloc {
   }
 
   _updateState() {
-    this._subjectCheckinUnirsonState.sink.add(this._checkinUnirsonState);
+    if (!this._subjectCheckinUnirsonState.isClosed) {
+      this._subjectCheckinUnirsonState.sink.add(this._checkinUnirsonState);
+    }
   }
 
   dispose() {
