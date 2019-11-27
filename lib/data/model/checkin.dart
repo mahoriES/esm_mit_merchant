@@ -67,3 +67,55 @@ class CheckInItem {
     return data;
   }
 }
+///////////////
+class BulkCheckInPayload {
+  List<ContactInfo> contactInfos;
+  String locationId;
+  List<String> seqIds;
+  int reviewSeq;
+
+  BulkCheckInPayload(
+      {this.contactInfos, this.locationId, this.seqIds, this.reviewSeq});
+
+  BulkCheckInPayload.fromJson(Map<String, dynamic> json) {
+    if (json['contact_infos'] != null) {
+      contactInfos = new List<ContactInfo>();
+      json['contact_infos'].forEach((v) {
+        contactInfos.add(new ContactInfo.fromJson(v));
+      });
+    }
+    locationId = json['location_id'];
+    seqIds = json['seq_ids'].cast<String>();
+    reviewSeq = json['review_seq'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.contactInfos != null) {
+      data['contact_infos'] = this.contactInfos.map((v) => v.toJson()).toList();
+    }
+    data['location_id'] = this.locationId;
+    data['seq_ids'] = this.seqIds;
+    data['review_seq'] = this.reviewSeq;
+    return data;
+  }
+}
+
+class ContactInfo {
+  String phoneNum;
+  String fullName;
+
+  ContactInfo({this.phoneNum, this.fullName});
+
+  ContactInfo.fromJson(Map<String, dynamic> json) {
+    phoneNum = json['phone_num'];
+    fullName = json['full_name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['phone_num'] = this.phoneNum;
+    data['full_name'] = this.fullName;
+    return data;
+  }
+}

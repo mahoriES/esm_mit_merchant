@@ -170,9 +170,9 @@ class CheckinUnirsonBloc {
     this._checkinUnirsonState.isSubmitFailed = false;
     this._checkinUnirsonState.isSubmitSuccess = false;
     this._updateState();
-    var payload = new CheckInPayload(
-      phoneTo: this.phoneNumberEditController.text,
-      fullName: this.nameEditController.text,
+    var payload = new BulkCheckInPayload(
+      contactInfos: this._checkinUnirsonState.multipleContacts.map((contact) =>
+          ContactInfo(phoneNum: contact.phoneNumber, fullName: contact.name)).toList(),
       locationId: this._checkinUnirsonState.selectedLocation.fbLocationId,
       reviewSeq: this._checkinUnirsonState.isGmbReviewSelected ? 1 : 0,
       seqIds: this._checkinUnirsonState.sequences.takeWhile((sequence) {
@@ -184,7 +184,7 @@ class CheckinUnirsonBloc {
     var payloadString = json.encode(payload.toJson());
     this
         ._httpService
-        .foPost('instore/checkin/add/', payloadString)
+        .foPost('instore/checkin/add/bulk/', payloadString)
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
         this._checkinUnirsonState.isSubmitting = false;
