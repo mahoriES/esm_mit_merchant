@@ -55,7 +55,13 @@ class _ContactsPageState extends State<ContactsPage>
     if (!isGranted) {
       bool shouldShowPermissionDialog = await PermissionHandler()
           .shouldShowRequestPermissionRationale(PermissionGroup.contacts);
-      if (shouldShowPermissionDialog) {
+      if (permissionDeniedCount == 0) {
+        Map<PermissionGroup, PermissionStatus> permissions =
+            await PermissionHandler()
+                .requestPermissions([PermissionGroup.contacts]);
+        isGranted = permissions[PermissionGroup.contacts]?.value ==
+            PermissionStatus.granted.value;
+      } else if (shouldShowPermissionDialog) {
         Map<PermissionGroup, PermissionStatus> permissions =
             await PermissionHandler()
                 .requestPermissions([PermissionGroup.contacts]);
