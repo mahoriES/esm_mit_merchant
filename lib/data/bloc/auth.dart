@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:foore/data/bloc/push_notifications.dart';
+import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/login.dart';
 import 'package:foore/environments/environment.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
@@ -18,6 +20,7 @@ class AuthBloc {
   );
 
   final AuthState authState = new AuthState();
+  final PushNotifications _pushNotifications = PushNotifications();
 
   BehaviorSubject<AuthState> _subjectAuthState;
 
@@ -47,6 +50,7 @@ class AuthBloc {
     if (authType == AuthType.Google) {
       this._storeAuthTypeGoogle(true);
     }
+    this._pushNotifications.subscribeForCurrentUser(HttpService(this));
     intercomLogin(authData);
   }
 
@@ -100,6 +104,7 @@ class AuthBloc {
     this._updateState();
     this.googleSignIn.signOut();
     this.intercomLogout();
+    this._pushNotifications.unsubscribeForCurrentUser();
     clearSharedPreferences();
   }
 
