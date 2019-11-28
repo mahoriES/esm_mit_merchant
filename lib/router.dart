@@ -1,22 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
-import 'package:foore/data/bloc/onboarding_guard.dart';
-import 'package:foore/data/model/locations.dart';
 import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
-import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:provider/provider.dart';
 
 import 'auth_guard/auth_guard.dart';
 import 'check_in_page/check_in_page.dart';
-import 'data/bloc/location_claim.dart';
 import 'data/bloc/onboarding.dart';
 import 'data/bloc/people.dart';
 import 'data/http_service.dart';
 import 'data/model/feedback.dart';
 import 'data/model/unirson.dart';
-import 'data/push_notification_listener.dart';
 import 'home_page/home_page.dart';
 import 'intro_page/intro_page.dart';
 import 'login_page/login_page.dart';
@@ -49,16 +44,14 @@ class Router {
             unauthenticatedHandler: unauthenticatedHandler,
             child: OnboardingGuard(
               onboardingRequiredHandler: onboardingRequiredHandler,
-              child: PushNotificationListener(
-                child: MultiProvider(
-                  providers: [
-                    Provider<PeopleBloc>(
-                      builder: (context) => PeopleBloc(httpServiceBloc),
-                      dispose: (context, value) => value.dispose(),
-                    ),
-                  ],
-                  child: HomePage(),
-                ),
+              child: MultiProvider(
+                providers: [
+                  Provider<PeopleBloc>(
+                    builder: (context) => PeopleBloc(httpServiceBloc),
+                    dispose: (context, value) => value.dispose(),
+                  ),
+                ],
+                child: HomePage(),
               ),
             ),
           ),
