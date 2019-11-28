@@ -47,7 +47,7 @@ class AuthBloc {
     if (authType == AuthType.Google) {
       this._storeAuthTypeGoogle(true);
     }
-    intercomInit(authData);
+    intercomLogin(authData);
   }
 
   Future<bool> googleLoginSilently() async {
@@ -66,7 +66,15 @@ class AuthBloc {
     }
   }
 
-  intercomInit(AuthInfo authData) async {
+  intercomInit() async {
+    await Intercom.initialize(
+      Environment.intercomAppId,
+      iosApiKey: Environment.intercomIosApiKey,
+      androidApiKey: Environment.intercomAndroidApiKey,
+    );
+  }
+
+  intercomLogin(AuthInfo authData) async {
     await Intercom.initialize(
       Environment.intercomAppId,
       iosApiKey: Environment.intercomIosApiKey,
@@ -82,11 +90,16 @@ class AuthBloc {
     );
   }
 
+  intercomLogout() async {
+    await Intercom.logout();
+  }
+
   logout() {
     this.authState.authData = null;
     this.authState.isLoading = false;
     this._updateState();
     this.googleSignIn.signOut();
+    this.intercomLogout();
     clearSharedPreferences();
   }
 
@@ -106,6 +119,7 @@ class AuthBloc {
   _loadAuthState() async {
     this.authState.isLoading = true;
     this._updateState();
+    await intercomInit();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final authString = prefs.getString('authenticationInfo') ?? '';
     if (authString != '') {

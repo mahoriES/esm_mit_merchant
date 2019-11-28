@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'http_service.dart';
@@ -57,6 +58,7 @@ class _PushNotificationListenerState extends State<PushNotificationListener> {
         .foPost('fcm/add/foore/', payloadString)
         .then((httpResponse) {})
         .catchError((onError) {});
+    Intercom.sendTokenToIntercom(fcmToken.fcmToken);
   }
 }
 

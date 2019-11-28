@@ -45,5 +45,10 @@
             </intent-filter>
         </receiver>
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBGRrg0YVy9U3SUF34GoAeGbUP_s5RAYAY"/>
+        <service android:name="io.maido.intercom.PushInterceptService" android:enabled="true" android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 </manifest>
