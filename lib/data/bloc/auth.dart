@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:foore/data/bloc/push_notifications.dart';
+import 'package:foore/data/branch_service.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/login.dart';
 import 'package:foore/environments/environment.dart';
@@ -24,8 +25,11 @@ class AuthBloc {
 
   BehaviorSubject<AuthState> _subjectAuthState;
 
+  BranchService _branchService;
+
   AuthBloc() {
     this._subjectAuthState = new BehaviorSubject<AuthState>.seeded(authState);
+    this._branchService = new BranchService(this);
     this._loadAuthState();
   }
 
@@ -52,6 +56,18 @@ class AuthBloc {
     }
     this._pushNotifications.subscribeForCurrentUser(HttpService(this));
     intercomLogin(authData);
+    generateReferralUrl();
+  }
+
+  generateReferralUrl() {
+    try {
+      this._branchService.generateReferralUrl(this.authState.userReferralCode);
+    } catch (er) {}
+  }
+
+  getReferralUrl() async {
+    var url = await this._branchService.getReferralUrl();
+    return url;
   }
 
   Future<bool> googleLoginSilently() async {
@@ -106,6 +122,7 @@ class AuthBloc {
     this.intercomLogout();
     this._pushNotifications.unsubscribeForCurrentUser();
     clearSharedPreferences();
+    this._branchService.clear();
   }
 
   clearSharedPreferences() async {
@@ -178,6 +195,7 @@ class AuthState {
   UserProfile get _userProfile => authData?.userProfile;
   String get userName => _userProfile?.name;
   String get userEmail => _userProfile?.email;
+  String get userReferralCode => _userProfile?.sUid;
   String get firstLetterOfUserName {
     if (userName != null && userName != '') {
       if (userName.length > 1) {

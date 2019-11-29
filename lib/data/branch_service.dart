@@ -11,6 +11,8 @@ class BranchService {
 
   String _referralUrl;
 
+  final AuthBloc authBloc;
+
   static final branchData = BranchData(
       ogType: "website",
       canonicalUrl:
@@ -33,13 +35,20 @@ class BranchService {
     type: 2,
   );
 
-  BranchService(AuthBloc authBloc) {
+  BranchService(this.authBloc) {
     this._branchKey = Environment.branchKey;
     this._branchDomain = Environment.branchDomain;
   }
 
+  clear() {
+    this._referralUrl = null;
+  }
+
   getReferralUrl() async {
-    String referralCode = '3rwrw';
+    String referralCode = this.authBloc.authState.userReferralCode;
+    if (referralCode == null) {
+      return 'https://www.foore.in';
+    }
     if (this._referralUrl != null) {
       return this._referralUrl;
     } else {
