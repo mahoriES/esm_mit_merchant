@@ -65,6 +65,9 @@ dependencies:
 
   permission_handler: ^4.0.0
 
+  esys_flutter_share:
+    path: ./esys-flutter-share/
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

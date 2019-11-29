@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foore/environments/environment.dart';
 import 'package:foore/language_selection_page/language_selection_page.dart';
+import 'package:foore/share_page/share_page.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/auth.dart';
 
@@ -84,6 +85,13 @@ class AppDrawer extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (context) => LanguageSelectionPage()),
               );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.share),
+            title: Text('Share'),
+            onTap: () {
+              Navigator.of(context).pushNamed(SharePage.routeName);
             },
           ),
           ListTile(

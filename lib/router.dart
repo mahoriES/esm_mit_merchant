@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
+import 'package:foore/share_page/share_page.dart';
 import 'package:provider/provider.dart';
 
 import 'auth_guard/auth_guard.dart';
@@ -125,6 +126,9 @@ class Router {
         break;
       case GoogleLoginNotDonePage.routeName:
         return GoogleLoginNotDonePage.generateRoute(settings);
+        break;
+      case SharePage.routeName:
+        return SharePage.generateRoute(settings);
         break;
       default:
         return MaterialPageRoute(
