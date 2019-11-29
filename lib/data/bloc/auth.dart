@@ -56,13 +56,7 @@ class AuthBloc {
     }
     this._pushNotifications.subscribeForCurrentUser(HttpService(this));
     intercomLogin(authData);
-    generateReferralUrl();
-  }
-
-  generateReferralUrl() {
-    try {
-      this._branchService.generateReferralUrl(this.authState.userReferralCode);
-    } catch (er) {}
+    getReferralUrl();
   }
 
   getReferralUrl() async {
