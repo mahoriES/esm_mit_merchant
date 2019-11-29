@@ -108,6 +108,10 @@ class AuthBloc {
     await Intercom.logout();
   }
 
+  Future<bool> shouldShowSharePrompt() async {
+    return await this._branchService.shouldShowSharePrompt();
+  }
+
   logout() {
     this.authState.authData = null;
     this.authState.isLoading = false;

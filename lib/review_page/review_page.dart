@@ -1,5 +1,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/auth.dart';
+import 'package:foore/share_page/share_page.dart';
 import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
@@ -37,11 +39,15 @@ class _ReviewPageState extends State<ReviewPage> {
     super.dispose();
   }
 
-  onGetReviews() {
-    Navigator.pushNamed(
-      context,
-      CheckInPage.routeName,
-    );
+  onGetReviews() async {
+    bool isDone = await CheckInPage.open(context);
+    final authBloc = Provider.of<AuthBloc>(context);
+    if (isDone == true) {
+      bool shouldShowSharePage = await authBloc.shouldShowSharePrompt();
+      if (shouldShowSharePage) {
+        Navigator.of(context).pushNamed(SharePage.routeName);
+      }
+    }
   }
 
   @override

@@ -6,6 +6,15 @@ import 'package:permission_handler/permission_handler.dart';
 class ContactsPage extends StatefulWidget {
   @override
   _ContactsPageState createState() => _ContactsPageState();
+
+  static Future<List<FoContact>> open(BuildContext context) async {
+    return await Navigator.of(context)
+        .push(new MaterialPageRoute<List<FoContact>>(
+            builder: (BuildContext context) {
+              return new ContactsPage();
+            },
+            fullscreenDialog: true));
+  }
 }
 
 class _ContactsPageState extends State<ContactsPage>

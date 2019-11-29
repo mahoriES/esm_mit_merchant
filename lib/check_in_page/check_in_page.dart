@@ -12,10 +12,16 @@ import 'package:foore/data/model/locations.dart';
 import '../app_translations.dart';
 
 class CheckInPage extends StatefulWidget {
-  static const routeName = '/checkin';
-
   @override
   CheckInPageState createState() => CheckInPageState();
+
+  static Future<bool> open(BuildContext context) async {
+    return await Navigator.of(context).push(new MaterialPageRoute<bool>(
+        builder: (BuildContext context) {
+          return new CheckInPage();
+        },
+        fullscreenDialog: true));
+  }
 }
 
 class CheckInPageState extends State<CheckInPage>
@@ -26,12 +32,7 @@ class CheckInPageState extends State<CheckInPage>
   StreamSubscription<CheckinUnirsonState> _subscription;
 
   openContactPicker() async {
-    List<FoContact> results =
-        await Navigator.of(context).push(new MaterialPageRoute<List<FoContact>>(
-            builder: (BuildContext context) {
-              return new ContactsPage();
-            },
-            fullscreenDialog: true));
+    List<FoContact> results = await ContactsPage.open(context);
     if (results != null) {
       if (results.length == 1) {
         var contact = results[0];
@@ -121,7 +122,7 @@ class CheckInPageState extends State<CheckInPage>
       if (_formKey.currentState.validate()) {
         this._checkinUnirsonBloc.checkinWithPhoneNumber(() async {
           await Future.delayed(Duration(milliseconds: 300));
-          Navigator.pop(context);
+          Navigator.of(context).pop(true);
         }); // Process data.
 
       }
@@ -131,7 +132,7 @@ class CheckInPageState extends State<CheckInPage>
       if (_formKey.currentState.validate()) {
         this._checkinUnirsonBloc.checkinWithMultipleContacts(() async {
           await Future.delayed(Duration(milliseconds: 300));
-          Navigator.pop(context);
+           Navigator.of(context).pop(true);
         }); // Process data.
 
       }

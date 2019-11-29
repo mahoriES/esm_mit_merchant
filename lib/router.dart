@@ -80,15 +80,6 @@ class Router {
           ),
           fullscreenDialog: true,
         );
-      case CheckInPage.routeName:
-        return MaterialPageRoute(
-          builder: (context) => AuthGuard(
-            unauthenticatedHandler: unauthenticatedHandler,
-            child: CheckInPage(),
-          ),
-          fullscreenDialog: true,
-        );
-        break;
       case OnboardingPage.routeName:
         return MaterialPageRoute(
           builder: (context) => AuthGuard(

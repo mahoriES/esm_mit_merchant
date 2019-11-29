@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/auth.dart';
+import 'package:foore/share_page/share_page.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/check_in_page/check_in_page.dart';
 import 'package:foore/data/bloc/people.dart';
@@ -20,8 +22,15 @@ class _PeoplePageState extends State<PeoplePage>
     peopleBloc.getPeopleFromSearch();
   }
 
-  onGetReviews() {
-    Navigator.pushNamed(context, CheckInPage.routeName);
+  onGetReviews() async {
+    bool isDone = await CheckInPage.open(context);
+    final authBloc = Provider.of<AuthBloc>(context);
+    if (isDone == true) {
+      bool shouldShowSharePage = await authBloc.shouldShowSharePrompt();
+      if (shouldShowSharePage) {
+        Navigator.of(context).pushNamed(SharePage.routeName);
+      }
+    }
   }
 
   @override

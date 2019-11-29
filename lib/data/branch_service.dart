@@ -94,6 +94,10 @@ class BranchService {
     }
   }
 
+  Future<bool> shouldShowSharePrompt() async {
+    return true;
+  }
+
   generateReferralUrl(
       String referralCode, String userEmail, String userUuid) async {
     Map<String, String> requestHeaders = {
