@@ -79,6 +79,9 @@ class BranchService {
         'https://api.branch.io/v1/url?url=$mayBeUrl&branch_key=$_branchKey',
         headers: requestHeaders);
 
+    print(httpResponse.statusCode);
+    print(httpResponse.body);
+
     if (httpResponse.statusCode == 200) {
       return mayBeUrl;
     } else if (httpResponse.statusCode == 404) {
@@ -99,6 +102,9 @@ class BranchService {
 
     final httpResponse = await http.post('https://api.branch.io/v1/url',
         headers: requestHeaders, body: payload);
+
+    print(httpResponse.statusCode);
+    print(httpResponse.body);
 
     if (httpResponse.statusCode == 200) {
       return json.decode(httpResponse.body)['url'];

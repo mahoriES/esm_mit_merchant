@@ -44,7 +44,7 @@ class EnvironmentPreprod {
 
   static const _branch_key = 'key_test_goKq4q3paOO31mavR7jxHpfbwFhtMimH';
 
-  static const _branch_domain = 'foore.app.link';
+  static const _branch_domain = 'https://foore.test-app.link';
 }
 
 class EnvironmentProd {
@@ -60,5 +60,5 @@ class EnvironmentProd {
 
   static const _branch_key = 'key_live_cgRzWv8klJM27ocyT3cD8makuxkwNoe5';
 
-  static const _branch_domain = 'foore.test-app.link';
+  static const _branch_domain = 'https://foore.app.link';
 }
