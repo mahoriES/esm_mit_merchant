@@ -33,7 +33,8 @@ public class EsysFlutterSharePlugin implements MethodCallHandler {
      * Plugin registration.
      */
     public static void registerWith(Registrar registrar) {
-        final MethodChannel channel = new MethodChannel(registrar.messenger(), "channel:github.com/orgs/esysberlin/esys-flutter-share");
+        final MethodChannel channel = new MethodChannel(registrar.messenger(),
+                "channel:github.com/orgs/esysberlin/esys-flutter-share");
         channel.setMethodCallHandler(new EsysFlutterSharePlugin(registrar));
     }
 
@@ -75,16 +76,29 @@ public class EsysFlutterSharePlugin implements MethodCallHandler {
 
         Context activeContext = _registrar.activeContext();
 
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType(mimeType);
-        shareIntent.setPackage("com.whatsapp");
         File file = new File(activeContext.getCacheDir(), name);
         String fileProviderAuthority = activeContext.getPackageName() + PROVIDER_AUTH_EXT;
         Uri contentUri = FileProvider.getUriForFile(activeContext, fileProviderAuthority, file);
-        shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-        // add optional text
-        if (!text.isEmpty()) shareIntent.putExtra(Intent.EXTRA_TEXT, text);
-        activeContext.startActivity(Intent.createChooser(shareIntent, title));
+
+        try {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType(mimeType);
+            shareIntent.setPackage("com.whatsapp");
+            shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+            // add optional text
+            if (!text.isEmpty())
+                shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+            activeContext.startActivity(Intent.createChooser(shareIntent, title));
+        } catch (Exception e) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType(mimeType);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+            // add optional text
+            if (!text.isEmpty())
+                shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+            activeContext.startActivity(Intent.createChooser(shareIntent, title));
+        }
+
     }
 
     private void files(Object arguments) {
@@ -112,7 +126,8 @@ public class EsysFlutterSharePlugin implements MethodCallHandler {
 
         shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, contentUris);
         // add optional text
-        if (!text.isEmpty()) shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+        if (!text.isEmpty())
+            shareIntent.putExtra(Intent.EXTRA_TEXT, text);
         activeContext.startActivity(Intent.createChooser(shareIntent, title));
     }
 }
