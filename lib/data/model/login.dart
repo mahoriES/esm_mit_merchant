@@ -47,6 +47,7 @@ class UserProfile {
   bool isMe;
   int userStatus;
   String photo;
+  String sUid;
 
   UserProfile(
       {this.email,
@@ -57,7 +58,8 @@ class UserProfile {
       this.userActive,
       this.isMe,
       this.userStatus,
-      this.photo});
+      this.photo,
+      this.sUid});
 
   UserProfile.fromJson(Map<String, dynamic> json) {
     email = json['email'];
@@ -69,6 +71,7 @@ class UserProfile {
     isMe = json['is_me'];
     userStatus = json['user_status'];
     photo = json['photo'];
+    sUid = json['suid'];
   }
 
   Map<String, dynamic> toJson() {
@@ -82,6 +85,7 @@ class UserProfile {
     data['is_me'] = this.isMe;
     data['user_status'] = this.userStatus;
     data['photo'] = this.photo;
+    data['suid'] = this.sUid;
     return data;
   }
 }

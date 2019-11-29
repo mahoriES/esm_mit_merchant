@@ -78,6 +78,7 @@ class LoginBloc {
     var httpResponse = await _httpService.foGetWithoutAuth(
         'google/account/login/info/?auth_state_id=$authStateId');
     if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+      print(httpResponse.body);
       var loginInfo = AuthInfo.fromJson(json.decode(httpResponse.body));
       if (loginInfo.code == AuthInfoCode.pending) {
         await Future.delayed(const Duration(seconds: 5));
@@ -127,6 +128,7 @@ class LoginBloc {
                 .toJson()))
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+        print(httpResponse.body);
         this._authBloc.login(AuthInfo.fromJson(json.decode(httpResponse.body)));
         Navigator.of(context).pushNamedAndRemoveUntil(Router.homeRoute,(Route<dynamic> route) => false);
       } else {
