@@ -46,6 +46,8 @@ class BranchService {
 
   getReferralUrl() async {
     String referralCode = this.authBloc.authState.userReferralCode;
+    String userUUid = this.authBloc.authState.userUUid;
+    String userEmail = this.authBloc.authState.userEmail;
     if (referralCode == null) {
       return 'https://www.foore.in';
     }
@@ -58,7 +60,8 @@ class BranchService {
           this._referralUrl = existingUrl;
           return existingUrl;
         } else {
-          String generatedUrl = await generateReferralUrl(referralCode);
+          String generatedUrl =
+              await generateReferralUrl(referralCode, userEmail, userUUid);
           this._referralUrl = generatedUrl;
           return generatedUrl;
         }
@@ -91,14 +94,16 @@ class BranchService {
     }
   }
 
-  generateReferralUrl(String referralCode) async {
+  generateReferralUrl(
+      String referralCode, String userEmail, String userUuid) async {
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
     };
 
-    String payload =
-        json.encode(getBranchPayloadWithReferralCode(referralCode).toJson());
+    String payload = json.encode(
+        getBranchPayloadWithReferralCode(referralCode, userEmail, userUuid)
+            .toJson());
 
     final httpResponse = await http.post('https://api.branch.io/v1/url',
         headers: requestHeaders, body: payload);
@@ -113,13 +118,18 @@ class BranchService {
     }
   }
 
-  BranchPayload getBranchPayloadWithReferralCode(String referralCode) {
+  BranchPayload getBranchPayloadWithReferralCode(
+      String referralCode, String userEmail, String userUuid) {
+    var email = userEmail ?? '';
+    var uuid = userUuid ?? '';
+
     return BranchPayload(
         alias: referralCode,
         branchKey: this._branchKey,
         campaign: defaultPayload.campaign,
         channel: defaultPayload.channel,
         feature: defaultPayload.feature,
+        data: branchData.copyWith(newMarketingTitle: email + ' ' + uuid),
         type: 2);
   }
 
@@ -212,5 +222,17 @@ class BranchData {
     data['\$android_url'] = this.androidUrl;
     data['\$ios_url'] = this.iosUrl;
     return data;
+  }
+
+  BranchData copyWith({String newMarketingTitle}) {
+    return BranchData(
+        ogType: ogType,
+        canonicalUrl: canonicalUrl,
+        ogTitle: ogTitle,
+        marketingTitle: newMarketingTitle,
+        ogDescription: ogDescription,
+        ogImageUrl: ogImageUrl,
+        androidUrl: androidUrl,
+        iosUrl: iosUrl);
   }
 }

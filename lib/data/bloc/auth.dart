@@ -190,6 +190,7 @@ class AuthState {
   String get userName => _userProfile?.name;
   String get userEmail => _userProfile?.email;
   String get userReferralCode => _userProfile?.sUid;
+  String get userUUid => _userProfile?.userUuid;
   String get firstLetterOfUserName {
     if (userName != null && userName != '') {
       if (userName.length > 1) {
