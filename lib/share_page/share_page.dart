@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -53,10 +54,22 @@ class _SharePageState extends State<SharePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FoSubmitButton(
-          text: "Share",
-          onPressed: share,
-          isLoading: isLoading,
+        appBar: AppBar(
+          backgroundColor: Color(0xFFFA7E5D),
+          automaticallyImplyLeading: true,
+          elevation: 0,
+          brightness: Brightness.dark,
+          iconTheme: IconThemeData.fallback().copyWith(color: Colors.white),
+        ),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(
+            bottom: 32.0,
+          ),
+          child: FoShareButton(
+            onPressed: this.share,
+            text: 'Share',
+            isLoading: isLoading,
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: Container(
@@ -76,9 +89,10 @@ class _SharePageState extends State<SharePage> {
                     height: 20.0,
                   ),
                   Text(
-                    'Win iphone x',
+                    'Win iPhone X',
                     style: Theme.of(context).textTheme.title.copyWith(
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         ),
                   ),
                   Container(
@@ -100,11 +114,90 @@ class _SharePageState extends State<SharePage> {
                         )
                       ],
                     ),
-                  )
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Text(
+                    'Share Foore with your Friends',
+                    style: Theme.of(context).textTheme.title.copyWith(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Text(
+                    'win iPhone X every week.',
+                    style: Theme.of(context).textTheme.body1.copyWith(
+                          color: Colors.white,
+                        ),
+                  ),
                 ],
               ),
             ),
           ),
         ));
+  }
+}
+
+class FoShareButton extends StatelessWidget {
+  final String text;
+  final bool isLoading;
+  final Function onPressed;
+  const FoShareButton({this.text, this.isLoading, this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoading == true) {
+      return RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50.0),
+        ),
+        padding: EdgeInsets.symmetric(
+          vertical: 15,
+          horizontal: 60,
+        ),
+        onPressed: null,
+        child: Container(
+            height: 22,
+            width: 22,
+            child: Center(child: CircularProgressIndicator())),
+      );
+    }
+    return RaisedButton(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50.0),
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: 15,
+        horizontal: 45,
+      ),
+      color: Colors.white,
+      onPressed: () {},
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.all(1.0),
+            child: Icon(
+              Icons.share,
+              color: Colors.green,
+            ),
+          ),
+          Container(
+              padding: EdgeInsets.only(
+                left: 15.0,
+              ),
+              child: new Text(
+                text,
+                style: TextStyle(
+                  color: Colors.green,
+                ),
+              )),
+        ],
+      ),
+    );
   }
 }
