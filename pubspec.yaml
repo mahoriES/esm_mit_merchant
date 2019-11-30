@@ -51,7 +51,7 @@ dependencies:
 
   intercom_flutter: ^2.0.5+2
 
-  package_info: ^0.4.0+10 
+  package_info: ^0.4.0+10
 
   firebase_crashlytics: ^0.1.1+2
 
@@ -64,6 +64,8 @@ dependencies:
   contacts_service: ^0.3.9
 
   permission_handler: ^4.0.0
+
+  flare_flutter: ^1.7.3
 
   esys_flutter_share:
     path: ./esys-flutter-share/
@@ -91,6 +93,8 @@ flutter:
     - assets/button-click.png
     - assets/growth.png
     - assets/empty-state.png
+    - assets/iphone.flr
+    - assets/iphone.png
     - assets/locale/localization_hi.json
     - assets/locale/localization_kn.json
     - assets/locale/localization_ml.json
@@ -125,4 +129,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-

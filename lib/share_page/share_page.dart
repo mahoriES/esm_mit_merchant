@@ -9,6 +9,7 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:provider/provider.dart';
+import 'package:flare_flutter/flare_actor.dart';
 
 class SharePage extends StatefulWidget {
   SharePage({Key key}) : super(key: key);
@@ -52,15 +53,58 @@ class _SharePageState extends State<SharePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Share"),
-        ),
         floatingActionButton: FoSubmitButton(
           text: "Share",
           onPressed: share,
           isLoading: isLoading,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        body: Container());
+        body: Container(
+          height: double.infinity,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: FractionalOffset.topCenter,
+                end: FractionalOffset.bottomCenter,
+                colors: [Color(0xFFFA7E5D), Color(0xFFF75362)]),
+          ),
+          child: SafeArea(
+            child: Container(
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Text(
+                    'Win iphone x',
+                    style: Theme.of(context).textTheme.title.copyWith(
+                          color: Colors.white,
+                        ),
+                  ),
+                  Container(
+                    height: 300,
+                    width: 300,
+                    child: Stack(
+                      children: <Widget>[
+                        FlareActor("assets/iphone.flr",
+                            alignment: Alignment.center,
+                            fit: BoxFit.contain,
+                            animation: "rotate"),
+                        Positioned(
+                          top: 70,
+                          left: 100,
+                          width: 100,
+                          child: Image(
+                            image: AssetImage('assets/iphone.png'),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ));
   }
 }

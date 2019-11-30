@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_analytics/observer.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/environments/environment.dart';
@@ -16,6 +17,12 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent, //top bar color
+    statusBarIconBrightness: Brightness.dark, //top bar icons
+    systemNavigationBarColor: Colors.grey[50], //bottom bar color
+    systemNavigationBarIconBrightness: Brightness.dark, //bottom bar icons
+  ));
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   runZoned<Future<void>>(() async {
     runApp(
