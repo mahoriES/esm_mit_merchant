@@ -66,5 +66,11 @@
   "location_search_page_button_create_on_google": "Google లో వ్యాపారాన్ని సృష్టించండి",
 
   "google_login_not_done_page_message": "Google స్థానాలను సృష్టించడానికి లేదా నిర్వహించడానికి మీరు Google తో లాగిన్ అవ్వాలి",
-  "onboarding_page_button_verify": "నిర్ధారించండి"
+  "onboarding_page_button_verify": "నిర్ధారించండి",
+
+  "whatsapp_share_message": "Get more new customers with Foore app & be a smart businessman. Promote your business for free & increase your business. Share the app & win an iPhone X every week. %s",
+  "share_page_button_share": "Share",
+  "share_page_title": "Win iPhone X",
+  "share_page_main_text": "Share Foore with your friends",
+  "share_page_description_text": "win iPhone X every week."
 }

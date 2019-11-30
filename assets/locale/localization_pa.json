@@ -66,5 +66,11 @@
   "location_search_page_button_create_on_google": "ਗੂਗਲ 'ਤੇ ਇੱਕ ਕਾਰੋਬਾਰ ਬਣਾਓ",
 
   "google_login_not_done_page_message": "ਗੂਗਲ ਨਿਰਧਾਰਿਤ ਸਥਾਨਾਂ ਨੂੰ ਬਣਾਉਣ ਅਤੇ ਪ੍ਰਬੰਧਿਤ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਗੂਗਲ ਨਾਲ ਲੌਗਇਨ ਕਰਨ ਦੀ ਜ਼ਰੂਰਤ ਹੈ",
-  "onboarding_page_button_verify": "ਪੜਤਾਲ ਕਰੋ"
+  "onboarding_page_button_verify": "ਪੜਤਾਲ ਕਰੋ",
+
+  "whatsapp_share_message": "Get more new customers with Foore app & be a smart businessman. Promote your business for free & increase your business. Share the app & win an iPhone X every week. %s",
+  "share_page_button_share": "Share",
+  "share_page_title": "Win iPhone X",
+  "share_page_main_text": "Share Foore with your friends",
+  "share_page_description_text": "win iPhone X every week."
 }
