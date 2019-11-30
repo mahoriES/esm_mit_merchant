@@ -7,10 +7,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
-import 'package:foore/buttons/fo_submit_button.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:sprintf/sprintf.dart';
 
 class SharePage extends StatefulWidget {
   SharePage({Key key}) : super(key: key);
@@ -45,7 +46,9 @@ class _SharePageState extends State<SharePage> {
       final ByteData bytes = await rootBundle.load('assets/google-icon.png');
       await Share.file(
           'Foore', 'google-icon.png', bytes.buffer.asUint8List(), 'image/png',
-          text: 'Download Foore app. Go to $url');
+          text: sprintf(
+              AppTranslations.of(context).text('whatsapp_share_message'),
+              [url]));
     } catch (e) {
       print('error: $e');
     }
@@ -67,7 +70,7 @@ class _SharePageState extends State<SharePage> {
           ),
           child: FoShareButton(
             onPressed: this.share,
-            text: 'Share',
+            text: AppTranslations.of(context).text('share_page_button_share'),
             isLoading: isLoading,
           ),
         ),
@@ -89,7 +92,7 @@ class _SharePageState extends State<SharePage> {
                     height: 20.0,
                   ),
                   Text(
-                    'Win iPhone X',
+                    AppTranslations.of(context).text('share_page_title'),
                     style: Theme.of(context).textTheme.title.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -119,7 +122,7 @@ class _SharePageState extends State<SharePage> {
                     height: 20.0,
                   ),
                   Text(
-                    'Share Foore with your Friends',
+                    AppTranslations.of(context).text('share_page_main_text'),
                     style: Theme.of(context).textTheme.title.copyWith(
                         color: Colors.white,
                         fontSize: 18,
@@ -129,7 +132,8 @@ class _SharePageState extends State<SharePage> {
                     height: 20.0,
                   ),
                   Text(
-                    'win iPhone X every week.',
+                    AppTranslations.of(context)
+                        .text('share_page_description_text'),
                     style: Theme.of(context).textTheme.body1.copyWith(
                           color: Colors.white,
                         ),
@@ -175,7 +179,7 @@ class FoShareButton extends StatelessWidget {
         horizontal: 45,
       ),
       color: Colors.white,
-      onPressed: () {},
+      onPressed: onPressed,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -184,7 +188,7 @@ class FoShareButton extends StatelessWidget {
             height: 16,
             width: 16,
             child: Image(
-             image: AssetImage('assets/whatsapp.png'),
+              image: AssetImage('assets/whatsapp.png'),
             ),
           ),
           Container(
