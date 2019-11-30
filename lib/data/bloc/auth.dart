@@ -141,7 +141,7 @@ class AuthBloc {
     this._updateState();
     await intercomInit();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final authString = prefs.getString('authenticationInfo') ?? '';
+    final authString = prefs.getString('authenticationInformation') ?? '';
     if (authString != '') {
       var authData = json.decode(authString);
       this.login(AuthInfo.fromJson(authData));
@@ -176,9 +176,9 @@ class AuthBloc {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (this.authState.authData != null) {
       await sharedPreferences.setString(
-          'authenticationInfo', json.encode(this.authState.authData.toJson()));
+          'authenticationInformation', json.encode(this.authState.authData.toJson()));
     } else {
-      await sharedPreferences.setString('authenticationInfo', '');
+      await sharedPreferences.setString('authenticationInformation', '');
     }
   }
 }
