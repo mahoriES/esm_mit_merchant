@@ -64,13 +64,13 @@
   "location_search_page_no_business": "आपके पास अपने गूगल खाते %s के लिए कोई गूगल व्यवसाय स्थान नहीं है।",
   "location_search_page_cant_find_your_business": "अपना बिज़नेस नहीं ढूंढ सकते ?",
   "location_search_page_button_create_on_google": "गूगल पर एक बिज़नेस बनाएँ",
-  
+
   "google_login_not_done_page_message": "गूगल स्थान बनाने या प्रबंधित करने के लिए आपको गूगल के साथ लॉगिन करने की आवश्यकता है",
   "onboarding_page_button_verify": "प्रमाणित करें",
 
-  "whatsapp_share_message": "Get more new customers with Foore app & be a smart businessman. Promote your business for free & increase your business. Share the app & win an iPhone X every week. %s",
-  "share_page_button_share": "Share",
-  "share_page_title": "Win iPhone X",
-  "share_page_main_text": "Share Foore with your friends",
-  "share_page_description_text": "win iPhone X every week."
+  "whatsapp_share_message": "फूरे ऐप से अधिक नए ग्राहक प्राप्त करें और एक स्मार्ट व्यवसायी बनें। अपने व्यवसाय का मुफ्त में विज्ञापन करें और अपना व्यवसाय बढ़ाएं। ऐप को शेयर करें और हर हफ्ते एक iPhone X जीतो। %s",
+  "share_page_button_share": "शेयर",
+  "share_page_title": "IPhone X जीतो",
+  "share_page_main_text": "अपने दोस्तों के साथ शेयर करें",
+  "share_page_description_text": "हर हफ्ते iPhone X जीतें।"
 }
