@@ -20,8 +20,6 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, //top bar color
     statusBarIconBrightness: Brightness.dark, //top bar icons
-    systemNavigationBarColor: Colors.grey[50], //bottom bar color
-    systemNavigationBarIconBrightness: Brightness.dark, //bottom bar icons
   ));
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   runZoned<Future<void>>(() async {

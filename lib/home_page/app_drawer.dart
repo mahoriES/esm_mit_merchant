@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:foore/environments/environment.dart';
 import 'package:foore/language_selection_page/language_selection_page.dart';
 import 'package:foore/share_page/share_page.dart';
@@ -79,6 +80,7 @@ class AppDrawer extends StatelessWidget {
             title: Text(
                 AppTranslations.of(context).text("drawer_button_language")),
             onTap: () {
+              Navigator.of(context).pop();
               Navigator.push(
                 context,
                 MaterialPageRoute(
