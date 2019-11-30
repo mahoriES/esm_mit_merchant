@@ -95,6 +95,7 @@ flutter:
     - assets/empty-state.png
     - assets/iphone.flr
     - assets/iphone.png
+    - assets/whatsapp.png
     - assets/locale/localization_hi.json
     - assets/locale/localization_kn.json
     - assets/locale/localization_ml.json

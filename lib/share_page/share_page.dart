@@ -181,9 +181,10 @@ class FoShareButton extends StatelessWidget {
         children: <Widget>[
           Container(
             margin: EdgeInsets.all(1.0),
-            child: Icon(
-              Icons.share,
-              color: Colors.green,
+            height: 16,
+            width: 16,
+            child: Image(
+             image: AssetImage('assets/whatsapp.png'),
             ),
           ),
           Container(
