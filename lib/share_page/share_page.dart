@@ -11,6 +11,7 @@ import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprintf/sprintf.dart';
 
 class SharePage extends StatefulWidget {
@@ -43,12 +44,25 @@ class _SharePageState extends State<SharePage> {
 
   Future<void> _shareImage(String url) async {
     try {
-      final ByteData bytes = await rootBundle.load('assets/google-icon.png');
-      await Share.file(
-          'Foore', 'google-icon.png', bytes.buffer.asUint8List(), 'image/png',
-          text: sprintf(
-              AppTranslations.of(context).text('whatsapp_share_message'),
-              [url]));
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var languageCode = prefs.getString('language_code') ?? null;
+
+      if (languageCode == 'hi') {
+        final ByteData bytes = await rootBundle.load('assets/hindi-share.png');
+        await Share.file(
+            'Foore', 'hindi-share.png', bytes.buffer.asUint8List(), 'image/png',
+            text: sprintf(
+                AppTranslations.of(context).text('whatsapp_share_message'),
+                [url]));
+      } else {
+        final ByteData bytes =
+            await rootBundle.load('assets/english-share.png');
+        await Share.file('Foore', 'english-share.png',
+            bytes.buffer.asUint8List(), 'image/png',
+            text: sprintf(
+                AppTranslations.of(context).text('whatsapp_share_message'),
+                [url]));
+      }
     } catch (e) {
       print('error: $e');
     }

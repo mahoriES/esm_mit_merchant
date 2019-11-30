@@ -96,6 +96,8 @@ flutter:
     - assets/iphone.flr
     - assets/iphone.png
     - assets/whatsapp.png
+    - assets/hindi-share.png
+    - assets/english-share.png
     - assets/locale/localization_hi.json
     - assets/locale/localization_kn.json
     - assets/locale/localization_ml.json
