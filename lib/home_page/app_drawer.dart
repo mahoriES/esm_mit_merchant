@@ -79,7 +79,6 @@ class AppDrawer extends StatelessWidget {
             title: Text(
                 AppTranslations.of(context).text("drawer_button_language")),
             onTap: () {
-              Navigator.of(context).pop();
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -91,7 +90,7 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.share),
             title: Text('Share'),
             onTap: () {
-              Navigator.of(context).pushNamed(SharePage.routeName);
+              Navigator.of(context).popAndPushNamed(SharePage.routeName);
             },
           ),
           ListTile(
