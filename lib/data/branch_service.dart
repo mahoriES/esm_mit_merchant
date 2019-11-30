@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:foore/environments/environment.dart';
 import 'package:http/http.dart' as http;
 import 'package:foore/data/bloc/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BranchService {
   String _branchKey;
@@ -95,7 +96,12 @@ class BranchService {
   }
 
   Future<bool> shouldShowSharePrompt() async {
-    return true;
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var isShown = sharedPreferences.getBool('sharePromptShown') ?? false;
+    if (!isShown) {
+      await sharedPreferences.setBool('sharePromptShown', true);
+    }
+    return !isShown;
   }
 
   generateReferralUrl(
