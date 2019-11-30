@@ -90,7 +90,8 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.share),
-            title: Text('Share'),
+            title: Text(
+                AppTranslations.of(context).text("share_page_button_share")),
             onTap: () {
               Navigator.of(context).popAndPushNamed(SharePage.routeName);
             },
