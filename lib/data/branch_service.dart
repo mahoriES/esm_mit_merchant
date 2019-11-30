@@ -15,24 +15,17 @@ class BranchService {
   final AuthBloc authBloc;
 
   static final branchData = BranchData(
-      ogType: "website",
-      canonicalUrl:
-          "https://play.google.com/store/apps/details?id=in.foore.mobile&hl=en",
-      ogTitle: "Foore - Get More Google Reviews - Apps on Google Play",
+      ogTitle: "More Google Reviews, More Customers",
       marketingTitle: "Foore - Get More Google Reviews - Apps on Google Play",
       ogDescription:
-          "Foore lets you collect customer reviews for free and improve your Google ranking & rating.\n\nGoogle reviews are crucial for local businesses with physical stores. Using the Foore app, business owners can automate their review collection process. Get more ",
+          "Use Foore app to promote your business for free and get new customers. Increase your visibility & your business.",
       ogImageUrl:
-          "https://cdn.branch.io/branch-assets/1574077806065-og_image.jpeg",
-      androidUrl:
-          "https://play.google.com/store/apps/details?id=in.foore.mobile&hl=en",
-      iosUrl:
-          "https://play.google.com/store/apps/details?id=in.foore.mobile&hl=en");
+          "https://cdn.branch.io/branch-assets/1575132441899-og_image.jpeg");
 
   static final defaultPayload = BranchPayload(
-    campaign: "Test",
-    channel: "Test 3",
-    feature: "Test 2",
+    campaign: "Share",
+    channel: "Referral",
+    feature: "Whatsapp",
     type: 2,
   );
 
@@ -191,58 +184,40 @@ class BranchPayload {
 }
 
 class BranchData {
-  String ogType;
-  String canonicalUrl;
   String ogTitle;
   String marketingTitle;
   String ogDescription;
   String ogImageUrl;
-  String androidUrl;
-  String iosUrl;
 
-  BranchData(
-      {this.ogType,
-      this.canonicalUrl,
-      this.ogTitle,
-      this.marketingTitle,
-      this.ogDescription,
-      this.ogImageUrl,
-      this.androidUrl,
-      this.iosUrl});
+  BranchData({
+    this.ogTitle,
+    this.marketingTitle,
+    this.ogDescription,
+    this.ogImageUrl,
+  });
 
   BranchData.fromJson(Map<String, dynamic> json) {
-    ogType = json['\$og_type'];
-    canonicalUrl = json['\$canonical_url'];
     ogTitle = json['\$og_title'];
     marketingTitle = json['\$marketing_title'];
     ogDescription = json['\$og_description'];
     ogImageUrl = json['\$og_image_url'];
-    androidUrl = json['\$android_url'];
-    iosUrl = json['\$ios_url'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['\$og_type'] = this.ogType;
-    data['\$canonical_url'] = this.canonicalUrl;
     data['\$og_title'] = this.ogTitle;
     data['\$marketing_title'] = this.marketingTitle;
     data['\$og_description'] = this.ogDescription;
     data['\$og_image_url'] = this.ogImageUrl;
-    data['\$android_url'] = this.androidUrl;
-    data['\$ios_url'] = this.iosUrl;
     return data;
   }
 
   BranchData copyWith({String newMarketingTitle}) {
     return BranchData(
-        ogType: ogType,
-        canonicalUrl: canonicalUrl,
-        ogTitle: ogTitle,
-        marketingTitle: newMarketingTitle,
-        ogDescription: ogDescription,
-        ogImageUrl: ogImageUrl,
-        androidUrl: androidUrl,
-        iosUrl: iosUrl);
+      ogTitle: ogTitle,
+      marketingTitle: newMarketingTitle,
+      ogDescription: ogDescription,
+      ogImageUrl: ogImageUrl,
+    );
   }
 }
