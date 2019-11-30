@@ -39,7 +39,7 @@
   "reply_page_reply_label": "உங்கள் பதிலை இங்கே உள்ளிடவும். 4000 எழுத்துகளுக்குக் குறைவாக வைக்கவும். இருக்கும் பதிலை நீக்க காலியாக விடவும்",
   "language_selection_page_change_language": "மொழியை மாற்றவும்",
   "intro_page_button_create_account": "உங்கள் கணக்கை துவங்குங்கள்",
-  
+
   "intro_page_button_login": "நிறுவனத்தின் மின்னஞ்சலுடன் உள்நுழைக",
   "intro_page_button_google": "கூகிள் உடன் தொடரவும்",
   "onboarding_page_title": "எனது கூகிள் வணிக இருப்பிடங்கள்",
@@ -68,9 +68,8 @@
   "google_login_not_done_page_message": "ਗੂਗਲ ਨਿਰਧਾਰਿਤ ਸਥਾਨਾਂ ਨੂੰ ਬਣਾਉਣ ਅਤੇ ਪ੍ਰਬੰਧਿਤ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਗੂਗਲ ਨਾਲ ਲੌਗਇਨ ਕਰਨ ਦੀ ਜ਼ਰੂਰਤ ਹੈ",
   "onboarding_page_button_verify": "ਪੜਤਾਲ ਕਰੋ",
 
-  "whatsapp_share_message": "Get more new customers with Foore app & be a smart businessman. Promote your business for free & increase your business. Share the app & win an iPhone X every week. %s",
-  "share_page_button_share": "Share",
-  "share_page_title": "Win iPhone X",
-  "share_page_main_text": "Share Foore with your friends",
-  "share_page_description_text": "win iPhone X every week."
+  "whatsapp_share_message": "ஃபூர் பயன்பாடு மற்றும் புதிய வாடிக்கையாளர்களைப் பெறுங்கள் ஒரு ஸ்மார்ட் தொழிலதிபராக இருங்கள். உங்கள் வணிகத்தை ஊக்குவிக்கவும் இலவசமாக & உங்கள் வணிகத்தை அதிகரிக்கவும். பயன்பாட்டைப் பகிரவும் & ஒவ்வொரு வாரமும் ஒரு ஐபோன் எக்ஸ் வெல்லுங்கள். %s",
+  "share_page_button_share": "பகிர்",
+  "share_page_title": "ஐபோன் எக்ஸ் வெற்றிஉங்கள் நண்பர்களுடன் ஃபூரைப் பகிரவும்",
+  "share_page_description_text": "ஒவ்வொரு வாரமும் ஐபோன் எக்ஸ் வெல்லுங்கள்."
 }

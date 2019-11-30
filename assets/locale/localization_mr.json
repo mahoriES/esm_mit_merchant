@@ -68,9 +68,9 @@
   "google_login_not_done_page_message": "गूगल स्थाने तयार करण्यासाठी किंवा व्यवस्थापित करण्यासाठी आपल्याला गूगल सह लॉग इन करण्याची आवश्यकता आहे",
   "onboarding_page_button_verify": "सत्यापित करा",
 
-  "whatsapp_share_message": "Get more new customers with Foore app & be a smart businessman. Promote your business for free & increase your business. Share the app & win an iPhone X every week. %s",
-  "share_page_button_share": "Share",
-  "share_page_title": "Win iPhone X",
-  "share_page_main_text": "Share Foore with your friends",
-  "share_page_description_text": "win iPhone X every week."
+  "whatsapp_share_message": "Foore अ‍ॅपसह अधिक नवीन ग्राहक मिळवा आणि हुशार व्यापारी व्हा. आपल्या व्यवसायाची जाहिरात करा विनामूल्य आणि आपला व्यवसाय वाढवा. अ‍ॅप सामायिक करा आणि दर आठवड्याला आयफोन एक्स जिंकणे. %s",
+  "share_page_button_share": "सामायिक करा",
+  "share_page_title": "आयफोन एक्स जिंक",
+  "share_page_main_text": "आपल्या मित्रांसह फूअर सामायिक करा",
+  "share_page_description_text": "प्रत्येक आठवड्यात आयफोन एक्स जिंकणे."
 }

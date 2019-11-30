@@ -68,9 +68,9 @@
   "google_login_not_done_page_message": "Google ലൊക്കേഷനുകൾ സൃഷ്‌ടിക്കുന്നതിനോ നിയന്ത്രിക്കുന്നതിനോ നിങ്ങൾ Google- ൽ ലോഗിൻ ചെയ്യേണ്ടതുണ്ട്",
   "onboarding_page_button_verify": "പരിശോധിക്കുക",
 
-  "whatsapp_share_message": "Get more new customers with Foore app & be a smart businessman. Promote your business for free & increase your business. Share the app & win an iPhone X every week. %s",
-  "share_page_button_share": "Share",
-  "share_page_title": "Win iPhone X",
-  "share_page_main_text": "Share Foore with your friends",
-  "share_page_description_text": "win iPhone X every week."
+  "whatsapp_share_message": "ஃபூர் பயன்பாடு மற்றும் புதிய வாடிக்கையாளர்களைப் பெறுங்கள் ஒரு ஸ்மார்ட் தொழிலதிபராக இருங்கள். உங்கள் வணிகத்தை ஊக்குவிக்கவும் இலவசமாக & உங்கள் வணிகத்தை அதிகரிக்கவும். பயன்பாட்டைப் பகிரவும் & ஒவ்வொரு வாரமும் ஒரு ஐபோன் எக்ஸ் வெல்லுங்கள். %s",
+  "share_page_button_share": "പങ്കിടുക",
+  "share_page_title": "ഐഫോൺ എക്സ് നേടുക",
+  "share_page_main_text": "നിങ്ങളുടെ സുഹൃത്തുക്കളുമായി ഫൂർ പങ്കിടുക",
+  "share_page_description_text": "എല്ലാ ആഴ്ചയും iPhone X നേടുക."
 }

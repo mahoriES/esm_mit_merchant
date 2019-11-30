@@ -39,7 +39,7 @@
   "reply_page_reply_label": "ਆਪਣਾ ਜਵਾਬ ਇੱਥੇ ਦਿਓ. ਇਸ ਨੂੰ 4000 ਅੱਖਰਾਂ ਤੋਂ ਘੱਟ ਰੱਖੋ. ਮੌਜੂਦਾ ਜਵਾਬ ਨੂੰ ਮਿਟਾਉਣ ਲਈ ਖਾਲੀ ਛੱਡੋ",
   "language_selection_page_change_language": "ਭਾਸ਼ਾ ਬਦਲੋ",
   "intro_page_button_create_account": "ਖਾਤਾ ਬਣਾਉ",
- 
+
   "intro_page_button_login": "ਕੰਪਨੀ ਈਮੇਲ ਨਾਲ ਲੌਗਇਨ ਕਰੋ",
   "intro_page_button_google": "ਗੂਗਲ ਦੇ ਨਾਲ ਜਾਰੀ ਰੱਖੋ",
   "onboarding_page_title": "ਮੇਰੇ ਗੂਗਲ ਵਪਾਰ ਸਥਾਨ",
@@ -68,9 +68,9 @@
   "google_login_not_done_page_message": "ਗੂਗਲ ਨਿਰਧਾਰਿਤ ਸਥਾਨਾਂ ਨੂੰ ਬਣਾਉਣ ਅਤੇ ਪ੍ਰਬੰਧਿਤ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਗੂਗਲ ਨਾਲ ਲੌਗਇਨ ਕਰਨ ਦੀ ਜ਼ਰੂਰਤ ਹੈ",
   "onboarding_page_button_verify": "ਪੜਤਾਲ ਕਰੋ",
 
-  "whatsapp_share_message": "Get more new customers with Foore app & be a smart businessman. Promote your business for free & increase your business. Share the app & win an iPhone X every week. %s",
-  "share_page_button_share": "Share",
-  "share_page_title": "Win iPhone X",
-  "share_page_main_text": "Share Foore with your friends",
-  "share_page_description_text": "win iPhone X every week."
+  "whatsapp_share_message": "ਫੂਅਰ ਐਪ ਅਤੇ ਹੋਰ ਨਵੇਂ ਗਾਹਕਾਂ ਨੂੰ ਪ੍ਰਾਪਤ ਕਰੋ ਇੱਕ ਸਮਾਰਟ ਵਪਾਰੀ ਬਣੋ. ਆਪਣੇ ਕਾਰੋਬਾਰ ਨੂੰ ਉਤਸ਼ਾਹਤ ਕਰੋ ਮੁਫਤ ਅਤੇ ਆਪਣੇ ਕਾਰੋਬਾਰ ਨੂੰ ਵਧਾਉਣ ਲਈ. ਐਪ ਨੂੰ ਸਾਂਝਾ ਕਰੋ & ਹਰ ਹਫਤੇ ਇੱਕ ਆਈਫੋਨ ਐਕਸ ਜਿੱਤੋ. %s",
+  "share_page_button_share": "ਸਾਂਝਾ ਕਰੋ",
+  "share_page_title": "ਵਿਨ ਆਈਫੋਨ ਐਕਸ",
+  "share_page_main_text": "ਆਪਣੇ ਦੋਸਤਾਂ ਨਾਲ ਫੂਅਰ ਸਾਂਝਾ ਕਰੋ",
+  "share_page_description_text": "ਹਰ ਹਫ਼ਤੇ ਆਈਫੋਨ ਐਕਸ ਨੂੰ ਜਿੱਤੋ."
 }
