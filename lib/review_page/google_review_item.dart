@@ -27,75 +27,95 @@ class GoogleItemWidget extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        Container(
-          width: double.infinity,
-          height: 1.0,
-          color: Theme.of(context).dividerColor,
-        ),
-        SizedBox(
-          height: 20.0,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+        ListTile(
+          contentPadding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+          title: Row(
             children: <Widget>[
               StarDisplay(
                   value: GmbReviewHelper.getStarRating(this._feedbackItem)),
+              SizedBox(
+                width: 4.0,
+              ),
               Container(
-                width: 80.0,
+                width: 120,
                 child: Text(
                   onboardingGuardBloc
                       .getLocationNameById(this._feedbackItem.fbLocationId),
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(fontSize: 10.0),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    ReviewPageHelper.getCreatedTimeText(this._feedbackItem),
-                    style: Theme.of(context).textTheme.caption,
-                  ),
-                ),
-              ),
-              Container(child: this.sourceLogo(this._feedbackItem))
             ],
           ),
+          leading: CircleAvatar(
+              backgroundImage:
+                  NetworkImage(this._feedbackItem.gmbReview.reviewerPicture)),
+          subtitle: Container(
+            child: Text(
+              ReviewPageHelper.getCreatedTimeText(this._feedbackItem),
+              style: Theme.of(context).textTheme.caption,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          trailing: Container(child: this.sourceLogo(this._feedbackItem)),
         ),
-        ListTile(
-          title: Text(ReviewPageHelper.getNameText(this._feedbackItem)),
-          subtitle: GmbReviewHelper.isShowGmbComment(this._feedbackItem)
-              ? Text(GmbReviewHelper.getGmbCommentText(this._feedbackItem))
-              : null,
-        ),
-        reply(this._feedbackItem, context),
-        this.isShowReplyButton
-            ? Padding(
-                padding: EdgeInsets.only(right: 8.0),
-                child: ButtonTheme.bar(
-                  child: ButtonBar(
-                    children: <Widget>[
-                      RaisedButton(
-                        elevation: 0.0,
-                        child: Text(
-                          GmbReviewHelper.isShowGmbReply(this._feedbackItem)
-                              ? AppTranslations.of(context)
-                                  .text("review_page_button_edit_reply")
-                              : AppTranslations.of(context)
-                                  .text("review_page_button_reply"),
-                          style: Theme.of(context).textTheme.button.copyWith(
-                                color: Colors.white,
+        Container(
+          padding: EdgeInsets.only(left: 70.0, right: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(ReviewPageHelper.getNameText(this._feedbackItem),
+                  style: Theme.of(context)
+                      .textTheme
+                      .body1
+                      .copyWith(fontWeight: FontWeight.w600)),
+              SizedBox(
+                height: 4.0,
+              ),
+              Container(
+                child: GmbReviewHelper.isShowGmbComment(this._feedbackItem)
+                    ? Text(
+                        GmbReviewHelper.getGmbCommentText(this._feedbackItem))
+                    : null,
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              reply(this._feedbackItem, context),
+              this.isShowReplyButton
+                  ? Container(
+                      child: ButtonTheme.bar(
+                        padding: EdgeInsets.all(0),
+                        child: ButtonBar(
+                          children: <Widget>[
+                            RaisedButton(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              elevation: 0.0,
+                              child: Text(
+                                GmbReviewHelper.isShowGmbReply(
+                                        this._feedbackItem)
+                                    ? AppTranslations.of(context)
+                                        .text("review_page_button_edit_reply")
+                                    : AppTranslations.of(context)
+                                        .text("review_page_button_reply"),
+                                style:
+                                    Theme.of(context).textTheme.button.copyWith(
+                                          color: Colors.white,
+                                        ),
                               ),
+                              onPressed: onReply,
+                            ),
+                          ],
                         ),
-                        onPressed: onReply,
                       ),
-                    ],
-                  ),
-                ),
-              )
-            : Container(),
+                    )
+                  : Container(),
+            ],
+          ),
+        )
       ],
     );
   }
@@ -118,8 +138,8 @@ class GoogleItemWidget extends StatelessWidget {
     if (!GmbReviewHelper.isShowGmbReply(feedbackItem)) {
       return Container();
     }
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    return Container(
+      // padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Container(
         width: double.infinity,
         color: Color.fromRGBO(233, 233, 233, 0.50),

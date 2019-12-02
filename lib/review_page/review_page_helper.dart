@@ -16,7 +16,7 @@ class ReviewPageHelper {
 
   static String getCreatedTimeText(FeedbackItem feedbackItem) {
     var lastInteractionDate = DateTime.parse(feedbackItem.created);
-    var formatter = new DateFormat('MMM dd, yyyy, hh:mm a');
+    var formatter = new DateFormat('hh:mm a, dd MMM, yyyy');
     String timeText = formatter.format(lastInteractionDate);
     return timeText;
   }
