@@ -39,6 +39,15 @@ class GmbReviewHelper {
         : '';
   }
 
+  static String getReviewerPicture(FeedbackItem feedbackItem) {
+    if (feedbackItem.gmbReview == null) {
+      return '';
+    }
+    return feedbackItem.gmbReview.reviewerPicture != null
+        ? feedbackItem.gmbReview.reviewerPicture
+        : '';
+  }
+
   static bool isShowGmbReply(FeedbackItem feedbackItem) {
     if (feedbackItem.gmbReview == null) {
       return false;

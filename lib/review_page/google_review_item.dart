@@ -51,8 +51,8 @@ class GoogleItemWidget extends StatelessWidget {
             ],
           ),
           leading: CircleAvatar(
-              backgroundImage:
-                  NetworkImage(this._feedbackItem.gmbReview.reviewerPicture)),
+              backgroundImage: NetworkImage(
+                  GmbReviewHelper.getReviewerPicture(this._feedbackItem))),
           subtitle: Container(
             child: Text(
               ReviewPageHelper.getCreatedTimeText(this._feedbackItem),
