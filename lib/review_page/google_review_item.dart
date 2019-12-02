@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/data/constants/feedback.dart';
 import 'package:foore/data/model/feedback.dart';
 import 'package:foore/review_page/reply_gmb.dart';
+import 'package:provider/provider.dart';
 import '../app_translations.dart';
 import 'review_page_helper.dart';
 
@@ -14,6 +16,7 @@ class GoogleItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onboardingGuardBloc = Provider.of<OnboardingGuardBloc>(context);
     var onReply = () {
       Navigator.pushNamed(
         context,
@@ -39,6 +42,15 @@ class GoogleItemWidget extends StatelessWidget {
             children: <Widget>[
               StarDisplay(
                   value: GmbReviewHelper.getStarRating(this._feedbackItem)),
+              Container(
+                width: 80.0,
+                child: Text(
+                  onboardingGuardBloc
+                      .getLocationNameById(this._feedbackItem.fbLocationId),
+                  style: Theme.of(context).textTheme.caption,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0),

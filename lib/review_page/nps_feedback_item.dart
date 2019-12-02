@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/data/constants/feedback.dart';
 import 'package:foore/data/model/feedback.dart';
+import 'package:provider/provider.dart';
 import 'review_page_helper.dart';
 
 class NpsFeedbackItemWidget extends StatelessWidget {
@@ -10,6 +12,7 @@ class NpsFeedbackItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onboardingGuardBloc = Provider.of<OnboardingGuardBloc>(context);
     return Column(
       children: <Widget>[
         Container(
@@ -47,7 +50,8 @@ class NpsFeedbackItemWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                NpsFeedbackHelper.getNpsRespondent(this._feedbackItem),
+                onboardingGuardBloc
+                    .getLocationNameById(this._feedbackItem.fbLocationId),
                 style: Theme.of(context).textTheme.caption,
               ),
               Expanded(

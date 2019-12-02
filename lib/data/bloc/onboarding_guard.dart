@@ -21,7 +21,9 @@ class OnboardingGuardBloc {
     this._onboardingState.isLoading = true;
     this._onboardingState.isLoadingFailed = false;
     this._updateState();
-    _httpService.foGet('ui/helper/account/?onboarding').then((httpResponse) {
+    _httpService
+        .foGet('ui/helper/account/?onboarding&locations')
+        .then((httpResponse) {
       if (httpResponse.statusCode == 200) {
         this._onboardingState.response =
             UiHelperResponse.fromJson(json.decode(httpResponse.body));
@@ -46,6 +48,19 @@ class OnboardingGuardBloc {
     }
   }
 
+  String getLocationNameById(String locationId) {
+    String locationName = '';
+    if (this._onboardingState.locations.length > 1) {
+      for (var location in this._onboardingState.locations) {
+        if (location.fbLocationId == locationId) {
+          locationName = location.name;
+          break;
+        }
+      }
+    }
+    return locationName;
+  }
+
   _updateState() {
     this._subjectOnboardingState.sink.add(this._onboardingState);
   }
@@ -66,6 +81,8 @@ class OnboardingGuardState {
       onboarding != 0 &&
       onboarding != null;
 
+  List<FoLocations> get locations => response != null ? response.locations : [];
+
   // get isOnboardingRequired => isLoading == false;
 
   get isShowChild =>
@@ -81,16 +98,45 @@ class OnboardingGuardState {
 
 class UiHelperResponse {
   int onboarding;
+  List<FoLocations> locations;
 
   UiHelperResponse({this.onboarding});
 
   UiHelperResponse.fromJson(Map<String, dynamic> json) {
+    locations = new List<FoLocations>();
+    if (json['locations'] != null) {
+      json['locations'].forEach((v) {
+        locations.add(new FoLocations.fromJson(v));
+      });
+    }
     onboarding = json['onboarding'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.locations != null) {
+      data['locations'] = this.locations.map((v) => v.toJson()).toList();
+    }
     data['onboarding'] = this.onboarding;
+    return data;
+  }
+}
+
+class FoLocations {
+  String name;
+  String fbLocationId;
+
+  FoLocations({this.name, this.fbLocationId});
+
+  FoLocations.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    fbLocationId = json['fb_location_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['fb_location_id'] = this.fbLocationId;
     return data;
   }
 }
