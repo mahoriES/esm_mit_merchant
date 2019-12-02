@@ -26,6 +26,7 @@ class GoogleItemWidget extends StatelessWidget {
     };
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         ListTile(
           contentPadding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
