@@ -14,65 +14,74 @@ class NpsFeedbackItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final onboardingGuardBloc = Provider.of<OnboardingGuardBloc>(context);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Container(
-          width: double.infinity,
-          height: 1.0,
-          color: Color.fromRGBO(233, 233, 233, 0.50),
-        ),
-        SizedBox(
-          height: 20.0,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+        ListTile(
+          contentPadding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+          title: Row(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 4.0),
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: this.npsScoreColor(this._feedbackItem),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Text(
-                      NpsFeedbackHelper.getScoreText(this._feedbackItem),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 10,
-                      ),
-                    ),
-                  ),
+              CircleAvatar(
+                radius: 8.0,
+                backgroundColor: this.npsScoreColor(this._feedbackItem),
+                child: Text(
+                  NpsFeedbackHelper.getScoreText(this._feedbackItem),
+                  style: TextStyle(
+                      fontSize: 8.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               ),
-              Text(
-                onboardingGuardBloc
-                    .getLocationNameById(this._feedbackItem.fbLocationId),
-                style: Theme.of(context).textTheme.caption,
+              SizedBox(
+                width: 4.0,
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    ReviewPageHelper.getCreatedTimeText(this._feedbackItem),
-                    style: Theme.of(context).textTheme.caption,
-                  ),
+              Container(
+                width: 120,
+                child: Text(
+                  onboardingGuardBloc
+                      .getLocationNameById(this._feedbackItem.fbLocationId),
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(fontSize: 10.0),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Container(child: this.sourceLogo(this._feedbackItem))
             ],
           ),
+          leading: CircleAvatar(
+            child: Icon(Icons.person),
+            backgroundColor: Colors.blueGrey,
+          ),
+          subtitle: Container(
+            child: Text(
+              ReviewPageHelper.getCreatedTimeText(this._feedbackItem),
+              style: Theme.of(context).textTheme.caption,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          trailing: Container(child: this.sourceLogo(this._feedbackItem)),
         ),
-        ListTile(
-          title: Text(ReviewPageHelper.getNameText(this._feedbackItem)),
-          subtitle: this._feedbackItem.comment != null
-              ? Text(NpsFeedbackHelper.getCommentText(this._feedbackItem))
-              : null,
-        ),
+        Container(
+          padding: EdgeInsets.only(left: 70.0, right: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(ReviewPageHelper.getNameText(this._feedbackItem),
+                  style: Theme.of(context)
+                      .textTheme
+                      .body1
+                      .copyWith(fontWeight: FontWeight.w600)),
+              SizedBox(
+                height: 4.0,
+              ),
+              Container(
+                child: this._feedbackItem.comment != null
+                    ? Text(NpsFeedbackHelper.getCommentText(this._feedbackItem))
+                    : null,
+              ),
+            ],
+          ),
+        )
       ],
     );
   }
@@ -83,7 +92,7 @@ class NpsFeedbackItemWidget extends StatelessWidget {
     if (npsRespondent == NpsFeedbackHelper.DETRACTOR) {
       return Colors.red;
     } else if (npsRespondent == NpsFeedbackHelper.PASSIVE) {
-      return Colors.yellow;
+      return Colors.orange;
     } else if (npsRespondent == NpsFeedbackHelper.PROMOTER) {
       return Colors.green;
     }
