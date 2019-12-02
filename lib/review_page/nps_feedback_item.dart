@@ -20,16 +20,8 @@ class NpsFeedbackItemWidget extends StatelessWidget {
           contentPadding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
           title: Row(
             children: <Widget>[
-              CircleAvatar(
-                radius: 8.0,
-                backgroundColor: this.npsScoreColor(this._feedbackItem),
-                child: Text(
-                  NpsFeedbackHelper.getScoreText(this._feedbackItem),
-                  style: TextStyle(
-                      fontSize: 8.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
+              NpsStarDisplay(
+                value: NpsFeedbackHelper.getNpsStarRating(this._feedbackItem),
               ),
               SizedBox(
                 width: 4.0,
@@ -113,5 +105,25 @@ class NpsFeedbackItemWidget extends StatelessWidget {
       );
     }
     return null;
+  }
+}
+
+class NpsStarDisplay extends StatelessWidget {
+  final double value;
+  const NpsStarDisplay({Key key, this.value = 0})
+      : assert(value != null),
+        super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(5, (index) {
+        return Icon(
+          index < value ? Icons.star : Icons.star_border,
+          size: 18.0,
+          color: Color.fromARGB(255, 239, 206, 74),
+        );
+      }),
+    );
   }
 }

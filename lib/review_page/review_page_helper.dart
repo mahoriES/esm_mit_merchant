@@ -131,6 +131,10 @@ class NpsFeedbackHelper {
     return feedbackItem.score.toString();
   }
 
+  static double getNpsStarRating(FeedbackItem feedbackItem) {
+    return feedbackItem.score / 2;
+  }
+
   static String getCommentText(FeedbackItem feedbackItem) {
     return feedbackItem.comment != null ? feedbackItem.comment : '';
   }
