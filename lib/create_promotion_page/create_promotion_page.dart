@@ -94,63 +94,67 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Material(
               elevation: 2,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    height: 200,
-                    child: GoogleMap(
-                      mapType: MapType.normal,
-                      initialCameraPosition: CameraPosition(
-                        target: LatLng(
-                          12.9829735,
-                          77.687969,
+              borderRadius: BorderRadius.circular(4),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 200,
+                      child: GoogleMap(
+                        mapType: MapType.normal,
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(
+                            12.9829735,
+                            77.687969,
+                          ),
+                          zoom: 14.4746,
                         ),
-                        zoom: 14.4746,
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+                        },
+                        circles: Set.from([
+                          Circle(
+                            circleId: CircleId('foCircle'),
+                            center: LatLng(
+                              12.9829735,
+                              77.687969,
+                            ),
+                            radius: 50,
+                            fillColor: Colors.blue,
+                            strokeWidth: 0,
+                          ),
+                          Circle(
+                            circleId: CircleId('foCircle2'),
+                            center: LatLng(
+                              12.9829735,
+                              77.687969,
+                            ),
+                            radius: 240,
+                            fillColor: Colors.blue[100].withOpacity(0.12),
+                            strokeWidth: 6,
+                            strokeColor: Colors.blue[100],
+                          ),
+                        ]),
                       ),
-                      onMapCreated: (GoogleMapController controller) {
-                        _controller.complete(controller);
-                      },
-                      circles: Set.from([
-                        Circle(
-                          circleId: CircleId('foCircle'),
-                          center: LatLng(
-                            12.9829735,
-                            77.687969,
-                          ),
-                          radius: 50,
-                          fillColor: Colors.blue,
-                          strokeWidth: 0,
-                        ),
-                        Circle(
-                          circleId: CircleId('foCircle2'),
-                          center: LatLng(
-                            12.9829735,
-                            77.687969,
-                          ),
-                          radius: 240,
-                          fillColor: Colors.blue[100].withOpacity(0.12),
-                          strokeWidth: 6,
-                          strokeColor: Colors.blue[100],
-                        ),
-                      ]),
                     ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 12,
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 12,
+                      ),
+                      color: Colors.green[100],
+                      child: Text(
+                        'You can reach upto 4985 people near your store.',
+                        style: Theme.of(context).textTheme.body1.copyWith(
+                              color: Colors.green[700],
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    color: Colors.green[100],
-                    child: Text(
-                      'You can reach upto 4985 people near your store.',
-                      style: Theme.of(context).textTheme.body1.copyWith(
-                            color: Colors.green[700],
-                          ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
