@@ -70,6 +70,24 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
                   ]),
                 ),
                 Positioned(
+                  child: StreamBuilder<OnboardingGuardState>(
+                    stream: onboardingGuardBloc.onboardingStateObservable,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        if (snapshot.data.locations.length < 2) {
+                          return SafeArea(
+                            child: IconButton(
+                              icon: Icon(Icons.arrow_back),
+                              onPressed: () {},
+                            ),
+                          );
+                        } else
+                          return Container();
+                      }
+                    },
+                  ),
+                ),
+                Positioned(
                   top: 24,
                   left: 16,
                   right: 16,
@@ -80,7 +98,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
                           return Container();
                         }
                         var value = null;
-                        if (snapshot.data.locations.length > 0) {
+                        if (snapshot.data.locations.length > 1) {
                           value = snapshot.data.locations[0];
                         }
                         return SafeArea(
