@@ -69,38 +69,51 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
                   ]),
                 ),
                 Positioned(
-                  child: SafeArea(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      margin: EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 16.0),
-                      color: Colors.white,
-                      width: double.infinity,
-                      child: StreamBuilder<OnboardingGuardState>(
-                          stream: onboardingGuardBloc.onboardingStateObservable,
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return Container();
-                            }
-                            var value = null;
-                            if (snapshot.data.locations.length > 0) {
-                              value = snapshot.data.locations[0];
-                            }
-                            return DropdownButton<FoLocations>(
-                              value: value,
-                              onChanged: (value) {},
-                              items: snapshot.data.locations
-                                  .map<DropdownMenuItem<FoLocations>>(
-                                      (FoLocations locationItem) {
-                                return DropdownMenuItem<FoLocations>(
-                                  value: locationItem,
-                                  child: Text(locationItem.name),
-                                );
-                              }).toList(),
-                            );
-                          }),
-                    ),
-                  ),
+                  top: 24,
+                  left: 16,
+                  right: 16,
+                  child: StreamBuilder<OnboardingGuardState>(
+                      stream: onboardingGuardBloc.onboardingStateObservable,
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Container();
+                        }
+                        var value = null;
+                        if (snapshot.data.locations.length > 0) {
+                          value = snapshot.data.locations[0];
+                        }
+                        return SafeArea(
+                          child: Material(
+                            borderRadius: BorderRadius.circular(4),
+                            elevation: 12,
+                            child: Row(
+                              children: <Widget>[
+                                IconButton(
+                                  icon: Icon(Icons.arrow_back),
+                                  onPressed: () {},
+                                ),
+                                Container(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: DropdownButton<FoLocations>(
+                                    value: value,
+                                    underline: Container(),
+                                    onChanged: (value) {},
+                                    items: snapshot.data.locations
+                                        .map<DropdownMenuItem<FoLocations>>(
+                                            (FoLocations locationItem) {
+                                      return DropdownMenuItem<FoLocations>(
+                                        value: locationItem,
+                                        child: Text(locationItem.name),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
                 ),
                 Positioned(
                   bottom: 16,
