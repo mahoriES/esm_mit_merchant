@@ -117,8 +117,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
                 ),
                 Positioned(
                   bottom: 16,
-                  left: 16,
-                  right: 16,
+                  left: 8,
+                  right: 8,
                   child: SafeArea(
                     child: Container(
                       padding: EdgeInsets.symmetric(
