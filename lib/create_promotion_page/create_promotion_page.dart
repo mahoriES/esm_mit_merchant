@@ -78,7 +78,9 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
                           return SafeArea(
                             child: IconButton(
                               icon: Icon(Icons.arrow_back),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
                             ),
                           );
                         } else
@@ -109,7 +111,9 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
                               children: <Widget>[
                                 IconButton(
                                   icon: Icon(Icons.arrow_back),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
                                 ),
                                 Expanded(
                                   child: Container(
