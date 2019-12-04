@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/create_promotion_page/create_promotion_page.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
@@ -7,7 +8,6 @@ import 'package:foore/share_page/share_page.dart';
 import 'package:provider/provider.dart';
 
 import 'auth_guard/auth_guard.dart';
-import 'check_in_page/check_in_page.dart';
 import 'data/bloc/onboarding.dart';
 import 'data/bloc/people.dart';
 import 'data/http_service.dart';
@@ -25,7 +25,7 @@ import 'unirson_check_in_page/unirson_check_in_page.dart';
 
 class Router {
   static const homeRoute = '/';
-  static const testRoute = OnboardingPage.routeName;
+  static const testRoute = CreatePromotionPage.routeName;
   final unauthenticatedHandler = (BuildContext context) => Navigator.of(context)
       .pushNamedAndRemoveUntil(
           IntroPage.routeName, (Route<dynamic> route) => false);
@@ -121,6 +121,8 @@ class Router {
       case SharePage.routeName:
         return SharePage.generateRoute(settings);
         break;
+      case CreatePromotionPage.routeName:
+        return CreatePromotionPage.generateRoute(settings);
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(
