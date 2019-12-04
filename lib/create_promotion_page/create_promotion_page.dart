@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'dart:math' as math;
 
 class CreatePromotionPage extends StatefulWidget {
   CreatePromotionPage({Key key}) : super(key: key);
@@ -92,21 +93,27 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
                                   icon: Icon(Icons.arrow_back),
                                   onPressed: () {},
                                 ),
-                                Container(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: DropdownButton<FoLocations>(
-                                    value: value,
-                                    underline: Container(),
-                                    onChanged: (value) {},
-                                    items: snapshot.data.locations
-                                        .map<DropdownMenuItem<FoLocations>>(
-                                            (FoLocations locationItem) {
-                                      return DropdownMenuItem<FoLocations>(
-                                        value: locationItem,
-                                        child: Text(locationItem.name),
-                                      );
-                                    }).toList(),
+                                Expanded(
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: DropdownButton<FoLocations>(
+                                      value: value,
+                                      underline: Container(),
+                                      icon: Transform.rotate(
+                                          angle: math.pi / 2.0,
+                                          child: Icon(Icons.chevron_right)),
+                                      isExpanded: true,
+                                      onChanged: (value) {},
+                                      items: snapshot.data.locations
+                                          .map<DropdownMenuItem<FoLocations>>(
+                                              (FoLocations locationItem) {
+                                        return DropdownMenuItem<FoLocations>(
+                                          value: locationItem,
+                                          child: Text(locationItem.name),
+                                        );
+                                      }).toList(),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -114,28 +121,6 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
                           ),
                         );
                       }),
-                ),
-                Positioned(
-                  bottom: 16,
-                  left: 8,
-                  right: 8,
-                  child: SafeArea(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 12,
-                      ),
-                      margin: EdgeInsets.symmetric(horizontal: 16),
-                      color: Colors.green[100],
-                      child: Text(
-                        'You can reach upto 4985 people near your store.',
-                        style: Theme.of(context).textTheme.body1.copyWith(
-                              color: Colors.green[700],
-                            ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
                 ),
               ],
             ),
@@ -152,7 +137,22 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
             ),
           ),
           SizedBox(
-            height: 16.0,
+            height: 12.0,
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(
+              vertical: 12,
+              horizontal: 12,
+            ),
+            margin: EdgeInsets.symmetric(horizontal: 16),
+            // color: Colors.green[100],
+            child: Text(
+              'You can reach up to 4985 people near your store.',
+              style: Theme.of(context).textTheme.body1.copyWith(
+                    color: Colors.green[700],
+                  ),
+              textAlign: TextAlign.center,
+            ),
           ),
           SizedBox(
             height: 16,
