@@ -26,54 +26,105 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
   Widget build(BuildContext context) {
     final onboardingGuardBloc = Provider.of<OnboardingGuardBloc>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Create Promotion'),
-        automaticallyImplyLeading: true,
-        backgroundColor: Colors.transparent,
-      ),
-      backgroundColor: Colors.white,
       body: ListView(
         children: <Widget>[
-          SizedBox(
-            height: 12,
-          ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            width: double.infinity,
-            child: StreamBuilder<OnboardingGuardState>(
-                stream: onboardingGuardBloc.onboardingStateObservable,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Container();
-                  }
-                  var value = null;
-                  if (snapshot.data.locations.length > 0) {
-                    value = snapshot.data.locations[0];
-                  }
-                  return DropdownButton<FoLocations>(
-                    value: value,
-                    elevation: 4,
-                    onChanged: (value) {},
-                    items: snapshot.data.locations
-                        .map<DropdownMenuItem<FoLocations>>(
-                            (FoLocations locationItem) {
-                      return DropdownMenuItem<FoLocations>(
-                        value: locationItem,
-                        child: Text(locationItem.name),
-                      );
-                    }).toList(),
-                  );
-                }),
-          ),
-          SizedBox(
-            height: 12,
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            width: double.infinity,
-            child: Text(
-              'Send messages to nearby customers',
-              style: Theme.of(context).textTheme.subtitle,
+            height: 400.0,
+            child: Stack(
+              children: <Widget>[
+                GoogleMap(
+                  mapType: MapType.normal,
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(
+                      12.9829735,
+                      77.687969,
+                    ),
+                    zoom: 14.4746,
+                  ),
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                  },
+                  circles: Set.from([
+                    Circle(
+                      circleId: CircleId('foCircle'),
+                      center: LatLng(
+                        12.9829735,
+                        77.687969,
+                      ),
+                      radius: 50,
+                      fillColor: Colors.blue,
+                      strokeWidth: 0,
+                    ),
+                    Circle(
+                      circleId: CircleId('foCircle2'),
+                      center: LatLng(
+                        12.9829735,
+                        77.687969,
+                      ),
+                      radius: 240,
+                      fillColor: Colors.blue[100].withOpacity(0.12),
+                      strokeWidth: 6,
+                      strokeColor: Colors.blue[100],
+                    ),
+                  ]),
+                ),
+                Positioned(
+                  child: SafeArea(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      margin: EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 16.0),
+                      color: Colors.white,
+                      width: double.infinity,
+                      child: StreamBuilder<OnboardingGuardState>(
+                          stream: onboardingGuardBloc.onboardingStateObservable,
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return Container();
+                            }
+                            var value = null;
+                            if (snapshot.data.locations.length > 0) {
+                              value = snapshot.data.locations[0];
+                            }
+                            return DropdownButton<FoLocations>(
+                              value: value,
+                              onChanged: (value) {},
+                              items: snapshot.data.locations
+                                  .map<DropdownMenuItem<FoLocations>>(
+                                      (FoLocations locationItem) {
+                                return DropdownMenuItem<FoLocations>(
+                                  value: locationItem,
+                                  child: Text(locationItem.name),
+                                );
+                              }).toList(),
+                            );
+                          }),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 16,
+                  left: 16,
+                  right: 16,
+                  child: SafeArea(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 12,
+                      ),
+                      margin: EdgeInsets.symmetric(horizontal: 16),
+                      color: Colors.green[100],
+                      child: Text(
+                        'You can reach upto 4985 people near your store.',
+                        style: Theme.of(context).textTheme.body1.copyWith(
+                              color: Colors.green[700],
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Padding(
@@ -89,74 +140,6 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
           ),
           SizedBox(
             height: 16.0,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Material(
-              elevation: 2,
-              borderRadius: BorderRadius.circular(4),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      height: 200,
-                      child: GoogleMap(
-                        mapType: MapType.normal,
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(
-                            12.9829735,
-                            77.687969,
-                          ),
-                          zoom: 14.4746,
-                        ),
-                        onMapCreated: (GoogleMapController controller) {
-                          _controller.complete(controller);
-                        },
-                        circles: Set.from([
-                          Circle(
-                            circleId: CircleId('foCircle'),
-                            center: LatLng(
-                              12.9829735,
-                              77.687969,
-                            ),
-                            radius: 50,
-                            fillColor: Colors.blue,
-                            strokeWidth: 0,
-                          ),
-                          Circle(
-                            circleId: CircleId('foCircle2'),
-                            center: LatLng(
-                              12.9829735,
-                              77.687969,
-                            ),
-                            radius: 240,
-                            fillColor: Colors.blue[100].withOpacity(0.12),
-                            strokeWidth: 6,
-                            strokeColor: Colors.blue[100],
-                          ),
-                        ]),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 12,
-                      ),
-                      color: Colors.green[100],
-                      child: Text(
-                        'You can reach upto 4985 people near your store.',
-                        style: Theme.of(context).textTheme.body1.copyWith(
-                              color: Colors.green[700],
-                            ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ),
           SizedBox(
             height: 16,
