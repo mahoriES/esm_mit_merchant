@@ -49,6 +49,9 @@ public class EsysFlutterSharePlugin implements MethodCallHandler {
         if (call.method.equals("files")) {
             files(call.arguments);
         }
+        if (call.method.equals("whatsAppTo")) {
+            whatsAppTo(call.arguments);
+        }
     }
 
     private void text(Object arguments) {
@@ -97,6 +100,27 @@ public class EsysFlutterSharePlugin implements MethodCallHandler {
             if (!text.isEmpty())
                 shareIntent.putExtra(Intent.EXTRA_TEXT, text);
             activeContext.startActivity(Intent.createChooser(shareIntent, title));
+        }
+
+    }
+
+    private void whatsAppTo(Object arguments) {
+        @SuppressWarnings("unchecked")
+        HashMap<String, String> argsMap = (HashMap<String, String>) arguments;
+        String number = argsMap.get("number");
+
+        Context activeContext = _registrar.activeContext();
+        String text = argsMap.get("text");
+
+        try {
+            Uri uri = Uri.parse("smsto:" + number);
+            Intent shareIntent = new Intent(Intent.ACTION_SENDTO, uri);
+            shareIntent.setPackage("com.whatsapp");
+            // add optional text
+            if (!text.isEmpty())
+                shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+            activeContext.startActivity(Intent.createChooser(shareIntent, ""));
+        } catch (Exception e) {
         }
 
     }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:after_layout/after_layout.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/create_promotion.dart';
@@ -315,7 +316,9 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: FoSubmitButton(
               text: 'Contact us',
-              onPressed: () {},
+              onPressed: () async {
+                await Share.whatsAppTo('+917829862689');
+              },
             ),
           ),
         ],

@@ -18,9 +18,16 @@ class Share {
     _channel.invokeMethod('text', argsMap);
   }
 
+  /// Sends a text to other apps.
+  static void whatsAppTo(String number, {String text = ''}) {
+    Map argsMap = <String, String>{'number': '$number', 'text': '$text'};
+    _channel.invokeMethod('whatsAppTo', argsMap);
+  }
+
   /// Sends a file to other apps.
   static Future<void> file(
-      String title, String name, List<int> bytes, String mimeType, {String text = ''}) async {
+      String title, String name, List<int> bytes, String mimeType,
+      {String text = ''}) async {
     Map argsMap = <String, String>{
       'title': '$title',
       'name': '$name',
@@ -37,7 +44,8 @@ class Share {
 
   /// Sends multiple files to other apps.
   static Future<void> files(
-      String title, Map<String, List<int>> files, String mimeType, {String text = ''}) async {
+      String title, Map<String, List<int>> files, String mimeType,
+      {String text = ''}) async {
     Map argsMap = <String, dynamic>{
       'title': '$title',
       'names': files.entries.toList().map((x) => x.key).toList(),
