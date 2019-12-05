@@ -10,7 +10,7 @@ class CreatePromotionBloc {
   final CreatePromotionState _createPromotionState = CreatePromotionState();
   final HttpService httpService;
   final messageEditController =
-      TextEditingController(text: 'Hey [[NAME]], Our brand new store is now open near you. Visit us today & avail flat 15% discount on all our products & services.');
+      TextEditingController(text: 'Hey [[NAME]], Amazing Pizza Near You (Pizzeria House) - Buy any medium Pizza & get free Choco Lava. Offer valid till 07:00 PM.');
 
   static const button_one_base = 3163;
   static const button_two_base = 1421;
