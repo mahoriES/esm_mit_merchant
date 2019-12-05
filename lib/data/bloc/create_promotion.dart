@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 
 class CreatePromotionBloc {
@@ -205,6 +206,13 @@ class PromotionItem {
     data['promo_state'] = this.promoState;
     data['created'] = this.created;
     return data;
+  }
+
+  String getCreatedTimeText() {
+    var lastInteractionDate = DateTime.parse(this.created);
+    var formatter = new DateFormat('hh:mm a, dd MMM, yyyy');
+    String timeText = formatter.format(lastInteractionDate);
+    return timeText;
   }
 }
 

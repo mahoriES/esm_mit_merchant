@@ -2,13 +2,17 @@ import 'dart:async';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/create_promotion.dart';
 import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/share_page/share_page.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
+
+import 'package:rxdart/rxdart.dart';
 
 class CreatePromotionPage extends StatefulWidget {
   CreatePromotionPage({Key key}) : super(key: key);
@@ -176,10 +180,121 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               return createPromotion(context);
             } else if (snapshot.data.screenType ==
                 CreatePromotionScreens.promotionSent) {
-              return Container();
+              return listPromotion(context);
             }
             return Container();
           }),
+    );
+  }
+
+  Widget listPromotion(BuildContext context) {
+    final createPromotionBloc = Provider.of<CreatePromotionBloc>(context);
+    final onboardingGuardBloc = Provider.of<OnboardingGuardBloc>(context);
+    return SafeArea(
+      child: Column(
+        children: <Widget>[
+          AppBar(
+            title: Text(
+              'My promotions',
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'This feature is currently limited to selected customers. Your promotions will be sent after approval from Foore tem. Contact us for more information.',
+              style: Theme.of(context).textTheme.subtitle,
+            ),
+          ),
+          Expanded(
+            child: StreamBuilder<CreatePromotionState>(
+                stream: createPromotionBloc.CreatePromotionStateObservable,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Container();
+                  }
+                  final CreatePromotionState promotionData = snapshot.data;
+                  return ListView.builder(
+                    itemCount: promotionData.promotionList.length,
+                    itemBuilder: (context, index) {
+                      final promotion = promotionData.promotionList[index];
+                      return Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 1,
+                              color: Colors.black12,
+                            ),
+                            borderRadius: BorderRadius.circular(4)),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 8.0,
+                        ),
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  onboardingGuardBloc.getLocationNameById(
+                                      promotion.locationId),
+                                  style: Theme.of(context).textTheme.caption,
+                                ),
+                                SizedBox(
+                                  width: 6,
+                                ),
+                                Text(
+                                  promotion.getCreatedTimeText(),
+                                  style: Theme.of(context).textTheme.caption,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Text(
+                              promotion.promoMessage,
+                              style: Theme.of(context).textTheme.subhead,
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Text(
+                              promotion.promoReach,
+                              style:
+                                  Theme.of(context).textTheme.caption.copyWith(
+                                        color: Colors.grey[900],
+                                      ),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Text(
+                              'Approval pending',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .caption
+                                  .copyWith(
+                                      color: Colors.yellow[800],
+                                      fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: FoSubmitButton(
+              text: 'Contact us',
+              onPressed: () {},
+            ),
+          ),
+        ],
+      ),
     );
   }
 
