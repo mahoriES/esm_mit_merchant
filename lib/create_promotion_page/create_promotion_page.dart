@@ -45,7 +45,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
 
   _onCreatePromotionStateChange(CreatePromotionState state) {
     if (state.screenType == CreatePromotionScreens.promotionSent) {
-      _showFailedAlertDialog();
+      _showIntroAlertDialog();
     }
   }
 
@@ -63,7 +63,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
     super.initState();
   }
 
-  _showFailedAlertDialog() async {
+  _showIntroAlertDialog() async {
     await showDialog(
       context: context,
       barrierDismissible: true, // user must tap button for close dialog!
