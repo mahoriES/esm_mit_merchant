@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/create_promotion_page/create_promotion_page.dart';
 import 'package:foore/people_page/people_page.dart';
 import 'package:foore/review_page/review_page.dart';
 
@@ -18,13 +19,18 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = <Widget>[
     PeoplePage(),
+    Container(),
     ReviewPage(),
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index == 1) {
+      Navigator.of(context).pushNamed(CreatePromotionPage.routeName);
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override
@@ -40,6 +46,24 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.people),
             title: Text(
               AppTranslations.of(context).text("tab_people"),
+            ),
+          ),
+          BottomNavigationBarItem(
+            icon: Transform.translate(
+              offset: Offset(0, -10),
+              child: Transform.scale(
+                scale: 1.4,
+                child: CircleAvatar(
+                  child: Icon(Icons.add),
+                  backgroundColor: _selectedIndex != 1
+                      ? Colors.grey[600]
+                      : Theme.of(context).primaryColor,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            ),
+            title: Text(
+              'Nearby',
             ),
           ),
           BottomNavigationBarItem(
