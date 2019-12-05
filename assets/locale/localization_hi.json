@@ -72,5 +72,19 @@
   "share_page_button_share": "शेयर",
   "share_page_title": "iPhone X जीतो",
   "share_page_main_text": "अपने दोस्तों के साथ शेयर करें",
-  "share_page_description_text": "हर हफ्ते iPhone X जीतें।"
+  "share_page_description_text": "हर हफ्ते iPhone X जीतें।",
+
+  "tab_nearby": "Nearby",
+  "create_promotion_page_help_description": "अपने व्यवसाय के पास के लोगों को प्रचार भेजें और नए ग्राहक प्राप्त करें।",
+  "create_promotion_page_help_button_continue": "जारी",
+  "create_promotion_page_confirm_title": "क्या आप निश्चित है?",
+  "create_promotion_page_confirm_subtitle": "अपने पास के %s लोगों को यह प्रचार संदेश भेजें।",
+  "create_promotion_page_confirm_tip": "*स्वीकृति के बाद आपको %s रुपये का भुगतान करना होगा।",
+  "create_promotion_page_message_input_label": "अपना प्रचार संदेश दर्ज करें",
+  "Enter your promotional message": "आप अपने स्टोर के पास 3333 लोगों तक पहुँच सकते हैं",
+  "create_promotion_page_submit": "Rs. %s - %s लोग",
+  "promotion_list_page_title": "मेरे प्रमोशन",
+  "promotion_list_page_sub-title": "यह सुविधा चयनित ग्राहकों के लिए उपलब्ध है। आपके प्रचार को फूरे टीम से अनुमोदन के बाद भेजा जाएगा। ज़्यादा जानकारी के लिए हमें संपर्क करें।",
+  "promotion_list_page_contact-us": "हमसे संपर्क करें",
+  "promotion_list_page_approval_pending": "स्वीकृति लंबित"
 }

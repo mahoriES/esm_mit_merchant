@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             title: Text(
-              'Nearby',
+              AppTranslations.of(context).text('tab_nearby'),
             ),
           ),
           BottomNavigationBarItem(
