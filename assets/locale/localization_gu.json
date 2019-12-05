@@ -72,5 +72,20 @@
   "share_page_button_share": "શેર કરો",
   "share_page_title": "વિન આઇફોન એક્સ",
   "share_page_main_text": "તમારા મિત્રો સાથે ફૂર શેર કરો",
-  "share_page_description_text": "દર અઠવાડિયે આઇફોન X જીતવા."
+  "share_page_description_text": "દર અઠવાડિયે આઇફોન X જીતવા.",
+
+  "tab_nearby": "Nearby",
+  "create_promotion_page_help_description": "તમારા વ્યવસાય નજીકના લોકોને પ્રમોશન મોકલો અને નવા ગ્રાહકો મેળવો.",
+  "create_promotion_page_help_button_continue": "ચાલુ રાખો",
+  "create_promotion_page_confirm_title": "શું તમને ખાતરી છે?",
+  "create_promotion_page_confirm_subtitle": "આ પ્રમોશનલ સંદેશ તમારી નજીકના %s લોકોને મોકલો.",
+  "create_promotion_page_confirm_tip": "*મંજૂરી પછી તમારે %s રૂપિયા ચૂકવવા પડશે.",
+  "create_promotion_page_message_input_label": "તમારો પ્રમોશનલ સંદેશ દાખલ કરો",
+  "create_promotion_page_people_reach_message": "તમે તમારા સ્ટોર નજીક %s લોકો સુધી પહોંચી શકો છો",
+  "create_promotion_page_submit": "Rs. %s - %s લોકો",
+  "promotion_list_page_title": "My promotions",
+  "promotion_list_page_sub-title": "આ સુવિધા પસંદ કરેલા ગ્રાહકો માટે આકારની મર્યાદિત છે. તમારી બionsતીઓ Foore ટીમની મંજૂરી પછી મોકલવામાં આવશે. વધુ માહિતી માટે અમારો સંપર્ક કરો.",
+  "promotion_list_page_contact-us": "અમારો સંપર્ક કરો",
+  "promotion_list_page_approval_pending": "મંજૂરી બાકી છે",
+  "create_promotion_page_button_confirm": "Confirm"
 }
