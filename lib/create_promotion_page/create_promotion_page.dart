@@ -21,8 +21,40 @@ class CreatePromotionPage extends StatefulWidget {
   _CreatePromotionPageState createState() => _CreatePromotionPageState();
 }
 
-class _CreatePromotionPageState extends State<CreatePromotionPage> {
+class _CreatePromotionPageState extends State<CreatePromotionPage>
+    with SingleTickerProviderStateMixin {
+  AnimationController _animationController;
+  Animation _circleRadius;
   Completer<GoogleMapController> _controller = Completer();
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 2000));
+    _circleRadius = Tween<double>(begin: 40, end: 60).animate(
+      CurvedAnimation(
+        curve: Interval(0.0, 0.5, curve: Curves.easeInOut),
+        parent: _animationController,
+      ),
+    );
+    playAnimation();
+    super.initState();
+  }
+
+  Future<Null> playAnimation() async {
+    try {
+      await _animationController.repeat(reverse: true).orCancel;
+    } on TickerCanceled {
+      // the animation got canceled, probably because we were disposed
+    }
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final onboardingGuardBloc = Provider.of<OnboardingGuardBloc>(context);
@@ -33,41 +65,68 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
             height: 400.0,
             child: Stack(
               children: <Widget>[
-                GoogleMap(
-                  mapType: MapType.normal,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                      12.9829735,
-                      77.687969,
-                    ),
-                    zoom: 14.4746,
-                  ),
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
+                AnimatedBuilder(
+                  animation: _animationController,
+                  builder: (context, _) {
+                    return GoogleMap(
+                      mapType: MapType.normal,
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(
+                          12.9829735,
+                          77.687969,
+                        ),
+                        zoom: 14.4746,
+                      ),
+                      onMapCreated: (GoogleMapController controller) {
+                        _controller.complete(controller);
+                      },
+                      circles: Set.from([
+                        Circle(
+                          circleId: CircleId('foCircle'),
+                          center: LatLng(
+                            12.9829735,
+                            77.687969,
+                          ),
+                          radius: _circleRadius.value,
+                          fillColor: Colors.blue,
+                          strokeWidth: 0,
+                        ),
+                        Circle(
+                          circleId: CircleId('foCircle2'),
+                          center: LatLng(
+                            12.9829735,
+                            77.687969,
+                          ),
+                          radius: 200,
+                          fillColor: Colors.blue[400].withOpacity(0.12),
+                          strokeWidth: 1,
+                          strokeColor: Colors.blue[100],
+                        ),
+                        Circle(
+                          circleId: CircleId('foCircl3'),
+                          center: LatLng(
+                            12.9829735,
+                            77.687969,
+                          ),
+                          radius: 500,
+                          fillColor: Colors.blue[200].withOpacity(0.12),
+                          strokeWidth: 1,
+                          strokeColor: Colors.blue[100],
+                        ),
+                        Circle(
+                          circleId: CircleId('foCircle4'),
+                          center: LatLng(
+                            12.9829735,
+                            77.687969,
+                          ),
+                          radius: 1000,
+                          fillColor: Colors.blue[200].withOpacity(0.12),
+                          strokeWidth: 1,
+                          strokeColor: Colors.blue[100],
+                        ),
+                      ]),
+                    );
                   },
-                  circles: Set.from([
-                    Circle(
-                      circleId: CircleId('foCircle'),
-                      center: LatLng(
-                        12.9829735,
-                        77.687969,
-                      ),
-                      radius: 50,
-                      fillColor: Colors.blue,
-                      strokeWidth: 0,
-                    ),
-                    Circle(
-                      circleId: CircleId('foCircle2'),
-                      center: LatLng(
-                        12.9829735,
-                        77.687969,
-                      ),
-                      radius: 240,
-                      fillColor: Colors.blue[100].withOpacity(0.12),
-                      strokeWidth: 6,
-                      strokeColor: Colors.blue[100],
-                    ),
-                  ]),
                 ),
                 Positioned(
                   child: StreamBuilder<OnboardingGuardState>(
@@ -112,7 +171,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage> {
                                 IconButton(
                                   icon: Icon(Icons.arrow_back),
                                   onPressed: () {
-                                    Navigator.of(context).pop();
+                                    // Navigator.of(context).pop();
+                                    playAnimation();
                                   },
                                 ),
                                 Expanded(
