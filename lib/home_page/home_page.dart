@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
             icon: Transform.translate(
               offset: Offset(0, -10),
               child: Transform.scale(
-                scale: 1.4,
+                scale: 1.3,
                 child: CircleAvatar(
                   child: Icon(Icons.add),
                   backgroundColor: _selectedIndex != 1
