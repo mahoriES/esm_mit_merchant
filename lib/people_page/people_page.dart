@@ -65,21 +65,24 @@ class _PeoplePageState extends State<PeoplePage>
           ),
         ),
       ),
-      floatingActionButton: RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50.0),
-        ),
-        padding: EdgeInsets.symmetric(
-          vertical: 15,
-          horizontal: 25,
-        ),
-        onPressed: this.onGetReviews,
-        child: Container(
-          child: Text(
-            AppTranslations.of(context).text("review_page_button_get_reviews"),
-            style: Theme.of(context).textTheme.subhead.copyWith(
-                  color: Colors.white,
-                ),
+      floatingActionButton: Transform.translate(
+        offset: Offset(0, -15),
+        child: RaisedButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50.0),
+          ),
+          padding: EdgeInsets.symmetric(
+            vertical: 15,
+            horizontal: 25,
+          ),
+          onPressed: this.onGetReviews,
+          child: Container(
+            child: Text(
+              AppTranslations.of(context).text("review_page_button_get_reviews"),
+              style: Theme.of(context).textTheme.subhead.copyWith(
+                    color: Colors.white,
+                  ),
+            ),
           ),
         ),
       ),
