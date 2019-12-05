@@ -59,6 +59,7 @@ class CreatePromotionBloc {
 
   setSelectedLocation(FoLocations location) {
     this._createPromotionState.selectedLocation = location;
+    this._updateState();
   }
 
   createPromotion(Function onDone) {

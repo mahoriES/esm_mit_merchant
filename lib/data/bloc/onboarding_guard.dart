@@ -25,6 +25,7 @@ class OnboardingGuardBloc {
         .foGet('ui/helper/account/?onboarding&locations')
         .then((httpResponse) {
       if (httpResponse.statusCode == 200) {
+        print(httpResponse.body);
         this._onboardingState.response =
             UiHelperResponse.fromJson(json.decode(httpResponse.body));
         this._onboardingState.isLoadingFailed = false;
@@ -125,18 +126,44 @@ class UiHelperResponse {
 class FoLocations {
   String name;
   String fbLocationId;
+  FoLocationMetaData metaData;
 
   FoLocations({this.name, this.fbLocationId});
 
   FoLocations.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     fbLocationId = json['fb_location_id'];
+    metaData = json['meta_data'] != null
+        ? new FoLocationMetaData.fromJson(json['meta_data'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
     data['fb_location_id'] = this.fbLocationId;
+    if (this.metaData != null) {
+      data['meta_data'] = this.metaData.toJson();
+    }
+    return data;
+  }
+}
+
+class FoLocationMetaData {
+  double latitude;
+  double longitude;
+
+  FoLocationMetaData({this.latitude, this.longitude});
+
+  FoLocationMetaData.fromJson(Map<String, dynamic> json) {
+    latitude = json['latitude'];
+    longitude = json['longitude'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['latitude'] = this.latitude;
+    data['longitude'] = this.longitude;
     return data;
   }
 }

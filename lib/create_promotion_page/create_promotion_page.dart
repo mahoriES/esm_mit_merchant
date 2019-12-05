@@ -38,7 +38,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
     with SingleTickerProviderStateMixin, AfterLayoutMixin<CreatePromotionPage> {
   AnimationController _animationController;
   Animation _circleRadius;
-  Completer<GoogleMapController> _controller = Completer();
+  Completer<GoogleMapController> _isReady = Completer();
   StreamSubscription<CreatePromotionState> _subscription;
   StreamSubscription<OnboardingGuardState> _subscription2;
   final _formKey = GlobalKey<FormState>();
@@ -343,6 +343,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
   Widget createPromotion(BuildContext context) {
     final onboardingGuardBloc = Provider.of<OnboardingGuardBloc>(context);
     final promotionBloc = Provider.of<CreatePromotionBloc>(context);
+
     return Form(
       key: this._formKey,
       child: ListView(
@@ -351,69 +352,79 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
             height: 400.0,
             child: Stack(
               children: <Widget>[
-                AnimatedBuilder(
-                  animation: _animationController,
-                  builder: (context, _) {
-                    return GoogleMap(
-                      mapType: MapType.normal,
-                      initialCameraPosition: CameraPosition(
-                        target: LatLng(
-                          12.9829735,
-                          77.687969,
-                        ),
-                        zoom: 14.4746,
-                      ),
-                      onMapCreated: (GoogleMapController controller) {
-                        _controller.complete(controller);
-                      },
-                      circles: Set.from([
-                        Circle(
-                          circleId: CircleId('foCircle'),
-                          center: LatLng(
-                            12.9829735,
-                            77.687969,
-                          ),
-                          radius: _circleRadius.value,
-                          fillColor: Colors.blue,
-                          strokeWidth: 0,
-                        ),
-                        Circle(
-                          circleId: CircleId('foCircle2'),
-                          center: LatLng(
-                            12.9829735,
-                            77.687969,
-                          ),
-                          radius: 200,
-                          fillColor: Colors.blue[400].withOpacity(0.12),
-                          strokeWidth: 1,
-                          strokeColor: Colors.blue[100],
-                        ),
-                        Circle(
-                          circleId: CircleId('foCircle3'),
-                          center: LatLng(
-                            12.9829735,
-                            77.687969,
-                          ),
-                          radius: 500,
-                          fillColor: Colors.blue[200].withOpacity(0.12),
-                          strokeWidth: 1,
-                          strokeColor: Colors.blue[100],
-                        ),
-                        Circle(
-                          circleId: CircleId('foCircle4'),
-                          center: LatLng(
-                            12.9829735,
-                            77.687969,
-                          ),
-                          radius: 1000,
-                          fillColor: Colors.blue[200].withOpacity(0.12),
-                          strokeWidth: 1,
-                          strokeColor: Colors.blue[100],
-                        ),
-                      ]),
-                    );
-                  },
-                ),
+                StreamBuilder<CreatePromotionState>(
+                    stream: promotionBloc.CreatePromotionStateObservable,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Container();
+                      }
+                      var latLang = LatLng(
+                        0,
+                        0,
+                      );
+                      if (snapshot.data.selectedLocation != null) {
+                        if (snapshot.data.selectedLocation.metaData != null) {
+                          latLang = LatLng(
+                            snapshot.data.selectedLocation.metaData.latitude,
+                            snapshot.data.selectedLocation.metaData.longitude,
+                          );
+                          _isReady.future.then((controller) {
+                            controller.moveCamera(
+                                CameraUpdate.newCameraPosition(CameraPosition(
+                              target: latLang,
+                              zoom: 14.4746,
+                            )));
+                          });
+                        }
+                      }
+                      return AnimatedBuilder(
+                          animation: _animationController,
+                          builder: (context, _) {
+                            return GoogleMap(
+                              mapType: MapType.normal,
+                              initialCameraPosition: CameraPosition(
+                                target: latLang,
+                                zoom: 14.4746,
+                              ),
+                              onMapCreated: (GoogleMapController controller) {
+                                _isReady.complete(controller);
+                              },
+                              circles: Set.from([
+                                Circle(
+                                  circleId: CircleId('foCircle'),
+                                  center: latLang,
+                                  radius: _circleRadius.value,
+                                  fillColor: Colors.blue,
+                                  strokeWidth: 0,
+                                ),
+                                Circle(
+                                  circleId: CircleId('foCircle2'),
+                                  center: latLang,
+                                  radius: 200,
+                                  fillColor: Colors.blue[400].withOpacity(0.12),
+                                  strokeWidth: 1,
+                                  strokeColor: Colors.blue[100],
+                                ),
+                                Circle(
+                                  circleId: CircleId('foCircle3'),
+                                  center: latLang,
+                                  radius: 500,
+                                  fillColor: Colors.blue[200].withOpacity(0.12),
+                                  strokeWidth: 1,
+                                  strokeColor: Colors.blue[100],
+                                ),
+                                Circle(
+                                  circleId: CircleId('foCircle4'),
+                                  center: latLang,
+                                  radius: 1000,
+                                  fillColor: Colors.blue[200].withOpacity(0.12),
+                                  strokeWidth: 1,
+                                  strokeColor: Colors.blue[100],
+                                ),
+                              ]),
+                            );
+                          });
+                    }),
                 Positioned(
                   child: StreamBuilder<OnboardingGuardState>(
                     stream: onboardingGuardBloc.onboardingStateObservable,
