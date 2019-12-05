@@ -43,6 +43,11 @@ class CreatePromotionBloc {
     });
   }
 
+  setPromoReach(String promoReach) {
+    this._createPromotionState.promoReach = promoReach;
+    this._updateState();
+  }
+
   createPromotion() {
     this._createPromotionState.isSubmitting = true;
     this._createPromotionState.isSubmitFailed = false;
