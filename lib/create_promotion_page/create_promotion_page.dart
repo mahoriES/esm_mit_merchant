@@ -217,7 +217,6 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               return createPromotion(context);
             } else if (snapshot.data.screenType ==
                 CreatePromotionScreens.promotionSent) {
-              return createPromotion(context);
               return listPromotion(context);
             }
             return Container();
@@ -578,7 +577,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                 sprintf(
                     AppTranslations.of(context)
                         .text('create_promotion_page_submit'),
-                    ['100',promotionBloc.buttonThreeCal.toString()]),
+                    ['100', promotionBloc.buttonThreeCal.toString()]),
                 textAlign: TextAlign.center,
                 style: Theme.of(context)
                     .textTheme
@@ -614,7 +613,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                 sprintf(
                     AppTranslations.of(context)
                         .text('create_promotion_page_submit'),
-                    ['300',promotionBloc.buttonTwoCal.toString()]),
+                    ['300', promotionBloc.buttonTwoCal.toString()]),
                 textAlign: TextAlign.center,
               ),
               onPressed: () {
@@ -646,7 +645,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                 sprintf(
                     AppTranslations.of(context)
                         .text('create_promotion_page_submit'),
-                    [ '500',promotionBloc.buttonOneCal.toString()]),
+                    ['500', promotionBloc.buttonOneCal.toString()]),
                 textAlign: TextAlign.center,
               ),
               onPressed: () {
