@@ -37,6 +37,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
   Completer<GoogleMapController> _controller = Completer();
   StreamSubscription<CreatePromotionState> _subscription;
   StreamSubscription<OnboardingGuardState> _subscription2;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void afterFirstLayout(BuildContext context) {
@@ -322,281 +323,295 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
     );
   }
 
-  ListView createPromotion(BuildContext context) {
+  Widget createPromotion(BuildContext context) {
     final onboardingGuardBloc = Provider.of<OnboardingGuardBloc>(context);
     final promotionBloc = Provider.of<CreatePromotionBloc>(context);
-    return ListView(
-      children: <Widget>[
-        Container(
-          height: 400.0,
-          child: Stack(
-            children: <Widget>[
-              AnimatedBuilder(
-                animation: _animationController,
-                builder: (context, _) {
-                  return GoogleMap(
-                    mapType: MapType.normal,
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(
-                        12.9829735,
-                        77.687969,
-                      ),
-                      zoom: 14.4746,
-                    ),
-                    onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
-                    },
-                    circles: Set.from([
-                      Circle(
-                        circleId: CircleId('foCircle'),
-                        center: LatLng(
+    return Form(
+      key: this._formKey,
+      child: ListView(
+        children: <Widget>[
+          Container(
+            height: 400.0,
+            child: Stack(
+              children: <Widget>[
+                AnimatedBuilder(
+                  animation: _animationController,
+                  builder: (context, _) {
+                    return GoogleMap(
+                      mapType: MapType.normal,
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(
                           12.9829735,
                           77.687969,
                         ),
-                        radius: _circleRadius.value,
-                        fillColor: Colors.blue,
-                        strokeWidth: 0,
+                        zoom: 14.4746,
                       ),
-                      Circle(
-                        circleId: CircleId('foCircle2'),
-                        center: LatLng(
-                          12.9829735,
-                          77.687969,
-                        ),
-                        radius: 200,
-                        fillColor: Colors.blue[400].withOpacity(0.12),
-                        strokeWidth: 1,
-                        strokeColor: Colors.blue[100],
-                      ),
-                      Circle(
-                        circleId: CircleId('foCircle3'),
-                        center: LatLng(
-                          12.9829735,
-                          77.687969,
-                        ),
-                        radius: 500,
-                        fillColor: Colors.blue[200].withOpacity(0.12),
-                        strokeWidth: 1,
-                        strokeColor: Colors.blue[100],
-                      ),
-                      Circle(
-                        circleId: CircleId('foCircle4'),
-                        center: LatLng(
-                          12.9829735,
-                          77.687969,
-                        ),
-                        radius: 1000,
-                        fillColor: Colors.blue[200].withOpacity(0.12),
-                        strokeWidth: 1,
-                        strokeColor: Colors.blue[100],
-                      ),
-                    ]),
-                  );
-                },
-              ),
-              Positioned(
-                child: StreamBuilder<OnboardingGuardState>(
-                  stream: onboardingGuardBloc.onboardingStateObservable,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data.locations.length < 2) {
-                        return SafeArea(
-                          child: IconButton(
-                            icon: Icon(Icons.arrow_back),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
+                      onMapCreated: (GoogleMapController controller) {
+                        _controller.complete(controller);
+                      },
+                      circles: Set.from([
+                        Circle(
+                          circleId: CircleId('foCircle'),
+                          center: LatLng(
+                            12.9829735,
+                            77.687969,
                           ),
-                        );
-                      } else
-                        return Container();
-                    } else
-                      return Container();
+                          radius: _circleRadius.value,
+                          fillColor: Colors.blue,
+                          strokeWidth: 0,
+                        ),
+                        Circle(
+                          circleId: CircleId('foCircle2'),
+                          center: LatLng(
+                            12.9829735,
+                            77.687969,
+                          ),
+                          radius: 200,
+                          fillColor: Colors.blue[400].withOpacity(0.12),
+                          strokeWidth: 1,
+                          strokeColor: Colors.blue[100],
+                        ),
+                        Circle(
+                          circleId: CircleId('foCircle3'),
+                          center: LatLng(
+                            12.9829735,
+                            77.687969,
+                          ),
+                          radius: 500,
+                          fillColor: Colors.blue[200].withOpacity(0.12),
+                          strokeWidth: 1,
+                          strokeColor: Colors.blue[100],
+                        ),
+                        Circle(
+                          circleId: CircleId('foCircle4'),
+                          center: LatLng(
+                            12.9829735,
+                            77.687969,
+                          ),
+                          radius: 1000,
+                          fillColor: Colors.blue[200].withOpacity(0.12),
+                          strokeWidth: 1,
+                          strokeColor: Colors.blue[100],
+                        ),
+                      ]),
+                    );
                   },
                 ),
-              ),
-              Positioned(
-                top: 24,
-                left: 16,
-                right: 16,
-                child: StreamBuilder<OnboardingGuardState>(
+                Positioned(
+                  child: StreamBuilder<OnboardingGuardState>(
                     stream: onboardingGuardBloc.onboardingStateObservable,
-                    builder: (context, onboardingSnapshot) {
-                      if (!onboardingSnapshot.hasData) {
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        if (snapshot.data.locations.length < 2) {
+                          return SafeArea(
+                            child: IconButton(
+                              icon: Icon(Icons.arrow_back),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          );
+                        } else
+                          return Container();
+                      } else
                         return Container();
-                      }
+                    },
+                  ),
+                ),
+                Positioned(
+                  top: 24,
+                  left: 16,
+                  right: 16,
+                  child: StreamBuilder<OnboardingGuardState>(
+                      stream: onboardingGuardBloc.onboardingStateObservable,
+                      builder: (context, onboardingSnapshot) {
+                        if (!onboardingSnapshot.hasData) {
+                          return Container();
+                        }
 
-                      if (onboardingSnapshot.data.locations.length > 1) {
-                        return StreamBuilder<CreatePromotionState>(
-                            stream:
-                                promotionBloc.CreatePromotionStateObservable,
-                            builder: (context, promotionSnapshot) {
-                              if (!promotionSnapshot.hasData) {
-                                return Container();
-                              }
-                              return SafeArea(
-                                child: Material(
-                                  borderRadius: BorderRadius.circular(4),
-                                  elevation: 12,
-                                  child: Row(
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.arrow_back),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 16.0),
-                                          child: DropdownButton<FoLocations>(
-                                            value: promotionSnapshot
-                                                .data.selectedLocation,
-                                            underline: Container(),
-                                            icon: Transform.rotate(
-                                                angle: math.pi / 2.0,
-                                                child:
-                                                    Icon(Icons.chevron_right)),
-                                            isExpanded: true,
-                                            onChanged: (value) {
-                                              promotionBloc
-                                                  .setSelectedLocation(value);
-                                            },
-                                            items: onboardingSnapshot
-                                                .data.locations
-                                                .map<
-                                                    DropdownMenuItem<
-                                                        FoLocations>>(
-                                                    (FoLocations locationItem) {
-                                              return DropdownMenuItem<
-                                                  FoLocations>(
-                                                value: locationItem,
-                                                child: Text(locationItem.name),
-                                              );
-                                            }).toList(),
+                        if (onboardingSnapshot.data.locations.length > 1) {
+                          return StreamBuilder<CreatePromotionState>(
+                              stream:
+                                  promotionBloc.CreatePromotionStateObservable,
+                              builder: (context, promotionSnapshot) {
+                                if (!promotionSnapshot.hasData) {
+                                  return Container();
+                                }
+                                return SafeArea(
+                                  child: Material(
+                                    borderRadius: BorderRadius.circular(4),
+                                    elevation: 12,
+                                    child: Row(
+                                      children: <Widget>[
+                                        IconButton(
+                                          icon: Icon(Icons.arrow_back),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 16.0),
+                                            child: DropdownButton<FoLocations>(
+                                              value: promotionSnapshot
+                                                  .data.selectedLocation,
+                                              underline: Container(),
+                                              icon: Transform.rotate(
+                                                  angle: math.pi / 2.0,
+                                                  child: Icon(
+                                                      Icons.chevron_right)),
+                                              isExpanded: true,
+                                              onChanged: (value) {
+                                                promotionBloc
+                                                    .setSelectedLocation(value);
+                                              },
+                                              items: onboardingSnapshot
+                                                  .data.locations
+                                                  .map<
+                                                      DropdownMenuItem<
+                                                          FoLocations>>(
+                                                      (FoLocations
+                                                          locationItem) {
+                                                return DropdownMenuItem<
+                                                    FoLocations>(
+                                                  value: locationItem,
+                                                  child:
+                                                      Text(locationItem.name),
+                                                );
+                                              }).toList(),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            });
-                      }
-                      return Container();
-                    }),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: TextFormField(
-            controller: promotionBloc.messageEditController,
-            minLines: 3,
-            maxLines: 3,
-            decoration: InputDecoration(
-              labelText: 'Type your promotional message',
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 12.0,
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(
-            vertical: 12,
-            horizontal: 12,
-          ),
-          margin: EdgeInsets.symmetric(horizontal: 16),
-          // color: Colors.green[100],
-          child: Text(
-            'You can reach up to 4985 people near your store.',
-            style: Theme.of(context).textTheme.body1.copyWith(
-                  color: Colors.green[700],
+                                );
+                              });
+                        }
+                        return Container();
+                      }),
                 ),
-            textAlign: TextAlign.center,
+              ],
+            ),
           ),
-        ),
-        SizedBox(
-          height: 16,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: RaisedButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50.0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextFormField(
+              controller: promotionBloc.messageEditController,
+              minLines: 3,
+              maxLines: 3,
+              decoration: InputDecoration(
+                labelText: 'Type your promotional message',
+                border: OutlineInputBorder(),
+              ),
+              validator: (String value) {
+                return value.length < 1 ? 'Required' : null;
+              },
             ),
-            color: Color.fromRGBO(4, 196, 204, 1),
-            padding: EdgeInsets.symmetric(
-              vertical: 15.0,
-              horizontal: 30,
-            ),
-            child: Text(
-              'Rs. 100-1012 People',
-              textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .button
-                  .copyWith(color: Colors.white),
-            ),
-            onPressed: () {
-              promotionBloc.setPromoReach('Rs. 100-1012 People', 100, 33);
-              this._showConfirmAlertDialog(promotionBloc);
-            },
           ),
-        ),
-        SizedBox(
-          height: 12,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: RaisedButton(
-            color: Color.fromRGBO(4, 150, 204, 1),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50.0),
-            ),
+          SizedBox(
+            height: 12.0,
+          ),
+          Container(
             padding: EdgeInsets.symmetric(
-              vertical: 15.0,
-              horizontal: 30,
+              vertical: 12,
+              horizontal: 12,
             ),
+            margin: EdgeInsets.symmetric(horizontal: 16),
+            // color: Colors.green[100],
             child: Text(
-              'Rs. 100-1012 People',
+              'You can reach up to 4985 people near your store.',
+              style: Theme.of(context).textTheme.body1.copyWith(
+                    color: Colors.green[700],
+                  ),
               textAlign: TextAlign.center,
             ),
-            onPressed: () {
-              promotionBloc.setPromoReach('Rs. 200-1012 People', 100, 35);
-              this._showConfirmAlertDialog(promotionBloc);
-            },
           ),
-        ),
-        SizedBox(
-          height: 12,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: RaisedButton(
-            color: Color.fromRGBO(4, 86, 91, 1),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50.0),
-            ),
-            padding: EdgeInsets.symmetric(
-              vertical: 15.0,
-              horizontal: 30,
-            ),
-            child: Text(
-              'Rs. 100-1012 People',
-              textAlign: TextAlign.center,
-            ),
-            onPressed: () {
-              promotionBloc.setPromoReach('Rs. 300-1012 People', 100, 53);
-              this._showConfirmAlertDialog(promotionBloc);
-            },
+          SizedBox(
+            height: 16,
           ),
-        ),
-      ],
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: RaisedButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50.0),
+              ),
+              color: Color.fromRGBO(4, 196, 204, 1),
+              padding: EdgeInsets.symmetric(
+                vertical: 15.0,
+                horizontal: 30,
+              ),
+              child: Text(
+                'Rs. 100-1012 People',
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .button
+                    .copyWith(color: Colors.white),
+              ),
+              onPressed: () {
+                if (this._formKey.currentState.validate()) {
+                  promotionBloc.setPromoReach('Rs. 100-1012 People', 100, 33);
+                  this._showConfirmAlertDialog(promotionBloc);
+                }
+              },
+            ),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: RaisedButton(
+              color: Color.fromRGBO(4, 150, 204, 1),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50.0),
+              ),
+              padding: EdgeInsets.symmetric(
+                vertical: 15.0,
+                horizontal: 30,
+              ),
+              child: Text(
+                'Rs. 100-1012 People',
+                textAlign: TextAlign.center,
+              ),
+              onPressed: () {
+                if (this._formKey.currentState.validate()) {
+                  promotionBloc.setPromoReach('Rs. 200-1012 People', 100, 35);
+                  this._showConfirmAlertDialog(promotionBloc);
+                }
+              },
+            ),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: RaisedButton(
+              color: Color.fromRGBO(4, 86, 91, 1),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50.0),
+              ),
+              padding: EdgeInsets.symmetric(
+                vertical: 15.0,
+                horizontal: 30,
+              ),
+              child: Text(
+                'Rs. 100-1012 People',
+                textAlign: TextAlign.center,
+              ),
+              onPressed: () {
+                if (this._formKey.currentState.validate()) {
+                  promotionBloc.setPromoReach('Rs. 300-1012 People', 100, 53);
+                  this._showConfirmAlertDialog(promotionBloc);
+                }
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
