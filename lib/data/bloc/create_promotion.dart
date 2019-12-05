@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
@@ -49,6 +50,10 @@ class CreatePromotionBloc {
     this._updateState();
   }
 
+  setSelectedLocation(FoLocations location) {
+    this._createPromotionState.selectedLocation = location;
+  }
+
   createPromotion() {
     this._createPromotionState.isSubmitting = true;
     this._createPromotionState.isSubmitFailed = false;
@@ -57,7 +62,8 @@ class CreatePromotionBloc {
     var payload = new PromotionCreatePayload(
         promoMessage: messageEditController.text,
         promoReach: _createPromotionState.promoReach,
-        locationId: _createPromotionState.selectedLocationId);
+        locationId: _createPromotionState.selectedLocation ??
+            _createPromotionState.selectedLocation.fbLocationId);
     var payloadString = json.encode(payload.toJson());
     print(payloadString);
     this
@@ -109,7 +115,7 @@ class CreatePromotionState {
   bool isSubmitFailed = false;
   bool isSubmitSuccess = false;
   String promoReach = '';
-  String selectedLocationId;
+  FoLocations selectedLocation;
   NearbyPromotionResponse nearbyPromotionResponse;
   List<PromotionItem> promotionList = new List<PromotionItem>();
 

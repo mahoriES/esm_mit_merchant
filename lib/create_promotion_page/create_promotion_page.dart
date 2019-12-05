@@ -6,7 +6,6 @@ import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/create_promotion.dart';
 import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/data/http_service.dart';
-import 'package:foore/share_page/share_page.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +38,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
   Animation _circleRadius;
   Completer<GoogleMapController> _controller = Completer();
   StreamSubscription<CreatePromotionState> _subscription;
+  StreamSubscription<OnboardingGuardState> _subscription2;
 
   @override
   void afterFirstLayout(BuildContext context) {
@@ -46,10 +46,17 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
     _subscription = createPromotionBloc.CreatePromotionStateObservable.listen(
         _onCreatePromotionStateChange);
     createPromotionBloc.getNearbyPromotions();
+    final onboardingGuardBloc = Provider.of<OnboardingGuardBloc>(context);
+    _subscription2 = onboardingGuardBloc.onboardingStateObservable
+        .listen((OnboardingGuardState state) {
+      if (state.locations.length > 0) {
+        createPromotionBloc.setSelectedLocation(state.locations[0]);
+      }
+    });
   }
 
   _onCreatePromotionStateChange(CreatePromotionState state) {
-    if (state.screenType == CreatePromotionScreens.promotionSent) {
+    if (state.screenType == CreatePromotionScreens.sendPromotions) {
       _showIntroAlertDialog();
     }
   }
@@ -153,6 +160,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
   @override
   void dispose() {
     _animationController.dispose();
+    _subscription.cancel();
+    _subscription2.cancel();
     super.dispose();
   }
 
@@ -300,6 +309,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
 
   ListView createPromotion(BuildContext context) {
     final onboardingGuardBloc = Provider.of<OnboardingGuardBloc>(context);
+    final promotionBloc = Provider.of<CreatePromotionBloc>(context);
     return ListView(
       children: <Widget>[
         Container(
@@ -396,53 +406,70 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                 right: 16,
                 child: StreamBuilder<OnboardingGuardState>(
                     stream: onboardingGuardBloc.onboardingStateObservable,
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
+                    builder: (context, onboardingSnapshot) {
+                      if (!onboardingSnapshot.hasData) {
                         return Container();
                       }
-                      var value = null;
-                      if (snapshot.data.locations.length > 1) {
-                        value = snapshot.data.locations[0];
-                      }
-                      return SafeArea(
-                        child: Material(
-                          borderRadius: BorderRadius.circular(4),
-                          elevation: 12,
-                          child: Row(
-                            children: <Widget>[
-                              IconButton(
-                                icon: Icon(Icons.arrow_back),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              Expanded(
-                                child: Container(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: DropdownButton<FoLocations>(
-                                    value: value,
-                                    underline: Container(),
-                                    icon: Transform.rotate(
-                                        angle: math.pi / 2.0,
-                                        child: Icon(Icons.chevron_right)),
-                                    isExpanded: true,
-                                    onChanged: (value) {},
-                                    items: snapshot.data.locations
-                                        .map<DropdownMenuItem<FoLocations>>(
-                                            (FoLocations locationItem) {
-                                      return DropdownMenuItem<FoLocations>(
-                                        value: locationItem,
-                                        child: Text(locationItem.name),
-                                      );
-                                    }).toList(),
+
+                      if (onboardingSnapshot.data.locations.length > 1) {
+                        return StreamBuilder<CreatePromotionState>(
+                            stream:
+                                promotionBloc.CreatePromotionStateObservable,
+                            builder: (context, promotionSnapshot) {
+                              if (!promotionSnapshot.hasData) {
+                                return Container();
+                              }
+                              return SafeArea(
+                                child: Material(
+                                  borderRadius: BorderRadius.circular(4),
+                                  elevation: 12,
+                                  child: Row(
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(Icons.arrow_back),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 16.0),
+                                          child: DropdownButton<FoLocations>(
+                                            value: promotionSnapshot
+                                                .data.selectedLocation,
+                                            underline: Container(),
+                                            icon: Transform.rotate(
+                                                angle: math.pi / 2.0,
+                                                child:
+                                                    Icon(Icons.chevron_right)),
+                                            isExpanded: true,
+                                            onChanged: (value) {
+                                              promotionBloc
+                                                  .setSelectedLocation(value);
+                                            },
+                                            items: onboardingSnapshot
+                                                .data.locations
+                                                .map<
+                                                    DropdownMenuItem<
+                                                        FoLocations>>(
+                                                    (FoLocations locationItem) {
+                                              return DropdownMenuItem<
+                                                  FoLocations>(
+                                                value: locationItem,
+                                                child: Text(locationItem.name),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                              );
+                            });
+                      }
+                      return Container();
                     }),
               ),
             ],
