@@ -103,7 +103,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                           strokeColor: Colors.blue[100],
                         ),
                         Circle(
-                          circleId: CircleId('foCircl3'),
+                          circleId: CircleId('foCircle3'),
                           center: LatLng(
                             12.9829735,
                             77.687969,
@@ -171,8 +171,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                                 IconButton(
                                   icon: Icon(Icons.arrow_back),
                                   onPressed: () {
-                                    // Navigator.of(context).pop();
-                                    playAnimation();
+                                    Navigator.of(context).pop();
                                   },
                                 ),
                                 Expanded(
