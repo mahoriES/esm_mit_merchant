@@ -100,6 +100,43 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
     );
   }
 
+  _showConfirmAlertDialog() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Are you sure?'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                child: Text(
+                    'Send this promotional message to 4002 people near you.'),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 8.0),
+                child: Text(
+                  '*You will need to pay Rs 100 after approval.',
+                  style: Theme.of(context).textTheme.caption,
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Confirm'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
   Future<Null> playAnimation() async {
     try {
       await _animationController.repeat(reverse: true).orCancel;
@@ -317,7 +354,9 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                     .button
                     .copyWith(color: Colors.white),
               ),
-              onPressed: () {},
+              onPressed: () {
+                this._showConfirmAlertDialog();
+              },
             ),
           ),
           SizedBox(
