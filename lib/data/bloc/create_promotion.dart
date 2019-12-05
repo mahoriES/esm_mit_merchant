@@ -45,8 +45,10 @@ class CreatePromotionBloc {
     });
   }
 
-  setPromoReach(String promoReach) {
+  setPromoReach(String promoReach, int numberOfCustomers, int price) {
     this._createPromotionState.promoReach = promoReach;
+    this._createPromotionState.numberOfCustomers = numberOfCustomers;
+    this._createPromotionState.price = price;
     this._updateState();
   }
 
@@ -54,7 +56,10 @@ class CreatePromotionBloc {
     this._createPromotionState.selectedLocation = location;
   }
 
-  createPromotion() {
+  createPromotion(Function onDone) {
+    if (this._createPromotionState.isSubmitting) {
+      return;
+    }
     this._createPromotionState.isSubmitting = true;
     this._createPromotionState.isSubmitFailed = false;
     this._createPromotionState.isSubmitSuccess = false;
@@ -76,6 +81,9 @@ class CreatePromotionBloc {
         this._createPromotionState.isSubmitting = false;
         this._createPromotionState.isSubmitFailed = false;
         this._createPromotionState.isSubmitSuccess = true;
+        if (onDone != null) {
+          onDone();
+        }
       } else {
         this._createPromotionState.isSubmitting = false;
         this._createPromotionState.isSubmitFailed = true;
@@ -115,6 +123,8 @@ class CreatePromotionState {
   bool isSubmitFailed = false;
   bool isSubmitSuccess = false;
   String promoReach = '';
+  int numberOfCustomers = 0;
+  int price = 0;
   FoLocations selectedLocation;
   NearbyPromotionResponse nearbyPromotionResponse;
   List<PromotionItem> promotionList = new List<PromotionItem>();

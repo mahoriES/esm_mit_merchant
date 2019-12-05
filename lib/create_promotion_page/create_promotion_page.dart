@@ -11,8 +11,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
-import 'package:rxdart/rxdart.dart';
-
 class CreatePromotionPage extends StatefulWidget {
   CreatePromotionPage({Key key}) : super(key: key);
 
@@ -43,8 +41,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
   @override
   void afterFirstLayout(BuildContext context) {
     final createPromotionBloc = Provider.of<CreatePromotionBloc>(context);
-    _subscription = createPromotionBloc.CreatePromotionStateObservable.listen(
-        _onCreatePromotionStateChange);
+    _subscription = createPromotionBloc.CreatePromotionStateObservable.take(1)
+        .listen(_onCreatePromotionStateChange);
     createPromotionBloc.getNearbyPromotions();
     final onboardingGuardBloc = Provider.of<OnboardingGuardBloc>(context);
     _subscription2 = onboardingGuardBloc.onboardingStateObservable
@@ -112,35 +110,52 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
     );
   }
 
-  _showConfirmAlertDialog() async {
+  _showConfirmAlertDialog(CreatePromotionBloc promotionBloc) async {
     await showDialog(
       context: context,
       barrierDismissible: true, // user must tap button for close dialog!
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Are you sure?'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                child: Text(
-                    'Send this promotional message to 4002 people near you.'),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 8.0),
-                child: Text(
-                  '*You will need to pay Rs 100 after approval.',
-                  style: Theme.of(context).textTheme.caption,
-                ),
-              ),
-            ],
-          ),
+          content: StreamBuilder<CreatePromotionState>(
+              stream: promotionBloc.CreatePromotionStateObservable,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container();
+                }
+
+                if (snapshot.data.isSubmitting) {
+                  return Container(
+                      width: 50,
+                      height: 50,
+                      child: Center(child: CircularProgressIndicator()));
+                }
+
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Text(
+                          'Send this promotional message to ${snapshot.data.numberOfCustomers} people near you.'),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        '*You will need to pay Rs. ${snapshot.data.price} after approval.',
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                    ),
+                  ],
+                );
+              }),
           actions: <Widget>[
             FlatButton(
               child: const Text('Confirm'),
               onPressed: () {
-                Navigator.of(context).pop();
+                promotionBloc.createPromotion(() {
+                  Navigator.of(context).pop();
+                });
               },
             )
           ],
@@ -527,7 +542,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                   .copyWith(color: Colors.white),
             ),
             onPressed: () {
-              this._showConfirmAlertDialog();
+              promotionBloc.setPromoReach('Rs. 100-1012 People', 100, 33);
+              this._showConfirmAlertDialog(promotionBloc);
             },
           ),
         ),
@@ -549,7 +565,10 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               'Rs. 100-1012 People',
               textAlign: TextAlign.center,
             ),
-            onPressed: () {},
+            onPressed: () {
+              promotionBloc.setPromoReach('Rs. 200-1012 People', 100, 35);
+              this._showConfirmAlertDialog(promotionBloc);
+            },
           ),
         ),
         SizedBox(
@@ -570,7 +589,10 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               'Rs. 100-1012 People',
               textAlign: TextAlign.center,
             ),
-            onPressed: () {},
+            onPressed: () {
+              promotionBloc.setPromoReach('Rs. 300-1012 People', 100, 53);
+              this._showConfirmAlertDialog(promotionBloc);
+            },
           ),
         ),
       ],
