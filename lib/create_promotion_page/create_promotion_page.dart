@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/create_promotion.dart';
 import 'package:foore/data/bloc/onboarding_guard.dart';
@@ -11,6 +12,8 @@ import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
+
+import 'package:sprintf/sprintf.dart';
 
 class CreatePromotionPage extends StatefulWidget {
   CreatePromotionPage({Key key}) : super(key: key);
@@ -94,14 +97,15 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                    'Foore lets you send promotions 💌 to new potential customers, near your local business. 🎉🎉🎉'),
+                child: Text(AppTranslations.of(context)
+                    .text('create_promotion_page_help_description')),
               ),
             ],
           ),
           actions: <Widget>[
             FlatButton(
-              child: const Text('Continue'),
+              child: Text(AppTranslations.of(context)
+                  .text('create_promotion_page_help_button_continue')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -118,7 +122,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
       barrierDismissible: true, // user must tap button for close dialog!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Are you sure?'),
+          title: Text(AppTranslations.of(context)
+              .text('create_promotion_page_confirm_title')),
           content: StreamBuilder<CreatePromotionState>(
               stream: promotionBloc.CreatePromotionStateObservable,
               builder: (context, snapshot) {
@@ -138,13 +143,18 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      child: Text(
-                          'Send this promotional message to ${snapshot.data.numberOfCustomers} people near you.'),
+                      child: Text(sprintf(
+                          AppTranslations.of(context)
+                              .text('create_promotion_page_confirm_subtitle'),
+                          [snapshot.data.numberOfCustomers])),
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 8.0),
                       child: Text(
-                        '*You will need to pay Rs. ${snapshot.data.price} after approval.',
+                        sprintf(
+                            AppTranslations.of(context)
+                                .text('create_promotion_page_confirm_tip'),
+                            [snapshot.data.price]),
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ),
@@ -153,7 +163,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               }),
           actions: <Widget>[
             FlatButton(
-              child: const Text('Confirm'),
+              child: Text(AppTranslations.of(context)
+                  .text('create_promotion_page_button_confirm')),
               onPressed: () {
                 promotionBloc.createPromotion(() {
                   Navigator.of(context).pop();
@@ -206,7 +217,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               return createPromotion(context);
             } else if (snapshot.data.screenType ==
                 CreatePromotionScreens.promotionSent) {
-                  // return createPromotion(context);
+              // return createPromotion(context);
               return listPromotion(context);
             }
             return Container();
@@ -222,13 +233,13 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
         children: <Widget>[
           AppBar(
             title: Text(
-              'My promotions',
+              AppTranslations.of(context).text('promotion_list_page_title'),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              'This feature is currently limited to selected customers. Your promotions will be sent after approval from Foore tem. Contact us for more information.',
+              AppTranslations.of(context).text('promotion_list_page_sub-title'),
               style: Theme.of(context).textTheme.subtitle,
             ),
           ),
@@ -298,7 +309,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                               height: 8,
                             ),
                             Text(
-                              'Approval pending',
+                              AppTranslations.of(context)
+                                  .text('promotion_list_page_approval_pending'),
                               style: Theme.of(context)
                                   .textTheme
                                   .caption
@@ -316,7 +328,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: FoSubmitButton(
-              text: 'Contact us',
+              text: AppTranslations.of(context)
+                  .text('promotion_list_page_contact-us'),
               onPressed: () async {
                 await Share.whatsAppTo('+917829862689');
               },
@@ -506,7 +519,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               minLines: 3,
               maxLines: 3,
               decoration: InputDecoration(
-                labelText: 'Type your promotional message',
+                labelText: AppTranslations.of(context)
+                    .text('create_promotion_page_message_input_label'),
                 border: OutlineInputBorder(),
               ),
               validator: (String value) {
@@ -525,7 +539,10 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
             margin: EdgeInsets.symmetric(horizontal: 16),
             // color: Colors.green[100],
             child: Text(
-              'You can reach up to 4985 people near your store.',
+              sprintf(
+                  AppTranslations.of(context)
+                      .text('create_promotion_page_people_reach_message'),
+                  ['333']),
               style: Theme.of(context).textTheme.body1.copyWith(
                     color: Colors.green[700],
                   ),
@@ -547,7 +564,10 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                 horizontal: 30,
               ),
               child: Text(
-                'Rs. 100-1012 People',
+                sprintf(
+                    AppTranslations.of(context)
+                        .text('create_promotion_page_submit'),
+                    ['333', '233']),
                 textAlign: TextAlign.center,
                 style: Theme.of(context)
                     .textTheme
@@ -577,7 +597,10 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                 horizontal: 30,
               ),
               child: Text(
-                'Rs. 100-1012 People',
+                sprintf(
+                    AppTranslations.of(context)
+                        .text('create_promotion_page_submit'),
+                    ['333', '233']),
                 textAlign: TextAlign.center,
               ),
               onPressed: () {
@@ -603,7 +626,10 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                 horizontal: 30,
               ),
               child: Text(
-                'Rs. 100-1012 People',
+                sprintf(
+                    AppTranslations.of(context)
+                        .text('create_promotion_page_submit'),
+                    ['333', '233']),
                 textAlign: TextAlign.center,
               ),
               onPressed: () {

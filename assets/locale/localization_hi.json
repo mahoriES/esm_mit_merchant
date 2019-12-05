@@ -86,5 +86,6 @@
   "promotion_list_page_title": "मेरे प्रमोशन",
   "promotion_list_page_sub-title": "यह सुविधा चयनित ग्राहकों के लिए उपलब्ध है। आपके प्रचार को फूरे टीम से अनुमोदन के बाद भेजा जाएगा। ज़्यादा जानकारी के लिए हमें संपर्क करें।",
   "promotion_list_page_contact-us": "हमसे संपर्क करें",
-  "promotion_list_page_approval_pending": "स्वीकृति लंबित"
+  "promotion_list_page_approval_pending": "स्वीकृति लंबित",
+  "create_promotion_page_button_confirm": "confirm"
 }
