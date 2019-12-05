@@ -493,6 +493,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: TextFormField(
+            controller: promotionBloc.messageEditController,
             minLines: 3,
             maxLines: 3,
             decoration: InputDecoration(

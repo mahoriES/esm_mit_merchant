@@ -9,7 +9,8 @@ import 'package:rxdart/rxdart.dart';
 class CreatePromotionBloc {
   final CreatePromotionState _createPromotionState = CreatePromotionState();
   final HttpService httpService;
-  final messageEditController = TextEditingController();
+  final messageEditController =
+      TextEditingController(text: 'Send message to name [[NAME]]');
 
   BehaviorSubject<CreatePromotionState> _subjectCreatePromotionState;
 
@@ -67,8 +68,7 @@ class CreatePromotionBloc {
     var payload = new PromotionCreatePayload(
         promoMessage: messageEditController.text,
         promoReach: _createPromotionState.promoReach,
-        locationId: _createPromotionState.selectedLocation ??
-            _createPromotionState.selectedLocation.fbLocationId);
+        locationId: _createPromotionState.selectedLocation?.fbLocationId);
     var payloadString = json.encode(payload.toJson());
     print(payloadString);
     this
