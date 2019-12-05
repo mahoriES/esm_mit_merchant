@@ -10,7 +10,11 @@ class CreatePromotionBloc {
   final CreatePromotionState _createPromotionState = CreatePromotionState();
   final HttpService httpService;
   final messageEditController =
-      TextEditingController(text: 'Send message to name [[NAME]]');
+      TextEditingController(text: 'Hey [[NAME]], Our brand new store is now open near you. Visit us today & avail flat 15% discount on all our products & services.');
+
+  static const button_one_base = 3163;
+  static const button_two_base = 1421;
+  static const button_tree_base = 391;
 
   BehaviorSubject<CreatePromotionState> _subjectCreatePromotionState;
 
