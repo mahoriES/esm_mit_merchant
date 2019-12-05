@@ -98,6 +98,7 @@ flutter:
     - assets/whatsapp.png
     - assets/hindi-share.png
     - assets/english-share.png
+    - assets/promotion-banner.png
     - assets/locale/localization_hi.json
     - assets/locale/localization_kn.json
     - assets/locale/localization_ml.json

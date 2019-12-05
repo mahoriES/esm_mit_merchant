@@ -122,7 +122,8 @@ class Router {
         return SharePage.generateRoute(settings);
         break;
       case CreatePromotionPage.routeName:
-        return CreatePromotionPage.generateRoute(settings);
+        return CreatePromotionPage.generateRoute(
+            settings, this.httpServiceBloc);
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

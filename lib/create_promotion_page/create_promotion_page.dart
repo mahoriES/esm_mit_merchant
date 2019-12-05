@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/create_promotion.dart';
 import 'package:foore/data/bloc/onboarding_guard.dart';
+import 'package:foore/data/http_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
@@ -11,10 +14,14 @@ class CreatePromotionPage extends StatefulWidget {
 
   static const routeName = '/create-promotion';
 
-  static Route generateRoute(RouteSettings settings) {
+  static Route generateRoute(RouteSettings settings, HttpService httpService) {
     return MaterialPageRoute(
-      builder: (context) => CreatePromotionPage(),
-    );
+        builder: (context) => Provider(
+              builder: (context) =>
+                  CreatePromotionBloc(httpService: httpService),
+              dispose: (context, value) => value.dispose(),
+              child: CreatePromotionPage(),
+            ));
   }
 
   @override
@@ -22,10 +29,25 @@ class CreatePromotionPage extends StatefulWidget {
 }
 
 class _CreatePromotionPageState extends State<CreatePromotionPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AfterLayoutMixin<CreatePromotionPage> {
   AnimationController _animationController;
   Animation _circleRadius;
   Completer<GoogleMapController> _controller = Completer();
+  StreamSubscription<CreatePromotionState> _subscription;
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    final createPromotionBloc = Provider.of<CreatePromotionBloc>(context);
+    _subscription = createPromotionBloc.CreatePromotionStateObservable.listen(
+        _onCreatePromotionStateChange);
+    createPromotionBloc.getNearbyPromotions();
+  }
+
+  _onCreatePromotionStateChange(CreatePromotionState state) {
+    if (state.screenType == CreatePromotionScreens.promotionSent) {
+      _showFailedAlertDialog();
+    }
+  }
 
   @override
   void initState() {
@@ -39,6 +61,43 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
     );
     playAnimation();
     super.initState();
+  }
+
+  _showFailedAlertDialog() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                width: double.infinity,
+                margin: EdgeInsets.only(bottom: 20.0),
+                child: Image(
+                  image: AssetImage('assets/promotion-banner.png'),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                    'Foore lets you send promotions 💌 to new potential customers, near your local business. 🎉🎉🎉'),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Continue'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   Future<Null> playAnimation() async {
@@ -144,7 +203,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                           );
                         } else
                           return Container();
-                      }
+                      } else
+                        return Container();
                     },
                   ),
                 ),

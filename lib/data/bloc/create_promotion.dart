@@ -4,31 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'auth.dart';
-
 class CreatePromotionBloc {
   final CreatePromotionState _createPromotionState = CreatePromotionState();
   final HttpService httpService;
-  final AuthBloc authBloc;
   final messageEditController = TextEditingController();
 
-  BehaviorSubject<CreatePromotionState> _subjectCompleteVerificationState;
+  BehaviorSubject<CreatePromotionState> _subjectCreatePromotionState;
 
-  CreatePromotionBloc({@required this.httpService, @required this.authBloc}) {
-    this._subjectCompleteVerificationState =
+  CreatePromotionBloc({@required this.httpService}) {
+    this._subjectCreatePromotionState =
         new BehaviorSubject<CreatePromotionState>.seeded(_createPromotionState);
-    authBloc.googleSignIn.signInSilently();
   }
 
-  Observable<CreatePromotionState> get completeVerificationStateObservable =>
-      _subjectCompleteVerificationState.stream;
+  Observable<CreatePromotionState> get CreatePromotionStateObservable =>
+      _subjectCreatePromotionState.stream;
 
   getNearbyPromotions() {
     this._createPromotionState.isLoading = true;
     this._createPromotionState.isLoadingFailed = false;
     this._updateState();
     httpService.foGet('nearby/promo/').then((httpResponse) {
+      print(httpResponse.statusCode);
       if (httpResponse.statusCode == 200) {
+        print(httpResponse.body);
         this._createPromotionState.response =
             NearbyPromotionResponse.fromJson(json.decode(httpResponse.body));
         this._createPromotionState.isLoadingFailed = false;
@@ -81,11 +79,13 @@ class CreatePromotionBloc {
   }
 
   _updateState() {
-    this._subjectCompleteVerificationState.sink.add(this._createPromotionState);
+    if (!this._subjectCreatePromotionState.isClosed) {
+      this._subjectCreatePromotionState.sink.add(this._createPromotionState);
+    }
   }
 
   dispose() {
-    this._subjectCompleteVerificationState.close();
+    this._subjectCreatePromotionState.close();
   }
 }
 

@@ -84,7 +84,7 @@ class _ReviewAppState extends State<ReviewApp> {
           }
           return MaterialApp(
             title: 'Foore',
-            initialRoute: Router.testRoute,
+            initialRoute: Router.homeRoute,
             onGenerateRoute: router.routeGenerator,
             localizationsDelegates: [
               snapshot.data.localeDelegate,
