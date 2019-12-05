@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/onboarding_guard.dart';
@@ -9,12 +10,16 @@ import 'package:rxdart/rxdart.dart';
 class CreatePromotionBloc {
   final CreatePromotionState _createPromotionState = CreatePromotionState();
   final HttpService httpService;
-  final messageEditController =
-      TextEditingController(text: 'Hey [[NAME]], Amazing Pizza Near You (Pizzeria House) - Buy any medium Pizza & get free Choco Lava. Offer valid till 07:00 PM.');
+  final messageEditController = TextEditingController(
+      text:
+          'Hey [[NAME]], Amazing Pizza Near You (Pizzeria House) - Buy any medium Pizza & get free Choco Lava. Offer valid till 07:00 PM.');
 
-  static const button_one_base = 3163;
-  static const button_two_base = 1421;
-  static const button_tree_base = 391;
+  static const button_one_base = 1580;
+  final buttonOneCal = button_one_base + Random().nextInt(button_one_base);
+  static const button_two_base = 710;
+  final buttonTwoCal = button_two_base + Random().nextInt(button_two_base);
+  static const button_three_base = 195;
+  final buttonThreeCal = button_three_base + Random().nextInt(button_three_base);
 
   BehaviorSubject<CreatePromotionState> _subjectCreatePromotionState;
 

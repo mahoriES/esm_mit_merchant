@@ -553,7 +553,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               sprintf(
                   AppTranslations.of(context)
                       .text('create_promotion_page_people_reach_message'),
-                  ['333']),
+                  [promotionBloc.buttonOneCal.toString()]),
               style: Theme.of(context).textTheme.body1.copyWith(
                     color: Colors.green[700],
                   ),
@@ -578,7 +578,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                 sprintf(
                     AppTranslations.of(context)
                         .text('create_promotion_page_submit'),
-                    ['333', '233']),
+                    ['100',promotionBloc.buttonThreeCal.toString()]),
                 textAlign: TextAlign.center,
                 style: Theme.of(context)
                     .textTheme
@@ -587,7 +587,10 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               ),
               onPressed: () {
                 if (this._formKey.currentState.validate()) {
-                  promotionBloc.setPromoReach('Rs. 100-1012 People', 100, 33);
+                  promotionBloc.setPromoReach(
+                      'Rs. 100-${promotionBloc.buttonThreeCal.toString()} People',
+                      promotionBloc.buttonThreeCal,
+                      100);
                   this._showConfirmAlertDialog(promotionBloc);
                 }
               },
@@ -611,12 +614,15 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                 sprintf(
                     AppTranslations.of(context)
                         .text('create_promotion_page_submit'),
-                    ['333', '233']),
+                    ['300',promotionBloc.buttonTwoCal.toString()]),
                 textAlign: TextAlign.center,
               ),
               onPressed: () {
                 if (this._formKey.currentState.validate()) {
-                  promotionBloc.setPromoReach('Rs. 200-1012 People', 100, 35);
+                  promotionBloc.setPromoReach(
+                      'Rs. 300-${promotionBloc.buttonTwoCal.toString()} People',
+                      promotionBloc.buttonTwoCal,
+                      300);
                   this._showConfirmAlertDialog(promotionBloc);
                 }
               },
@@ -640,12 +646,15 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                 sprintf(
                     AppTranslations.of(context)
                         .text('create_promotion_page_submit'),
-                    ['333', '233']),
+                    [ '500',promotionBloc.buttonOneCal.toString()]),
                 textAlign: TextAlign.center,
               ),
               onPressed: () {
                 if (this._formKey.currentState.validate()) {
-                  promotionBloc.setPromoReach('Rs. 300-1012 People', 100, 53);
+                  promotionBloc.setPromoReach(
+                      'Rs. 500-${promotionBloc.buttonOneCal.toString()} People',
+                      promotionBloc.buttonOneCal,
+                      500);
                   this._showConfirmAlertDialog(promotionBloc);
                 }
               },
