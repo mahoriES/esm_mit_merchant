@@ -1,4 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/model/login.dart';
 import 'package:foore/environments/environment.dart';
@@ -38,7 +39,7 @@ class FoAnalytics {
 
   firebaseAnalyticsInit() {
     this._firebaseAnalytics = FirebaseAnalytics();
-     _firebaseAnalytics.setAnalyticsCollectionEnabled(Environment.isProd);
+    _firebaseAnalytics.setAnalyticsCollectionEnabled(Environment.isProd);
   }
 
   intercomLogin(AuthInfo authData) async {
@@ -88,6 +89,7 @@ class FoAnalytics {
       }
     } catch (err, stacktrace) {
       print(stacktrace.toString());
+      Crashlytics.instance.recordError(err, stacktrace);
     }
   }
 
@@ -96,6 +98,8 @@ class FoAnalytics {
       this._firebaseAnalytics.setCurrentScreen(screenName: screenName);
     } catch (err, stacktrace) {
       print(stacktrace.toString());
+
+      Crashlytics.instance.recordError(err, stacktrace);
     }
   }
 
@@ -110,7 +114,7 @@ class FoAnalytics {
             .setUserProperty(name: name, value: value.toString());
       }
     } catch (err, stacktrace) {
-      print(err.toString());
+      Crashlytics.instance.recordError(err, stacktrace);
       print(stacktrace.toString());
     }
   }
