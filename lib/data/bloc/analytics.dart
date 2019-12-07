@@ -38,8 +38,7 @@ class FoAnalytics {
 
   firebaseAnalyticsInit() {
     this._firebaseAnalytics = FirebaseAnalytics();
-    // _firebaseAnalytics.setAnalyticsCollectionEnabled(Environment.isProd);
-    _firebaseAnalytics.setAnalyticsCollectionEnabled(true);
+     _firebaseAnalytics.setAnalyticsCollectionEnabled(Environment.isProd);
   }
 
   intercomLogin(AuthInfo authData) async {
@@ -82,24 +81,25 @@ class FoAnalytics {
   }
 
   trackUserEvent({@required String name, Map<String, dynamic> parameters}) {
-      print(name);
-    print(parameters.toString());
-    if (isUserIdentified) {
-      Intercom.logEvent(name, parameters);
-      this._firebaseAnalytics.logEvent(name: name, parameters: parameters);
+    try {
+      if (isUserIdentified) {
+        Intercom.logEvent(name, parameters);
+        this._firebaseAnalytics.logEvent(name: name, parameters: parameters);
+      }
+    } catch (err, stacktrace) {
+      print(stacktrace.toString());
     }
   }
 
   setCurrentScreen(String screenName) {
-    print(screenName);
-    // try {
-    //   this._firebaseAnalytics.setCurrentScreen(screenName: screenName);
-    // } catch (err) {}
+    try {
+      this._firebaseAnalytics.setCurrentScreen(screenName: screenName);
+    } catch (err, stacktrace) {
+      print(stacktrace.toString());
+    }
   }
 
   addUserProperties({@required String name, @required dynamic value}) {
-    print(name);
-    print(value.toString());
     try {
       if (isUserIdentified) {
         final customAttributes = new Map<String, dynamic>();
@@ -117,10 +117,8 @@ class FoAnalytics {
 }
 
 class FoAnalyticsEvents {
-  static const checkin_by_clicking_on_contact =
-      'checkin_by_contact';
-  static const checkin_by_manual_entry_of_name_num =
-      'checkin_by_name_num';
+  static const checkin_by_clicking_on_contact = 'checkin_by_contact';
+  static const checkin_by_manual_entry_of_name_num = 'checkin_by_name_num';
   static const bulk_checkin = 'bulk_checkin';
   static const app_shared = 'app_shared';
   static const nearby_promo_clicked = 'nearby_promo_clicked';
@@ -132,12 +130,10 @@ class FoAnalyticsUserProperties {
   static const language_chosen = 'language_chosen';
   static const google_locations_count = 'g_locations_count';
   static const google_locations_info = 'g_locations_info';
-  static const google_location_created_from_app =
-      'g_loc_created';
+  static const google_location_created_from_app = 'g_loc_created';
   static const google_location_verification_started_from_app =
       'g_loc_veri_started';
-  static const google_location_verification_done_from_app =
-      'g_loc_veri_done';
+  static const google_location_verification_done_from_app = 'g_loc_veri_done';
   static const nearby_promo_created = 'nearby_promo_created';
   static const uses_google_to_login = 'uses_google_login';
   static const uses_company_email_to_login = 'uses_email_login';
