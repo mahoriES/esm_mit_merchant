@@ -29,8 +29,6 @@ class _HomePageState extends State<HomePage> {
   void _onItemTapped(int index) {
     if (index == 1) {
       final httpService = Provider.of<HttpService>(context);
-      httpService.foAnalytics.addUserProperties(
-          name: FoAnalyticsUserProperties.nearby_promo_clicked, value: true);
       httpService.foAnalytics
           .trackUserEvent(name: FoAnalyticsEvents.nearby_promo_clicked);
       Navigator.of(context).pushNamed(CreatePromotionPage.routeName);

@@ -94,8 +94,6 @@ class CreatePromotionBloc {
             parameters: <String, String>{
               'promoReach': _createPromotionState.promoReach
             });
-        this.httpService.foAnalytics.addUserProperties(
-            name: FoAnalyticsUserProperties.nearby_promo_created, value: true);
         this._createPromotionState.promotionCreateResponse =
             PromotionItem.fromJson(json.decode(httpResponse.body));
         this._createPromotionState.isSubmitting = false;

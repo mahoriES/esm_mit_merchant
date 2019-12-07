@@ -139,11 +139,8 @@ class FoAnalyticsUserProperties {
   static const google_location_verification_started_from_app =
       'g_loc_veri_started';
   static const google_location_verification_done_from_app = 'g_loc_veri_done';
-  static const nearby_promo_created = 'nearby_promo_created';
-  static const nearby_promo_clicked = 'nearby_promo_clicked';
   static const uses_google_to_login = 'uses_google_login';
   static const uses_company_email_to_login = 'uses_email_login';
   static const no_of_feedbacks = 'no_of_feedbacks';
   static const no_of_unirson = 'no_of_unirson';
-  static const app_shared = 'app_shared';
 }

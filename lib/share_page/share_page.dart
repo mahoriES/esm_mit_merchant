@@ -32,8 +32,6 @@ class _SharePageState extends State<SharePage> {
 
   share() async {
     final authBloc = Provider.of<AuthBloc>(context);
-    authBloc.foAnalytics.addUserProperties(
-        name: FoAnalyticsUserProperties.app_shared, value: true);
     authBloc.foAnalytics.trackUserEvent(name: FoAnalyticsEvents.app_shared);
     setState(() {
       isLoading = true;
