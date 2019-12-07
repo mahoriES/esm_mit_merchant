@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:foore/create_promotion_page/create_promotion_page.dart';
+import 'package:foore/data/bloc/analytics.dart';
+import 'package:foore/data/http_service.dart';
+import 'package:foore/data/http_service.dart' as prefix0;
 import 'package:foore/people_page/people_page.dart';
 import 'package:foore/review_page/review_page.dart';
+import 'package:provider/provider.dart';
 
 import '../app_translations.dart';
 import 'app_drawer.dart';
@@ -25,6 +29,11 @@ class _HomePageState extends State<HomePage> {
 
   void _onItemTapped(int index) {
     if (index == 1) {
+      final httpService = Provider.of<HttpService>(context);
+      httpService.foAnalytics.addUserProperties(
+          name: FoAnalyticsUserProperties.nearby_promo_clicked, value: true);
+      httpService.foAnalytics
+          .trackUserEvent(name: FoAnalyticsEvents.nearby_promo_clicked);
       Navigator.of(context).pushNamed(CreatePromotionPage.routeName);
     } else {
       setState(() {
