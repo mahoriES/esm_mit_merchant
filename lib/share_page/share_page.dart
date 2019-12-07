@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:foore/app_translations.dart';
+import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:flare_flutter/flare_actor.dart';
@@ -31,6 +32,9 @@ class _SharePageState extends State<SharePage> {
 
   share() async {
     final authBloc = Provider.of<AuthBloc>(context);
+    authBloc.foAnalytics.addUserProperties(
+        name: FoAnalyticsUserProperties.app_shared, value: true);
+    authBloc.foAnalytics.trackUserEvent(name: FoAnalyticsEvents.app_shared);
     setState(() {
       isLoading = true;
     });

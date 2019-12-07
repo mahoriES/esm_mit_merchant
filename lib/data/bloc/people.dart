@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/unirson.dart';
 import 'package:rxdart/rxdart.dart';
@@ -38,6 +39,9 @@ class PeopleBloc {
         this._peopleState.response =
             UnirsonItemResponse.fromJson(json.decode(httpResponse.body));
         this._peopleState.items = this._peopleState.response.results;
+        this._httpService.foAnalytics.addUserProperties(
+            name: FoAnalyticsUserProperties.no_of_unirson,
+            value: this._peopleState.response.count);
       } else {
         this._peopleState.isLoadingFailed = true;
         this._peopleState.isLoading = false;

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/feedback.dart';
 import 'package:rxdart/rxdart.dart';
@@ -29,6 +30,9 @@ class ReviewBloc {
         this._reviewState.response =
             FeedbackResponse.fromJson(json.decode(httpResponse.body));
         this._reviewState.items = this._reviewState.response.results;
+        this._httpService.foAnalytics.addUserProperties(
+            name: FoAnalyticsUserProperties.no_of_feedbacks,
+            value: this._reviewState.response.count);
         this._reviewState.isLoadingFailed = false;
         this._reviewState.isLoading = false;
       } else {

@@ -123,5 +123,8 @@ class FoAnalyticsUserProperties {
   static const nearby_promo_created = 'nearby promo created';
   static const uses_google_to_login = 'uses_google_to_login';
   static const uses_company_email_to_login = 'uses_company_email_to_login';
+  static const no_of_feedbacks = 'no_of_feedbacks';
+  static const no_of_unirson = 'no_of_unirson';
+  static const app_shared = 'app shared';
 
 }

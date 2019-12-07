@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/data/bloc/app_translations_bloc.dart';
+import 'package:foore/data/http_service.dart';
 import 'package:provider/provider.dart';
 
 import '../app_translations.dart';
@@ -68,7 +70,11 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
               value:
                   snapshot.data.localeDelegate.currentLanguage == languageCode,
               onChanged: (bool value) {
+                final httpService = Provider.of<HttpService>(context);
                 appTranslationsBloc.onLocaleChanged(Locale(languageCode));
+                httpService.foAnalytics.addUserProperties(
+                    name: FoAnalyticsUserProperties.language_chosen,
+                    value: language);
                 if (widget.onSelectLanguage != null) {
                   widget.onSelectLanguage();
                 } else {
