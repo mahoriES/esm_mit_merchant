@@ -75,7 +75,7 @@ class _LocationSearchPageState extends State<LocationSearchPage>
                     stream: authBloc.authStateObservable,
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        return null;
+                        return Container();
                       }
                       return Text(
                         sprintf(

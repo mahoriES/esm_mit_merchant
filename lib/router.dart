@@ -30,7 +30,7 @@ class Router {
       .pushNamedAndRemoveUntil(
           IntroPage.routeName, (Route<dynamic> route) => false);
   final onboardingRequiredHandler = (BuildContext context) =>
-      Navigator.of(context).pushReplacementNamed(OnboardingPage.routeName);
+      Navigator.of(context).pushNamedAndRemoveUntil(OnboardingPage.routeName,  (Route<dynamic> route) => false);
 
   final HttpService httpServiceBloc;
   final AuthBloc authBloc;
