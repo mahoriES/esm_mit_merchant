@@ -42,12 +42,13 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
   StreamSubscription<CreatePromotionState> _subscription;
   StreamSubscription<OnboardingGuardState> _subscription2;
   final _formKey = GlobalKey<FormState>();
+  bool isIntroDialogShown = false;
 
   @override
   void afterFirstLayout(BuildContext context) {
     final createPromotionBloc = Provider.of<CreatePromotionBloc>(context);
-    _subscription = createPromotionBloc.CreatePromotionStateObservable.take(1)
-        .listen(_onCreatePromotionStateChange);
+    _subscription = createPromotionBloc.CreatePromotionStateObservable.listen(
+        _onCreatePromotionStateChange);
     createPromotionBloc.getNearbyPromotions();
     final onboardingGuardBloc = Provider.of<OnboardingGuardBloc>(context);
     _subscription2 = onboardingGuardBloc.onboardingStateObservable
@@ -59,8 +60,10 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
   }
 
   _onCreatePromotionStateChange(CreatePromotionState state) {
-    if (state.screenType == CreatePromotionScreens.sendPromotions) {
+    if (state.screenType == CreatePromotionScreens.sendPromotions &&  
+        !isIntroDialogShown) {
       _showIntroAlertDialog();
+      isIntroDialogShown = true;
     }
   }
 
