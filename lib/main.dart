@@ -59,12 +59,9 @@ class ReviewApp extends StatefulWidget {
 }
 
 class _ReviewAppState extends State<ReviewApp> {
-  FirebaseAnalytics analytics;
 
   @override
   void initState() {
-    analytics = FirebaseAnalytics();
-    analytics.setAnalyticsCollectionEnabled(Environment.isProd);
     super.initState();
   }
 

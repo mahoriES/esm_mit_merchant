@@ -38,7 +38,8 @@ class Router {
   Router({@required this.httpServiceBloc, @required this.authBloc});
 
   Route<dynamic> routeGenerator(RouteSettings settings) {
-    switch (settings.name) {
+    this.authBloc.foAnalytics.setCurrentScreen(settings.name);
+    switch (settings.name) {  
       case homeRoute:
         return MaterialPageRoute(
           builder: (context) => AuthGuard(
