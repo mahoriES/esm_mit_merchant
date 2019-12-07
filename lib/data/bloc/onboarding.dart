@@ -86,11 +86,15 @@ class OnboardingBloc {
         this._httpService.foAnalytics.addUserProperties(
             name: FoAnalyticsUserProperties.google_locations_count,
             value: this._onboardingState.locations.length);
+        try {
+          this._httpService.foAnalytics.addUserProperties(
+              name: FoAnalyticsUserProperties.google_locations_info,
+              value:
+                  json.encode(json.decode(httpResponse.body)['gmb_locations']));
+        } catch (err, stacktrace) {
+          print(stacktrace.toString());
+        }
 
-        this._httpService.foAnalytics.addUserProperties(
-            name: FoAnalyticsUserProperties.google_locations_info,
-            value: this._onboardingState.locations.toString());
-        print(this._onboardingState.response);
         print(httpResponse.body);
         this._onboardingState.isLoadingFailed = false;
         this._onboardingState.isLoading = false;
