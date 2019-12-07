@@ -367,8 +367,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                       if (snapshot.data.selectedLocation != null) {
                         if (snapshot.data.selectedLocation.metaData != null) {
                           latLang = LatLng(
-                            snapshot.data.selectedLocation.metaData.latitude,
-                            snapshot.data.selectedLocation.metaData.longitude,
+                            snapshot.data.selectedLocation.metaData.latitude??0,
+                            snapshot.data.selectedLocation.metaData.longitude??0,
                           );
                           _isReady.future.then((controller) {
                             controller.moveCamera(
