@@ -201,7 +201,7 @@ class CheckinUnirsonBloc {
         this._httpService.foAnalytics.trackUserEvent(
             name: FoAnalyticsEvents.bulk_checkin,
             parameters: <String, dynamic>{
-              'No of contacts':
+              'No_of_contacts':
                   this._checkinUnirsonState.multipleContacts.length
             });
         this._checkinUnirsonState.isSubmitting = false;

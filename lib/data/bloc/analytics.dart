@@ -38,7 +38,8 @@ class FoAnalytics {
 
   firebaseAnalyticsInit() {
     this._firebaseAnalytics = FirebaseAnalytics();
-    _firebaseAnalytics.setAnalyticsCollectionEnabled(Environment.isProd);
+    // _firebaseAnalytics.setAnalyticsCollectionEnabled(Environment.isProd);
+    _firebaseAnalytics.setAnalyticsCollectionEnabled(true);
   }
 
   intercomLogin(AuthInfo authData) async {
@@ -81,6 +82,8 @@ class FoAnalytics {
   }
 
   trackUserEvent({@required String name, Map<String, dynamic> parameters}) {
+      print(name);
+    print(parameters.toString());
     if (isUserIdentified) {
       Intercom.logEvent(name, parameters);
       this._firebaseAnalytics.logEvent(name: name, parameters: parameters);
@@ -88,6 +91,7 @@ class FoAnalytics {
   }
 
   setCurrentScreen(String screenName) {
+    print(screenName);
     // try {
     //   this._firebaseAnalytics.setCurrentScreen(screenName: screenName);
     // } catch (err) {}
