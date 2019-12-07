@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/gmb_location.dart';
 import 'package:foore/data/model/google_account.dart';
@@ -82,6 +83,9 @@ class OnboardingBloc {
         print(httpResponse.body);
         this._onboardingState.response =
             UiHelperResponse.fromJson(json.decode(httpResponse.body));
+        this._httpService.foAnalytics.addUserProperties(
+            name: FoAnalyticsUserProperties.google_locations_count,
+            value: this._onboardingState.locations.length);
         print(this._onboardingState.response);
         print(httpResponse.body);
         this._onboardingState.isLoadingFailed = false;
