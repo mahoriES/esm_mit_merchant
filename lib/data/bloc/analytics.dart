@@ -130,14 +130,14 @@ class FoAnalyticsEvents {
 class FoAnalyticsUserProperties {
   static const no_of_locations = 'no_of_locations';
   static const language_chosen = 'language_chosen';
-  static const google_locations_count = 'google_locations_count';
-  static const google_locations_info = 'google_locations_info';
+  static const google_locations_count = 'foore_google_locations_count';
+  static const google_locations_info = 'foore_google_locations_info';
   static const google_location_created_from_app =
-      'google_location_created_from_app';
+      'gol_loc_created';
   static const google_location_verification_started_from_app =
-      'google_location_verification_started_from_app';
+      'gol_loc_veri_started';
   static const google_location_verification_done_from_app =
-      'google_location_verification_done_from_app';
+      'gol_loc_veri_done';
   static const nearby_promo_created = 'nearby_promo_created';
   static const uses_google_to_login = 'uses_google_to_login';
   static const uses_company_email_to_login = 'uses_company_email_to_login';
