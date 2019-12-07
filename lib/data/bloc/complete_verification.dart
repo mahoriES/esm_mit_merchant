@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/router.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
@@ -110,6 +111,10 @@ class CompleteVerificationBloc {
     );
     await refreshBackend();
     if (httpResponse.statusCode == 200) {
+      this.httpService.foAnalytics.addUserProperties(
+          name: FoAnalyticsUserProperties
+              .google_location_verification_done_from_app,
+          value: true);
       //////////navigate away
       Navigator.pushReplacementNamed(context, Router.homeRoute);
     } else {

@@ -91,13 +91,13 @@ class FoAnalytics {
     this._firebaseAnalytics.setCurrentScreen(screenName: screenName);
   }
 
-  addUserProperties({@required String name, @required String value}) {
+  addUserProperties({@required String name, @required dynamic value}) {
     if (isUserIdentified) {
       Map customAttributes = new Map();
       customAttributes[name] = value;
       Intercom.updateUser(customAttributes: customAttributes);
 
-      this._firebaseAnalytics.setUserProperty(name: name, value: value);
+      this._firebaseAnalytics.setUserProperty(name: name, value: value.toString());
     }
   }
 }
@@ -109,7 +109,7 @@ class FoAnalyticsEvents {
   static const bulk_checkin = 'bulk checkin';
   static const app_shared = 'app shared';
   static const nearby_promo_clicked = 'nearby promo clicked';
-  static const nearby_Promo_created = 'nearby Promo created';
+  static const nearby_promo_created = 'nearby promo created';
 }
 
 class FoAnalyticsUserProperties {
@@ -117,5 +117,11 @@ class FoAnalyticsUserProperties {
   static const language_chosen = 'language chosen';
   static const google_locations_exists_or_not = 'google locations exists or not';
   static const google_locations_categories = 'google locations categories';
+  static const google_location_created_from_app = 'google_location_created_from_app';
+  static const google_location_verification_started_from_app = 'google_location_verification_started_from_app';
+  static const google_location_verification_done_from_app = 'google_location_verification_done_from_app';
+  static const nearby_promo_created = 'nearby promo created';
+  static const uses_google_to_login = 'uses_google_to_login';
+  static const uses_company_email_to_login = 'uses_company_email_to_login';
 
 }

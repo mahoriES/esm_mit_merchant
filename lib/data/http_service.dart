@@ -1,3 +1,4 @@
+import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/environments/environment.dart';
 import 'package:http/http.dart' as http;
 import 'package:foore/data/bloc/auth.dart';
@@ -9,7 +10,11 @@ class HttpService {
 
   HttpService(AuthBloc authBloc) {
     this._authBloc = authBloc;
-    this.apiUrl =  Environment.apiUrl;
+    this.apiUrl = Environment.apiUrl;
+  }
+
+  FoAnalytics get foAnalytics {
+    return this._authBloc.foAnalytics;
   }
 
   Future<http.Response> get(url, {Map<String, String> headers}) =>
@@ -80,8 +85,7 @@ class HttpService {
       'Content-type': 'application/json',
       'Accept': 'application/json',
     };
-    final httpResponse =
-        await http.get(apiUrl + url, headers: requestHeaders);
+    final httpResponse = await http.get(apiUrl + url, headers: requestHeaders);
     return httpResponse;
   }
 

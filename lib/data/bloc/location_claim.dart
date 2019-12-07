@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/onboarding_page/location_verify.dart';
@@ -140,6 +141,9 @@ class LocationClaimBloc {
     print(httpResponse.body);
     print(httpResponse.statusCode);
     if (httpResponse.statusCode == 200) {
+      this.httpService.foAnalytics.addUserProperties(
+          name: FoAnalyticsUserProperties.google_location_created_from_app,
+          value: true);
       this._onboardingState.locationItem =
           GmbLocationItem.fromJson(json.decode(httpResponse.body));
       this._onboardingState.googleLocation = null;
@@ -167,11 +171,16 @@ class LocationClaimBloc {
     );
     print(httpResponse.statusCode);
     if (httpResponse.statusCode == 200) {
+      this.httpService.foAnalytics.addUserProperties(
+          name: FoAnalyticsUserProperties
+              .google_location_verification_started_from_app,
+          value: true);
       this._onboardingState.locationItem.locationState.hasPendingVerification =
           true;
+
       this._updateState();
     } else {
-       Crashlytics.instance.log(
+      Crashlytics.instance.log(
           'url: $url , responseCode: ${httpResponse.statusCode} , body: $body , response: ${httpResponse.body ?? ''}');
       throw 'Error';
     }

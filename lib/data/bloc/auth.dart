@@ -55,6 +55,12 @@ class AuthBloc {
     this._storeAuthState();
     if (authType == AuthType.Google) {
       this._storeAuthTypeGoogle(true);
+      this.foAnalytics.addUserProperties(
+          name: FoAnalyticsUserProperties.uses_google_to_login, value: true);
+    } else {
+      this.foAnalytics.addUserProperties(
+          name: FoAnalyticsUserProperties.uses_company_email_to_login,
+          value: true);
     }
     this._pushNotifications.subscribeForCurrentUser(HttpService(this));
     this.foAnalytics.identifyUser(authData);

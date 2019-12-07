@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -28,6 +29,9 @@ class OnboardingGuardBloc {
         print(httpResponse.body);
         this._onboardingState.response =
             UiHelperResponse.fromJson(json.decode(httpResponse.body));
+        this._httpService.foAnalytics.addUserProperties(
+            name: FoAnalyticsUserProperties.no_of_locations,
+            value: this._onboardingState.response.locations.length);
         this._onboardingState.isLoadingFailed = false;
         this._onboardingState.isLoading = false;
       } else {

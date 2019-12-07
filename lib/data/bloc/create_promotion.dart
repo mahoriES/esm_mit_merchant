@@ -7,6 +7,8 @@ import 'package:foore/data/http_service.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'analytics.dart';
+
 class CreatePromotionBloc {
   final CreatePromotionState _createPromotionState = CreatePromotionState();
   final HttpService httpService;
@@ -19,7 +21,8 @@ class CreatePromotionBloc {
   static const button_two_base = 710;
   final buttonTwoCal = button_two_base + Random().nextInt(button_two_base);
   static const button_three_base = 195;
-  final buttonThreeCal = button_three_base + Random().nextInt(button_three_base);
+  final buttonThreeCal =
+      button_three_base + Random().nextInt(button_three_base);
 
   BehaviorSubject<CreatePromotionState> _subjectCreatePromotionState;
 
@@ -86,6 +89,13 @@ class CreatePromotionBloc {
         .foPost('nearby/promo/create/', payloadString)
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+        this.httpService.foAnalytics.trackUserEvent(
+            name: FoAnalyticsEvents.nearby_promo_created,
+            parameters: <String, String>{
+              'promoReach': _createPromotionState.promoReach
+            });
+        this.httpService.foAnalytics.addUserProperties(
+            name: FoAnalyticsUserProperties.nearby_promo_created, value: true);
         this._createPromotionState.promotionCreateResponse =
             PromotionItem.fromJson(json.decode(httpResponse.body));
         this._createPromotionState.isSubmitting = false;

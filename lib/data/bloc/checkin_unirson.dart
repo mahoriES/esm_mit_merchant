@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:foore/contacts_page/contacts_page.dart';
+import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/checkin.dart';
 import 'package:foore/data/model/locations.dart';
@@ -102,6 +103,9 @@ class CheckinUnirsonBloc {
         ._httpService
         .foPost('instore/checkin/add/', payloadString)
         .then((httpResponse) {
+      this._httpService.foAnalytics.trackUserEvent(
+            name: FoAnalyticsEvents.checkin_by_clicking_on_contact,
+          );
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
         this._checkinUnirsonState.isSubmitting = false;
         this._checkinUnirsonState.isSubmitFailed = false;
@@ -144,6 +148,9 @@ class CheckinUnirsonBloc {
         ._httpService
         .foPost('instore/checkin/add/', payloadString)
         .then((httpResponse) {
+      this._httpService.foAnalytics.trackUserEvent(
+            name: FoAnalyticsEvents.checkin_by_manual_entry_of_name_num,
+          );
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
         this._checkinUnirsonState.isSubmitting = false;
         this._checkinUnirsonState.isSubmitFailed = false;
@@ -171,8 +178,12 @@ class CheckinUnirsonBloc {
     this._checkinUnirsonState.isSubmitSuccess = false;
     this._updateState();
     var payload = new BulkCheckInPayload(
-      contactInfos: this._checkinUnirsonState.multipleContacts.map((contact) =>
-          ContactInfo(phoneTo: contact.phoneNumber, fullName: contact.name)).toList(),
+      contactInfos: this
+          ._checkinUnirsonState
+          .multipleContacts
+          .map((contact) =>
+              ContactInfo(phoneTo: contact.phoneNumber, fullName: contact.name))
+          .toList(),
       locationId: this._checkinUnirsonState.selectedLocation.fbLocationId,
       reviewSeq: this._checkinUnirsonState.isGmbReviewSelected ? 1 : 0,
       seqIds: this._checkinUnirsonState.sequences.takeWhile((sequence) {
@@ -187,6 +198,12 @@ class CheckinUnirsonBloc {
         .foPost('instore/checkin/add/bulk/', payloadString)
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+        this._httpService.foAnalytics.trackUserEvent(
+            name: FoAnalyticsEvents.bulk_checkin,
+            parameters: <String, dynamic>{
+              'No of contacts':
+                  this._checkinUnirsonState.multipleContacts.length
+            });
         this._checkinUnirsonState.isSubmitting = false;
         this._checkinUnirsonState.isSubmitFailed = false;
         this._checkinUnirsonState.isSubmitSuccess = true;
