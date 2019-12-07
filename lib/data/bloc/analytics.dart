@@ -116,7 +116,7 @@ class FoAnalyticsUserProperties {
   static const no_of_locations = 'no of locations';
   static const language_chosen = 'language chosen';
   static const google_locations_count = 'google locations count';
-  static const google_locations_categories = 'google locations categories';
+  static const google_locations_info = 'google_locations_info';
   static const google_location_created_from_app = 'google_location_created_from_app';
   static const google_location_verification_started_from_app = 'google_location_verification_started_from_app';
   static const google_location_verification_done_from_app = 'google_location_verification_done_from_app';

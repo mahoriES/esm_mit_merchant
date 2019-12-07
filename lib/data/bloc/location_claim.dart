@@ -144,6 +144,9 @@ class LocationClaimBloc {
       this.httpService.foAnalytics.addUserProperties(
           name: FoAnalyticsUserProperties.google_location_created_from_app,
           value: true);
+      this.httpService.foAnalytics.addUserProperties(
+          name: FoAnalyticsUserProperties.google_locations_info,
+          value: httpResponse.body);
       this._onboardingState.locationItem =
           GmbLocationItem.fromJson(json.decode(httpResponse.body));
       this._onboardingState.googleLocation = null;
