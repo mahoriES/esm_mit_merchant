@@ -118,9 +118,9 @@ class FoAnalytics {
 
 class FoAnalyticsEvents {
   static const checkin_by_clicking_on_contact =
-      'checkin_by_clicking_on_contact';
+      'checkin_by_contact';
   static const checkin_by_manual_entry_of_name_num =
-      'checkin_by_manual_entry_of_name_num';
+      'checkin_by_name_num';
   static const bulk_checkin = 'bulk_checkin';
   static const app_shared = 'app_shared';
   static const nearby_promo_clicked = 'nearby_promo_clicked';
@@ -130,8 +130,8 @@ class FoAnalyticsEvents {
 class FoAnalyticsUserProperties {
   static const no_of_locations = 'no_of_locations';
   static const language_chosen = 'language_chosen';
-  static const google_locations_count = 'foore_google_locations_count';
-  static const google_locations_info = 'foore_google_locations_info';
+  static const google_locations_count = 'gol_locations_count';
+  static const google_locations_info = 'gol_locations_info';
   static const google_location_created_from_app =
       'gol_loc_created';
   static const google_location_verification_started_from_app =
@@ -139,8 +139,8 @@ class FoAnalyticsUserProperties {
   static const google_location_verification_done_from_app =
       'gol_loc_veri_done';
   static const nearby_promo_created = 'nearby_promo_created';
-  static const uses_google_to_login = 'uses_google_to_login';
-  static const uses_company_email_to_login = 'uses_company_email_to_login';
+  static const uses_google_to_login = 'uses_google_login';
+  static const uses_company_email_to_login = 'uses_email_login';
   static const no_of_feedbacks = 'no_of_feedbacks';
   static const no_of_unirson = 'no_of_unirson';
   static const app_shared = 'app_shared';
