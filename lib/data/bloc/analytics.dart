@@ -96,6 +96,7 @@ class FoAnalytics {
   setCurrentScreen(String screenName) {
     try {
       this._firebaseAnalytics.setCurrentScreen(screenName: screenName);
+      Intercom.logEvent('Navigate to : $screenName');
     } catch (err, stacktrace) {
       print(stacktrace.toString());
 
