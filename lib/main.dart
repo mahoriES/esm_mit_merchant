@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:foore/environments/environment.dart';
 import 'package:foore/theme/light.dart';
 import 'package:provider/provider.dart';
 import 'data/bloc/login.dart';
@@ -14,7 +12,6 @@ import 'data/bloc/app_translations_bloc.dart';
 import 'data/bloc/auth.dart';
 import 'data/http_service.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -90,9 +87,6 @@ class _ReviewAppState extends State<ReviewApp> {
             ],
             supportedLocales: AppTranslationsBloc.supportedLocales(),
             theme: FooreLightTheme.themeData,
-            navigatorObservers: [
-              FirebaseAnalyticsObserver(analytics: analytics),
-            ],
           );
         });
   }
