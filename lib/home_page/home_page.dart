@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:foore/create_promotion_page/create_promotion_page.dart';
 import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/data/http_service.dart';
-import 'package:foore/data/http_service.dart' as prefix0;
 import 'package:foore/people_page/people_page.dart';
 import 'package:foore/review_page/review_page.dart';
 import 'package:provider/provider.dart';
