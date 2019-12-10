@@ -16,13 +16,13 @@ class CreatePromotionBloc {
       text:
           'Grand offer - 5000Rs. ki shopping par paye 25% discount - Gupta Saree wale, Uttam Nagar Call kare - 765451234');
 
-  static const button_one_base = 1580;
-  final buttonOneCal = button_one_base + Random().nextInt(button_one_base);
-  static const button_two_base = 710;
-  final buttonTwoCal = button_two_base + Random().nextInt(button_two_base);
-  static const button_three_base = 195;
+  static const button_one_base = 2908;
+  final buttonOneCal = button_one_base + Random().nextInt(255);
+  static const button_two_base = 1305;
+  final buttonTwoCal = button_two_base + Random().nextInt(115);
+  static const button_three_base = 360;
   final buttonThreeCal =
-      button_three_base + Random().nextInt(button_three_base);
+      button_three_base + Random().nextInt(31);
 
   BehaviorSubject<CreatePromotionState> _subjectCreatePromotionState;
 
