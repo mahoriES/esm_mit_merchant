@@ -60,7 +60,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
   }
 
   _onCreatePromotionStateChange(CreatePromotionState state) {
-    if (state.screenType == CreatePromotionScreens.sendPromotions &&  
+    if (state.screenType == CreatePromotionScreens.sendPromotions &&
         !isIntroDialogShown) {
       _showIntroAlertDialog();
       isIntroDialogShown = true;
@@ -220,6 +220,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               return createPromotion(context);
             } else if (snapshot.data.screenType ==
                 CreatePromotionScreens.promotionSent) {
+              return createPromotion(context);
               return listPromotion(context);
             }
             return Container();
@@ -367,8 +368,10 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                       if (snapshot.data.selectedLocation != null) {
                         if (snapshot.data.selectedLocation.metaData != null) {
                           latLang = LatLng(
-                            snapshot.data.selectedLocation.metaData.latitude??0,
-                            snapshot.data.selectedLocation.metaData.longitude??0,
+                            snapshot.data.selectedLocation.metaData.latitude ??
+                                0,
+                            snapshot.data.selectedLocation.metaData.longitude ??
+                                0,
                           );
                           _isReady.future.then((controller) {
                             controller.moveCamera(
@@ -432,7 +435,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                     stream: onboardingGuardBloc.onboardingStateObservable,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        if (snapshot.data.locations.length < 2) {
+                        if (snapshot.data.locations.length < 1) {
                           return SafeArea(
                             child: IconButton(
                               icon: Icon(Icons.arrow_back),
@@ -459,7 +462,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                           return Container();
                         }
 
-                        if (onboardingSnapshot.data.locations.length > 1) {
+                        if (onboardingSnapshot.data.locations.length > 0) {
                           return StreamBuilder<CreatePromotionState>(
                               stream:
                                   promotionBloc.CreatePromotionStateObservable,
@@ -542,7 +545,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
             ),
           ),
           SizedBox(
-            height: 12.0,
+            height: 8.0,
           ),
           Container(
             padding: EdgeInsets.symmetric(
@@ -556,7 +559,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                   AppTranslations.of(context)
                       .text('create_promotion_page_people_reach_message'),
                   [promotionBloc.buttonOneCal.toString()]),
-              style: Theme.of(context).textTheme.body1.copyWith(
+              style: Theme.of(context).textTheme.subhead.copyWith(
                     color: Colors.green[700],
                   ),
               textAlign: TextAlign.center,

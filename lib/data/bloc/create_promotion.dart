@@ -14,7 +14,7 @@ class CreatePromotionBloc {
   final HttpService httpService;
   final messageEditController = TextEditingController(
       text:
-          'Hey [[NAME]], Amazing Pizza Near You (Pizzeria House) - Buy any medium Pizza & get free Choco Lava. Offer valid till 07:00 PM.');
+          'Grand offer - 5000Rs. ki shopping par paye 25% discount - Gupta Saree wale, Uttam Nagar Call kare - 765451234');
 
   static const button_one_base = 1580;
   final buttonOneCal = button_one_base + Random().nextInt(button_one_base);
