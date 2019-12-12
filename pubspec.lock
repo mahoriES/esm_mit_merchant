@@ -308,6 +308,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.6"
+  upi_india:
+    dependency: "direct main"
+    description:
+      path: UPI
+      relative: true
+    source: path
+    version: "1.1.1"
   url_launcher:
     dependency: "direct main"
     description:
