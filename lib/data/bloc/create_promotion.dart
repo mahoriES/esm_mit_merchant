@@ -6,6 +6,7 @@ import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:upi_india/upi_india.dart';
 
 import 'analytics.dart';
 
@@ -21,8 +22,7 @@ class CreatePromotionBloc {
   static const button_two_base = 1305;
   final buttonTwoCal = button_two_base + Random().nextInt(115);
   static const button_three_base = 360;
-  final buttonThreeCal =
-      button_three_base + Random().nextInt(31);
+  final buttonThreeCal = button_three_base + Random().nextInt(31);
 
   BehaviorSubject<CreatePromotionState> _subjectCreatePromotionState;
 
@@ -70,7 +70,44 @@ class CreatePromotionBloc {
     this._updateState();
   }
 
-  createPromotion(Function onDone) {
+  Future<bool> pay(double price) async {
+    UpiIndia upi = new UpiIndia(
+      receiverUpiId: 'tester@test',
+      receiverName: 'Tester',
+      transactionRefId: 'TestingId',
+      transactionNote: 'Not actual. Just an example.',
+      amount: 1.00,
+    );
+    String response = await upi.startTransaction();
+    switch (response) {
+      case UpiIndiaResponseError.APP_NOT_INSTALLED:
+        return false;
+        break;
+      case UpiIndiaResponseError.INVALID_PARAMETERS:
+        return false;
+        break;
+      case UpiIndiaResponseError.USER_CANCELLED:
+        return false;
+        break;
+      case UpiIndiaResponseError.NULL_RESPONSE:
+        return false;
+        break;
+      default:
+        UpiIndiaResponse _upiResponse;
+        _upiResponse = UpiIndiaResponse(response);
+        String txnId = _upiResponse.transactionId;
+        String resCode = _upiResponse.responseCode;
+        String txnRef = _upiResponse.transactionRefId;
+        String status = _upiResponse.status;
+        String approvalRef = _upiResponse.approvalRefNo;
+        if (status == UpiIndiaResponseStatus.SUCCESS) {
+          return true;
+        }
+        return false;
+    }
+  }
+
+  createPromotion(Function onDone) async {
     if (this._createPromotionState.isSubmitting) {
       return;
     }
@@ -78,6 +115,17 @@ class CreatePromotionBloc {
     this._createPromotionState.isSubmitFailed = false;
     this._createPromotionState.isSubmitSuccess = false;
     this._updateState();
+    ////
+    bool isSuccess = await pay(_createPromotionState.price.toDouble());
+    if (!isSuccess) {
+      this._createPromotionState.isSubmitting = false;
+      this._createPromotionState.isSubmitFailed = true;
+      this._createPromotionState.isSubmitSuccess = false;
+      this._updateState();
+      return;
+    }
+
+    /////////////
     var payload = new PromotionCreatePayload(
         promoMessage: messageEditController.text,
         promoReach: _createPromotionState.promoReach,
