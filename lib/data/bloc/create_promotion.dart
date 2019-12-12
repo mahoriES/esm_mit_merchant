@@ -10,6 +10,8 @@ import 'package:upi_india/upi_india.dart';
 
 import 'analytics.dart';
 
+import 'package:uuid/uuid.dart';
+
 class CreatePromotionBloc {
   final CreatePromotionState _createPromotionState = CreatePromotionState();
   final HttpService httpService;
@@ -71,14 +73,16 @@ class CreatePromotionBloc {
   }
 
   Future<bool> pay(double price) async {
+    var uuid = Uuid();
     UpiIndia upi = new UpiIndia(
-      receiverUpiId: 'tester@test',
-      receiverName: 'Tester',
-      transactionRefId: 'TestingId',
-      transactionNote: 'Not actual. Just an example.',
-      amount: 1.00,
+      receiverUpiId: '7829862689@upi',
+      receiverName: 'Ravinder Singh Mahori',
+      transactionRefId: uuid.v1(),
+      transactionNote: 'Charge',
+      amount: price,
     );
     String response = await upi.startTransaction();
+    print(response);
     switch (response) {
       case UpiIndiaResponseError.APP_NOT_INSTALLED:
         return false;

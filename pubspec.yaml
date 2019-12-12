@@ -72,6 +72,8 @@ dependencies:
 
   upi_india:
     path: ./UPI/
+  
+  uuid: 2.0.4
 
 dev_dependencies:
   flutter_test:
