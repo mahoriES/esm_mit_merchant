@@ -129,8 +129,19 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
       barrierDismissible: true, // user must tap button for close dialog!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppTranslations.of(context)
-              .text('create_promotion_page_confirm_title')),
+          title: StreamBuilder<CreatePromotionState>(
+              stream: promotionBloc.CreatePromotionStateObservable,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container();
+                }
+
+                if (snapshot.data.isSubmitting) {
+                  return Container();
+                }
+                return Text(AppTranslations.of(context)
+                    .text('create_promotion_page_confirm_title'));
+              }),
           content: StreamBuilder<CreatePromotionState>(
               stream: promotionBloc.CreatePromotionStateObservable,
               builder: (context, snapshot) {
@@ -169,15 +180,27 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                 );
               }),
           actions: <Widget>[
-            FlatButton(
-              child: Text(AppTranslations.of(context)
-                  .text('create_promotion_page_button_confirm')),
-              onPressed: () {
-                promotionBloc.createPromotion(() {
-                  Navigator.of(context).pop();
-                });
-              },
-            )
+            StreamBuilder<CreatePromotionState>(
+                stream: promotionBloc.CreatePromotionStateObservable,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Container();
+                  }
+
+                  if (snapshot.data.isSubmitting) {
+                    return Container();
+                  }
+
+                  return FlatButton(
+                    child: Text(AppTranslations.of(context)
+                        .text('create_promotion_page_button_confirm')),
+                    onPressed: () {
+                      promotionBloc.createPromotion(() {
+                        Navigator.of(context).pop();
+                      });
+                    },
+                  );
+                })
           ],
         );
       },
