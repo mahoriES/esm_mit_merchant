@@ -247,8 +247,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               return createPromotion(context);
             } else if (snapshot.data.screenType ==
                 CreatePromotionScreens.promotionSent) {
-              // return createPromotion(context);
-              return listPromotion(context);
+               return createPromotion(context);
+              // return listPromotion(context);
             }
             return Container();
           }),

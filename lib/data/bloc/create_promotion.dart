@@ -10,8 +10,6 @@ import 'package:upi_india/upi_india.dart';
 
 import 'analytics.dart';
 
-import 'package:uuid/uuid.dart';
-
 class CreatePromotionBloc {
   final CreatePromotionState _createPromotionState = CreatePromotionState();
   final HttpService httpService;
@@ -73,11 +71,10 @@ class CreatePromotionBloc {
   }
 
   Future<bool> pay(double price) async {
-    var uuid = Uuid();
     UpiIndia upi = new UpiIndia(
       receiverUpiId: '7829862689@upi',
-      receiverName: 'Ravinder Singh Mahori',
-      transactionRefId: uuid.v1(),
+      receiverName: 'Ravinder Singh',
+      transactionRefId: DateTime.now().millisecondsSinceEpoch.toString(),
       transactionNote: 'Charge',
       amount: price,
     );
