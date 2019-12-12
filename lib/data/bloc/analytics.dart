@@ -128,6 +128,8 @@ class FoAnalyticsEvents {
   static const app_shared = 'app_shared';
   static const nearby_promo_clicked = 'nearby_promo_clicked';
   static const nearby_promo_created = 'nearby_promo_created';
+  static const payment_started = 'payment_started';
+  static const payment_response = 'payment_response';
 }
 
 class FoAnalyticsUserProperties {

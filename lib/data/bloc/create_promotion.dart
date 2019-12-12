@@ -81,8 +81,14 @@ class CreatePromotionBloc {
       transactionNote: 'Charge',
       amount: price,
     );
+    this
+        .httpService
+        .foAnalytics
+        .trackUserEvent(name: FoAnalyticsEvents.payment_started);
     String response = await upi.startTransaction();
-    print(response);
+    this.httpService.foAnalytics.trackUserEvent(
+        name: FoAnalyticsEvents.payment_response,
+        parameters: <String, String>{'response': response});
     switch (response) {
       case UpiIndiaResponseError.APP_NOT_INSTALLED:
         return false;
