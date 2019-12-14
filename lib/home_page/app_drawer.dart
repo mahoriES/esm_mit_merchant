@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:foore/environments/environment.dart';
 import 'package:foore/language_selection_page/language_selection_page.dart';
+import 'package:foore/setting_page/settting_page.dart';
 import 'package:foore/share_page/share_page.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/auth.dart';
@@ -94,6 +95,13 @@ class AppDrawer extends StatelessWidget {
                 AppTranslations.of(context).text("share_page_button_share")),
             onTap: () {
               Navigator.of(context).popAndPushNamed(SharePage.routeName);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Settings'),
+            onTap: () {
+              Navigator.of(context).popAndPushNamed(SettingPage.routeName);
             },
           ),
           ListTile(

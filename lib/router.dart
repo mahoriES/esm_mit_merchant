@@ -4,6 +4,8 @@ import 'package:foore/create_promotion_page/create_promotion_page.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
+import 'package:foore/setting_page/sender_code.dart';
+import 'package:foore/setting_page/settting_page.dart';
 import 'package:foore/share_page/share_page.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +32,8 @@ class Router {
       .pushNamedAndRemoveUntil(
           IntroPage.routeName, (Route<dynamic> route) => false);
   final onboardingRequiredHandler = (BuildContext context) =>
-      Navigator.of(context).pushNamedAndRemoveUntil(OnboardingPage.routeName,  (Route<dynamic> route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          OnboardingPage.routeName, (Route<dynamic> route) => false);
 
   final HttpService httpServiceBloc;
   final AuthBloc authBloc;
@@ -39,7 +42,7 @@ class Router {
 
   Route<dynamic> routeGenerator(RouteSettings settings) {
     this.authBloc.foAnalytics.setCurrentScreen(settings.name);
-    switch (settings.name) {  
+    switch (settings.name) {
       case homeRoute:
         return MaterialPageRoute(
           builder: (context) => AuthGuard(
@@ -121,6 +124,12 @@ class Router {
         break;
       case SharePage.routeName:
         return SharePage.generateRoute(settings);
+        break;
+      case SettingPage.routeName:
+        return SettingPage.generateRoute(settings);
+        break;
+      case SenderCodePage.routeName:
+        return SenderCodePage.generateRoute(settings);
         break;
       case CreatePromotionPage.routeName:
         return CreatePromotionPage.generateRoute(
