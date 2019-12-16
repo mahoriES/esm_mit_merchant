@@ -16,11 +16,13 @@ class CheckInPage extends StatefulWidget {
   CheckInPageState createState() => CheckInPageState();
 
   static Future<bool> open(BuildContext context) async {
-    return await Navigator.of(context).push(new MaterialPageRoute<bool>(
-        builder: (BuildContext context) {
-          return new CheckInPage();
-        },
-        fullscreenDialog: true));
+    return await Navigator.of(context).push(
+      new MaterialPageRoute<bool>(
+          builder: (BuildContext context) {
+            return new CheckInPage();
+          },
+          fullscreenDialog: true),
+    );
   }
 }
 
@@ -132,7 +134,7 @@ class CheckInPageState extends State<CheckInPage>
       if (_formKey.currentState.validate()) {
         this._checkinUnirsonBloc.checkinWithMultipleContacts(() async {
           await Future.delayed(Duration(milliseconds: 300));
-           Navigator.of(context).pop(true);
+          Navigator.of(context).pop(true);
         }); // Process data.
 
       }
