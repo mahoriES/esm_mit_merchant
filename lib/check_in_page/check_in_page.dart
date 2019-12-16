@@ -3,6 +3,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/contacts_page/contacts_page.dart';
+import 'package:foore/setting_page/sender_code.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/checkin_unirson.dart';
@@ -189,7 +190,9 @@ class CheckInPageState extends State<CheckInPage>
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 4.0),
+                          horizontal: 16.0,
+                          vertical: 4.0,
+                        ),
                         child: DropdownButton<LocationItem>(
                           value: snapshot.data.selectedLocation,
                           elevation: 4,
@@ -229,7 +232,49 @@ class CheckInPageState extends State<CheckInPage>
                               this._checkinUnirsonBloc.setIsGmbReviewSelected,
                         ),
                       ),
-                      sequenceItemsWidget(snapshot.data),
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 4.0,
+                          horizontal: 16.0,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.green.withOpacity(0.1),
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              'Send SMS from your Store Name',
+                              style: TextStyle(
+                                color: Colors.green,
+                                // decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context)
+                                    .pushNamed(SenderCodePage.routeName);
+                              },
+                              child: Chip(
+                                label: Text(
+                                  'Customize',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                backgroundColor: Colors.green,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      // sequenceItemsWidget(snapshot.data),
                       SizedBox(
                         height: 60.0,
                       ),
