@@ -23,7 +23,7 @@ class OnboardingGuardBloc {
     this._onboardingState.isLoadingFailed = false;
     this._updateState();
     _httpService
-        .foGet('ui/helper/account/?onboarding&locations')
+        .foGet('ui/helper/account/?onboarding&locations&company_info')
         .then((httpResponse) {
       if (httpResponse.statusCode == 200) {
         print(httpResponse.body);
@@ -80,6 +80,7 @@ class OnboardingGuardState {
   bool isLoadingFailed;
   UiHelperResponse response;
   get onboarding => response?.onboarding;
+  String get smsCode => response.companyInfo.sms.smsCode;
   get isOnboardingRequired =>
       isLoading == false &&
       isLoadingFailed == false &&
@@ -104,8 +105,9 @@ class OnboardingGuardState {
 class UiHelperResponse {
   int onboarding;
   List<FoLocations> locations;
+  CompanyInfo companyInfo;
 
-  UiHelperResponse({this.onboarding});
+  UiHelperResponse({this.onboarding, this.companyInfo});
 
   UiHelperResponse.fromJson(Map<String, dynamic> json) {
     locations = new List<FoLocations>();
@@ -114,6 +116,9 @@ class UiHelperResponse {
         locations.add(new FoLocations.fromJson(v));
       });
     }
+    companyInfo = json['company_info'] != null
+        ? new CompanyInfo.fromJson(json['company_info'])
+        : null;
     onboarding = json['onboarding'];
   }
 
@@ -122,10 +127,85 @@ class UiHelperResponse {
     if (this.locations != null) {
       data['locations'] = this.locations.map((v) => v.toJson()).toList();
     }
+    if (this.companyInfo != null) {
+      data['company_info'] = this.companyInfo.toJson();
+    }
     data['onboarding'] = this.onboarding;
     return data;
   }
 }
+
+class CompanyInfo {
+  String name;
+  String companyUuid;
+  Payment payment;
+  Sms sms;
+
+  CompanyInfo({this.name, this.companyUuid, this.payment, this.sms});
+
+  CompanyInfo.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    companyUuid = json['company_uuid'];
+    payment =
+        json['payment'] != null ? new Payment.fromJson(json['payment']) : null;
+    sms = json['sms'] != null ? new Sms.fromJson(json['sms']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['company_uuid'] = this.companyUuid;
+    if (this.payment != null) {
+      data['payment'] = this.payment.toJson();
+    }
+    if (this.sms != null) {
+      data['sms'] = this.sms.toJson();
+    }
+    return data;
+  }
+}
+
+class Payment {
+  bool subscriptionIsWorking;
+
+  Payment({this.subscriptionIsWorking});
+
+  Payment.fromJson(Map<String, dynamic> json) {
+    subscriptionIsWorking = json['subscription_is_working'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['subscription_is_working'] = this.subscriptionIsWorking;
+    return data;
+  }
+}
+
+class Sms {
+  String smsCode;
+  int smsCodeStatus;
+  int smsCredits;
+  int maxSmsCredits;
+
+  Sms({this.smsCode, this.smsCodeStatus, this.smsCredits, this.maxSmsCredits});
+
+  Sms.fromJson(Map<String, dynamic> json) {
+    smsCode = json['sms_code'];
+    smsCodeStatus = json['sms_code_status'];
+    smsCredits = json['sms_credits'];
+    maxSmsCredits = json['max_sms_credits'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['sms_code'] = this.smsCode;
+    data['sms_code_status'] = this.smsCodeStatus;
+    data['sms_credits'] = this.smsCredits;
+    data['max_sms_credits'] = this.maxSmsCredits;
+    return data;
+  }
+}
+
 
 class FoLocations {
   String name;
