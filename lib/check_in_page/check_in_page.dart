@@ -19,10 +19,11 @@ class CheckInPage extends StatefulWidget {
   static Future<bool> open(BuildContext context) async {
     return await Navigator.of(context).push(
       new MaterialPageRoute<bool>(
-          builder: (BuildContext context) {
-            return new CheckInPage();
-          },
-          fullscreenDialog: true),
+        builder: (BuildContext context) {
+          return CheckInPage();
+        },
+        fullscreenDialog: true,
+      ),
     );
   }
 }
@@ -247,7 +248,8 @@ class CheckInPageState extends State<CheckInPage>
                         child: Row(
                           children: <Widget>[
                             Text(
-                              'Send SMS from your Store Name',
+                              AppTranslations.of(context)
+                                  .text('check_in_page_sender_code_message'),
                               style: TextStyle(
                                 color: Colors.green,
                                 // decoration: TextDecoration.underline,
@@ -263,7 +265,8 @@ class CheckInPageState extends State<CheckInPage>
                               },
                               child: Chip(
                                 label: Text(
-                                  'Customize',
+                                  AppTranslations.of(context)
+                                      .text('check_in_page_sender_code_button'),
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),

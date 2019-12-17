@@ -35,15 +35,8 @@ class SenderCodePageState extends State<SenderCodePage>
   @override
   void afterFirstLayout(BuildContext context) {
     var onBoardingGuard = Provider.of<OnboardingGuardBloc>(context);
-    var authBloc = Provider.of<AuthBloc>(context);
-    Observable.combineLatest2(
-        onBoardingGuard.onboardingStateObservable, authBloc.authStateObservable,
-        (OnboardingGuardState onboardingState, AuthState authState) {
-      return {'onboardingState': onboardingState, 'authState': authState};
-    }).listen((value) {
+    onBoardingGuard.onboardingStateObservable.listen((onboardingState) {
       setState(() {
-        OnboardingGuardState onboardingState = value['onboardingState'];
-        AuthState authState = value['authState'];
         suggestions = [];
         print('fffffffffffffffffffffffffffffffffff');
         if (onboardingState.smsCode != 'oFoore') {
@@ -126,7 +119,7 @@ class SenderCodePageState extends State<SenderCodePage>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Sender Code',
+          AppTranslations.of(context).text('sender_code_page_title'),
           style: TextStyle(
             color: Colors.white,
           ),
@@ -171,7 +164,7 @@ class SenderCodePageState extends State<SenderCodePage>
                 color: Colors.green.withOpacity(0.1),
               ),
               child: Text(
-                'Choose a sender code that matches your brand name. It increases click rate.',
+                AppTranslations.of(context).text('sender_code_page_help_text'),
                 style: Theme.of(context).textTheme.body1.copyWith(
                       color: Colors.green,
                     ),
@@ -180,12 +173,12 @@ class SenderCodePageState extends State<SenderCodePage>
             SizedBox(
               height: 16.0,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-              ),
-              child: Text('Change Sender Code'),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(
+            //     horizontal: 16.0,
+            //   ),
+            //   child: Text('Change Sender Code'),
+            // ),
             Visibility(
               visible: !isManual,
               child: Container(
@@ -210,7 +203,7 @@ class SenderCodePageState extends State<SenderCodePage>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            'or',
+                            AppTranslations.of(context).text('sender_code_page_or'),
                             style: Theme.of(context).textTheme.caption,
                           ),
                           SizedBox(
@@ -224,7 +217,7 @@ class SenderCodePageState extends State<SenderCodePage>
                             },
                             child: Chip(
                               label: Text(
-                                'Enter manually',
+                                AppTranslations.of(context).text('sender_code_page_button_manual'),
                                 style: Theme.of(context).textTheme.caption,
                               ),
                             ),
@@ -374,7 +367,7 @@ class SenderCodePageState extends State<SenderCodePage>
         ),
       ),
       floatingActionButton: FoSubmitButton(
-        text: AppTranslations.of(context).text("checkin_page_button_submit"),
+        text: AppTranslations.of(context).text("sender_code_page_button_submit"),
         onPressed: isManual ? manualCodeChange : suggestedCodeChange,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

@@ -86,5 +86,14 @@
   "promotion_list_page_sub-title": "This feature is currently limited to selected customers. Your promotions will be sent after approval from Foore team. Contact us for more information.",
   "promotion_list_page_contact-us": "Contact us",
   "promotion_list_page_approval_pending": "Approval pending",
-  "create_promotion_page_button_confirm": "Confirm"
+  "create_promotion_page_button_confirm": "Confirm",
+
+  "check_in_page_sender_code_message": "Send SMS from your store name",
+  "check_in_page_sender_code_button": "Customize",
+  "sender_code_page_title": "Sender Code",
+  "sender_code_page_help_text": "Choose a sender code that matches your store name. It increases click rate",
+  "sender_code_page_or": "or",
+  "sender_code_page_button_manual": "Enter manually",
+  "sender_code_page_button_submit": "Submit",
+  "sender_code_page_dialog_message": "your request to change sender code is submitted successfully. I may take up to 24 hours to take effect."
 }
