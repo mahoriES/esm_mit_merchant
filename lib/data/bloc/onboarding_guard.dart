@@ -90,7 +90,24 @@ class OnboardingGuardState {
   bool isLoadingFailed;
   UiHelperResponse response;
   get onboarding => response?.onboarding;
-  String get smsCode => response.companyInfo.sms.smsCode;
+
+  String get smsCode {
+    var code = 'oFoore';
+    if (response == null) {
+      return code;
+    }
+    if (response.companyInfo == null) {
+      return code;
+    }
+    if (response.companyInfo.sms == null) {
+      return code;
+    }
+    if (response.companyInfo.sms.smsCode == null) {
+      return code;
+    }
+    return response.companyInfo.sms.smsCode;
+  }
+
   get isOnboardingRequired =>
       isLoading == false &&
       isLoadingFailed == false &&
@@ -215,7 +232,6 @@ class Sms {
     return data;
   }
 }
-
 
 class FoLocations {
   String name;
