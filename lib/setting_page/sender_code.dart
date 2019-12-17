@@ -73,14 +73,8 @@ class SenderCodePageState extends State<SenderCodePage>
     onBoardingGuard.onboardingStateObservable.listen((onboardingState) {
       setState(() {
         suggestions = [];
-        if (onboardingState.smsCode != 'oFoore') {
-          // this.isManual = true;
-          this.suggestions.add(onboardingState.smsCode);
-          this.selectedSuggestion = onboardingState.smsCode;
-        } else {
-          this.suggestions.add('oFoore');
-          this.selectedSuggestion = 'oFoore';
-        }
+        this.suggestions.add(onboardingState.smsCode);
+        this.selectedSuggestion = onboardingState.smsCode;
         if (onboardingState.locations.length > 0) {
           final storeName = onboardingState.locations[0].name ?? '';
           // final storeName = 'Foore';
