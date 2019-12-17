@@ -76,6 +76,7 @@ class SenderCodePageState extends State<SenderCodePage>
         if (onboardingState.smsCode != 'oFoore') {
           // this.isManual = true;
           this.suggestions.add(onboardingState.smsCode);
+          this.selectedSuggestion = onboardingState.smsCode;
         } else {
           this.suggestions.add('oFoore');
           this.selectedSuggestion = 'oFoore';
