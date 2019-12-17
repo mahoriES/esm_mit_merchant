@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingGuardBloc {
   final OnboardingGuardState _onboardingState = new OnboardingGuardState();
@@ -72,6 +73,15 @@ class OnboardingGuardBloc {
 
   dispose() {
     this._subjectOnboardingState.close();
+  }
+
+  Future<bool> shouldShowSmsCodeCustomize() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var showSmsCode = sharedPreferences.getBool('showSmsCode') ?? false;
+    if (!showSmsCode) {
+      await sharedPreferences.setBool('showSmsCode', true);
+    }
+    return showSmsCode;
   }
 }
 

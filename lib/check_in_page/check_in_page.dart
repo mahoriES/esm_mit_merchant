@@ -3,6 +3,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/contacts_page/contacts_page.dart';
+import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/setting_page/sender_code.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +35,7 @@ class CheckInPageState extends State<CheckInPage>
   HttpService _httpService;
   CheckinUnirsonBloc _checkinUnirsonBloc;
   StreamSubscription<CheckinUnirsonState> _subscription;
+  bool shouldShowSmsCodeCustomize = false;
 
   openContactPicker() async {
     List<FoContact> results = await ContactsPage.open(context);
@@ -81,6 +83,13 @@ class CheckInPageState extends State<CheckInPage>
         .checkinStateObservable
         .listen(this._onCompleteVerificationStateChange);
     this._checkinUnirsonBloc.getData();
+
+    final onboardingGuardBloc = Provider.of<OnboardingGuardBloc>(context);
+    onboardingGuardBloc.shouldShowSmsCodeCustomize().then((shouldShow) {
+      setState(() {
+        this.shouldShowSmsCodeCustomize = shouldShow;
+      });
+    });
   }
 
   _onCompleteVerificationStateChange(
@@ -233,51 +242,8 @@ class CheckInPageState extends State<CheckInPage>
                               this._checkinUnirsonBloc.setIsGmbReviewSelected,
                         ),
                       ),
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          vertical: 4.0,
-                          horizontal: 16.0,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.green.withOpacity(0.1),
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              AppTranslations.of(context)
-                                  .text('check_in_page_sender_code_message'),
-                              style: TextStyle(
-                                color: Colors.green,
-                                // decoration: TextDecoration.underline,
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context)
-                                    .pushNamed(SenderCodePage.routeName);
-                              },
-                              child: Chip(
-                                label: Text(
-                                  AppTranslations.of(context)
-                                      .text('check_in_page_sender_code_button'),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                backgroundColor: Colors.green,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      // sequenceItemsWidget(snapshot.data),
+                      smsCodeWidget(context),
+                      sequenceItemsWidget(snapshot.data),
                       SizedBox(
                         height: 60.0,
                       ),
@@ -329,6 +295,55 @@ class CheckInPageState extends State<CheckInPage>
         );
       }).toList()),
     );
+  }
+
+  Widget smsCodeWidget(BuildContext context) {
+    if (shouldShowSmsCodeCustomize) {
+      return Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: 16.0,
+        ),
+        padding: EdgeInsets.symmetric(
+          vertical: 4.0,
+          horizontal: 16.0,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.green.withOpacity(0.1),
+        ),
+        child: Row(
+          children: <Widget>[
+            Text(
+              AppTranslations.of(context)
+                  .text('check_in_page_sender_code_message'),
+              style: TextStyle(
+                color: Colors.green,
+                // decoration: TextDecoration.underline,
+              ),
+            ),
+            Expanded(
+              child: Container(),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(SenderCodePage.routeName);
+              },
+              child: Chip(
+                label: Text(
+                  AppTranslations.of(context)
+                      .text('check_in_page_sender_code_button'),
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                backgroundColor: Colors.green,
+              ),
+            )
+          ],
+        ),
+      );
+    } else
+      return Container();
   }
 
   Container sequenceItemsWidget(CheckinUnirsonState state) {
