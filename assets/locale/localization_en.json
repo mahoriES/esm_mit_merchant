@@ -95,5 +95,6 @@
   "sender_code_page_or": "or",
   "sender_code_page_button_manual": "Enter manually",
   "sender_code_page_button_submit": "Submit",
-  "sender_code_page_dialog_message": "your request to change sender code is submitted successfully. I may take up to 24 hours to take effect."
+  "sender_code_page_dialog_message": "your request to change sender code is submitted successfully. I may take up to 24 hours to take effect.",
+  "sender_code_page_dialog_button_text": "ok"
 }

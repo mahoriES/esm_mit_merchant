@@ -43,6 +43,30 @@ class SenderCodePageState extends State<SenderCodePage>
   String manualSuggestionFive;
   String manualSuggestionSix;
 
+  _showIntroAlertDialog() async {
+    await showDialog<bool>(
+      context: context,
+      barrierDismissible: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Container(),
+          content: Text(AppTranslations.of(context)
+              .text('sender_code_page_dialog_message')),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(AppTranslations.of(context)
+                  .text('sender_code_page_dialog_button_text')),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            )
+          ],
+        );
+      },
+    );
+    Navigator.of(context).pop();
+  }
+
   @override
   void afterFirstLayout(BuildContext context) {
     var onBoardingGuard = Provider.of<OnboardingGuardBloc>(context);
@@ -130,14 +154,17 @@ class SenderCodePageState extends State<SenderCodePage>
                 manualSuggestionSix, (String proposedCode) {
           print('.............');
           print(proposedCode);
+          _showIntroAlertDialog();
         });
       }
     }
 
     suggestedCodeChange() {
       if (selectedSuggestion != null) {
-        senderCodeBloc.proposeSenderCode(
-            selectedSuggestion, (String proposedCode) {});
+        senderCodeBloc.proposeSenderCode(selectedSuggestion,
+            (String proposedCode) {
+          _showIntroAlertDialog();
+        });
       }
     }
 
