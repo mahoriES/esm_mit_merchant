@@ -1,11 +1,11 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
-import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/onboarding_guard.dart';
+import 'package:foore/data/bloc/sender_code.dart';
+import 'package:foore/data/http_service.dart';
 import 'package:provider/provider.dart';
 import 'package:rake/rake.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../app_translations.dart';
 
@@ -14,8 +14,13 @@ class SenderCodePage extends StatefulWidget {
   @override
   SenderCodePageState createState() => SenderCodePageState();
 
-  static Route generateRoute(RouteSettings settings) {
-    return MaterialPageRoute(builder: (context) => SenderCodePage());
+  static Route generateRoute(RouteSettings settings, HttpService httpService) {
+    return MaterialPageRoute(
+        builder: (context) => Provider(
+              builder: (context) => SenderCodeBloc(httpService: httpService),
+              dispose: (context, value) => value.dispose(),
+              child: SenderCodePage(),
+            ));
   }
 }
 
@@ -31,6 +36,12 @@ class SenderCodePageState extends State<SenderCodePage>
   final _formKey = GlobalKey<FormState>();
   List<String> suggestions = [];
   String selectedSuggestion;
+  String manualSuggestionOne;
+  String manualSuggestionTwo;
+  String manualSuggestionThree;
+  String manualSuggestionFour;
+  String manualSuggestionFive;
+  String manualSuggestionSix;
 
   @override
   void afterFirstLayout(BuildContext context) {
@@ -38,7 +49,6 @@ class SenderCodePageState extends State<SenderCodePage>
     onBoardingGuard.onboardingStateObservable.listen((onboardingState) {
       setState(() {
         suggestions = [];
-        print('fffffffffffffffffffffffffffffffffff');
         if (onboardingState.smsCode != 'oFoore') {
           // this.isManual = true;
           this.suggestions.add(onboardingState.smsCode);
@@ -108,12 +118,27 @@ class SenderCodePageState extends State<SenderCodePage>
 
   @override
   Widget build(BuildContext context) {
+    var senderCodeBloc = Provider.of<SenderCodeBloc>(context);
     manualCodeChange() {
-      if (_formKey.currentState.validate()) {}
+      if (_formKey.currentState.validate()) {
+        senderCodeBloc.proposeSenderCode(
+            manualSuggestionOne +
+                manualSuggestionTwo +
+                manualSuggestionThree +
+                manualSuggestionFour +
+                manualSuggestionFive +
+                manualSuggestionSix, (String proposedCode) {
+          print('.............');
+          print(proposedCode);
+        });
+      }
     }
 
     suggestedCodeChange() {
-      if (_formKey.currentState.validate()) {}
+      if (selectedSuggestion != null) {
+        senderCodeBloc.proposeSenderCode(
+            selectedSuggestion, (String proposedCode) {});
+      }
     }
 
     return Scaffold(
@@ -173,12 +198,6 @@ class SenderCodePageState extends State<SenderCodePage>
             SizedBox(
               height: 16.0,
             ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(
-            //     horizontal: 16.0,
-            //   ),
-            //   child: Text('Change Sender Code'),
-            // ),
             Visibility(
               visible: !isManual,
               child: Container(
@@ -203,7 +222,8 @@ class SenderCodePageState extends State<SenderCodePage>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            AppTranslations.of(context).text('sender_code_page_or'),
+                            AppTranslations.of(context)
+                                .text('sender_code_page_or'),
                             style: Theme.of(context).textTheme.caption,
                           ),
                           SizedBox(
@@ -217,7 +237,8 @@ class SenderCodePageState extends State<SenderCodePage>
                             },
                             child: Chip(
                               label: Text(
-                                AppTranslations.of(context).text('sender_code_page_button_manual'),
+                                AppTranslations.of(context)
+                                    .text('sender_code_page_button_manual'),
                                 style: Theme.of(context).textTheme.caption,
                               ),
                             ),
@@ -244,6 +265,9 @@ class SenderCodePageState extends State<SenderCodePage>
                         ),
                         focusNode: _codeFocusNodeOne,
                         onChanged: (String text) {
+                          setState(() {
+                            manualSuggestionOne = text;
+                          });
                           if (text.length > 0) {
                             FocusScope.of(context)
                                 .requestFocus(_codeFocusNodeTwo);
@@ -266,6 +290,9 @@ class SenderCodePageState extends State<SenderCodePage>
                         ),
                         focusNode: _codeFocusNodeTwo,
                         onChanged: (String text) {
+                          setState(() {
+                            manualSuggestionTwo = text;
+                          });
                           if (text.length > 0) {
                             FocusScope.of(context)
                                 .requestFocus(codeFocusNodeThree);
@@ -288,6 +315,9 @@ class SenderCodePageState extends State<SenderCodePage>
                         ),
                         focusNode: codeFocusNodeThree,
                         onChanged: (String text) {
+                          setState(() {
+                            manualSuggestionThree = text;
+                          });
                           if (text.length > 0) {
                             FocusScope.of(context)
                                 .requestFocus(codeFocusNodeFour);
@@ -310,6 +340,9 @@ class SenderCodePageState extends State<SenderCodePage>
                         ),
                         focusNode: codeFocusNodeFour,
                         onChanged: (String text) {
+                          setState(() {
+                            manualSuggestionFour = text;
+                          });
                           if (text.length > 0) {
                             FocusScope.of(context)
                                 .requestFocus(codeFocusNodeFive);
@@ -332,6 +365,9 @@ class SenderCodePageState extends State<SenderCodePage>
                         ),
                         focusNode: codeFocusNodeFive,
                         onChanged: (String text) {
+                          setState(() {
+                            manualSuggestionFive = text;
+                          });
                           if (text.length > 0) {
                             FocusScope.of(context)
                                 .requestFocus(codeFocusNodeSix);
@@ -354,6 +390,11 @@ class SenderCodePageState extends State<SenderCodePage>
                         ),
                         focusNode: codeFocusNodeSix,
                         maxLength: 1,
+                        onChanged: (text) {
+                          setState(() {
+                            manualSuggestionSix = text;
+                          });
+                        },
                         validator: (String value) {
                           return value.length < 1 ? '' : null;
                         },
@@ -366,10 +407,20 @@ class SenderCodePageState extends State<SenderCodePage>
           ],
         ),
       ),
-      floatingActionButton: FoSubmitButton(
-        text: AppTranslations.of(context).text("sender_code_page_button_submit"),
-        onPressed: isManual ? manualCodeChange : suggestedCodeChange,
-      ),
+      floatingActionButton: StreamBuilder<SenderCodeState>(
+          stream: senderCodeBloc.SenderCodeStateObservable,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Container();
+            }
+            return FoSubmitButton(
+              text: AppTranslations.of(context)
+                  .text("sender_code_page_button_submit"),
+              onPressed: isManual ? manualCodeChange : suggestedCodeChange,
+              isLoading: snapshot.data.isSubmitting,
+              isSuccess: snapshot.data.isSubmitSuccess,
+            );
+          }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

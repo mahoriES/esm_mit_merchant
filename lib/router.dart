@@ -129,7 +129,7 @@ class Router {
         return SettingPage.generateRoute(settings);
         break;
       case SenderCodePage.routeName:
-        return SenderCodePage.generateRoute(settings);
+        return SenderCodePage.generateRoute(settings, httpServiceBloc);
         break;
       case CreatePromotionPage.routeName:
         return CreatePromotionPage.generateRoute(
