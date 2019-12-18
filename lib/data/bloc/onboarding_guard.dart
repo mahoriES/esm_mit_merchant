@@ -76,6 +76,9 @@ class OnboardingGuardBloc {
   }
 
   Future<bool> shouldShowSmsCodeCustomize() async {
+    if (this._onboardingState.smsCode != 'oFoore') {
+      return false;
+    }
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var showSmsCode = sharedPreferences.getBool('showSmsCode') ?? false;
     if (!showSmsCode) {

@@ -172,7 +172,7 @@ class SenderCodePageState extends State<SenderCodePage>
     }
 
     validateInput(String input) {
-      final RegExp _onlyConsonants = RegExp(r'[bcdfghjklmnpqrstvwxys]');
+      final RegExp _onlyConsonants = RegExp(r'[a-z]');
       return _onlyConsonants.hasMatch(input) ? null: '';
     }
 
