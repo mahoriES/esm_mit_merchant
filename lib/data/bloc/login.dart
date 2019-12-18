@@ -43,6 +43,7 @@ class LoginBloc {
         AuthInfo loginInfo = await getAuthInfoWithGoogleAuthStateId(
             authStateResponse.authStateId);
         this._authBloc.login(loginInfo, authType: AuthType.Google);
+        refreshBackend();
         Navigator.of(context).pushNamedAndRemoveUntil(Router.homeRoute,(Route<dynamic> route) => false);
         this._loginState.isLoading = false;
         this._loginState.isSubmitFailed = false;
@@ -130,6 +131,7 @@ class LoginBloc {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
         print(httpResponse.body);
         this._authBloc.login(AuthInfo.fromJson(json.decode(httpResponse.body)));
+        refreshBackend();
         Navigator.of(context).pushNamedAndRemoveUntil(Router.homeRoute,(Route<dynamic> route) => false);
       } else {
         this._loginState.isSubmitOtp = false;
@@ -143,6 +145,14 @@ class LoginBloc {
 
   _updateState() {
     this._subjectLoginState.sink.add(this._loginState);
+  }
+
+  refreshBackend() async {
+    try {
+      final response =
+          await _httpService.foPost('google/account/user/refresh/', null);
+      print(response.statusCode);
+    } catch (err) {}
   }
 
   dispose() {
