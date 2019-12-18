@@ -87,5 +87,15 @@
   "promotion_list_page_sub-title": "यह सुविधा चयनित ग्राहकों के लिए उपलब्ध है। आपके प्रचार को फूरे टीम से अनुमोदन के बाद भेजा जाएगा। ज़्यादा जानकारी के लिए हमें संपर्क करें।",
   "promotion_list_page_contact-us": "हमसे संपर्क करें",
   "promotion_list_page_approval_pending": "स्वीकृति लंबित",
-  "create_promotion_page_button_confirm": "पुष्टि करें"
+  "create_promotion_page_button_confirm": "पुष्टि करें",
+
+  "check_in_page_sender_code_message": "अपने स्टोर के नाम से एसएमएस भेजें",
+  "check_in_page_sender_code_button": "चयन",
+  "sender_code_page_title": "एसएमएस प्रेषक कोड",
+  "sender_code_page_help_text": "एक प्रेषक कोड चुनें जो आपके स्टोर के नाम से मेल खाता हो। आपको अधिक रिव्यू मिलेंगे और ब्रांड ट्रस्ट बढ़ेगा।",
+  "sender_code_page_or": "या",
+  "sender_code_page_button_manual": "मैन्युअल रूप से दर्ज़ करें",
+  "sender_code_page_button_submit": "जमा करें",
+  "sender_code_page_dialog_message": "प्रेषक कोड बदलने का आपका अनुरोध सफलतापूर्वक सबमिट किया गया है। मंजूरी मिलने में 24 घंटे तक का समय लग सकता है।",
+  "sender_code_page_dialog_button_text": "ठीक"
 }

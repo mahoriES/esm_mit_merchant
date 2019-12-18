@@ -87,5 +87,16 @@
   "promotion_list_page_sub-title": "இந்த அம்சம் தேர்ந்தெடுக்கப்பட்ட வாடிக்கையாளர்களுக்கு மட்டுமே வரையறுக்கப்பட்டுள்ளது. உங்கள் விளம்பரங்கள் ஃபூர் குழுவின் ஒப்புதலுக்குப் பிறகு அனுப்பப்படும். மேலும் தகவலுக்கு எங்களை தொடர்பு கொள்ளவும்.",
   "promotion_list_page_contact-us": "எங்களை தொடர்பு கொள்ள",
   "promotion_list_page_approval_pending": "ஒப்புதல் நிலுவையில் உள்ளது",
-  "create_promotion_page_button_confirm": "Confirm"
+  "create_promotion_page_button_confirm": "Confirm",
+
+  
+  "check_in_page_sender_code_message": "உங்கள் வணிகப் பெயரைப் பயன்படுத்தி எஸ்எம்எஸ் அனுப்பவும்",
+  "check_in_page_sender_code_button": "தேர்வு",
+  "sender_code_page_title": "எஸ்எம்எஸ் அனுப்புநர் குறியீடு",
+  "sender_code_page_help_text": "உங்கள் கடையின் பெயருடன் பொருந்தக்கூடிய அனுப்புநர் குறியீட்டைத் தேர்வுசெய்க. நீங்கள் கூடுதல் மதிப்புரைகளைப் பெறுவீர்கள் மற்றும் பிராண்ட் நம்பிக்கையை உருவாக்குவீர்கள்.",
+  "sender_code_page_or": "அல்லது",
+  "sender_code_page_button_manual": "கைமுறையாக உள்ளிடவும்",
+  "sender_code_page_button_submit": "சமர்ப்பி",
+  "sender_code_page_dialog_message": "அனுப்புநர் குறியீட்டை மாற்றுவதற்கான உங்கள் கோரிக்கை வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது. ஒப்புதல் அளிக்கப்பட்டால் நடைமுறைக்கு வர 24 மணிநேரம் ஆகலாம்.",
+  "sender_code_page_dialog_button_text": "சரி"
 }

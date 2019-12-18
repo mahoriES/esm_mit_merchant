@@ -87,5 +87,16 @@
   "promotion_list_page_sub-title": "આ સુવિધા પસંદ કરેલા ગ્રાહકો માટે આકારની મર્યાદિત છે. તમારી બionsતીઓ Foore ટીમની મંજૂરી પછી મોકલવામાં આવશે. વધુ માહિતી માટે અમારો સંપર્ક કરો.",
   "promotion_list_page_contact-us": "અમારો સંપર્ક કરો",
   "promotion_list_page_approval_pending": "મંજૂરી બાકી છે",
-  "create_promotion_page_button_confirm": "Confirm"
+  "create_promotion_page_button_confirm": "Confirm",
+
+  
+  "check_in_page_sender_code_message": "તમારા વ્યવસાયના નામનો ઉપયોગ કરીને SMS મોકલો",
+  "check_in_page_sender_code_button": "પસંદ કરો",
+  "sender_code_page_title": "એસએમએસ પ્રેષક કોડ",
+  "sender_code_page_help_text": "એક પ્રેષક કોડ પસંદ કરો કે જે તમારા સ્ટોરના નામ સાથે મેળ ખાતો હોય. તમે વધુ સમીક્ષાઓ મેળવશો અને બ્રાન્ડ ટ્રસ્ટ બનાવશો.",
+  "sender_code_page_or": "અથવા",
+  "sender_code_page_button_manual": "જાતે દાખલ કરો",
+  "sender_code_page_button_submit": "સબમિટ કરો",
+  "sender_code_page_dialog_message": "પ્રેષક કોડ બદલવાની તમારી વિનંતી સફળતાપૂર્વક સબમિટ થઈ છે. જો મંજૂરી આપવામાં આવે તો અસર થવામાં 24 કલાકનો સમય લાગી શકે છે.",
+  "sender_code_page_dialog_button_text": "ઠીક છે"
 }

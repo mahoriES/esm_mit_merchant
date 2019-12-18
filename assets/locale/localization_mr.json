@@ -87,5 +87,15 @@
   "promotion_list_page_sub-title": "हे वैशिष्ट्य क्रूरपणे निवडलेल्या ग्राहकांपुरते मर्यादित आहे. आपल्या जाहिराती Foore कार्यसंघाच्या मंजुरीनंतर पाठवल्या जातील. अधिक माहितीसाठी आमच्याशी संपर्क साधा.",
   "promotion_list_page_contact-us": "आमच्याशी संपर्क साधा",
   "promotion_list_page_approval_pending": "मंजूरी प्रलंबित",
-  "create_promotion_page_button_confirm": "Confirm"
+  "create_promotion_page_button_confirm": "Confirm",
+  
+  "check_in_page_sender_code_message": "आपले व्यवसाय नाव वापरून एसएमएस पाठवा",
+  "check_in_page_sender_code_button": "वेचक",
+  "sender_code_page_title": "एसएमएस प्रेषक कोड",
+  "sender_code_page_help_text": "आपल्या स्टोअरच्या नावाशी जुळणारा प्रेषक कोड निवडा. आपल्याला अधिक पुनरावलोकने मिळतील आणि ब्रँड विश्वास निर्माण होईल.",
+  "sender_code_page_or": "किंवा",
+  "sender_code_page_button_manual": "स्वहस्ते प्रविष्ट करा",
+  "sender_code_page_button_submit": "सबमिट करा",
+  "sender_code_page_dialog_message": "आपली प्रेषक कोड बदलण्याची विनंती यशस्वीरित्या सबमिट केली गेली. मंजूर झाल्यास अंमलात येण्यास 24 तास लागू शकतात.",
+  "sender_code_page_dialog_button_text": "ठीक"
 }

@@ -87,5 +87,15 @@
   "promotion_list_page_sub-title": "ਇਹ ਵਿਸ਼ੇਸ਼ਤਾ ਚੁਣੇ ਹੋਏ ਗ੍ਰਾਹਕਾਂ ਤੱਕ ਪੂਰੀ ਤਰ੍ਹਾਂ ਸੀਮਤ ਹੈ. ਤੁਹਾਡੀਆਂ ਤਰੱਕੀਆਂ Foore ਟੀਮ ਤੋਂ ਮਨਜ਼ੂਰੀ ਤੋਂ ਬਾਅਦ ਭੇਜੀਆਂ ਜਾਣਗੀਆਂ. ਵਧੇਰੇ ਜਾਣਕਾਰੀ ਲਈ ਸਾਡੇ ਨਾਲ ਸੰਪਰਕ ਕਰੋ.",
   "promotion_list_page_contact-us": "અમારો સંપર્ક કરો",
   "promotion_list_page_approval_pending": "મંજૂરી બાકી છે",
-  "create_promotion_page_button_confirm": "Confirm"
+  "create_promotion_page_button_confirm": "Confirm",
+  
+  "check_in_page_sender_code_message": "ਆਪਣੇ ਕਾਰੋਬਾਰ ਦਾ ਨਾਮ ਵਰਤ ਕੇ ਐਸ ਐਮ ਐਸ ਭੇਜੋ",
+  "check_in_page_sender_code_button": "ਚੁਣੋ",
+  "sender_code_page_title": "ਐਸਐਮਐਸ ਭੇਜਣ ਵਾਲਾ ਕੋਡ",
+  "sender_code_page_help_text": "ਇੱਕ ਪ੍ਰੇਸ਼ਕ ਕੋਡ ਚੁਣੋ ਜੋ ਤੁਹਾਡੇ ਸਟੋਰ ਦੇ ਨਾਮ ਨਾਲ ਮੇਲ ਖਾਂਦਾ ਹੈ. ਤੁਸੀਂ ਵਧੇਰੇ ਸਮੀਖਿਆਵਾਂ ਪ੍ਰਾਪਤ ਕਰੋਗੇ ਅਤੇ ਬ੍ਰਾਂਡ ਵਿਸ਼ਵਾਸ ਬਣਾਓਗੇ.",
+  "sender_code_page_or": "ਜਾਂ",
+  "sender_code_page_button_manual": "ਹੱਥੀਂ ਦਾਖਲ ਹੋਵੋ",
+  "sender_code_page_button_submit": "ਜਮ੍ਹਾ ਕਰੋ",
+  "sender_code_page_dialog_message": "ਤੁਹਾਡੇ ਭੇਜਣ ਵਾਲੇ ਕੋਡ ਨੂੰ ਬਦਲਣ ਦੀ ਬੇਨਤੀ ਸਫਲਤਾਪੂਰਵਕ ਦਰਜ ਕੀਤੀ ਗਈ ਹੈ. ਜੇ ਮਨਜੂਰ ਹੋ ਜਾਂਦਾ ਹੈ ਤਾਂ ਇਸ ਨੂੰ ਲਾਗੂ ਹੋਣ ਵਿਚ 24 ਘੰਟੇ ਲੱਗ ਸਕਦੇ ਹਨ.",
+  "sender_code_page_dialog_button_text": "ਠੀਕ ਹੈ"
 }

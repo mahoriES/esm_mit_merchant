@@ -88,5 +88,15 @@
   "promotion_list_page_sub-title": "ಈ ವೈಶಿಷ್ಟ್ಯವು ಆಯ್ದ ಗ್ರಾಹಕರಿಗೆ ಮಾತ್ರ ಸೀಮಿತವಾಗಿದೆ. ನಿಮ್ಮ ಪ್ರಚಾರಗಳನ್ನು ಫೂರ್ ತಂಡದ ಅನುಮೋದನೆಯ ನಂತರ ಕಳುಹಿಸಲಾಗುತ್ತದೆ. ಹೆಚ್ಚಿನ ಮಾಹಿತಿಗಾಗಿ ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ.",
   "promotion_list_page_contact-us": "ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ",
   "promotion_list_page_approval_pending": "ಅನುಮೋದನೆ ಬಾಕಿ ಉಳಿದಿದೆ",
-  "create_promotion_page_button_confirm": "Confirm"
+  "create_promotion_page_button_confirm": "Confirm",
+
+  "check_in_page_sender_code_message": "ನಿಮ್ಮ ವ್ಯವಹಾರದ ಹೆಸರನ್ನು ಬಳಸಿಕೊಂಡು SMS ಕಳುಹಿಸಿ",
+  "check_in_page_sender_code_button": "ಆಯ್ಕೆಮಾಡಿ",
+  "sender_code_page_title": "SMS ಕಳುಹಿಸುವವರ ಕೋಡ್",
+  "sender_code_page_help_text": "ನಿಮ್ಮ ಅಂಗಡಿ ಹೆಸರಿಗೆ ಹೊಂದಿಕೆಯಾಗುವ ಕಳುಹಿಸುವವರ ಕೋಡ್ ಆಯ್ಕೆಮಾಡಿ. ನೀವು ಹೆಚ್ಚಿನ ವಿಮರ್ಶೆಗಳನ್ನು ಪಡೆಯುತ್ತೀರಿ ಮತ್ತು ಬ್ರಾಂಡ್ ವಿಶ್ವಾಸವನ್ನು ಬೆಳೆಸುತ್ತೀರಿ.",
+  "sender_code_page_or": "ಅಥವಾ",
+  "sender_code_page_button_manual": "ಹಸ್ತಚಾಲಿತವಾಗಿ ನಮೂದಿಸಿ",
+  "sender_code_page_button_submit": "ಸಲ್ಲಿಸಲು",
+  "sender_code_page_dialog_message": "ಕಳುಹಿಸುವವರ ಕೋಡ್ ಬದಲಾಯಿಸುವ ನಿಮ್ಮ ವಿನಂತಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ. ಅನುಮೋದನೆ ದೊರೆತರೆ ಅದು ಕಾರ್ಯರೂಪಕ್ಕೆ ಬರಲು 24 ಗಂಟೆಗಳವರೆಗೆ ತೆಗೆದುಕೊಳ್ಳಬಹುದು.",
+  "sender_code_page_dialog_button_text": "ಸರಿ"
 }

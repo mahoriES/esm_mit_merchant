@@ -1,6 +1,7 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
+import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/data/bloc/sender_code.dart';
 import 'package:foore/data/http_service.dart';
@@ -70,6 +71,7 @@ class SenderCodePageState extends State<SenderCodePage>
   @override
   void afterFirstLayout(BuildContext context) {
     var onBoardingGuard = Provider.of<OnboardingGuardBloc>(context);
+    var httpService = Provider.of<HttpService>(context);
     onBoardingGuard.onboardingStateObservable.listen((onboardingState) {
       setState(() {
         suggestions = [];
@@ -108,6 +110,12 @@ class SenderCodePageState extends State<SenderCodePage>
             suggestions.add(wordWithoutVowels.substring(0, 6).toUpperCase());
           }
           print(suggestions);
+          httpService.foAnalytics.trackUserEvent(
+              name: FoAnalyticsEvents.suggested_sms_codes,
+              parameters: <String, String>{
+                'location_name': storeName,
+                'suggestions': suggestions.join(' ')
+              });
         }
       });
     });

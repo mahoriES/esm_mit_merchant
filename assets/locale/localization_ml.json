@@ -87,5 +87,15 @@
   "promotion_list_page_sub-title": "തിരഞ്ഞെടുത്ത ഉപയോക്താക്കൾക്ക് ഈ സവിശേഷത വളരെ പരിമിതമാണ്. നിങ്ങളുടെ പ്രമോഷനുകൾ ഫൂർ ടീമിന്റെ അംഗീകാരത്തിന് ശേഷം അയയ്‌ക്കും. കൂടുതൽ വിവരങ്ങൾക്ക് ഞങ്ങളെ ബന്ധപ്പെടുക.",
   "promotion_list_page_contact-us": "ഞങ്ങളെ സമീപിക്കുക",
   "promotion_list_page_approval_pending": "അംഗീകാരം തീർപ്പുകൽപ്പിച്ചിട്ടില്ല",
-  "create_promotion_page_button_confirm": "Confirm"
+  "create_promotion_page_button_confirm": "Confirm",
+  
+  "check_in_page_sender_code_message": "നിങ്ങളുടെ ബിസിനസ്സ് പേര് ഉപയോഗിച്ച് SMS അയയ്ക്കുക",
+  "check_in_page_sender_code_button": "തിരഞ്ഞെടുക്കുക",
+  "sender_code_page_title": "SMS അയയ്‌ക്കുന്ന കോഡ്",
+  "sender_code_page_help_text": "നിങ്ങളുടെ സ്റ്റോറിന്റെ പേരുമായി പൊരുത്തപ്പെടുന്ന ഒരു പ്രേഷിത കോഡ് തിരഞ്ഞെടുക്കുക. നിങ്ങൾക്ക് കൂടുതൽ അവലോകനങ്ങൾ ലഭിക്കുകയും ബ്രാൻഡ് വിശ്വാസ്യത വളർത്തുകയും ചെയ്യും.",
+  "sender_code_page_or": "അഥവാ",
+  "sender_code_page_button_manual": "സ്വമേധയാ നൽകുക",
+  "sender_code_page_button_submit": "സമർപ്പിക്കുക",
+  "sender_code_page_dialog_message": "അയച്ചയാളുടെ കോഡ് മാറ്റാനുള്ള നിങ്ങളുടെ അഭ്യർത്ഥന വിജയകരമായി സമർപ്പിച്ചു. അംഗീകാരം ലഭിക്കുകയാണെങ്കിൽ പ്രാബല്യത്തിൽ വരാൻ 24 മണിക്കൂർ വരെ എടുത്തേക്കാം.",
+  "sender_code_page_dialog_button_text": "ശരി"
 }

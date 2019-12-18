@@ -130,6 +130,7 @@ class FoAnalyticsEvents {
   static const nearby_promo_created = 'nearby_promo_created';
   static const payment_started = 'payment_started';
   static const payment_response = 'payment_response';
+  static const suggested_sms_codes = 'suggested_sms_codes';
 }
 
 class FoAnalyticsUserProperties {

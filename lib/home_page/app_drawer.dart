@@ -98,13 +98,6 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
-            onTap: () {
-              Navigator.of(context).popAndPushNamed(SettingPage.routeName);
-            },
-          ),
-          ListTile(
             leading: Icon(Icons.power_settings_new),
             title:
                 Text(AppTranslations.of(context).text("drawer_button_logout")),

@@ -88,13 +88,13 @@
   "promotion_list_page_approval_pending": "Approval pending",
   "create_promotion_page_button_confirm": "Confirm",
 
-  "check_in_page_sender_code_message": "Send SMS from your store name",
-  "check_in_page_sender_code_button": "Customize",
-  "sender_code_page_title": "Sender Code",
-  "sender_code_page_help_text": "Choose a sender code that matches your store name. It increases click rate",
+  "check_in_page_sender_code_message": "Send SMS using your business name",
+  "check_in_page_sender_code_button": "Select",
+  "sender_code_page_title": "SMS Sender Code",
+  "sender_code_page_help_text": "Choose a sender code that matches your store name. You will get more reviews and build brand trust.",
   "sender_code_page_or": "or",
   "sender_code_page_button_manual": "Enter manually",
   "sender_code_page_button_submit": "Submit",
-  "sender_code_page_dialog_message": "your request to change sender code is submitted successfully. I may take up to 24 hours to take effect.",
+  "sender_code_page_dialog_message": "Your request to change sender code is submitted successfully. It may take up to 24 hours to take effect if approved.",
   "sender_code_page_dialog_button_text": "ok"
 }
