@@ -84,7 +84,7 @@ class SenderCodePageState extends State<SenderCodePage>
           final rakeFilter = Rake(stopWords: ['']..addAll(smartEnglish));
           var wordWithoutSpaces =
               rakeFilter.run(storeName).keys.join('').toUpperCase();
-          final RegExp _eliminateVowels = RegExp(r'[aeyiuo]');
+          final RegExp _eliminateVowels = RegExp(r'[^bcdfghjklmnpqrstvwxys]');
           var wordWithoutVowels = wordWithoutSpaces
               .toLowerCase()
               .replaceAll(_eliminateVowels, '')
@@ -169,6 +169,11 @@ class SenderCodePageState extends State<SenderCodePage>
           _showIntroAlertDialog();
         });
       }
+    }
+
+    validateInput(String input) {
+      final RegExp _onlyConsonants = RegExp(r'[bcdfghjklmnpqrstvwxys]');
+      return _onlyConsonants.hasMatch(input) ? null: '';
     }
 
     return Scaffold(
@@ -294,6 +299,7 @@ class SenderCodePageState extends State<SenderCodePage>
                           counter: Container(),
                         ),
                         focusNode: _codeFocusNodeOne,
+                        autofocus: true,
                         onChanged: (String text) {
                           setState(() {
                             manualSuggestionOne = text;
@@ -304,9 +310,7 @@ class SenderCodePageState extends State<SenderCodePage>
                           }
                         },
                         maxLength: 1,
-                        validator: (String value) {
-                          return value.length < 1 ? '' : null;
-                        },
+                        validator: validateInput,
                       ),
                     ),
                     SizedBox(
@@ -329,9 +333,7 @@ class SenderCodePageState extends State<SenderCodePage>
                           }
                         },
                         maxLength: 1,
-                        validator: (String value) {
-                          return value.length < 1 ? '' : null;
-                        },
+                        validator: validateInput,
                       ),
                     ),
                     SizedBox(
@@ -354,9 +356,7 @@ class SenderCodePageState extends State<SenderCodePage>
                           }
                         },
                         maxLength: 1,
-                        validator: (String value) {
-                          return value.length < 1 ? '' : null;
-                        },
+                        validator: validateInput,
                       ),
                     ),
                     SizedBox(
@@ -379,9 +379,7 @@ class SenderCodePageState extends State<SenderCodePage>
                           }
                         },
                         maxLength: 1,
-                        validator: (String value) {
-                          return value.length < 1 ? '' : null;
-                        },
+                        validator: validateInput,
                       ),
                     ),
                     SizedBox(
@@ -404,9 +402,7 @@ class SenderCodePageState extends State<SenderCodePage>
                           }
                         },
                         maxLength: 1,
-                        validator: (String value) {
-                          return value.length < 1 ? '' : null;
-                        },
+                        validator: validateInput,
                       ),
                     ),
                     SizedBox(
@@ -425,9 +421,7 @@ class SenderCodePageState extends State<SenderCodePage>
                             manualSuggestionSix = text;
                           });
                         },
-                        validator: (String value) {
-                          return value.length < 1 ? '' : null;
-                        },
+                        validator: validateInput,
                       ),
                     ),
                   ],
