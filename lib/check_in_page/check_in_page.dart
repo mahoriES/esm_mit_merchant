@@ -313,27 +313,30 @@ class CheckInPageState extends State<CheckInPage>
         ),
         child: Row(
           children: <Widget>[
-            Text(
-              AppTranslations.of(context)
-                  .text('check_in_page_sender_code_message'),
-              style: TextStyle(
-                color: Colors.green,
-                // decoration: TextDecoration.underline,
-              ),
-            ),
             Expanded(
-              child: Container(),
+              child: Container(
+                child: Text(
+                  AppTranslations.of(context)
+                      .text('check_in_page_sender_code_message'),
+                  style: TextStyle(
+                    color: Colors.green,
+                    // decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
             ),
             GestureDetector(
               onTap: () {
                 Navigator.of(context).pushNamed(SenderCodePage.routeName);
               },
               child: Chip(
+                elevation: 1,
                 label: Text(
                   AppTranslations.of(context)
                       .text('check_in_page_sender_code_button'),
                   style: TextStyle(
                     color: Colors.white,
+                    // decoration: TextDecoration.underline,
                   ),
                 ),
                 backgroundColor: Colors.green,

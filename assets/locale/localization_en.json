@@ -89,7 +89,7 @@
   "create_promotion_page_button_confirm": "Confirm",
 
   "check_in_page_sender_code_message": "Send SMS using your business name",
-  "check_in_page_sender_code_button": "Select",
+  "check_in_page_sender_code_button": "Change SMS code",
   "sender_code_page_title": "SMS Sender Code",
   "sender_code_page_help_text": "Choose a sender code that matches your store name. You will get more reviews and build brand trust.",
   "sender_code_page_or": "or",

@@ -90,7 +90,7 @@
   "create_promotion_page_button_confirm": "पुष्टि करें",
 
   "check_in_page_sender_code_message": "अपने स्टोर के नाम से एसएमएस भेजें",
-  "check_in_page_sender_code_button": "चयन",
+  "check_in_page_sender_code_button": "एसएमएस कोड बदलें",
   "sender_code_page_title": "एसएमएस प्रेषक कोड",
   "sender_code_page_help_text": "एक प्रेषक कोड चुनें जो आपके स्टोर के नाम से मेल खाता हो। आपको अधिक रिव्यू मिलेंगे और ब्रांड ट्रस्ट बढ़ेगा।",
   "sender_code_page_or": "या",
