@@ -126,7 +126,7 @@ class Router {
         return SharePage.generateRoute(settings);
         break;
       case SettingPage.routeName:
-        return SettingPage.generateRoute(settings);
+        return SettingPage.generateRoute(settings,httpServiceBloc);
         break;
       case SenderCodePage.routeName:
         return SenderCodePage.generateRoute(settings, httpServiceBloc);

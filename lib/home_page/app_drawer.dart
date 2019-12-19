@@ -48,6 +48,9 @@ class AppDrawer extends StatelessWidget {
                   return Container();
                 }
                 return ListTile(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(SettingPage.routeName);
+                  },
                   leading: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6),
                     child: Container(
@@ -70,6 +73,7 @@ class AppDrawer extends StatelessWidget {
                   ),
                   title: Text(snapshot.data.userName ?? ''),
                   subtitle: Text(snapshot.data.userEmail ?? ''),
+                  trailing: Icon(Icons.settings),
                 );
               }),
           Expanded(
