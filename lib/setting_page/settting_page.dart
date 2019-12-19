@@ -2,6 +2,9 @@ import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/account_setting.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/data/model/gmb_location.dart';
+import 'package:foore/onboarding_page/location_claim.dart';
+import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:provider/provider.dart';
 
 class SettingPage extends StatefulWidget {
@@ -97,6 +100,12 @@ class SettingPageState extends State<SettingPage>
 
   Widget locationListWidget(BuildContext context) {
     var accSettingBloc = Provider.of<AccountSettingBloc>(context);
+    onVerify(GmbLocation location) {
+      final arguments = Map<String, dynamic>();
+      arguments['locationItem'] = GmbLocationItem.fromGmbLocation(location);
+      Navigator.pushNamed(context, LocationClaimPage.routeName,
+          arguments: arguments);
+    }
     return Container(
       child: StreamBuilder<AccountSettingState>(
         stream: accSettingBloc.accountSettingStateObservable,
@@ -167,7 +176,9 @@ class SettingPageState extends State<SettingPage>
                               child: Text(
                                 'Verify',
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                onVerify(gmbLocationWithUiData.gmbLocation);
+                              },
                             )
                           : null,
                     ),
