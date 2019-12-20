@@ -43,7 +43,7 @@ class _LocationSearchPageState extends State<LocationSearchPage>
       var arguments = new Map<String, dynamic>();
       arguments['googleLocation'] = googleLocation;
       arguments['locationItem'] = googleLocation.location;
-      Navigator.pushNamed(context, LocationClaimPage.routeName,
+      Navigator.pushReplacementNamed(context, LocationClaimPage.routeName,
           arguments: arguments);
     }
 

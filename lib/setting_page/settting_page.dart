@@ -228,11 +228,10 @@ class SettingPageState extends State<SettingPage>
   Widget locationListWidget(BuildContext context) {
     var accSettingBloc = Provider.of<AccountSettingBloc>(context);
     onVerify(GmbLocation location) {
-      openCreateStore(accSettingBloc, location);
-      // final arguments = Map<String, dynamic>();
-      // arguments['locationItem'] = GmbLocationItem.fromGmbLocation(location);
-      // Navigator.pushNamed(context, LocationClaimPage.routeName,
-      //     arguments: arguments);
+      final arguments = Map<String, dynamic>();
+      arguments['locationItem'] = GmbLocationItem.fromGmbLocation(location);
+      Navigator.pushNamed(context, LocationClaimPage.routeName,
+          arguments: arguments);
     }
 
     return Container(

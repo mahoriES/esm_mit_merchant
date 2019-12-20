@@ -58,7 +58,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
 
   _onLocationClaimChange(LocationClaimState state) {
     if (state.isShowVerificationPending) {
-      Navigator.pushNamed(context, LocationVerifyPage.routeName,
+      Navigator.pushReplacementNamed(context, LocationVerifyPage.routeName,
           arguments: state.locationItem);
     } else if (state.isShowNotLoggedInWithGoogle) {
       Navigator.pushReplacementNamed(context, GoogleLoginNotDonePage.routeName);
