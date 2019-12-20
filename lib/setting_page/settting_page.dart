@@ -1,5 +1,6 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/account_setting.dart';
 import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/data/http_service.dart';
@@ -53,7 +54,7 @@ class SettingPageState extends State<SettingPage>
                     snapshot.data.isSubmitSuccess) {
                   return Container();
                 }
-                return Text('Are you sure?');
+                return Text(AppTranslations.of(context).text('setting_page_dialog_title'));
               }),
           content: StreamBuilder<AccountSettingState>(
               stream: accountSettingBloc.accountSettingStateObservable,
@@ -72,7 +73,7 @@ class SettingPageState extends State<SettingPage>
                   return Container(
                       width: 50,
                       height: 50,
-                      child: Text('Location connected.'));
+                      child: Text(AppTranslations.of(context).text('setting_page_dialog_success')));
                 }
 
                 return Column(
@@ -80,7 +81,7 @@ class SettingPageState extends State<SettingPage>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      child: Text(sprintf('Connect %s to Foore',
+                      child: Text(sprintf(AppTranslations.of(context).text('setting_page_dialog_message'),
                           [gmbLocation.gmbLocationName ?? ''])),
                     ),
                   ],
@@ -100,14 +101,14 @@ class SettingPageState extends State<SettingPage>
 
                   if (snapshot.data.isSubmitSuccess) {
                     return FlatButton(
-                      child: Text('Done'),
+                      child: Text(AppTranslations.of(context).text('setting_page_dialog_button_done')),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     );
                   }
                   return FlatButton(
-                    child: Text('Confirm'),
+                    child: Text(AppTranslations.of(context).text('setting_page_dialog_button_confirm')),
                     onPressed: () {
                       onCreateStore(gmbLocation);
                     },
@@ -152,7 +153,7 @@ class SettingPageState extends State<SettingPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Account Settings'),
+        title: Text(AppTranslations.of(context).text('setting_page_title')),
       ),
       body: StreamBuilder<AccountSettingState>(
           stream: accSettingBloc.accountSettingStateObservable,
@@ -177,7 +178,7 @@ class SettingPageState extends State<SettingPage>
                   top: 32.0,
                 ),
                 children: <Widget>[
-                  Text('SMS sender code',
+                  Text(AppTranslations.of(context).text('setting_page_sms_sender_code'),
                       style: Theme.of(context).textTheme.subtitle),
                   Row(
                     children: <Widget>[
@@ -191,7 +192,7 @@ class SettingPageState extends State<SettingPage>
                                 style: Theme.of(context).textTheme.subhead);
                           }),
                       FlatButton(
-                        child: Text('Change',
+                        child: Text(AppTranslations.of(context).text('setting_page_button_change_sms_code'),
                             style: Theme.of(context).textTheme.caption.copyWith(
                                 color: Theme.of(context).primaryColor)),
                         onPressed: () {
@@ -204,7 +205,7 @@ class SettingPageState extends State<SettingPage>
                   SizedBox(
                     height: 16.0,
                   ),
-                  Text('My Google Business Locations',
+                  Text(AppTranslations.of(context).text('setting_page_my_business_locations'),
                       style: Theme.of(context).textTheme.subtitle),
                   locationListWidget(context),
                   SizedBox(
@@ -214,7 +215,7 @@ class SettingPageState extends State<SettingPage>
                     child: Center(
                       child: OutlineButton(
                         onPressed: addNewLocation,
-                        child: Text('Add new Google Location'),
+                        child: Text(AppTranslations.of(context).text('setting_page_button_add_location')),
                       ),
                     ),
                   )
@@ -296,7 +297,7 @@ class SettingPageState extends State<SettingPage>
                       child: gmbLocationWithUiData.foLocation == null &&
                               gmbLocationWithUiData.getIsLocationVerified()
                           ? RaisedButton(
-                              child: Text('Connect'),
+                              child: Text(AppTranslations.of(context).text('setting_page_connect_location')),
                               onPressed: () {
                                 openCreateStore(accSettingBloc,
                                     gmbLocationWithUiData.gmbLocation);
@@ -309,7 +310,7 @@ class SettingPageState extends State<SettingPage>
                         top: 4.0,
                       ),
                       child: gmbLocationWithUiData.foLocation != null
-                          ? Text('connected',
+                          ? Text(AppTranslations.of(context).text('setting_page_location_connected'),
                               style: Theme.of(context)
                                   .textTheme
                                   .body1
@@ -322,7 +323,7 @@ class SettingPageState extends State<SettingPage>
                       ),
                       child: !gmbLocationWithUiData.getIsLocationVerified()
                           ? Text(
-                              'This location needs verification before you can use',
+                              AppTranslations.of(context).text('setting_page_location_verification_needed'),
                               style: Theme.of(context)
                                   .textTheme
                                   .body1
@@ -336,7 +337,7 @@ class SettingPageState extends State<SettingPage>
                       child: !gmbLocationWithUiData.getIsLocationVerified()
                           ? RaisedButton(
                               child: Text(
-                                'Verify',
+                                AppTranslations.of(context).text('setting_page_verify'),
                               ),
                               onPressed: () {
                                 onVerify(gmbLocationWithUiData.gmbLocation);

@@ -96,5 +96,20 @@
   "sender_code_page_button_manual": "Enter manually",
   "sender_code_page_button_submit": "Submit",
   "sender_code_page_dialog_message": "Your request to change sender code is submitted successfully. It may take up to 24 hours to take effect if approved.",
-  "sender_code_page_dialog_button_text": "ok"
+  "sender_code_page_dialog_button_text": "ok",
+
+  "setting_page_title": "account settings",
+  "setting_page_sms_sender_code":"SMS sender code",
+  "setting_page_button_change_sms_code":"change",
+  "setting_page_my_business_locations":"My Google Business Locations",
+  "setting_page_button_add_location":"Add new Google Location",
+  "setting_page_connect_location": "connect",
+  "setting_page_location_connected": "connected",
+  "setting_page_location_verification_needed": "This location needs verification before you can use",
+  "setting_page_verify": "verify",
+  "setting_page_dialog_title": "Are you sure?",
+  "setting_page_dialog_success":"Location connected.",
+  "setting_page_dialog_message":"Connect YourSalon to Foore",
+  "setting_page_dialog_button_done":"done",
+  "setting_page_dialog_button_confirm":"confirm"
 }
