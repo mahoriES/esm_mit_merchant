@@ -264,16 +264,15 @@ class SettingPageState extends State<SettingPage>
                         child: gmbLocationWithUiData.accountReviewInfo != null
                             ? Row(
                                 children: <Widget>[
-                                  Text(gmbLocationWithUiData
-                                      .accountReviewInfo.rating
+                                  Text((gmbLocationWithUiData
+                                      .accountReviewInfo.rating/2)
                                       .toStringAsFixed(1)),
                                   SizedBox(
                                     width: 4.0,
                                   ),
                                   StarDisplay(
                                     value: gmbLocationWithUiData
-                                        .accountReviewInfo.rating
-                                        .toInt(),
+                                        .accountReviewInfo.rating~/2,
                                   ),
                                   SizedBox(
                                     width: 4.0,
