@@ -91,7 +91,7 @@
 
   
   "check_in_page_sender_code_message": "உங்கள் வணிகப் பெயரைப் பயன்படுத்தி எஸ்எம்எஸ் அனுப்பவும்",
-  "check_in_page_sender_code_button": "தேர்வு",
+  "check_in_page_sender_code_button": "எஸ்எம்எஸ் குறியீட்டை மாற்றவும்",
   "sender_code_page_title": "எஸ்எம்எஸ் அனுப்புநர் குறியீடு",
   "sender_code_page_help_text": "உங்கள் கடையின் பெயருடன் பொருந்தக்கூடிய அனுப்புநர் குறியீட்டைத் தேர்வுசெய்க. நீங்கள் கூடுதல் மதிப்புரைகளைப் பெறுவீர்கள் மற்றும் பிராண்ட் நம்பிக்கையை உருவாக்குவீர்கள்.",
   "sender_code_page_or": "அல்லது",
@@ -100,18 +100,18 @@
   "sender_code_page_dialog_message": "அனுப்புநர் குறியீட்டை மாற்றுவதற்கான உங்கள் கோரிக்கை வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது. ஒப்புதல் அளிக்கப்பட்டால் நடைமுறைக்கு வர 24 மணிநேரம் ஆகலாம்.",
   "sender_code_page_dialog_button_text": "சரி",
 
-  "setting_page_title": "",
-  "setting_page_sms_sender_code": "",
-  "setting_page_button_change_sms_code": "",
-  "setting_page_my_business_locations": "",
-  "setting_page_button_add_location": "",
-  "setting_page_connect_location": "",
-  "setting_page_location_connected": "",
-  "setting_page_location_verification_needed": "",
-  "setting_page_verify": "",
-  "setting_page_dialog_title": "",
-  "setting_page_dialog_success": "",
-  "setting_page_dialog_message": "",
-  "setting_page_dialog_button_done": "",
-  "setting_page_dialog_button_confirm": ""
+  "setting_page_title": "கணக்கு அமைப்புகள்",
+  "setting_page_sms_sender_code": "எஸ்எம்எஸ் அனுப்புநர் குறியீடு",
+  "setting_page_button_change_sms_code": "மாற்றம்",
+  "setting_page_my_business_locations": "எனது Google வணிக இருப்பிடங்கள்",
+  "setting_page_button_add_location": "புதிய Google இருப்பிடத்தைச் சேர்க்கவும்",
+  "setting_page_connect_location": "இணைப்பு",
+  "setting_page_location_connected": "இணைக்கப்பட்ட",
+  "setting_page_location_verification_needed": "நீங்கள் பயன்படுத்துவதற்கு முன்பு இந்த இருப்பிடத்திற்கு சரிபார்ப்பு தேவை",
+  "setting_page_verify": "ਪੜਤਾਲ ਕਰੋ",
+  "setting_page_dialog_title": "நீ சொல்வது உறுதியா?",
+  "setting_page_dialog_success": "இடம் இணைக்கப்பட்டுள்ளது",
+  "setting_page_dialog_message": "உங்கள் வரவேற்புரை ஃபூருடன் இணைக்கவும்",
+  "setting_page_dialog_button_done": "முடிந்ததாகக்",
+  "setting_page_dialog_button_confirm": "உறுதிசெய்"
 }
