@@ -101,8 +101,9 @@ class Router {
         );
         break;
       case LocationSearchPage.routeName:
+        bool hideNoLocations = settings.arguments??false;
         return MaterialPageRoute(
-          builder: (context) => LocationSearchPage(),
+          builder: (context) => LocationSearchPage(hideNoLocations: hideNoLocations,),
         );
         break;
       case LocationClaimPage.routeName:

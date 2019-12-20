@@ -15,7 +15,8 @@ import '../app_translations.dart';
 
 class LocationSearchPage extends StatefulWidget {
   static const routeName = '/location-search';
-  LocationSearchPage({Key key}) : super(key: key);
+  bool hideNoLocations;
+  LocationSearchPage({Key key, this.hideNoLocations = false}) : super(key: key);
 
   @override
   _LocationSearchPageState createState() => _LocationSearchPageState();
@@ -67,28 +68,32 @@ class _LocationSearchPageState extends State<LocationSearchPage>
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).errorColor.withOpacity(0.2),
+              Visibility(
+                visible: !widget.hideNoLocations,
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).errorColor.withOpacity(0.2),
+                  ),
+                  child: StreamBuilder<AuthState>(
+                      stream: authBloc.authStateObservable,
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Container();
+                        }
+                        return Text(
+                          sprintf(
+                              AppTranslations.of(context)
+                                  .text("location_search_page_no_business"),
+                              [snapshot.data.userEmail]),
+                          style: Theme.of(context)
+                              .textTheme
+                              .body1
+                              .copyWith(color: Theme.of(context).errorColor),
+                        );
+                      }),
                 ),
-                child: StreamBuilder<AuthState>(
-                    stream: authBloc.authStateObservable,
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return Container();
-                      }
-                      return Text(
-                        sprintf(
-                            AppTranslations.of(context)
-                                .text("location_search_page_no_business"),
-                            [snapshot.data.userEmail]),
-                        style: Theme.of(context)
-                            .textTheme
-                            .body1
-                            .copyWith(color: Theme.of(context).errorColor),
-                      );
-                    }),
               ),
               Container(
                 padding: const EdgeInsets.only(

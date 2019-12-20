@@ -140,7 +140,7 @@ class SettingPageState extends State<SettingPage>
   @override
   Widget build(BuildContext context) {
     addNewLocation() {
-      Navigator.of(context).pushNamed(LocationSearchPage.routeName);
+      Navigator.of(context).pushNamed(LocationSearchPage.routeName, arguments:true);
     }
 
     final onBoardingGuard = Provider.of<OnboardingGuardBloc>(context);
