@@ -8,6 +8,7 @@ import 'package:foore/onboarding_page/location_claim.dart';
 import 'package:foore/onboarding_page/location_search_page.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:foore/setting_page/sender_code.dart';
+import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -147,64 +148,80 @@ class SettingPageState extends State<SettingPage>
     }
 
     final onBoardingGuard = Provider.of<OnboardingGuardBloc>(context);
+    final accSettingBloc = Provider.of<AccountSettingBloc>(context);
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Account Settings'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: ListView(
-          padding: EdgeInsets.only(
-            bottom: 32.0,
-            top: 32.0,
-          ),
-          children: <Widget>[
-            Text('SMS sender code',
-                style: Theme.of(context).textTheme.subtitle),
-            Row(
-              children: <Widget>[
-                StreamBuilder<OnboardingGuardState>(
-                    stream: onBoardingGuard.onboardingStateObservable,
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return Container();
-                      }
-                      return Text(snapshot.data.smsCode,
-                          style: Theme.of(context).textTheme.subhead);
-                    }),
-                FlatButton(
-                  child: Text('Change',
-                      style: Theme.of(context)
-                          .textTheme
-                          .caption
-                          .copyWith(color: Theme.of(context).primaryColor)),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(SenderCodePage.routeName);
-                  },
+      body: StreamBuilder<AccountSettingState>(
+          stream: accSettingBloc.accountSettingStateObservable,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Container();
+            }
+            if (snapshot.data.isLoading) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.data.isLoadingFailed) {
+              return SomethingWentWrong(
+                onRetry: accSettingBloc.getData,
+              );
+            }
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ListView(
+                padding: EdgeInsets.only(
+                  bottom: 32.0,
+                  top: 32.0,
                 ),
-              ],
-            ),
-            SizedBox(
-              height: 16.0,
-            ),
-            Text('My Google Business Locations',
-                style: Theme.of(context).textTheme.subtitle),
-            locationListWidget(context),
-            SizedBox(
-              height: 16.0,
-            ),
-            Container(
-              child: Center(
-                child: OutlineButton(
-                  onPressed: addNewLocation,
-                  child: Text('Add new Google Location'),
-                ),
+                children: <Widget>[
+                  Text('SMS sender code',
+                      style: Theme.of(context).textTheme.subtitle),
+                  Row(
+                    children: <Widget>[
+                      StreamBuilder<OnboardingGuardState>(
+                          stream: onBoardingGuard.onboardingStateObservable,
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return Container();
+                            }
+                            return Text(snapshot.data.smsCode,
+                                style: Theme.of(context).textTheme.subhead);
+                          }),
+                      FlatButton(
+                        child: Text('Change',
+                            style: Theme.of(context).textTheme.caption.copyWith(
+                                color: Theme.of(context).primaryColor)),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed(SenderCodePage.routeName);
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 16.0,
+                  ),
+                  Text('My Google Business Locations',
+                      style: Theme.of(context).textTheme.subtitle),
+                  locationListWidget(context),
+                  SizedBox(
+                    height: 16.0,
+                  ),
+                  Container(
+                    child: Center(
+                      child: OutlineButton(
+                        onPressed: addNewLocation,
+                        child: Text('Add new Google Location'),
+                      ),
+                    ),
+                  )
+                ],
               ),
-            )
-          ],
-        ),
-      ),
+            );
+          }),
     );
   }
 
