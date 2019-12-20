@@ -32,7 +32,8 @@ class _LocationSearchPageState extends State<LocationSearchPage>
   loginToGoogleSilently(AuthBloc authBloc) async {
     bool isSignedInWithGoogle = await authBloc.googleLoginSilently();
     if (!isSignedInWithGoogle) {
-      Navigator.pushReplacementNamed(context, GoogleLoginNotDonePage.routeName);
+      Navigator.of(context)
+          .pushReplacementNamed(GoogleLoginNotDonePage.routeName);
     }
   }
 
@@ -43,7 +44,7 @@ class _LocationSearchPageState extends State<LocationSearchPage>
       var arguments = new Map<String, dynamic>();
       arguments['googleLocation'] = googleLocation;
       arguments['locationItem'] = googleLocation.location;
-      Navigator.pushReplacementNamed(context, LocationClaimPage.routeName,
+      Navigator.of(context).pushReplacementNamed(LocationClaimPage.routeName,
           arguments: arguments);
     }
 
