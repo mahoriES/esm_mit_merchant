@@ -109,7 +109,7 @@
   "setting_page_verify": "verify",
   "setting_page_dialog_title": "Are you sure?",
   "setting_page_dialog_success":"Location connected.",
-  "setting_page_dialog_message":"Connect YourSalon to Foore",
+  "setting_page_dialog_message":"Connect %s to Foore",
   "setting_page_dialog_button_done":"done",
   "setting_page_dialog_button_confirm":"confirm"
 }
