@@ -78,7 +78,9 @@ class SettingPageState extends State<SettingPage>
                           .text('setting_page_dialog_success')));
                 }
 
-                return Container();
+                return Container(
+                  height: 0,
+                );
               }),
           actions: <Widget>[
             StreamBuilder<AccountSettingState>(
