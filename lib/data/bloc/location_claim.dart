@@ -57,11 +57,11 @@ class LocationClaimBloc {
       if (this._onboardingState.googleLocation != null) {
         await createLocation();
         await startVerification();
-        Navigator.pushNamed(context, LocationVerifyPage.routeName,
+        Navigator.of(context).pushReplacementNamed(LocationVerifyPage.routeName,
             arguments: this._onboardingState.locationItem);
       } else {
         await startVerification();
-        Navigator.pushNamed(context, LocationVerifyPage.routeName,
+        Navigator.of(context).pushReplacementNamed(LocationVerifyPage.routeName,
             arguments: this._onboardingState.locationItem);
       }
       refreshBackend();
