@@ -73,7 +73,7 @@ class AppDrawer extends StatelessWidget {
                   ),
                   title: Text(snapshot.data.userName ?? ''),
                   subtitle: Text(snapshot.data.userEmail ?? ''),
-                  trailing: Icon(Icons.settings),
+                  trailing: Icon(Icons.chevron_right),
                 );
               }),
           Expanded(
