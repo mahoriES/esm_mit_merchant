@@ -19,14 +19,15 @@ class AccountSettingBloc {
   Observable<AccountSettingState> get accountSettingStateObservable =>
       _subjectAccountSettingState.stream;
 
-  getData() {
+  getData() async {
     this._accountSettingState.isLoading = true;
     this._accountSettingState.isLoadingFailed = false;
     this._updateState();
-    httpService
-        .foGet(
-            'ui/helper/account/?gmb_locations&location_connections&locations')
-        .then((httpResponse) {
+    try {
+      final reviewInfos = await getReviewInfo();
+      this._accountSettingState.accountReviewInfo = reviewInfos;
+      final httpResponse = await httpService.foGet(
+          'ui/helper/account/?gmb_locations&location_connections&locations');
       if (httpResponse.statusCode == 200) {
         this._accountSettingState.response =
             UiHelperResponse.fromJson(json.decode(httpResponse.body));
@@ -38,12 +39,28 @@ class AccountSettingBloc {
         this._accountSettingState.isLoading = false;
       }
       this._updateState();
-    }).catchError((onError) {
+    } catch (onError) {
       print(onError.toString());
       this._accountSettingState.isLoadingFailed = true;
       this._accountSettingState.isLoading = false;
       this._updateState();
-    });
+    }
+  }
+
+  Future<List<AccountReviewInfo>> getReviewInfo() async {
+    final httpResponse = await httpService.foGet('google/account/review/info/');
+    final reviewInfos = new List<AccountReviewInfo>();
+    if (httpResponse.statusCode == 200 && httpResponse.body != null) {
+      print(httpResponse.body);
+      if (json.decode(httpResponse.body) != null) {
+        json.decode(httpResponse.body).forEach((v) {
+          reviewInfos.add(new AccountReviewInfo.fromJson(v));
+        });
+      }
+    } else {
+      throw Error();
+    }
+    return reviewInfos;
   }
 
   createStoreForGmbLocations(String gmbLocationId, Function onSuccess) {
@@ -91,9 +108,14 @@ class AccountSettingState {
   bool isLoadingFailed = false;
   bool isSubmitting = false;
   UiHelperResponse response;
+  List<AccountReviewInfo> accountReviewInfo;
 
   List<GmbLocationWithUiData> get gmbLocationWithUiData {
     if (response == null) {
+      return [];
+    }
+
+    if (accountReviewInfo == null) {
       return [];
     }
 
@@ -105,6 +127,7 @@ class AccountSettingState {
       var gmbLocationId = gmbLocation.gmbLocationId;
       String foLocationId;
       FoLocation foLocation;
+      AccountReviewInfo accReviewInfo;
       for (var locationConnection in locationConnections) {
         if (locationConnection.gmbLocationId == gmbLocationId) {
           foLocationId = locationConnection.fbLocationId;
@@ -119,9 +142,15 @@ class AccountSettingState {
           }
         }
       }
+      for(var accReview in accountReviewInfo ) {
+        if(accReview.gmbLocationId == gmbLocationId) {
+          accReviewInfo = accReview;
+        }
+      }
       return GmbLocationWithUiData(
         foLocation: foLocation,
         gmbLocation: gmbLocation,
+        accountReviewInfo: accReviewInfo
       );
     }).toList();
   }
@@ -323,7 +352,8 @@ class FoLocationMetaData {
 class GmbLocationWithUiData {
   GmbLocation gmbLocation;
   FoLocation foLocation;
-  GmbLocationWithUiData({this.gmbLocation, this.foLocation});
+  AccountReviewInfo accountReviewInfo;
+  GmbLocationWithUiData({this.gmbLocation, this.foLocation, this.accountReviewInfo});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -400,6 +430,28 @@ class CreateStorePayload {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['gmb_location_ids'] = this.gmbLocationIds;
+    return data;
+  }
+}
+
+class AccountReviewInfo {
+  double rating;
+  int numReview;
+  String gmbLocationId;
+
+  AccountReviewInfo({this.rating, this.numReview, this.gmbLocationId});
+
+  AccountReviewInfo.fromJson(Map<String, dynamic> json) {
+    rating = json['rating'];
+    numReview = json['num_review'];
+    gmbLocationId = json['gmb_location_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['rating'] = this.rating;
+    data['num_review'] = this.numReview;
+    data['gmb_location_id'] = this.gmbLocationId;
     return data;
   }
 }

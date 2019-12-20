@@ -204,8 +204,39 @@ class SettingPageState extends State<SettingPage>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(gmbLocationWithUiData.gmbLocation.gmbLocationName,
+                    Text(
+                        gmbLocationWithUiData.gmbLocation.gmbLocationName ?? '',
                         style: Theme.of(context).textTheme.subhead),
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: gmbLocationWithUiData.accountReviewInfo != null
+                            ? Row(
+                                children: <Widget>[
+                                  Text(gmbLocationWithUiData
+                                      .accountReviewInfo.rating
+                                      .toStringAsFixed(1)),
+                                  SizedBox(
+                                    width: 4.0,
+                                  ),
+                                  StarDisplay(
+                                    value: gmbLocationWithUiData
+                                        .accountReviewInfo.rating
+                                        .toInt(),
+                                  ),
+                                  SizedBox(
+                                    width: 4.0,
+                                  ),
+                                  Text('(' +
+                                      gmbLocationWithUiData
+                                          .accountReviewInfo.numReview
+                                          .toString() +
+                                      ')')
+                                ],
+                              )
+                            : null,
+                      ),
+                    ),
                     Container(
                       child: gmbLocationWithUiData.getLocationAddress() == ''
                           ? null
@@ -274,6 +305,26 @@ class SettingPageState extends State<SettingPage>
           );
         },
       ),
+    );
+  }
+}
+
+class StarDisplay extends StatelessWidget {
+  final int value;
+  const StarDisplay({Key key, this.value = 0})
+      : assert(value != null),
+        super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(5, (index) {
+        return Icon(
+          index < value ? Icons.star : Icons.star_border,
+          size: 18.0,
+          color: Color.fromARGB(255, 239, 206, 74),
+        );
+      }),
     );
   }
 }
