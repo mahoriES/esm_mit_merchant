@@ -97,5 +97,20 @@
   "sender_code_page_button_manual": "സ്വമേധയാ നൽകുക",
   "sender_code_page_button_submit": "സമർപ്പിക്കുക",
   "sender_code_page_dialog_message": "അയച്ചയാളുടെ കോഡ് മാറ്റാനുള്ള നിങ്ങളുടെ അഭ്യർത്ഥന വിജയകരമായി സമർപ്പിച്ചു. അംഗീകാരം ലഭിക്കുകയാണെങ്കിൽ പ്രാബല്യത്തിൽ വരാൻ 24 മണിക്കൂർ വരെ എടുത്തേക്കാം.",
-  "sender_code_page_dialog_button_text": "ശരി"
+  "sender_code_page_dialog_button_text": "ശരി",
+
+  "setting_page_title": "",
+  "setting_page_sms_sender_code": "",
+  "setting_page_button_change_sms_code": "",
+  "setting_page_my_business_locations": "",
+  "setting_page_button_add_location": "",
+  "setting_page_connect_location": "",
+  "setting_page_location_connected": "",
+  "setting_page_location_verification_needed": "",
+  "setting_page_verify": "",
+  "setting_page_dialog_title": "",
+  "setting_page_dialog_success": "",
+  "setting_page_dialog_message": "",
+  "setting_page_dialog_button_done": "",
+  "setting_page_dialog_button_confirm": ""
 }
