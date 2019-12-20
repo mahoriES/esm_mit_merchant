@@ -4,8 +4,10 @@ import 'package:foore/data/bloc/account_setting.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/gmb_location.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
+import 'package:foore/onboarding_page/location_search_page.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:provider/provider.dart';
+import 'package:sprintf/sprintf.dart';
 
 class SettingPage extends StatefulWidget {
   static const routeName = '/settings';
@@ -25,6 +27,80 @@ class SettingPage extends StatefulWidget {
 
 class SettingPageState extends State<SettingPage>
     with AfterLayoutMixin<SettingPage> {
+  onCreateStore(GmbLocation gmbLocation) {
+    var accSettingBloc = Provider.of<AccountSettingBloc>(context);
+    accSettingBloc.createStoreForGmbLocations(gmbLocation.gmbLocationId, () {});
+  }
+
+  openCreateStore(
+      AccountSettingBloc accountSettingBloc, GmbLocation gmbLocation) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: StreamBuilder<AccountSettingState>(
+              stream: accountSettingBloc.accountSettingStateObservable,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container();
+                }
+
+                if (snapshot.data.isSubmitting) {
+                  return Container();
+                }
+                return Text('Are you sure?');
+              }),
+          content: StreamBuilder<AccountSettingState>(
+              stream: accountSettingBloc.accountSettingStateObservable,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container();
+                }
+
+                if (snapshot.data.isSubmitting) {
+                  return Container(
+                      width: 50,
+                      height: 50,
+                      child: Center(child: CircularProgressIndicator()));
+                }
+
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Text(sprintf('Connect %s to Foore',
+                          [gmbLocation.gmbLocationName ?? ''])),
+                    ),
+                  ],
+                );
+              }),
+          actions: <Widget>[
+            StreamBuilder<AccountSettingState>(
+                stream: accountSettingBloc.accountSettingStateObservable,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Container();
+                  }
+
+                  if (snapshot.data.isSubmitting) {
+                    return Container();
+                  }
+
+                  return FlatButton(
+                    child: Text('Confirm'),
+                    onPressed: () {
+                      onCreateStore(gmbLocation);
+                    },
+                  );
+                })
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void afterFirstLayout(BuildContext context) {
     var accSettingBloc = Provider.of<AccountSettingBloc>(context);
@@ -48,6 +124,10 @@ class SettingPageState extends State<SettingPage>
 
   @override
   Widget build(BuildContext context) {
+    addNewLocation() {
+      Navigator.of(context).pushNamed(LocationSearchPage.routeName);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Account Settings'),
@@ -87,7 +167,7 @@ class SettingPageState extends State<SettingPage>
             Container(
               child: Center(
                 child: OutlineButton(
-                  onPressed: () {},
+                  onPressed: addNewLocation,
                   child: Text('Add new Google Location'),
                 ),
               ),
@@ -101,11 +181,13 @@ class SettingPageState extends State<SettingPage>
   Widget locationListWidget(BuildContext context) {
     var accSettingBloc = Provider.of<AccountSettingBloc>(context);
     onVerify(GmbLocation location) {
-      final arguments = Map<String, dynamic>();
-      arguments['locationItem'] = GmbLocationItem.fromGmbLocation(location);
-      Navigator.pushNamed(context, LocationClaimPage.routeName,
-          arguments: arguments);
+      openCreateStore(accSettingBloc, location);
+      // final arguments = Map<String, dynamic>();
+      // arguments['locationItem'] = GmbLocationItem.fromGmbLocation(location);
+      // Navigator.pushNamed(context, LocationClaimPage.routeName,
+      //     arguments: arguments);
     }
+
     return Container(
       child: StreamBuilder<AccountSettingState>(
         stream: accSettingBloc.accountSettingStateObservable,
@@ -138,7 +220,10 @@ class SettingPageState extends State<SettingPage>
                               gmbLocationWithUiData.getIsLocationVerified()
                           ? RaisedButton(
                               child: Text('Connect'),
-                              onPressed: () {},
+                              onPressed: () {
+                                openCreateStore(accSettingBloc,
+                                    gmbLocationWithUiData.gmbLocation);
+                              },
                             )
                           : null,
                     ),

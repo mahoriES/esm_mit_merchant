@@ -46,6 +46,35 @@ class AccountSettingBloc {
     });
   }
 
+  createStoreForGmbLocations(String gmbLocationId, Function onSuccess) {
+    final gmbLocationIds = [gmbLocationId];
+    if (this._accountSettingState.isSubmitting == false &&
+        gmbLocationIds.length > 0) {
+      this._accountSettingState.isSubmitting = true;
+      this._updateState();
+      var payload = CreateStorePayload(gmbLocationIds: gmbLocationIds);
+      var payloadString = json.encode(payload.toJson());
+      httpService
+          .foPost('gmb/create/store/', payloadString)
+          .then((httpResponse) {
+        print(httpResponse.statusCode);
+        if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+          this._accountSettingState.isSubmitting = false;
+          if (onSuccess != null) {
+            onSuccess();
+          }
+        } else {
+          this._accountSettingState.isSubmitting = false;
+        }
+        this._updateState();
+      }).catchError((onError) {
+        print(onError.toString());
+        this._accountSettingState.isSubmitting = false;
+        this._updateState();
+      });
+    }
+  }
+
   _updateState() {
     if (!this._subjectAccountSettingState.isClosed) {
       this._subjectAccountSettingState.sink.add(this._accountSettingState);
@@ -60,6 +89,7 @@ class AccountSettingBloc {
 class AccountSettingState {
   bool isLoading = false;
   bool isLoadingFailed = false;
+  bool isSubmitting = false;
   UiHelperResponse response;
 
   List<GmbLocationWithUiData> get gmbLocationWithUiData {
@@ -96,7 +126,7 @@ class AccountSettingState {
     }).toList();
   }
 
-   String getLocationAddress(GmbLocation locationItem) {
+  String getLocationAddress(GmbLocation locationItem) {
     var address = '';
     if (locationItem.gmbLocationAddress != null) {
       if (locationItem.gmbLocationAddress.addressLines != null) {
@@ -120,7 +150,9 @@ class AccountSettingState {
         if (address == '') {
           address = locationItem.gmbLocationAddress.administrativeArea;
         } else {
-          address = address + ', ' + locationItem.gmbLocationAddress.administrativeArea;
+          address = address +
+              ', ' +
+              locationItem.gmbLocationAddress.administrativeArea;
         }
       }
 
@@ -304,7 +336,7 @@ class GmbLocationWithUiData {
     return data;
   }
 
-   String getLocationAddress() {
+  String getLocationAddress() {
     var address = '';
     if (gmbLocation.gmbLocationAddress != null) {
       if (gmbLocation.gmbLocationAddress.addressLines != null) {
@@ -328,7 +360,9 @@ class GmbLocationWithUiData {
         if (address == '') {
           address = gmbLocation.gmbLocationAddress.administrativeArea;
         } else {
-          address = address + ', ' + gmbLocation.gmbLocationAddress.administrativeArea;
+          address = address +
+              ', ' +
+              gmbLocation.gmbLocationAddress.administrativeArea;
         }
       }
 
@@ -349,5 +383,23 @@ class GmbLocationWithUiData {
       return false;
     }
     return gmbLocation.gmbLocationState.isVerified ?? false;
+  }
+}
+
+class CreateStorePayload {
+  List<String> gmbLocationIds;
+
+  CreateStorePayload({
+    this.gmbLocationIds,
+  });
+
+  CreateStorePayload.fromJson(Map<String, dynamic> json) {
+    gmbLocationIds = json['gmb_location_ids'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['gmb_location_ids'] = this.gmbLocationIds;
+    return data;
   }
 }
