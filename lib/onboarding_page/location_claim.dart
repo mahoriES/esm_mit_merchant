@@ -46,6 +46,7 @@ class _LocationClaimPageState extends State<LocationClaimPage>
     with AfterLayoutMixin<LocationClaimPage> {
   Completer<GoogleMapController> _controller = Completer();
   StreamSubscription<LocationClaimState> _subscription;
+  bool isVerificationPendingPageOpened = false;
 
   @override
   void afterFirstLayout(BuildContext context) {
@@ -54,14 +55,17 @@ class _LocationClaimPageState extends State<LocationClaimPage>
     _subscription = locationClaimBloc.onboardingStateObservable
         .listen(_onLocationClaimChange);
     locationClaimBloc.getData();
+    this.isVerificationPendingPageOpened = false;
   }
 
   _onLocationClaimChange(LocationClaimState state) {
-    if (state.isShowVerificationPending) {
-      Navigator.pushReplacementNamed(context, LocationVerifyPage.routeName,
+    if (state.isShowVerificationPending && !isVerificationPendingPageOpened) {
+      Navigator.of(context).pushReplacementNamed(LocationVerifyPage.routeName,
           arguments: state.locationItem);
+      this.isVerificationPendingPageOpened = true;
     } else if (state.isShowNotLoggedInWithGoogle) {
-      Navigator.pushReplacementNamed(context, GoogleLoginNotDonePage.routeName);
+      Navigator.of(context)
+          .pushReplacementNamed(GoogleLoginNotDonePage.routeName);
     }
   }
 
@@ -85,7 +89,8 @@ class _LocationClaimPageState extends State<LocationClaimPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppTranslations.of(context).text("location_claim_page_title")),
+        title:
+            Text(AppTranslations.of(context).text("location_claim_page_title")),
       ),
       drawer: AppDrawer(),
       body: SafeArea(
@@ -143,7 +148,8 @@ class _LocationClaimPageState extends State<LocationClaimPage>
         ),
         FlatButton(
           child: Text(
-            AppTranslations.of(context).text("location_claim_page_button_request_access"),
+            AppTranslations.of(context)
+                .text("location_claim_page_button_request_access"),
             style: Theme.of(context).textTheme.button.copyWith(
                   decoration: TextDecoration.underline,
                 ),
@@ -172,7 +178,8 @@ class _LocationClaimPageState extends State<LocationClaimPage>
                     backgroundColor: Colors.white,
                   ))
                 : Text(
-                    AppTranslations.of(context).text("location_claim_page_button_manage"),
+                    AppTranslations.of(context)
+                        .text("location_claim_page_button_manage"),
                     style: Theme.of(context).textTheme.button.copyWith(
                           color: Colors.white,
                         ),

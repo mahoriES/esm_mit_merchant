@@ -133,10 +133,12 @@ class CompleteVerificationBloc {
   }
 
   _updateState() {
-    this
-        ._subjectCompleteVerificationState
-        .sink
-        .add(this._completeVerificationState);
+    if (!this._subjectCompleteVerificationState.isClosed) {
+      this
+          ._subjectCompleteVerificationState
+          .sink
+          .add(this._completeVerificationState);
+    }
   }
 
   dispose() {
