@@ -68,6 +68,7 @@ class AccountSettingBloc {
     if (this._accountSettingState.isSubmitting == false &&
         gmbLocationIds.length > 0) {
       this._accountSettingState.isSubmitting = true;
+      this._accountSettingState.isSubmitSuccess = false;
       this._updateState();
       var payload = CreateStorePayload(gmbLocationIds: gmbLocationIds);
       var payloadString = json.encode(payload.toJson());
@@ -77,16 +78,19 @@ class AccountSettingBloc {
         print(httpResponse.statusCode);
         if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
           this._accountSettingState.isSubmitting = false;
+          this._accountSettingState.isSubmitSuccess = true;
           if (onSuccess != null) {
             onSuccess();
           }
         } else {
           this._accountSettingState.isSubmitting = false;
+          this._accountSettingState.isSubmitSuccess = false;
         }
         this._updateState();
       }).catchError((onError) {
         print(onError.toString());
         this._accountSettingState.isSubmitting = false;
+        this._accountSettingState.isSubmitSuccess = false;
         this._updateState();
       });
     }
@@ -107,6 +111,7 @@ class AccountSettingState {
   bool isLoading = false;
   bool isLoadingFailed = false;
   bool isSubmitting = false;
+  bool isSubmitSuccess = false;
   UiHelperResponse response;
   List<AccountReviewInfo> accountReviewInfo;
 
@@ -142,16 +147,15 @@ class AccountSettingState {
           }
         }
       }
-      for(var accReview in accountReviewInfo ) {
-        if(accReview.gmbLocationId == gmbLocationId) {
+      for (var accReview in accountReviewInfo) {
+        if (accReview.gmbLocationId == gmbLocationId) {
           accReviewInfo = accReview;
         }
       }
       return GmbLocationWithUiData(
-        foLocation: foLocation,
-        gmbLocation: gmbLocation,
-        accountReviewInfo: accReviewInfo
-      );
+          foLocation: foLocation,
+          gmbLocation: gmbLocation,
+          accountReviewInfo: accReviewInfo);
     }).toList();
   }
 
@@ -353,7 +357,8 @@ class GmbLocationWithUiData {
   GmbLocation gmbLocation;
   FoLocation foLocation;
   AccountReviewInfo accountReviewInfo;
-  GmbLocationWithUiData({this.gmbLocation, this.foLocation, this.accountReviewInfo});
+  GmbLocationWithUiData(
+      {this.gmbLocation, this.foLocation, this.accountReviewInfo});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

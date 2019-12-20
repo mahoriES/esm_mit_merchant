@@ -1,11 +1,13 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/account_setting.dart';
+import 'package:foore/data/bloc/onboarding_guard.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/gmb_location.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
 import 'package:foore/onboarding_page/location_search_page.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
+import 'package:foore/setting_page/sender_code.dart';
 import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -46,7 +48,8 @@ class SettingPageState extends State<SettingPage>
                   return Container();
                 }
 
-                if (snapshot.data.isSubmitting) {
+                if (snapshot.data.isSubmitting ||
+                    snapshot.data.isSubmitSuccess) {
                   return Container();
                 }
                 return Text('Are you sure?');
@@ -63,6 +66,12 @@ class SettingPageState extends State<SettingPage>
                       width: 50,
                       height: 50,
                       child: Center(child: CircularProgressIndicator()));
+                }
+                if (snapshot.data.isSubmitSuccess) {
+                  return Container(
+                      width: 50,
+                      height: 50,
+                      child: Text('Location connected.'));
                 }
 
                 return Column(
@@ -88,6 +97,14 @@ class SettingPageState extends State<SettingPage>
                     return Container();
                   }
 
+                  if (snapshot.data.isSubmitSuccess) {
+                    return FlatButton(
+                      child: Text('Done'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    );
+                  }
                   return FlatButton(
                     child: Text('Confirm'),
                     onPressed: () {
@@ -99,6 +116,7 @@ class SettingPageState extends State<SettingPage>
         );
       },
     );
+    accountSettingBloc.getData();
   }
 
   @override
@@ -128,6 +146,8 @@ class SettingPageState extends State<SettingPage>
       Navigator.of(context).pushNamed(LocationSearchPage.routeName);
     }
 
+    final onBoardingGuard = Provider.of<OnboardingGuardBloc>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Account Settings'),
@@ -144,14 +164,24 @@ class SettingPageState extends State<SettingPage>
                 style: Theme.of(context).textTheme.subtitle),
             Row(
               children: <Widget>[
-                Text('oFoore', style: Theme.of(context).textTheme.subhead),
+                StreamBuilder<OnboardingGuardState>(
+                    stream: onBoardingGuard.onboardingStateObservable,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Container();
+                      }
+                      return Text(snapshot.data.smsCode,
+                          style: Theme.of(context).textTheme.subhead);
+                    }),
                 FlatButton(
                   child: Text('Change',
                       style: Theme.of(context)
                           .textTheme
                           .caption
                           .copyWith(color: Theme.of(context).primaryColor)),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(SenderCodePage.routeName);
+                  },
                 ),
               ],
             ),
