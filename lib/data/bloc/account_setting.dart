@@ -24,6 +24,7 @@ class AccountSettingBloc {
     this._accountSettingState.isLoadingFailed = false;
     this._accountSettingState.isSubmitSuccess = false;
     this._updateState();
+    refreshBackend();
     try {
       final reviewInfos = await getReviewInfo();
       this._accountSettingState.accountReviewInfo = reviewInfos;
@@ -46,6 +47,12 @@ class AccountSettingBloc {
       this._accountSettingState.isLoading = false;
       this._updateState();
     }
+  }
+
+  refreshBackend() async {
+    try {
+      await httpService.foPost('google/account/user/refresh/', null);
+    } catch (err) {}
   }
 
   Future<List<AccountReviewInfo>> getReviewInfo() async {
