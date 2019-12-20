@@ -22,6 +22,7 @@ class AccountSettingBloc {
   getData() async {
     this._accountSettingState.isLoading = true;
     this._accountSettingState.isLoadingFailed = false;
+    this._accountSettingState.isSubmitSuccess = false;
     this._updateState();
     try {
       final reviewInfos = await getReviewInfo();
