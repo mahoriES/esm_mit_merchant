@@ -70,11 +70,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
               value:
                   snapshot.data.localeDelegate.currentLanguage == languageCode,
               onChanged: (bool value) {
-                final httpService = Provider.of<HttpService>(context);
                 appTranslationsBloc.onLocaleChanged(Locale(languageCode));
-                httpService.foAnalytics.addUserProperties(
-                    name: FoAnalyticsUserProperties.language_chosen,
-                    value: language);
                 if (widget.onSelectLanguage != null) {
                   widget.onSelectLanguage();
                 } else {

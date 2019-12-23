@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations_delegate.dart';
 import 'package:foore/theme/light.dart';
 import 'package:provider/provider.dart';
+import 'data/bloc/analytics.dart';
 import 'data/bloc/login.dart';
 import 'data/bloc/onboarding_guard.dart';
 import 'router.dart';
@@ -56,10 +58,22 @@ class ReviewApp extends StatefulWidget {
 }
 
 class _ReviewAppState extends State<ReviewApp> {
-
   @override
   void initState() {
     super.initState();
+  }
+
+  bool isLanguageTracked = false;
+
+  trackLanguage(AppTranslationsDelegate delegate) async {
+    if (!isLanguageTracked) {
+      final httpService = Provider.of<HttpService>(context);
+      String languageCode = await delegate.getLanguageCode();
+      httpService.foAnalytics.addUserProperties(
+          name: FoAnalyticsUserProperties.language_chosen,
+          value: languageCode ?? 'en');
+      isLanguageTracked = true;
+    }
   }
 
   @override
@@ -76,6 +90,7 @@ class _ReviewAppState extends State<ReviewApp> {
           if (!snapshot.hasData) {
             return Container();
           }
+          trackLanguage(snapshot.data.localeDelegate);
           return MaterialApp(
             title: 'Foore',
             initialRoute: Router.homeRoute,
