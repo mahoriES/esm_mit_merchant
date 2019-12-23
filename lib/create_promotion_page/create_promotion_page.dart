@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -247,8 +248,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               return createPromotion(context);
             } else if (snapshot.data.screenType ==
                 CreatePromotionScreens.promotionSent) {
-               return createPromotion(context);
-              // return listPromotion(context);
+              return listPromotion(context);
             }
             return Container();
           }),
@@ -298,6 +298,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                         ),
                         margin: EdgeInsets.symmetric(
                           horizontal: 16.0,
+                          vertical: 8.0,
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,16 +339,9 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                             SizedBox(
                               height: 8,
                             ),
-                            Text(
-                              AppTranslations.of(context)
-                                  .text('promotion_list_page_approval_pending'),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .caption
-                                  .copyWith(
-                                      color: Colors.yellow[800],
-                                      fontWeight: FontWeight.w600),
-                            ),
+                            Container(
+                                child: promotionState(promotion, snapshot.data,
+                                    createPromotionBloc)),
                           ],
                         ),
                       );
@@ -368,6 +362,39 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
         ],
       ),
     );
+  }
+
+  promotionState(PromotionItem promotion, CreatePromotionState state,
+      CreatePromotionBloc createPromotionBloc) {
+    print(json.encode(promotion.toJson()));
+    if (promotion.paymentState == PaymentState.pending) {
+      return FoSubmitButton(
+          text: "Pay",
+          onPressed: () {
+            createPromotionBloc.createPayment(promotion);
+          },
+          isLoading: state.isPaymentSubmitting &&
+              state.promotionBeingPaid == promotion.promoId,
+          isSuccess: state.isPaymentSubmitSuccess &&
+              state.promotionBeingPaid == promotion.promoId);
+    } else if (promotion.paymentState == PaymentState.refunded) {
+      return Text(
+        'refunded',
+        style: Theme.of(context)
+            .textTheme
+            .caption
+            .copyWith(color: Colors.yellow[800], fontWeight: FontWeight.w600),
+      );
+    } else if (promotion.paymentState == PaymentState.done) {
+      return Text(
+        AppTranslations.of(context)
+            .text('promotion_list_page_approval_pending'),
+        style: Theme.of(context)
+            .textTheme
+            .caption
+            .copyWith(color: Colors.yellow[800], fontWeight: FontWeight.w600),
+      );
+    }
   }
 
   Future<Uint8List> getBytesFromCanvas(

@@ -122,16 +122,6 @@ class CreatePromotionBloc {
     this._createPromotionState.isSubmitFailed = false;
     this._createPromotionState.isSubmitSuccess = false;
     this._updateState();
-    ////
-    bool isSuccess = await pay(_createPromotionState.price.toDouble());
-    if (!isSuccess) {
-      this._createPromotionState.isSubmitting = false;
-      this._createPromotionState.isSubmitFailed = true;
-      this._createPromotionState.isSubmitSuccess = false;
-      this._updateState();
-      return;
-    }
-
     /////////////
     var payload = new PromotionCreatePayload(
         promoMessage: messageEditController.text,
@@ -157,6 +147,7 @@ class CreatePromotionBloc {
         if (onDone != null) {
           onDone();
         }
+        print(httpResponse.body);
       } else {
         this._createPromotionState.isSubmitting = false;
         this._createPromotionState.isSubmitFailed = true;
@@ -164,9 +155,61 @@ class CreatePromotionBloc {
       }
       this._updateState();
     }).catchError((onError) {
+      print(onError.toString());
       this._createPromotionState.isSubmitting = false;
       this._createPromotionState.isSubmitFailed = true;
       this._createPromotionState.isSubmitSuccess = false;
+      this._updateState();
+    });
+  }
+
+  createPayment(PromotionItem promotionItem) async {
+    if (this._createPromotionState.isPaymentSubmitting) {
+      return;
+    }
+    this._createPromotionState.promotionBeingPaid = promotionItem.promoId;
+    this._createPromotionState.isPaymentSubmitting = true;
+    this._createPromotionState.isPaymentSubmitSuccess = false;
+    this._updateState();
+    var price = promotionItem.promoReach.substring(4, 7);
+    //
+    bool isSuccess = await pay(double.parse(price));
+    if (!isSuccess) {
+      this._createPromotionState.isPaymentSubmitting = false;
+      this._createPromotionState.isPaymentSubmitSuccess = false;
+      this._createPromotionState.promotionBeingPaid = null;
+      this._updateState();
+      return;
+    }
+
+    /////////////
+    var payload = new PayPromoPayload(
+      promoId: promotionItem.promoId,
+    );
+    var payloadString = json.encode(payload.toJson());
+    print(payloadString);
+    this
+        .httpService
+        .foPost('nearby/promo/paid/', payloadString)
+        .then((httpResponse) {
+      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+        print(httpResponse.body);
+        this._createPromotionState.promotionPaymentResponse =
+            PromotionItem.fromJson(json.decode(httpResponse.body));
+        this._createPromotionState.isPaymentSubmitting = false;
+        this._createPromotionState.isPaymentSubmitSuccess = true;
+        this._createPromotionState.promotionBeingPaid = null;
+      } else {
+        this._createPromotionState.isPaymentSubmitting = false;
+        this._createPromotionState.isPaymentSubmitSuccess = false;
+        this._createPromotionState.promotionBeingPaid = null;
+      }
+      this._updateState();
+    }).catchError((onError) {
+      this._createPromotionState.isPaymentSubmitting = false;
+      this._createPromotionState.isPaymentSubmitSuccess = false;
+
+      this._createPromotionState.promotionBeingPaid = null;
       this._updateState();
     });
   }
@@ -193,6 +236,8 @@ class CreatePromotionState {
   bool isLoading = false;
   bool isLoadingFailed = false;
   bool isSubmitting = false;
+  bool isPaymentSubmitting = false;
+  bool isPaymentSubmitSuccess = false;
   bool isSubmitFailed = false;
   bool isSubmitSuccess = false;
   String promoReach = '';
@@ -200,6 +245,7 @@ class CreatePromotionState {
   int price = 0;
   FoLocations selectedLocation;
   NearbyPromotionResponse nearbyPromotionResponse;
+  int promotionBeingPaid;
   List<PromotionItem> promotionList = new List<PromotionItem>();
 
   CreatePromotionScreens get screenType {
@@ -222,6 +268,31 @@ class CreatePromotionState {
 
   set promotionCreateResponse(PromotionItem response) {
     promotionList.add(response);
+  }
+
+  set promotionPaymentResponse(PromotionItem response) {
+    for (var promotion in promotionList) {
+      if (promotion.promoId == response.promoId) { 
+        promotion.paymentState = response.paymentState;
+        break;
+      }
+    }
+  }
+}
+
+class PayPromoPayload {
+  int promoId;
+
+  PayPromoPayload({this.promoId});
+
+  PayPromoPayload.fromJson(Map<String, dynamic> json) {
+    promoId = json['promo_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['promo_id'] = this.promoId;
+    return data;
   }
 }
 
@@ -257,6 +328,18 @@ class NearbyPromotionResponse {
   }
 }
 
+class PromoState {
+  static const pending = 1;
+  static const done = 2;
+  static const rejected = 3;
+}
+
+class PaymentState {
+  static const pending = 1;
+  static const done = 2;
+  static const refunded = 3;
+}
+
 class PromotionItem {
   int promoId;
   String companyId;
@@ -264,6 +347,7 @@ class PromotionItem {
   String promoMessage;
   String promoReach;
   int promoState;
+  int paymentState;
   String created;
 
   PromotionItem(
@@ -273,6 +357,7 @@ class PromotionItem {
       this.promoMessage,
       this.promoReach,
       this.promoState,
+      this.paymentState,
       this.created});
 
   PromotionItem.fromJson(Map<String, dynamic> json) {
@@ -283,6 +368,7 @@ class PromotionItem {
     promoReach = json['promo_reach'];
     promoState = json['promo_state'];
     created = json['created'];
+    paymentState = json['payment_state'];
   }
 
   Map<String, dynamic> toJson() {
@@ -294,6 +380,7 @@ class PromotionItem {
     data['promo_reach'] = this.promoReach;
     data['promo_state'] = this.promoState;
     data['created'] = this.created;
+    data['payment_state'] = this.paymentState;
     return data;
   }
 
