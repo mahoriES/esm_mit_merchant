@@ -1,3 +1,4 @@
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:foore/environments/environment.dart';
@@ -99,6 +100,14 @@ class AppDrawer extends StatelessWidget {
                 AppTranslations.of(context).text("share_page_button_share")),
             onTap: () {
               Navigator.of(context).popAndPushNamed(SharePage.routeName);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.message),
+            title: Text(AppTranslations.of(context)
+                .text('promotion_list_page_contact-us')),
+            onTap: () async {
+              await Share.whatsAppTo('+917829862689');
             },
           ),
           ListTile(
