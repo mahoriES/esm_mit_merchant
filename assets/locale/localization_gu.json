@@ -115,11 +115,11 @@
   "setting_page_dialog_button_done": "થઈ ગયું",
   "setting_page_dialog_button_confirm": "ખાતરી કરો",
 
-  "drawer_button_contact_us": "",
-  "promotion_list_page_approval_rejected": "",
-  "promotion_list_page_button_pay": "",
-  "promotion_list_page_refunded": "",
-  "promotion_list_page_approval_done": "",
-  "promotion_list_page_payment_pending": "",
-  "promotion_list_page_payment_done": ""
+  "drawer_button_contact_us": "અમારો સંપર્ક કરો",
+  "promotion_list_page_approval_rejected": "મંજૂરી નામંજૂર",
+  "promotion_list_page_button_pay": "ચૂકવણી",
+  "promotion_list_page_refunded": "પરત આપ્યું",
+  "promotion_list_page_approval_done": "બ Promતી મોકલવામાં આવી",
+  "promotion_list_page_payment_pending": "ચુકવણી બાકી છે",
+  "promotion_list_page_payment_done": "ચુકવણી થઈ ગઈ"
 }

@@ -113,5 +113,13 @@
   "setting_page_dialog_success": "இடம் இணைக்கப்பட்டுள்ளது",
   "setting_page_dialog_message": "உங்கள் வரவேற்புரை ஃபூருடன் இணைக்கவும்",
   "setting_page_dialog_button_done": "முடிந்ததாகக்",
-  "setting_page_dialog_button_confirm": "உறுதிசெய்"
+  "setting_page_dialog_button_confirm": "உறுதிசெய்",
+
+  "drawer_button_contact_us": "ਸਾਡੇ ਨਾਲ ਸੰਪਰਕ ਕਰੋ",
+  "promotion_list_page_approval_rejected": "ਪ੍ਰਵਾਨਗੀ ਨੂੰ ਰੱਦ ਕਰ ਦਿੱਤਾ",
+  "promotion_list_page_button_pay": "ਭੁਗਤਾਨ ਕਰੋ",
+  "promotion_list_page_refunded": "ਵਾਪਸ ਕਰ ਦਿੱਤਾ ਗਿਆ",
+  "promotion_list_page_approval_done": "ਪ੍ਰਚਾਰ ਭੇਜਿਆ ਗਿਆ",
+  "promotion_list_page_payment_pending": "ਭੁਗਤਾਨ ਬਕਾਇਆ ਹੈ",
+  "promotion_list_page_payment_done": "ਭੁਗਤਾਨ ਹੋ ਗਿਆ"
 }

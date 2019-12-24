@@ -112,5 +112,13 @@
   "setting_page_dialog_success": "स्थान जुड़ा हुआ है।",
   "setting_page_dialog_message": "अपने सैलून को फूरे से कनेक्ट करें",
   "setting_page_dialog_button_done": "हॊ गया",
-  "setting_page_dialog_button_confirm": "पुष्टि करें"
+  "setting_page_dialog_button_confirm": "पुष्टि करें",
+
+  "drawer_button_contact_us": "संपर्क करें",
+  "promotion_list_page_approval_rejected": "अनुमोदन अस्वीकार कर दिया गया",
+  "promotion_list_page_button_pay": "भुगतान",
+  "promotion_list_page_refunded": "वापसी की गई है",
+  "promotion_list_page_approval_done": "प्रमोशन भेजा गया",
+  "promotion_list_page_payment_pending": "भुगतान लंबित",
+  "promotion_list_page_payment_done": "भुगतान हो गया"
 }

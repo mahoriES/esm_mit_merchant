@@ -112,5 +112,13 @@
   "setting_page_dialog_success": "స్థానం కనెక్ట్ చేయబడింది",
   "setting_page_dialog_message": "మీ సెలూన్‌ను Foore కనెక్ట్ చేయండి",
   "setting_page_dialog_button_done": "పూర్తి",
-  "setting_page_dialog_button_confirm": "కన్ఫర్మ్"
+  "setting_page_dialog_button_confirm": "కన్ఫర్మ్",
+
+  "drawer_button_contact_us": "మమ్మల్ని సంప్రదించండి",
+  "promotion_list_page_approval_rejected": "ఆమోదం తిరస్కరించబడింది",
+  "promotion_list_page_button_pay": "చెల్లింపు చేయండి",
+  "promotion_list_page_refunded": "తిరిగి చెల్లించబడదు",
+  "promotion_list_page_approval_done": "ప్రమోషన్ పంపబడింది",
+  "promotion_list_page_payment_pending": "చెల్లింపు పెండింగ్‌లో ఉంది",
+  "promotion_list_page_payment_done": "చెల్లింపు పూర్తయింది"
 }

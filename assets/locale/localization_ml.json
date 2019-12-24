@@ -112,5 +112,13 @@
   "setting_page_dialog_success": "സ്ഥാനം കണക്റ്റുചെയ്‌തു",
   "setting_page_dialog_message": "നിങ്ങളുടെ സലൂൺ ഫൂറിലേക്ക് ബന്ധിപ്പിക്കുക",
   "setting_page_dialog_button_done": "ചെയ്‌തു",
-  "setting_page_dialog_button_confirm": "സ്ഥിരീകരിക്കുക"
+  "setting_page_dialog_button_confirm": "സ്ഥിരീകരിക്കുക",
+
+  "drawer_button_contact_us": "ഞങ്ങളെ സമീപിക്കുക",
+  "promotion_list_page_approval_rejected": "അംഗീകാരം നിരസിച്ചു",
+  "promotion_list_page_button_pay": "പണമടയ്ക്കുക",
+  "promotion_list_page_refunded": "റീഫണ്ട് ചെയ്തു",
+  "promotion_list_page_approval_done": "പ്രമോഷൻ അയച്ചു",
+  "promotion_list_page_payment_pending": "പണമടയ്ക്കൽ ശേഷിക്കുന്നു",
+  "promotion_list_page_payment_done": "പേയ്‌മെന്റ് പൂർത്തിയായി"
 }

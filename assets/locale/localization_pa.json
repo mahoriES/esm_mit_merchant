@@ -112,5 +112,13 @@
   "setting_page_dialog_success": "ਟਿਕਾਣਾ ਜੁੜਿਆ",
   "setting_page_dialog_message": "ਆਪਣੇ ਸੈਲੂਨ ਨੂੰ Foore ਨਾਲ ਜੋੜੋ",
   "setting_page_dialog_button_done": "ਕੀਤਾ",
-  "setting_page_dialog_button_confirm": "ਪੁਸ਼ਟੀ ਕਰੋ"
+  "setting_page_dialog_button_confirm": "ਪੁਸ਼ਟੀ ਕਰੋ",
+
+  "drawer_button_contact_us": "ਸਾਡੇ ਨਾਲ ਸੰਪਰਕ ਕਰੋ",
+  "promotion_list_page_approval_rejected": "ਪ੍ਰਵਾਨਗੀ ਨੂੰ ਰੱਦ ਕਰ ਦਿੱਤਾ",
+  "promotion_list_page_button_pay": "ਭੁਗਤਾਨ ਕਰੋ",
+  "promotion_list_page_refunded": "ਵਾਪਸ ਕਰ ਦਿੱਤਾ ਗਿਆ",
+  "promotion_list_page_approval_done": "ਪ੍ਰਚਾਰ ਭੇਜਿਆ ਗਿਆ",
+  "promotion_list_page_payment_pending": "ਭੁਗਤਾਨ ਬਕਾਇਆ ਹੈ",
+  "promotion_list_page_payment_done": "ਭੁਗਤਾਨ ਹੋ ਗਿਆ"
 }

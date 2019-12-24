@@ -113,5 +113,13 @@
   "setting_page_dialog_success": "ಸ್ಥಳವನ್ನು ಸಂಪರ್ಕಿಸಲಾಗಿದೆ",
   "setting_page_dialog_message": "ನಿಮ್ಮ ಸಲೂನ್ ಅನ್ನು ಫೂರ್ಗೆ ಸಂಪರ್ಕಪಡಿಸಿ",
   "setting_page_dialog_button_done": "ಮುಗಿದಿದೆ",
-  "setting_page_dialog_button_confirm": "ಖಚಿತಪಡಿಸಿ"
+  "setting_page_dialog_button_confirm": "ಖಚಿತಪಡಿಸಿ",
+
+  "drawer_button_contact_us": "ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ",
+  "promotion_list_page_approval_rejected": "ಅನುಮೋದನೆಯನ್ನು ತಿರಸ್ಕರಿಸಲಾಗಿದೆ",
+  "promotion_list_page_button_pay": "ಪಾವತಿ",
+  "promotion_list_page_refunded": "ಮರುಪಾವತಿ ಮಾಡಲಾಗಿದೆ",
+  "promotion_list_page_approval_done": "ಪ್ರಚಾರ ಕಳುಹಿಸಲಾಗಿದೆ",
+  "promotion_list_page_payment_pending": "ಪಾವತಿ ಬಾಕಿ ಇದೆ",
+  "promotion_list_page_payment_done": "ಪಾವತಿ ಮಾಡಲಾಗಿದೆ"
 }
