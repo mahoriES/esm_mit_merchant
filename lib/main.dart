@@ -72,7 +72,7 @@ class _ReviewAppState extends State<ReviewApp>
     String languageCode = await delegate.getLanguageCode();
     httpService.foAnalytics.addUserProperties(
         name: FoAnalyticsUserProperties.language_chosen,
-        value: languageCode ?? 'en');
+        value: languageCode != null ? languageCode : 'en');
   }
 
   @override
