@@ -111,5 +111,14 @@
   "setting_page_dialog_success":"Location connected.",
   "setting_page_dialog_message":"Connect %s to Foore",
   "setting_page_dialog_button_done":"done",
-  "setting_page_dialog_button_confirm":"confirm"
+  "setting_page_dialog_button_confirm":"confirm",
+
+  "drawer_button_contact_us": "Contact us",
+  "promotion_list_page_approval_rejected": "Approval rejected",
+  "promotion_list_page_button_pay": "Pay",
+  "promotion_list_page_refunded": "Refunded",
+  "promotion_list_page_approval_done": "Promotion sent",
+  "promotion_list_page_payment_pending": "Payment pending",
+  "promotion_list_page_payment_done": "Payment done"
+
 }

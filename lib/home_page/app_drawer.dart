@@ -105,7 +105,7 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.message),
             title: Text(AppTranslations.of(context)
-                .text('promotion_list_page_contact-us')),
+                .text('drawer_button_contact_us')),
             onTap: () async {
               await Share.whatsAppTo('+917829862689');
             },

@@ -371,7 +371,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            'Payment pending',
+            AppTranslations.of(context)
+                .text('promotion_list_page_payment_pending'),
             style: Theme.of(context).textTheme.caption.copyWith(
                   color: Colors.yellow[800],
                 ),
@@ -380,7 +381,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
             height: 8.0,
           ),
           FoSubmitButton(
-              text: "Pay",
+              text: AppTranslations.of(context)
+                  .text('promotion_list_page_button_pay'),
               onPressed: () {
                 createPromotionBloc.createPayment(promotion);
               },
@@ -392,7 +394,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
       );
     } else if (promotion.paymentState == PaymentState.refunded) {
       return Text(
-        'Refunded',
+        AppTranslations.of(context).text('promotion_list_page_refunded'),
         style: Theme.of(context)
             .textTheme
             .caption
@@ -404,7 +406,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Payment done',
+              AppTranslations.of(context)
+                  .text('promotion_list_page_payment_done'),
               style: Theme.of(context).textTheme.caption.copyWith(
                     color: Colors.black54,
                   ),
@@ -425,7 +428,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Payment done',
+              AppTranslations.of(context)
+                  .text('promotion_list_page_payment_done'),
               style: Theme.of(context).textTheme.caption.copyWith(
                     color: Colors.black54,
                   ),
@@ -434,7 +438,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               height: 4.0,
             ),
             Text(
-              'Approval rejected',
+              AppTranslations.of(context)
+                  .text('promotion_list_page_approval_rejected'),
               style: Theme.of(context).textTheme.caption.copyWith(
                   color: Colors.red[800], fontWeight: FontWeight.w600),
             )
@@ -445,7 +450,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Payment done',
+              AppTranslations.of(context)
+                  .text('promotion_list_page_payment_done'),
               style: Theme.of(context).textTheme.caption.copyWith(
                     color: Colors.black54,
                   ),
@@ -454,7 +460,8 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               height: 4.0,
             ),
             Text(
-              'Promotion sent',
+              AppTranslations.of(context)
+                  .text('promotion_list_page_approval_done'),
               style: Theme.of(context).textTheme.caption.copyWith(
                   color: Colors.green[800], fontWeight: FontWeight.w600),
             )

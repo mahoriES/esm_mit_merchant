@@ -113,5 +113,13 @@
   "setting_page_dialog_success": "સ્થાન કનેક્ટેડ",
   "setting_page_dialog_message": "તમારા સલૂનને Foore થી જોડો",
   "setting_page_dialog_button_done": "થઈ ગયું",
-  "setting_page_dialog_button_confirm": "ખાતરી કરો"
+  "setting_page_dialog_button_confirm": "ખાતરી કરો",
+
+  "drawer_button_contact_us": "",
+  "promotion_list_page_approval_rejected": "",
+  "promotion_list_page_button_pay": "",
+  "promotion_list_page_refunded": "",
+  "promotion_list_page_approval_done": "",
+  "promotion_list_page_payment_pending": "",
+  "promotion_list_page_payment_done": ""
 }
