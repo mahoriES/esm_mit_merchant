@@ -366,34 +366,101 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
 
   promotionState(PromotionItem promotion, CreatePromotionState state,
       CreatePromotionBloc createPromotionBloc) {
-    print(json.encode(promotion.toJson()));
     if (promotion.paymentState == PaymentState.pending) {
-      return FoSubmitButton(
-          text: "Pay",
-          onPressed: () {
-            createPromotionBloc.createPayment(promotion);
-          },
-          isLoading: state.isPaymentSubmitting &&
-              state.promotionBeingPaid == promotion.promoId,
-          isSuccess: state.isPaymentSubmitSuccess &&
-              state.promotionBeingPaid == promotion.promoId);
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Payment pending',
+            style: Theme.of(context).textTheme.caption.copyWith(
+                  color: Colors.yellow[800],
+                ),
+          ),
+          SizedBox(
+            height: 8.0,
+          ),
+          FoSubmitButton(
+              text: "Pay",
+              onPressed: () {
+                createPromotionBloc.createPayment(promotion);
+              },
+              isLoading: state.isPaymentSubmitting &&
+                  state.promotionBeingPaid == promotion.promoId,
+              isSuccess: state.isPaymentSubmitSuccess &&
+                  state.promotionBeingPaid == promotion.promoId)
+        ],
+      );
     } else if (promotion.paymentState == PaymentState.refunded) {
       return Text(
-        'refunded',
+        'Refunded',
         style: Theme.of(context)
             .textTheme
             .caption
             .copyWith(color: Colors.yellow[800], fontWeight: FontWeight.w600),
       );
     } else if (promotion.paymentState == PaymentState.done) {
-      return Text(
-        AppTranslations.of(context)
-            .text('promotion_list_page_approval_pending'),
-        style: Theme.of(context)
-            .textTheme
-            .caption
-            .copyWith(color: Colors.yellow[800], fontWeight: FontWeight.w600),
-      );
+      if (promotion.promoState == PromoState.pending) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'Payment done',
+              style: Theme.of(context).textTheme.caption.copyWith(
+                    color: Colors.black54,
+                  ),
+            ),
+            SizedBox(
+              height: 4.0,
+            ),
+            Text(
+              AppTranslations.of(context)
+                  .text('promotion_list_page_approval_pending'),
+              style: Theme.of(context).textTheme.caption.copyWith(
+                  color: Colors.yellow[800], fontWeight: FontWeight.w600),
+            )
+          ],
+        );
+      } else if (promotion.promoState == PromoState.rejected) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'Payment done',
+              style: Theme.of(context).textTheme.caption.copyWith(
+                    color: Colors.black54,
+                  ),
+            ),
+            SizedBox(
+              height: 4.0,
+            ),
+            Text(
+              'Approval rejected',
+              style: Theme.of(context).textTheme.caption.copyWith(
+                  color: Colors.red[800], fontWeight: FontWeight.w600),
+            )
+          ],
+        );
+      } else if (promotion.promoState == PromoState.approved) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'Payment done',
+              style: Theme.of(context).textTheme.caption.copyWith(
+                    color: Colors.black54,
+                  ),
+            ),
+            SizedBox(
+              height: 4.0,
+            ),
+            Text(
+              'Promotion sent',
+              style: Theme.of(context).textTheme.caption.copyWith(
+                  color: Colors.green[800], fontWeight: FontWeight.w600),
+            )
+          ],
+        );
+      }
     }
   }
 

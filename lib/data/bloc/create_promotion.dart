@@ -330,7 +330,7 @@ class NearbyPromotionResponse {
 
 class PromoState {
   static const pending = 1;
-  static const done = 2;
+  static const approved = 2;
   static const rejected = 3;
 }
 
