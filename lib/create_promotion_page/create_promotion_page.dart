@@ -352,7 +352,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: FoSubmitButton(
-              text: 'Create new promotion',
+              text: AppTranslations.of(context).text('promotion_page_button_create_promotion'),
               onPressed: () {
                 createPromotionBloc.showPromotionList(false);
               },

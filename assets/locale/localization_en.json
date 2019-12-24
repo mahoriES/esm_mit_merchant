@@ -119,6 +119,7 @@
   "promotion_list_page_refunded": "Refunded",
   "promotion_list_page_approval_done": "Promotion sent",
   "promotion_list_page_payment_pending": "Payment pending",
-  "promotion_list_page_payment_done": "Payment done"
+  "promotion_list_page_payment_done": "Payment done",
+  "promotion_page_button_create_promotion": "Create new promotion"
 
 }
