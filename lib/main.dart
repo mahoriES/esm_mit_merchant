@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
@@ -57,23 +58,36 @@ class ReviewApp extends StatefulWidget {
   _ReviewAppState createState() => _ReviewAppState();
 }
 
-class _ReviewAppState extends State<ReviewApp> {
+class _ReviewAppState extends State<ReviewApp>
+    with SingleTickerProviderStateMixin, AfterLayoutMixin<ReviewApp> {
   @override
   void initState() {
     super.initState();
   }
 
-  bool isLanguageTracked = false;
+  StreamSubscription<AppTranslationsState> _subscription;
 
   trackLanguage(AppTranslationsDelegate delegate) async {
-    if (!isLanguageTracked) {
-      final httpService = Provider.of<HttpService>(context);
-      String languageCode = await delegate.getLanguageCode();
-      httpService.foAnalytics.addUserProperties(
-          name: FoAnalyticsUserProperties.language_chosen,
-          value: languageCode ?? 'en');
-      isLanguageTracked = true;
-    }
+    final httpService = Provider.of<HttpService>(context);
+    String languageCode = await delegate.getLanguageCode();
+    httpService.foAnalytics.addUserProperties(
+        name: FoAnalyticsUserProperties.language_chosen,
+        value: languageCode ?? 'en');
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    final appTranslationsBloc = Provider.of<AppTranslationsBloc>(context);
+    _subscription =
+        appTranslationsBloc.appTranslationsStateObservable.listen((state) {
+      trackLanguage(state.localeDelegate);
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -90,7 +104,6 @@ class _ReviewAppState extends State<ReviewApp> {
           if (!snapshot.hasData) {
             return Container();
           }
-          trackLanguage(snapshot.data.localeDelegate);
           return MaterialApp(
             title: 'Foore',
             initialRoute: Router.homeRoute,
