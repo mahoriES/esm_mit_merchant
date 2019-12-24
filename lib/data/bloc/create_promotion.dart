@@ -223,6 +223,11 @@ class CreatePromotionBloc {
   dispose() {
     this._subjectCreatePromotionState.close();
   }
+
+  showPromotionList(bool isShow) {
+    this._createPromotionState.showPromotionList = isShow;
+    this._updateState();
+  }
 }
 
 enum CreatePromotionScreens {
@@ -247,33 +252,40 @@ class CreatePromotionState {
   NearbyPromotionResponse nearbyPromotionResponse;
   int promotionBeingPaid;
   List<PromotionItem> promotionList = new List<PromotionItem>();
+  bool showPromotionList = false;
 
   CreatePromotionScreens get screenType {
     if (isLoading) {
       return CreatePromotionScreens.loading;
     } else if (isLoadingFailed) {
       return CreatePromotionScreens.loadingFailed;
-    } else if (promotionList.length == 0) {
-      return CreatePromotionScreens.sendPromotions;
-    } else if (promotionList.length > 0) {
+    } else if (showPromotionList) {
       return CreatePromotionScreens.promotionSent;
+    } else {
+      return CreatePromotionScreens.sendPromotions;
     }
-    return CreatePromotionScreens.loading;
   }
 
   set response(NearbyPromotionResponse response) {
     nearbyPromotionResponse = response;
     promotionList = response.results;
+    if (promotionList.length > 0) {
+      showPromotionList = true;
+    } else {
+      showPromotionList = false;
+    }
   }
 
   set promotionCreateResponse(PromotionItem response) {
     promotionList.add(response);
+    showPromotionList = true;
   }
 
   set promotionPaymentResponse(PromotionItem response) {
     for (var promotion in promotionList) {
-      if (promotion.promoId == response.promoId) { 
+      if (promotion.promoId == response.promoId) {
         promotion.paymentState = response.paymentState;
+        showPromotionList = true;
         break;
       }
     }

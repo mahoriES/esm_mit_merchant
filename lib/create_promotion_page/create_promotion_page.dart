@@ -352,10 +352,9 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: FoSubmitButton(
-              text: AppTranslations.of(context)
-                  .text('promotion_list_page_contact-us'),
-              onPressed: () async {
-                await Share.whatsAppTo('+917829862689');
+              text: 'Create new promotion',
+              onPressed: () {
+                createPromotionBloc.showPromotionList(false);
               },
             ),
           ),
