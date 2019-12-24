@@ -135,6 +135,7 @@ class FoAnalyticsEvents {
 
 class FoAnalyticsUserProperties {
   static const no_of_locations = 'no_of_locations';
+  static const sms_code = 'sms_code';
   static const language_chosen = 'language_chosen';
   static const google_locations_count = 'g_locations_count';
   static const google_locations_info = 'g_locations_info';

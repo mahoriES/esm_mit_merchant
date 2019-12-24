@@ -33,6 +33,9 @@ class OnboardingGuardBloc {
         this._httpService.foAnalytics.addUserProperties(
             name: FoAnalyticsUserProperties.no_of_locations,
             value: this._onboardingState.response.locations.length);
+         this._httpService.foAnalytics.addUserProperties(
+            name: FoAnalyticsUserProperties.sms_code,
+            value: this._onboardingState.smsCode);
         this._onboardingState.isLoadingFailed = false;
         this._onboardingState.isLoading = false;
       } else {
