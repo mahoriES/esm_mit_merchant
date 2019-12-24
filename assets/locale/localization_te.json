@@ -120,5 +120,6 @@
   "promotion_list_page_refunded": "తిరిగి చెల్లించబడదు",
   "promotion_list_page_approval_done": "ప్రమోషన్ పంపబడింది",
   "promotion_list_page_payment_pending": "చెల్లింపు పెండింగ్‌లో ఉంది",
-  "promotion_list_page_payment_done": "చెల్లింపు పూర్తయింది"
+  "promotion_list_page_payment_done": "చెల్లింపు పూర్తయింది",
+  "promotion_page_button_create_promotion": "కొత్త ప్రమోషన్"
 }

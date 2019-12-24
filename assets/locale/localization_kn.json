@@ -121,5 +121,6 @@
   "promotion_list_page_refunded": "ಮರುಪಾವತಿ ಮಾಡಲಾಗಿದೆ",
   "promotion_list_page_approval_done": "ಪ್ರಚಾರ ಕಳುಹಿಸಲಾಗಿದೆ",
   "promotion_list_page_payment_pending": "ಪಾವತಿ ಬಾಕಿ ಇದೆ",
-  "promotion_list_page_payment_done": "ಪಾವತಿ ಮಾಡಲಾಗಿದೆ"
+  "promotion_list_page_payment_done": "ಪಾವತಿ ಮಾಡಲಾಗಿದೆ",
+  "promotion_page_button_create_promotion": "ಹೊಸ ಪ್ರಚಾರ"
 }

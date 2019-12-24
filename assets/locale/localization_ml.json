@@ -120,5 +120,6 @@
   "promotion_list_page_refunded": "റീഫണ്ട് ചെയ്തു",
   "promotion_list_page_approval_done": "പ്രമോഷൻ അയച്ചു",
   "promotion_list_page_payment_pending": "പണമടയ്ക്കൽ ശേഷിക്കുന്നു",
-  "promotion_list_page_payment_done": "പേയ്‌മെന്റ് പൂർത്തിയായി"
+  "promotion_list_page_payment_done": "പേയ്‌മെന്റ് പൂർത്തിയായി",
+  "promotion_page_button_create_promotion": "புதிய பதவி உயர்வு"
 }

@@ -120,5 +120,6 @@
   "promotion_list_page_refunded": "वापसी की गई है",
   "promotion_list_page_approval_done": "प्रमोशन भेजा गया",
   "promotion_list_page_payment_pending": "भुगतान लंबित",
-  "promotion_list_page_payment_done": "भुगतान हो गया"
+  "promotion_list_page_payment_done": "भुगतान हो गया",
+  "promotion_page_button_create_promotion": "नया प्रचार"
 }

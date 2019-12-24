@@ -121,5 +121,6 @@
   "promotion_list_page_refunded": "પરત આપ્યું",
   "promotion_list_page_approval_done": "બ Promતી મોકલવામાં આવી",
   "promotion_list_page_payment_pending": "ચુકવણી બાકી છે",
-  "promotion_list_page_payment_done": "ચુકવણી થઈ ગઈ"
+  "promotion_list_page_payment_done": "ચુકવણી થઈ ગઈ",
+  "promotion_page_button_create_promotion": "નવી બ promotionતી"
 }

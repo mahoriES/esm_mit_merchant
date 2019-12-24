@@ -120,5 +120,6 @@
   "promotion_list_page_refunded": "ਵਾਪਸ ਕਰ ਦਿੱਤਾ ਗਿਆ",
   "promotion_list_page_approval_done": "ਪ੍ਰਚਾਰ ਭੇਜਿਆ ਗਿਆ",
   "promotion_list_page_payment_pending": "ਭੁਗਤਾਨ ਬਕਾਇਆ ਹੈ",
-  "promotion_list_page_payment_done": "ਭੁਗਤਾਨ ਹੋ ਗਿਆ"
+  "promotion_list_page_payment_done": "ਭੁਗਤਾਨ ਹੋ ਗਿਆ",
+  "promotion_page_button_create_promotion": "ਨਵੀਂ ਤਰੱਕੀ"
 }
