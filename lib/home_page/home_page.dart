@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
       httpService.foAnalytics
           .trackUserEvent(name: FoAnalyticsEvents.nearby_promo_clicked);
       Navigator.of(context).pushNamed(CreatePromotionPage.routeName);
-    } else if(index==3) {
+    } else if (index == 3) {
       Navigator.of(context).pushNamed(ShoppingPage.routeName);
     } else {
       setState(() {
@@ -59,17 +59,15 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           BottomNavigationBarItem(
-            icon: Transform.translate(
-              offset: Offset(0, -10),
-              child: Transform.scale(
-                scale: 1.3,
-                child: CircleAvatar(
-                  child: Icon(Icons.add),
-                  backgroundColor: _selectedIndex != 1
-                      ? Colors.grey[600]
-                      : Theme.of(context).primaryColor,
-                  foregroundColor: Colors.white,
-                ),
+            icon: CircleAvatar(
+              radius: 12.0,
+              backgroundColor: _selectedIndex != 1
+                  ? Colors.grey[600]
+                  : Theme.of(context).primaryColor,
+              foregroundColor: Colors.white,
+              child: Icon(
+                Icons.add,
+                size: 14.0,
               ),
             ),
             title: Text(
@@ -83,9 +81,9 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
+            icon: Icon(Icons.store),
             title: Text(
-              'Go online',
+              'My Store',
             ),
           ),
         ],

@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foore/home_page/app_drawer.dart';
-import 'package:provider/provider.dart';
-import 'package:foore/data/bloc/auth.dart';
-import 'package:foore/data/bloc/login.dart';
-import 'package:foore/data/http_service.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../app_translations.dart';
 
 class ShoppingPage extends StatefulWidget {
   static const routeName = '/shopping';
@@ -17,6 +11,18 @@ class ShoppingPage extends StatefulWidget {
 }
 
 class _ShoppingPageState extends State<ShoppingPage> {
+
+ Future<void> _launchPreRegisterUrl() async {
+  final url = 'https://forms.gle/rqqNdqoY8LE4qDW68';
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +34,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
           },
         ),
         title: Text(
-          'Go online',
+          'My Store',
         ),
       ),
       drawer: AppDrawer(),
@@ -88,7 +94,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
             vertical: 15,
             horizontal: 25,
           ),
-          onPressed: () {},
+          onPressed: _launchPreRegisterUrl,
           child: Container(
             child: Text(
               'Pre-register',
