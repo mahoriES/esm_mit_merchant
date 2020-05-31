@@ -72,7 +72,7 @@ class CreatePromotionBloc {
 
   Future<bool> pay(double price) async {
     UpiIndia upi = new UpiIndia(
-      receiverUpiId: '7829862689@upi',
+      receiverUpiId: 'mahori@citi',
       receiverName: 'Ravinder Singh',
       transactionRefId: DateTime.now().millisecondsSinceEpoch.toString(),
       transactionNote: 'Charge',

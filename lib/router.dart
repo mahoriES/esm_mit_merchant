@@ -7,6 +7,7 @@ import 'package:foore/onboarding_page/location_claim.dart';
 import 'package:foore/setting_page/sender_code.dart';
 import 'package:foore/setting_page/settting_page.dart';
 import 'package:foore/share_page/share_page.dart';
+import 'package:foore/shopping_page/shopping_page.dart';
 import 'package:provider/provider.dart';
 
 import 'auth_guard/auth_guard.dart';
@@ -135,6 +136,11 @@ class Router {
       case CreatePromotionPage.routeName:
         return CreatePromotionPage.generateRoute(
             settings, this.httpServiceBloc);
+      case ShoppingPage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => ShoppingPage(),
+        );
+        break;
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

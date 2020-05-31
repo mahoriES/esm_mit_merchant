@@ -756,7 +756,7 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                 sprintf(
                     AppTranslations.of(context)
                         .text('create_promotion_page_submit'),
-                    ['100', promotionBloc.buttonThreeCal.toString()]),
+                    ['2,500', promotionBloc.buttonThreeCal.toString()]),
                 textAlign: TextAlign.center,
                 style: Theme.of(context)
                     .textTheme
@@ -766,9 +766,9 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
               onPressed: () {
                 if (this._formKey.currentState.validate()) {
                   promotionBloc.setPromoReach(
-                      'Rs. 100-${promotionBloc.buttonThreeCal.toString()} People',
+                      'Rs. 2,500-${promotionBloc.buttonThreeCal.toString()} People',
                       promotionBloc.buttonThreeCal,
-                      100);
+                      2500);
                   this._showConfirmAlertDialog(promotionBloc);
                 }
               },
@@ -792,15 +792,15 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                 sprintf(
                     AppTranslations.of(context)
                         .text('create_promotion_page_submit'),
-                    ['300', promotionBloc.buttonTwoCal.toString()]),
+                    ['5,000', promotionBloc.buttonTwoCal.toString()]),
                 textAlign: TextAlign.center,
               ),
               onPressed: () {
                 if (this._formKey.currentState.validate()) {
                   promotionBloc.setPromoReach(
-                      'Rs. 300-${promotionBloc.buttonTwoCal.toString()} People',
+                      'Rs. 5,000-${promotionBloc.buttonTwoCal.toString()} People',
                       promotionBloc.buttonTwoCal,
-                      300);
+                      5000);
                   this._showConfirmAlertDialog(promotionBloc);
                 }
               },
@@ -824,15 +824,15 @@ class _CreatePromotionPageState extends State<CreatePromotionPage>
                 sprintf(
                     AppTranslations.of(context)
                         .text('create_promotion_page_submit'),
-                    ['500', promotionBloc.buttonOneCal.toString()]),
+                    ['10,000', promotionBloc.buttonOneCal.toString()]),
                 textAlign: TextAlign.center,
               ),
               onPressed: () {
                 if (this._formKey.currentState.validate()) {
                   promotionBloc.setPromoReach(
-                      'Rs. 500-${promotionBloc.buttonOneCal.toString()} People',
+                      'Rs. 10,000-${promotionBloc.buttonOneCal.toString()} People',
                       promotionBloc.buttonOneCal,
-                      500);
+                      10000);
                   this._showConfirmAlertDialog(promotionBloc);
                 }
               },
