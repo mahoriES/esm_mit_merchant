@@ -14,7 +14,7 @@ description: Foore mobile app
 version: 0.0.21+48
 
 environment:
-  sdk: '>=2.1.0 <3.0.0'
+  sdk: '>=2.5.2 <3.0.0'
 
 dependencies:
   flutter:
@@ -28,7 +28,7 @@ dependencies:
 
   after_layout: ^1.0.7+2
 
-  intl: ^0.15.8
+  intl: ^0.16.1
 
   http: ^0.12.0+2
 
@@ -40,7 +40,7 @@ dependencies:
 
   firebase_messaging: ^5.1.6
 
-  youtube_player: ^3.5.0
+  youtube_player_flutter: ^6.1.1
 
   google_sign_in:
     path: ./google_sign_in/

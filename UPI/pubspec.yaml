@@ -5,7 +5,7 @@ author: Md.Azharuddin<mdazharuddin1011999@gmail.com>
 homepage: https://github.com/mdazharuddin1011999/UPI-Plugin-Flutter
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.5.2 <3.0.0"
 
 dependencies:
   flutter:

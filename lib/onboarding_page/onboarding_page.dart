@@ -11,7 +11,7 @@ import 'package:foore/onboarding_page/location_search_page.dart';
 import 'package:foore/search_gmb/model/google_locations.dart';
 import 'package:provider/provider.dart';
 import '../app_translations.dart';
-import 'package:youtube_player/youtube_player.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class OnboardingPage extends StatefulWidget {
   static const routeName = '/onboarding';
@@ -82,6 +82,14 @@ class _OnboardingPageState extends State<OnboardingPage>
 
   Widget noGmbLocations(BuildContext context) {
     final authBloc = Provider.of<AuthBloc>(context);
+
+    YoutubePlayerController _controller = YoutubePlayerController(
+      initialVideoId: "T2mqrx20_Sg",
+      flags: YoutubePlayerFlags(
+        autoPlay: false,
+      ),
+    );
+
     return SafeArea(
       child: Container(
         height: double.infinity,
@@ -105,10 +113,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                 child: Container(),
               ),
               YoutubePlayer(
-                context: context,
-                source: "T2mqrx20_Sg",
-                quality: YoutubeQuality.HD,
-                autoPlay: false,
+                controller: _controller,
               ),
               Expanded(
                 child: Container(),
