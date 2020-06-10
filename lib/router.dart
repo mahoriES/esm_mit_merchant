@@ -19,6 +19,8 @@ import 'data/model/unirson.dart';
 import 'home_page/home_page.dart';
 import 'intro_page/intro_page.dart';
 import 'login_page/login_page.dart';
+import 'menu_page/add_menu_item_page.dart';
+import 'menu_page/menu_page.dart';
 import 'onboarding_guard/onboarding_guard.dart';
 import 'onboarding_page/location_search_page.dart';
 import 'onboarding_page/location_verify.dart';
@@ -28,7 +30,7 @@ import 'unirson_check_in_page/unirson_check_in_page.dart';
 
 class Router {
   static const homeRoute = '/';
-  static const testRoute = CreatePromotionPage.routeName;
+  static const testRoute = MenuPage.routeName;
   final unauthenticatedHandler = (BuildContext context) => Navigator.of(context)
       .pushNamedAndRemoveUntil(
           IntroPage.routeName, (Route<dynamic> route) => false);
@@ -102,9 +104,11 @@ class Router {
         );
         break;
       case LocationSearchPage.routeName:
-        bool hideNoLocations = settings.arguments??false;
+        bool hideNoLocations = settings.arguments ?? false;
         return MaterialPageRoute(
-          builder: (context) => LocationSearchPage(hideNoLocations: hideNoLocations,),
+          builder: (context) => LocationSearchPage(
+            hideNoLocations: hideNoLocations,
+          ),
         );
         break;
       case LocationClaimPage.routeName:
@@ -128,7 +132,7 @@ class Router {
         return SharePage.generateRoute(settings);
         break;
       case SettingPage.routeName:
-        return SettingPage.generateRoute(settings,httpServiceBloc);
+        return SettingPage.generateRoute(settings, httpServiceBloc);
         break;
       case SenderCodePage.routeName:
         return SenderCodePage.generateRoute(settings, httpServiceBloc);
@@ -139,6 +143,16 @@ class Router {
       case ShoppingPage.routeName:
         return MaterialPageRoute(
           builder: (context) => ShoppingPage(),
+        );
+        break;
+      case MenuPage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => MenuPage(),
+        );
+        break;
+      case AddMenuItemPage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => AddMenuItemPage(),
         );
         break;
       default:

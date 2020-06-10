@@ -23,7 +23,8 @@ class Environment {
       ? EnvironmentProd._branch_domain
       : EnvironmentPreprod._branch_domain;
 
-  static get isProd => const bool.fromEnvironment('dart.vm.product');
+  static get isProd => true;
+  // static get isProd => const bool.fromEnvironment('dart.vm.product');
 
   static Future<String> get version async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
