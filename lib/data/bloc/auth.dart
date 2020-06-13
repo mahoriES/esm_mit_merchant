@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:foore/data/bloc/push_notifications.dart';
 import 'package:foore/data/branch_service.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/data/model/es_auth.dart';
 import 'package:foore/data/model/login.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,6 +34,7 @@ class AuthBloc {
     this._subjectAuthState = new BehaviorSubject<AuthState>.seeded(authState);
     this._branchService = new BranchService(this);
     this._loadAuthState();
+    this._loadEsAuthState();
   }
 
   Observable<AuthState> get authStateObservable => _subjectAuthState.stream;
@@ -161,9 +163,61 @@ class AuthBloc {
       await sharedPreferences.setString('authenticationInformation', '');
     }
   }
-}
 
-class AuthData {}
+  //
+  static const eSamudaayAuthenticationInformationSharedPrefKey =
+      'eSamudaayAuthenticationInformation';
+
+  esLogin(EsAuthData esAuthData) {
+    if (esAuthData != null) {
+      if (esAuthData.token == null || esAuthData.token == '') {
+        this.authState.esAuthData = null;
+      } else {
+        this.authState.esAuthData = esAuthData;
+      }
+    } else {
+      this.authState.esAuthData = esAuthData;
+    }
+    this.authState.isEsLoading = false;
+    this._updateState();
+    this._storeEsAuthState();
+  }
+
+  esLogout() {
+    this.authState.esAuthData = null;
+    this.authState.isEsLoading = false;
+    this._updateState();
+    this._storeEsAuthState();
+  }
+
+  _storeEsAuthState() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if (this.authState.esAuthData != null) {
+      await sharedPreferences.setString(
+          eSamudaayAuthenticationInformationSharedPrefKey,
+          json.encode(this.authState.esAuthData.toJson()));
+    } else {
+      await sharedPreferences.setString(
+          eSamudaayAuthenticationInformationSharedPrefKey, '');
+    }
+  }
+
+  _loadEsAuthState() async {
+    this.authState.isEsLoading = true;
+    this._updateState();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final esAuthString =
+        prefs.getString(eSamudaayAuthenticationInformationSharedPrefKey) ?? '';
+    if (esAuthString != '') {
+      var esAuthData = json.decode(esAuthString);
+      this.esLogin(EsAuthData.fromJson(esAuthData));
+    } else {
+      this.esLogout();
+    }
+    this.authState.isEsLoading = false;
+    this._updateState();
+  }
+}
 
 class AuthState {
   bool isLoading = true;
@@ -185,6 +239,13 @@ class AuthState {
     }
     return '';
   }
+
+  bool isEsLoading = true;
+  EsAuthData esAuthData;
+  bool get isEsLoggedIn =>
+      esAuthData != null ? esAuthData.token != null : false;
+  bool get isEsLoggedOut => isEsLoading == false && isEsLoading == false;
+  bool get esJwtToken => esAuthData != null ? esAuthData.token != null : null;
 
   AuthState() {
     this.isLoading = false;

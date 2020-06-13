@@ -4,6 +4,10 @@ class Environment {
   static get apiUrl =>
       isProd ? EnvironmentProd._apiUrl : EnvironmentPreprod._apiUrl;
 
+  static get esApiUrl => 'https://api.test.esamudaay.com/api/v1/';
+
+  static get esTPID => '5d730376-72ed-478c-8d5e-1a3a6aee9815';
+
   static get intercomAppId => isProd
       ? EnvironmentProd._intercom_app_id
       : EnvironmentPreprod._intercom_app_id;

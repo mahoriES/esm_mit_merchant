@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/es_login_page/es_login_page.dart';
 import 'package:foore/home_page/app_drawer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,9 +12,8 @@ class ShoppingPage extends StatefulWidget {
 }
 
 class _ShoppingPageState extends State<ShoppingPage> {
-
- Future<void> _launchPreRegisterUrl() async {
-  final url = 'https://forms.gle/rqqNdqoY8LE4qDW68';
+  Future<void> _launchPreRegisterUrl() async {
+    final url = 'https://forms.gle/rqqNdqoY8LE4qDW68';
     if (await canLaunch(url)) {
       await launch(
         url,
@@ -94,7 +94,9 @@ class _ShoppingPageState extends State<ShoppingPage> {
             vertical: 15,
             horizontal: 25,
           ),
-          onPressed: _launchPreRegisterUrl,
+          onPressed: () {
+            Navigator.of(context).pushNamed(EsLoginPage.routeName);
+          },
           child: Container(
             child: Text(
               'Pre-register',
