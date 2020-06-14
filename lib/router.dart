@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/create_promotion_page/create_promotion_page.dart';
 import 'package:foore/data/bloc/auth.dart';
+import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/es_login_page/es_login_page.dart';
 import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
@@ -149,6 +150,11 @@ class Router {
       case ShoppingPage.routeName:
         return MaterialPageRoute(
           builder: (context) => ShoppingPage(),
+        );
+        break;
+      case EsHomePage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => EsHomePage(),
         );
         break;
       case MenuPage.routeName:

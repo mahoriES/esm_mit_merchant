@@ -38,7 +38,7 @@ class EsLoginBloc {
 
     _httpService
         .esGetWithoutAuth(
-            GET_OTP + '?phone=$phoneNumberInput&third_party_id=$TPID')
+            EsApiPaths.getOTP + '?phone=$phoneNumberInput&third_party_id=$TPID')
         .then((httpResponse) {
       print(httpResponse.body);
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
@@ -63,7 +63,7 @@ class EsLoginBloc {
 
     _httpService
         .esPostWithoutAuth(
-      POST_SIGN_UP,
+      EsApiPaths.postSignUp,
       json.encode(EsSignUpPayload(phone: phoneNumberInput, thirdPartyId: TPID)
           .toJson()),
     )
@@ -87,7 +87,7 @@ class EsLoginBloc {
     final TPID = Environment.esTPID;
     _httpService
         .esPostWithoutAuth(
-            POST_TOKEN,
+            EsApiPaths.postToken,
             json.encode(EsGetTokenPayload(
                     phone: this.phoneEditController.text,
                     token: this.otpEditController.text,

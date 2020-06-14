@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:foore/create_promotion_page/create_promotion_page.dart';
 import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/people_page/people_page.dart';
 import 'package:foore/review_page/review_page.dart';
-import 'package:foore/shopping_page/shopping_page.dart';
 import 'package:provider/provider.dart';
 
 import '../app_translations.dart';
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
           .trackUserEvent(name: FoAnalyticsEvents.nearby_promo_clicked);
       Navigator.of(context).pushNamed(CreatePromotionPage.routeName);
     } else if (index == 3) {
-      Navigator.of(context).pushNamed(ShoppingPage.routeName);
+      Navigator.of(context).pushNamed(EsHomePage.routeName);
     } else {
       setState(() {
         _selectedIndex = index;

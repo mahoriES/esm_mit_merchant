@@ -185,6 +185,27 @@ class HttpService {
     }
   }
 
+  Future<http.Response> esPatch(path, body) async {
+    final esJwtToken = this._authBloc.authState.esJwtToken;
+    if (esJwtToken != null) {
+      Map<String, String> requestHeaders = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'JWT $esJwtToken'
+      };
+      final httpResponse =
+          await http.patch(esApiBaseUrl + path, headers: requestHeaders, body: body);
+      if (httpResponse.statusCode == 403 || httpResponse.statusCode == 401) {
+        this._authBloc.esLogout();
+        throw Exception('Auth Failed');
+      }
+      return httpResponse;
+    } else {
+      this._authBloc.esLogout();
+      throw Exception('Auth Failed');
+    }
+  }
+
   Future<http.Response> esPostWithoutAuth(path, body) async {
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
