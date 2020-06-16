@@ -134,7 +134,7 @@ class HttpService {
 
   // eSamudaay
   Future<http.Response> esGet(path) async {
-    final esJwtToken = this._authBloc.authState.esJwtToken;
+    final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
     if (esJwtToken != null) {
       Map<String, String> requestHeaders = {
         'Content-type': 'application/json',
@@ -164,8 +164,38 @@ class HttpService {
     }
   }
 
+  Future<http.Response> esGetWithToken(path, token) async {
+    if (token != null) {
+      Map<String, String> requestHeaders = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'JWT $token'
+      };
+
+      final httpResponse =
+          await http.get(esApiBaseUrl + path, headers: requestHeaders);
+
+      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+        // If the call to the server was successful, parse the JSON.
+        return httpResponse;
+      }
+      if (httpResponse.statusCode == 403 || httpResponse.statusCode == 401) {
+        this._authBloc.esLogout();
+        throw Exception('Auth Failed');
+      } else {
+        print(httpResponse.toString());
+
+        // If that call was not successful, throw an error.
+        throw Exception('Failed to load post');
+      }
+    } else {
+      this._authBloc.esLogout();
+      throw Exception('Auth Failed');
+    }
+  }
+
   Future<http.Response> esPost(path, body) async {
-    final esJwtToken = this._authBloc.authState.esJwtToken;
+    final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
     if (esJwtToken != null) {
       Map<String, String> requestHeaders = {
         'Content-type': 'application/json',
@@ -186,7 +216,7 @@ class HttpService {
   }
 
   Future<http.Response> esPatch(path, body) async {
-    final esJwtToken = this._authBloc.authState.esJwtToken;
+    final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
     if (esJwtToken != null) {
       Map<String, String> requestHeaders = {
         'Content-type': 'application/json',
@@ -226,7 +256,7 @@ class HttpService {
   }
 
   Future<http.Response> esPostUrl(url, body) async {
-    final esJwtToken = this._authBloc.authState.esJwtToken;
+    final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
     if (esJwtToken != null) {
       Map<String, String> requestHeaders = {
         'Content-type': 'application/json',
@@ -247,7 +277,7 @@ class HttpService {
   }
 
   Future<http.Response> esGetUrl(url) async {
-    final esJwtToken = this._authBloc.authState.esJwtToken;
+    final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
     if (esJwtToken != null) {
       Map<String, String> requestHeaders = {
         'Content-type': 'application/json',

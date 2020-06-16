@@ -15,7 +15,7 @@ class EsBusinessesBloc {
         new BehaviorSubject<EsBusinessesState>.seeded(_esBusinessesState);
   }
 
-  Observable<EsBusinessesState> get checkinStateObservable =>
+  Observable<EsBusinessesState> get esBusinessesStateObservable =>
       _subjectEsBusinessesState.stream;
 
   getData() {
@@ -68,6 +68,10 @@ class EsBusinessesBloc {
 class EsBusinessesState {
   bool isLoading;
   bool isLoadingFailed;
+
+  bool isShowBusinesses = false;
+
+  bool isCreateBusinessRequired = false;
 
   EsBusinessInfo selectedBusiness;
 

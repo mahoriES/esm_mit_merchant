@@ -3,6 +3,7 @@ import 'package:foore/data/bloc/push_notifications.dart';
 import 'package:foore/data/branch_service.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_auth.dart';
+import 'package:foore/data/model/es_profiles.dart';
 import 'package:foore/data/model/login.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -167,17 +168,12 @@ class AuthBloc {
   //
   static const eSamudaayAuthenticationInformationSharedPrefKey =
       'eSamudaayAuthenticationInformation';
+  static const eSamudaayMerchantProfileInformationSharedPrefKey =
+      'eSamudaayMerchantProfileInformation';
 
-  esLogin(EsAuthData esAuthData) {
-    if (esAuthData != null) {
-      if (esAuthData.token == null || esAuthData.token == '') {
-        this.authState.esAuthData = null;
-      } else {
-        this.authState.esAuthData = esAuthData;
-      }
-    } else {
-      this.authState.esAuthData = esAuthData;
-    }
+  esLogin(EsAuthData esAuthData, EsProfile esMerchantProfile) async {
+    this.authState.esAuthData = esAuthData;
+    this.authState.esMerchantProfile = esMerchantProfile;
     this.authState.isEsLoading = false;
     this._updateState();
     this._storeEsAuthState();
@@ -200,6 +196,14 @@ class AuthBloc {
       await sharedPreferences.setString(
           eSamudaayAuthenticationInformationSharedPrefKey, '');
     }
+    if (this.authState.esMerchantProfile != null) {
+      await sharedPreferences.setString(
+          eSamudaayMerchantProfileInformationSharedPrefKey,
+          json.encode(this.authState.esMerchantProfile.toJson()));
+    } else {
+      await sharedPreferences.setString(
+          eSamudaayMerchantProfileInformationSharedPrefKey, '');
+    }
   }
 
   _loadEsAuthState() async {
@@ -208,9 +212,20 @@ class AuthBloc {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final esAuthString =
         prefs.getString(eSamudaayAuthenticationInformationSharedPrefKey) ?? '';
+
+    final esMerchantProfileString =
+        prefs.getString(eSamudaayMerchantProfileInformationSharedPrefKey) ?? '';
+
     if (esAuthString != '') {
       var esAuthData = json.decode(esAuthString);
-      this.esLogin(EsAuthData.fromJson(esAuthData));
+      var esMerchantProfile = esMerchantProfileString != ''
+          ? json.decode(esMerchantProfileString)
+          : null;
+      this.esLogin(
+          EsAuthData.fromJson(esAuthData),
+          esMerchantProfile != null
+              ? EsProfile.fromJson(esMerchantProfile)
+              : null);
     } else {
       this.esLogout();
     }
@@ -242,10 +257,15 @@ class AuthState {
 
   bool isEsLoading = true;
   EsAuthData esAuthData;
-  bool get isEsLoggedIn =>
-      esAuthData != null ? esAuthData.token != null : false;
-  bool get isEsLoggedOut => isEsLoading == false && isEsLoading == false;
-  bool get esJwtToken => esAuthData != null ? esAuthData.token != null : null;
+  EsProfile esMerchantProfile;
+  bool get isEsMerchantLoggedIn =>
+      esMerchantProfile != null ? esMerchantProfile.token != null : false;
+  bool get isEsLoggedOut => isEsLoading == false && esJwtToken == null;
+  bool get isMerchantProfileNotExist =>
+      isEsLoading == false && esMerchantProfile == null;
+  String get esJwtToken => esAuthData != null ? esAuthData.token : null;
+  String get esMerchantJwtToken =>
+      esMerchantProfile != null ? esMerchantProfile.token : null;
 
   AuthState() {
     this.isLoading = false;

@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/create_promotion_page/create_promotion_page.dart';
 import 'package:foore/data/bloc/auth.dart';
+import 'package:foore/data/bloc/es_businesses.dart';
+import 'package:foore/es_business_guard/es_businesses_guard.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/es_login_page/es_login_page.dart';
 import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart';
@@ -18,6 +20,9 @@ import 'data/bloc/people.dart';
 import 'data/http_service.dart';
 import 'data/model/feedback.dart';
 import 'data/model/unirson.dart';
+import 'es_auth_guard/es_auth_guard.dart';
+import 'es_create_business/es_create_business.dart';
+import 'es_create_merchant_profile/es_create_merchant_profile.dart';
 import 'home_page/home_page.dart';
 import 'intro_page/intro_page.dart';
 import 'login_page/login_page.dart';
@@ -36,16 +41,31 @@ class Router {
   final unauthenticatedHandler = (BuildContext context) => Navigator.of(context)
       .pushNamedAndRemoveUntil(
           IntroPage.routeName, (Route<dynamic> route) => false);
+
+  final esUnauthenticatedHandler = (BuildContext context) =>
+      Navigator.of(context).pushNamed(ShoppingPage.routeName);
+
+  final esNoMerchantProfileHandler = (BuildContext context) =>
+      Navigator.of(context).pushNamed(EsCreateMerchantProfilePage.routeName);
+
   final onboardingRequiredHandler = (BuildContext context) =>
       Navigator.of(context).pushNamedAndRemoveUntil(
           OnboardingPage.routeName, (Route<dynamic> route) => false);
 
+  final esCreateBusinessRequiredHandler = (BuildContext context) =>
+      Navigator.of(context).pushNamed(EsCreateBusinessPage.routeName);
+
   final HttpService httpServiceBloc;
   final AuthBloc authBloc;
+  final EsBusinessesBloc esBusinessesBloc;
 
-  Router({@required this.httpServiceBloc, @required this.authBloc});
+  Router(
+      {@required this.httpServiceBloc,
+      @required this.authBloc,
+      @required this.esBusinessesBloc});
 
   Route<dynamic> routeGenerator(RouteSettings settings) {
+    print(settings.name);
     this.authBloc.foAnalytics.setCurrentScreen(settings.name);
     switch (settings.name) {
       case homeRoute:
@@ -105,11 +125,6 @@ class Router {
           builder: (context) => LoginPage(),
         );
         break;
-      case EsLoginPage.routeName:
-        return MaterialPageRoute(
-          builder: (context) => EsLoginPage(),
-        );
-        break;
       case LocationSearchPage.routeName:
         bool hideNoLocations = settings.arguments ?? false;
         return MaterialPageRoute(
@@ -147,24 +162,80 @@ class Router {
       case CreatePromotionPage.routeName:
         return CreatePromotionPage.generateRoute(
             settings, this.httpServiceBloc);
+      //Es
       case ShoppingPage.routeName:
         return MaterialPageRoute(
           builder: (context) => ShoppingPage(),
         );
         break;
+      case EsLoginPage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => EsLoginPage(),
+        );
+        break;
       case EsHomePage.routeName:
         return MaterialPageRoute(
-          builder: (context) => EsHomePage(),
+          builder: (context) => EsAuthGuard(
+            unauthenticatedHandler: esUnauthenticatedHandler,
+            noMerchantProfileHandler: esNoMerchantProfileHandler,
+            child: EsBusinessesGuard(
+              createBusinessRequiredHandler: esCreateBusinessRequiredHandler,
+              child: MultiProvider(
+                providers: [
+                  Provider<PeopleBloc>(
+                    builder: (context) => PeopleBloc(httpServiceBloc),
+                    dispose: (context, value) => value.dispose(),
+                  ),
+                ],
+                child: EsHomePage(),
+              ),
+            ),
+          ),
+        );
+        break;
+      case EsCreateBusinessPage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => EsAuthGuard(
+              unauthenticatedHandler: esUnauthenticatedHandler,
+              noMerchantProfileHandler: esNoMerchantProfileHandler,
+              child: Provider<OnboardingBloc>(
+                builder: (context) => OnboardingBloc(httpServiceBloc),
+                dispose: (context, value) => value.dispose(),
+                child: EsCreateBusinessPage(),
+              )),
+        );
+        break;
+      case EsCreateMerchantProfilePage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => Provider<OnboardingBloc>(
+            builder: (context) => OnboardingBloc(httpServiceBloc),
+            dispose: (context, value) => value.dispose(),
+            child: EsCreateMerchantProfilePage(),
+          ),
         );
         break;
       case MenuPage.routeName:
         return MaterialPageRoute(
-          builder: (context) => MenuPage(),
+          builder: (context) => EsAuthGuard(
+              unauthenticatedHandler: esUnauthenticatedHandler,
+              noMerchantProfileHandler: esNoMerchantProfileHandler,
+              child: Provider<OnboardingBloc>(
+                builder: (context) => OnboardingBloc(httpServiceBloc),
+                dispose: (context, value) => value.dispose(),
+                child: MenuPage(),
+              )),
         );
         break;
       case AddMenuItemPage.routeName:
         return MaterialPageRoute(
-          builder: (context) => AddMenuItemPage(),
+          builder: (context) => EsAuthGuard(
+              unauthenticatedHandler: esUnauthenticatedHandler,
+              noMerchantProfileHandler: esNoMerchantProfileHandler,
+              child: Provider<OnboardingBloc>(
+                builder: (context) => OnboardingBloc(httpServiceBloc),
+                dispose: (context, value) => value.dispose(),
+                child: AddMenuItemPage(),
+              )),
         );
         break;
       default:

@@ -8,6 +8,7 @@ import 'package:foore/app_translations_delegate.dart';
 import 'package:foore/theme/light.dart';
 import 'package:provider/provider.dart';
 import 'data/bloc/analytics.dart';
+import 'data/bloc/es_businesses.dart';
 import 'data/bloc/login.dart';
 import 'data/bloc/onboarding_guard.dart';
 import 'router.dart';
@@ -39,6 +40,10 @@ void main() {
           ),
           ProxyProvider<HttpService, OnboardingGuardBloc>(
             builder: (_, http, __) => OnboardingGuardBloc(http),
+            dispose: (context, value) => value.dispose(),
+          ),
+          ProxyProvider<HttpService, EsBusinessesBloc>(
+            builder: (_, http, __) => EsBusinessesBloc(http),
             dispose: (context, value) => value.dispose(),
           ),
           Provider<AppTranslationsBloc>(
@@ -94,9 +99,9 @@ class _ReviewAppState extends State<ReviewApp>
   Widget build(BuildContext context) {
     final appTranslationsBloc = Provider.of<AppTranslationsBloc>(context);
     final router = Router(
-      httpServiceBloc: Provider.of<HttpService>(context),
-      authBloc: Provider.of<AuthBloc>(context),
-    );
+        httpServiceBloc: Provider.of<HttpService>(context),
+        authBloc: Provider.of<AuthBloc>(context),
+        esBusinessesBloc: Provider.of<EsBusinessesBloc>(context));
 
     return StreamBuilder<AppTranslationsState>(
         stream: appTranslationsBloc.appTranslationsStateObservable,
@@ -106,7 +111,7 @@ class _ReviewAppState extends State<ReviewApp>
           }
           return MaterialApp(
             title: 'Foore',
-            initialRoute: Router.testRoute,
+            initialRoute: Router.homeRoute,
             onGenerateRoute: router.routeGenerator,
             localizationsDelegates: [
               snapshot.data.localeDelegate,

@@ -39,4 +39,8 @@ class EsApiPaths {
       (String businessId) => 'businesses/$businessId/catalog/categories';
   static final getCategories =
       (String businessId) => 'businesses/$businessId/catalog/categories';
+
+  static final getProfiles = 'auth/profiles';
+  static final postAddProfile = 'auth/profiles';
+  static final patchUpdateProfile = 'auth/profiles';
 }
