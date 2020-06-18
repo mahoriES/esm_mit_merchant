@@ -75,34 +75,58 @@ class _ShoppingPageState extends State<ShoppingPage> {
                       'Create your online store',
                       textAlign: TextAlign.center,
                     )),
-                Flexible(
+                     Flexible(
                   flex: 3,
                   child: Container(),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      floatingActionButton: Transform.translate(
-        offset: Offset(0, -15),
-        child: RaisedButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50.0),
-          ),
-          padding: EdgeInsets.symmetric(
-            vertical: 15,
-            horizontal: 25,
-          ),
-          onPressed: () {
-            Navigator.of(context).pushNamed(EsLoginPage.routeName);
-          },
-          child: Container(
-            child: Text(
-              'Pre-register',
-              style: Theme.of(context).textTheme.subhead.copyWith(
-                    color: Colors.white,
+                RaisedButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0),
                   ),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 15,
+                    horizontal: 25,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(EsLoginPage.routeName);
+                  },
+                  child: Container(
+                    child: Text(
+                      'Login',
+                      style: Theme.of(context).textTheme.subhead.copyWith(
+                            color: Colors.white,
+                          ),
+                    ),
+                  ),
+                ),
+                 SizedBox(
+                  height: 16,
+                ),
+                RaisedButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 15,
+                    horizontal: 25,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(EsLoginPage.signUpRouteName);
+                  },
+                  child: Container(
+                    child: Text(
+                      'Sign Up',
+                      style: Theme.of(context).textTheme.subhead.copyWith(
+                            color: Colors.white,
+                          ),
+                    ),
+                  ),
+                ),
+                 SizedBox(
+                  height: 32,
+                ),
+               
+              ],
             ),
           ),
         ),

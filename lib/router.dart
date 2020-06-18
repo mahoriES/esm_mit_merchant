@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/create_promotion_page/create_promotion_page.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
+import 'package:foore/data/bloc/es_create_business.dart';
 import 'package:foore/es_business_guard/es_businesses_guard.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/es_login_page/es_login_page.dart';
@@ -170,7 +171,12 @@ class Router {
         break;
       case EsLoginPage.routeName:
         return MaterialPageRoute(
-          builder: (context) => EsLoginPage(),
+          builder: (context) => EsLoginPage(false),
+        );
+        break;
+      case EsLoginPage.signUpRouteName:
+        return MaterialPageRoute(
+          builder: (context) => EsLoginPage(true),
         );
         break;
       case EsHomePage.routeName:
@@ -198,21 +204,16 @@ class Router {
           builder: (context) => EsAuthGuard(
               unauthenticatedHandler: esUnauthenticatedHandler,
               noMerchantProfileHandler: esNoMerchantProfileHandler,
-              child: Provider<OnboardingBloc>(
-                builder: (context) => OnboardingBloc(httpServiceBloc),
+              child: Provider<EsCreateBusinessBloc>(
+                builder: (context) => EsCreateBusinessBloc(httpServiceBloc),
                 dispose: (context, value) => value.dispose(),
                 child: EsCreateBusinessPage(),
               )),
         );
         break;
       case EsCreateMerchantProfilePage.routeName:
-        return MaterialPageRoute(
-          builder: (context) => Provider<OnboardingBloc>(
-            builder: (context) => OnboardingBloc(httpServiceBloc),
-            dispose: (context, value) => value.dispose(),
-            child: EsCreateMerchantProfilePage(),
-          ),
-        );
+        return EsCreateMerchantProfilePage.generateRoute(
+            settings, httpServiceBloc, authBloc);
         break;
       case MenuPage.routeName:
         return MaterialPageRoute(

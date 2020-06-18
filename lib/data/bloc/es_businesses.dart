@@ -69,9 +69,9 @@ class EsBusinessesState {
   bool isLoading;
   bool isLoadingFailed;
 
-  bool isShowBusinesses = false;
+  get isShowBusinesses => !isLoading && businesses.length > 0;
 
-  bool isCreateBusinessRequired = false;
+  get isCreateBusinessRequired => !isLoading && businesses.length == 0;
 
   EsBusinessInfo selectedBusiness;
 

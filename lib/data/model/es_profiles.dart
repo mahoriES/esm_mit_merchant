@@ -1,3 +1,27 @@
+class AddMerchantProfilePayload {
+  String role;
+  String profileName;
+  String clusterCode;
+
+  AddMerchantProfilePayload({this.role, this.profileName, this.clusterCode});
+
+  AddMerchantProfilePayload.fromJson(Map<String, dynamic> json) {
+    role = json['role'];
+    profileName = json['profile_name'];
+    clusterCode = json['cluster_code'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['role'] = this.role;
+    data['profile_name'] = this.profileName;
+    if (this.clusterCode != null) {
+      data['cluster_code'] = this.clusterCode;
+    }
+    return data;
+  }
+}
+
 class EsGetProfilesResponse {
   EsProfile customer;
   EsProfile merchant;
@@ -33,7 +57,8 @@ class EsProfile {
   EsProfile({this.data, this.token, this.role});
 
   EsProfile.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? new EsProfileData.fromJson(json['data']) : null;
+    data =
+        json['data'] != null ? new EsProfileData.fromJson(json['data']) : null;
     token = json['token'];
     role = json['role'];
   }
@@ -50,21 +75,22 @@ class EsProfile {
 }
 
 class EsProfileData {
-  String profilePic;
+  // String profilePic;
   String profileName;
   String created;
   String modified;
   bool isSuspended;
 
   EsProfileData(
-      {this.profilePic,
+      {
+        // this.profilePic,
       this.profileName,
       this.created,
       this.modified,
       this.isSuspended});
 
   EsProfileData.fromJson(Map<String, dynamic> json) {
-    profilePic = json['profile_pic'];
+    // profilePic = json['profile_pic'];
     profileName = json['profile_name'];
     created = json['created'];
     modified = json['modified'];
@@ -73,7 +99,7 @@ class EsProfileData {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['profile_pic'] = this.profilePic;
+    // data['profile_pic'] = this.profilePic;
     data['profile_name'] = this.profileName;
     data['created'] = this.created;
     data['modified'] = this.modified;

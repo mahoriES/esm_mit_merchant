@@ -5,6 +5,7 @@ import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_auth.dart';
 import 'package:foore/data/model/es_profiles.dart';
 import 'package:foore/environments/environment.dart';
+import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../router.dart';
@@ -69,7 +70,7 @@ class EsLoginBloc {
           .toJson()),
     )
         .then((httpResponse) {
-      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202 || httpResponse.statusCode == 201) {
         this._loginState.isLoading = false;
         this._loginState.isShowOtp = true;
       } else {
@@ -105,7 +106,7 @@ class EsLoginBloc {
               json.decode(profilesResponse.body));
           this._authBloc.esLogin(authData, profilesResponseData.merchant);
           Navigator.of(context).pushNamedAndRemoveUntil(
-              Router.homeRoute, (Route<dynamic> route) => false);
+              EsHomePage.routeName, (Route<dynamic> route) => false);
           this._loginState.isSubmitOtp = false;
           this._updateState();
           return;

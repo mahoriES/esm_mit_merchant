@@ -6,8 +6,11 @@ import 'package:foore/data/http_service.dart';
 
 class EsLoginPage extends StatefulWidget {
   static const routeName = '/esLogin';
+  static const signUpRouteName = '/esSignUp';
 
-  EsLoginPage({Key key}) : super(key: key);
+  final isSignUp;
+
+  EsLoginPage(this.isSignUp,{Key key}) : super(key: key);
 
   _EsLoginPageState createState() => _EsLoginPageState();
 }
@@ -37,7 +40,11 @@ class _EsLoginPageState extends State<EsLoginPage> {
   Widget build(BuildContext context) {
     onSendCode() {
       if (_formKeySendCode.currentState.validate()) {
-        this._esLoginBloc.sendCode();
+        if(widget.isSignUp) {
+        this._esLoginBloc.signUp(context);
+        } else {
+         this._esLoginBloc.sendCode();
+        }
       }
     }
 
@@ -88,12 +95,12 @@ class _EsLoginPageState extends State<EsLoginPage> {
               child: Container(),
             ),
             Text(
-              'Login',
+              widget.isSignUp ?'Sign up':'Login',
               style: Theme.of(context).textTheme.headline,
             ),
             const SizedBox(height: 32.0),
             Text(
-              'Login with eSamudaay account',
+              widget.isSignUp ?'Sign up with eSamudaay account':'Login with eSamudaay account',
               style: Theme.of(context).textTheme.subtitle,
             ),
             const SizedBox(height: 16.0),

@@ -171,7 +171,7 @@ class AuthBloc {
   static const eSamudaayMerchantProfileInformationSharedPrefKey =
       'eSamudaayMerchantProfileInformation';
 
-  esLogin(EsAuthData esAuthData, EsProfile esMerchantProfile) async {
+  esLogin(EsAuthData esAuthData, EsProfile esMerchantProfile) {
     this.authState.esAuthData = esAuthData;
     this.authState.esMerchantProfile = esMerchantProfile;
     this.authState.isEsLoading = false;

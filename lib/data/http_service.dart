@@ -42,7 +42,6 @@ class HttpService {
         throw Exception('Auth Failed');
       } else {
         print(httpResponse.toString());
-
         // If that call was not successful, throw an error.
         throw Exception('Failed to load post');
       }
@@ -145,6 +144,10 @@ class HttpService {
       final httpResponse =
           await http.get(esApiBaseUrl + path, headers: requestHeaders);
 
+      print(httpResponse.request.url.toString());
+      print(httpResponse.statusCode);
+      print(httpResponse.body);
+
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
         // If the call to the server was successful, parse the JSON.
         return httpResponse;
@@ -175,6 +178,11 @@ class HttpService {
       final httpResponse =
           await http.get(esApiBaseUrl + path, headers: requestHeaders);
 
+      
+      print(httpResponse.request.url.toString());
+      print(httpResponse.statusCode);
+      print(httpResponse.body);
+
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
         // If the call to the server was successful, parse the JSON.
         return httpResponse;
@@ -204,6 +212,37 @@ class HttpService {
       };
       final httpResponse =
           await http.post(esApiBaseUrl + path, headers: requestHeaders, body: body);
+
+
+      print(httpResponse.request.url.toString());
+      print(httpResponse.statusCode);
+      print(httpResponse.body);
+      
+      if (httpResponse.statusCode == 403 || httpResponse.statusCode == 401) {
+        this._authBloc.esLogout();
+        throw Exception('Auth Failed');
+      }
+      return httpResponse;
+    } else {
+      this._authBloc.esLogout();
+      throw Exception('Auth Failed');
+    }
+  }
+
+  Future<http.Response> esPostWithToken(path, body, token) async {
+    if (token != null) {
+      Map<String, String> requestHeaders = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'JWT $token'
+      };
+      final httpResponse =
+          await http.post(esApiBaseUrl + path, headers: requestHeaders, body: body);
+      
+      print(httpResponse.request.url.toString());
+      print(httpResponse.statusCode);
+      print(httpResponse.body);
+
       if (httpResponse.statusCode == 403 || httpResponse.statusCode == 401) {
         this._authBloc.esLogout();
         throw Exception('Auth Failed');
@@ -225,6 +264,11 @@ class HttpService {
       };
       final httpResponse =
           await http.patch(esApiBaseUrl + path, headers: requestHeaders, body: body);
+
+      print(httpResponse.request.url.toString());
+      print(httpResponse.statusCode);
+      print(httpResponse.body);
+
       if (httpResponse.statusCode == 403 || httpResponse.statusCode == 401) {
         this._authBloc.esLogout();
         throw Exception('Auth Failed');
@@ -243,6 +287,11 @@ class HttpService {
     };
     final httpResponse =
         await http.post(esApiBaseUrl + path, headers: requestHeaders, body: body);
+        
+      print(httpResponse.request.url.toString());
+      print(httpResponse.statusCode);
+      print(httpResponse.body);
+
     return httpResponse;
   }
 
@@ -252,6 +301,10 @@ class HttpService {
       'Accept': 'application/json',
     };
     final httpResponse = await http.get(esApiBaseUrl + path, headers: requestHeaders);
+    
+      print(httpResponse.request.url.toString());
+      print(httpResponse.statusCode);
+      print(httpResponse.body);
     return httpResponse;
   }
 
@@ -265,6 +318,12 @@ class HttpService {
       };
       final httpResponse =
           await http.post(url, headers: requestHeaders, body: body);
+
+
+      print(httpResponse.request.url.toString());
+      print(httpResponse.statusCode);
+      print(httpResponse.body);
+
       if (httpResponse.statusCode == 403 || httpResponse.statusCode == 401) {
         this._authBloc.esLogout();
         throw Exception('Auth Failed');
@@ -286,6 +345,11 @@ class HttpService {
       };
 
       final httpResponse = await http.get(url, headers: requestHeaders);
+
+      
+      print(httpResponse.request.url.toString());
+      print(httpResponse.statusCode);
+      print(httpResponse.body);
 
       if (httpResponse.statusCode == 403 || httpResponse.statusCode == 401) {
         this._authBloc.esLogout();

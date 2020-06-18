@@ -10,16 +10,16 @@ class EsCreateBusinessBloc {
   EsCreateBusinessState _esCreateBusinessStateState = new EsCreateBusinessState();
   final nameEditController = TextEditingController();
   final phoneNumberEditController = TextEditingController();
-  final HttpService _httpService;
+  final HttpService httpService;
 
   BehaviorSubject<EsCreateBusinessState> _subjectEsCreateBusinessState;
 
-  EsCreateBusinessBloc(this._httpService) {
+  EsCreateBusinessBloc(this.httpService) {
     this._subjectEsCreateBusinessState =
         new BehaviorSubject<EsCreateBusinessState>.seeded(_esCreateBusinessStateState);
   }
 
-  Observable<EsCreateBusinessState> get checkinStateObservable =>
+  Observable<EsCreateBusinessState> get createBusinessObservable =>
       _subjectEsCreateBusinessState.stream;
 
   getData() {
@@ -31,7 +31,7 @@ class EsCreateBusinessBloc {
     this._esCreateBusinessStateState.isLoadingFailed = false;
     this._esCreateBusinessStateState.clusters = [];
     this._updateState();
-    _httpService.esGet(EsApiPaths.getClusters).then((httpResponse) {
+    httpService.esGet(EsApiPaths.getClusters).then((httpResponse) {
       if (httpResponse.statusCode == 200) {
         this._esCreateBusinessStateState.isLoading = false;
         this._esCreateBusinessStateState.isLoadingFailed = false;
@@ -62,7 +62,7 @@ class EsCreateBusinessBloc {
     );
     var payloadString = json.encode(payload.toJson());
     this
-        ._httpService
+        .httpService
         .esPost(EsApiPaths.postCreateBusiness, payloadString)
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
