@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
-import 'package:foore/data/model/es_clusters.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EsCreateBusinessBloc {
   EsCreateBusinessState _esCreateBusinessStateState = new EsCreateBusinessState();
   final nameEditController = TextEditingController();
-  final phoneNumberEditController = TextEditingController();
+  final circleEditController = TextEditingController();
   final HttpService httpService;
 
   BehaviorSubject<EsCreateBusinessState> _subjectEsCreateBusinessState;
@@ -22,35 +21,6 @@ class EsCreateBusinessBloc {
   Observable<EsCreateBusinessState> get createBusinessObservable =>
       _subjectEsCreateBusinessState.stream;
 
-  getData() {
-    this.getClusters();
-  }
-
-  getClusters() {
-    this._esCreateBusinessStateState.isLoading = true;
-    this._esCreateBusinessStateState.isLoadingFailed = false;
-    this._esCreateBusinessStateState.clusters = [];
-    this._updateState();
-    httpService.esGet(EsApiPaths.getClusters).then((httpResponse) {
-      if (httpResponse.statusCode == 200) {
-        this._esCreateBusinessStateState.isLoading = false;
-        this._esCreateBusinessStateState.isLoadingFailed = false;
-        this._esCreateBusinessStateState.clusters = new List<EsCluster>();
-        json.decode(httpResponse.body).forEach((v) {
-          this._esCreateBusinessStateState.clusters.add(new EsCluster.fromJson(v));
-        });
-      } else {
-        this._esCreateBusinessStateState.isLoadingFailed = true;
-        this._esCreateBusinessStateState.isLoading = false;
-      }
-      this._updateState();
-    }).catchError((onError) {
-      this._esCreateBusinessStateState.isLoadingFailed = true;
-      this._esCreateBusinessStateState.isLoading = false;
-      this._updateState();
-    });
-  }
-
   createBusiness(Function onCreateBusinessSuccess) {
     this._esCreateBusinessStateState.isSubmitting = true;
     this._esCreateBusinessStateState.isSubmitFailed = false;
@@ -58,14 +28,14 @@ class EsCreateBusinessBloc {
     this._updateState();
     var payload = new EsCreateBusinessPayload(
       businessName: this.nameEditController.text,
-      clusterCode: this._esCreateBusinessStateState.selectedClusterCode,
+      clusterCode: this.circleEditController.text,
     );
     var payloadString = json.encode(payload.toJson());
     this
         .httpService
         .esPost(EsApiPaths.postCreateBusiness, payloadString)
         .then((httpResponse) {
-      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
         this._esCreateBusinessStateState.isSubmitting = false;
         this._esCreateBusinessStateState.isSubmitFailed = false;
         this._esCreateBusinessStateState.isSubmitSuccess = true;
@@ -88,11 +58,6 @@ class EsCreateBusinessBloc {
     });
   }
 
-  setSelectedCluster(EsCluster cluster) {
-    this._esCreateBusinessStateState.selectedCluster = cluster;
-    this._updateState();
-  }
-
   setIsSubmitting(bool isSubmitting) {
     this._esCreateBusinessStateState.isSubmitting = isSubmitting;
     this._updateState();
@@ -110,25 +75,13 @@ class EsCreateBusinessBloc {
 }
 
 class EsCreateBusinessState {
-  bool isLoading;
-  bool isLoadingFailed;
-
-  get selectedClusterCode => '';
-
-  EsCluster selectedCluster;
-
-  List<EsCluster> clusters;
-
   bool isSubmitting;
   bool isSubmitSuccess;
   bool isSubmitFailed;
 
   EsCreateBusinessState() {
-    this.isLoading = false;
-    this.isLoadingFailed = false;
     this.isSubmitting = false;
     this.isSubmitFailed = false;
     this.isSubmitSuccess = false;
-    this.clusters = new List<EsCluster>();
   }
 }

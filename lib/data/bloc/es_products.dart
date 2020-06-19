@@ -25,7 +25,7 @@ class EsProductsBloc {
         new BehaviorSubject<EsProductsState>.seeded(_esProductsState);
   }
 
-  Observable<EsProductsState> get peopleStateObservable =>
+  Observable<EsProductsState> get esProductStateObservable =>
       _subjectEsProductsState.stream;
 
   getProductsFromSearch() {

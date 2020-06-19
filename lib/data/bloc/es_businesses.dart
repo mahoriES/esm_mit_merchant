@@ -19,7 +19,10 @@ class EsBusinessesBloc {
       _subjectEsBusinessesState.stream;
 
   getData() {
-    this.getBusinesses();
+    print('getData');
+      this.getBusinesses();
+    // if (this._esBusinessesState.businesses.length == 0) {
+    // }
   }
 
   getBusinesses() {
@@ -46,12 +49,15 @@ class EsBusinessesBloc {
   }
 
   setSelectedBusiness(EsBusinessInfo cluster) {
+    print('setSelectedBusiness');
     this._esBusinessesState.selectedBusiness = cluster;
     this._updateState();
   }
 
   getSelectedBusinessId() {
-    this._esBusinessesState.selectedBusinessId;
+    // print('get selected business id');
+    // print(this._esBusinessesState.selectedBusiness.toJson().toString());
+    return this._esBusinessesState.selectedBusinessId;
   }
 
   _updateState() {
@@ -75,7 +81,8 @@ class EsBusinessesState {
 
   EsBusinessInfo selectedBusiness;
 
-  get selectedBusinessId => selectedBusiness.businessId;
+  get selectedBusinessId =>
+      selectedBusiness != null ? selectedBusiness.businessId : null;
 
   EsGetBusinessesResponse businessesResponse;
 
@@ -90,5 +97,9 @@ class EsBusinessesState {
   setBusinessesResponse(EsGetBusinessesResponse response) {
     this.businessesResponse = response;
     this.businesses = response.results;
+    if (this.businesses.length > 0) {
+      selectedBusiness = this.businesses[0];
+      print(selectedBusiness.businessId);
+    }
   }
 }

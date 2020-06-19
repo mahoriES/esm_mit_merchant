@@ -1,7 +1,13 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/es_products.dart';
 
 class MenuSearchBar extends StatefulWidget {
+
+  final EsProductsBloc productsBloc;
+
+  MenuSearchBar(this.productsBloc);
+
   @override
   _MenuSearchBarState createState() => _MenuSearchBarState();
 }
@@ -10,12 +16,11 @@ class _MenuSearchBarState extends State<MenuSearchBar>
     with AfterLayoutMixin<MenuSearchBar> {
   final searchController = TextEditingController();
 
-  @override
+   @override
   void afterFirstLayout(BuildContext context) {
-    // final peopleBloc = Provider.of<PeopleBloc>(context);
-    //  this.searchController.addListener(() {
-    //   peopleBloc.onSearchTextChanged(this.searchController);
-    // });
+     this.searchController.addListener(() {
+      widget.productsBloc.onSearchTextChanged(this.searchController);
+    });
   }
 
   @override

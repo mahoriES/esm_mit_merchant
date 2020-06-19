@@ -25,24 +25,34 @@ class EsEditProductBloc {
       _subjectEsEditProductState.stream;
 
   addProduct(Function onAddProductSuccess) {
+    print('add Product');
     this._esEditProductState.isSubmitting = true;
     this._esEditProductState.isSubmitFailed = false;
     this._esEditProductState.isSubmitSuccess = false;
     this._updateState();
     var payload = new EsAddProductPayload(
-      productName: this.nameEditController.text,
-      productDescription: this.shortDescriptionEditController.text,
-      longDescription: this.longDescriptionEditController.text,
-    );
+        productName: this.nameEditController.text,
+        productDescription: this.shortDescriptionEditController.text,
+        longDescription: this.longDescriptionEditController.text,
+        images: [],
+        unitName: '',
+        displayLine1: '');
     var payloadString = json.encode(payload.toJson());
-    this
-        .httpService
-        .esPost(
-            EsApiPaths.postAddProductToBusiness(
-                this.esBusinessesBloc.getSelectedBusinessId()),
-            payloadString)
-        .then((httpResponse) {
-      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+    print(payloadString);
+    this.httpService.esPost(
+        EsApiPaths.postAddProductToBusiness(
+            this.esBusinessesBloc.getSelectedBusinessId()),
+        '''{
+	"product_name":"Dettol-Extra2",
+	"unit_name":"Ml",
+	"product_description":"Herbal, works!",
+	"images":[{"photo_id": "18d039fa-c478-4abc-852f-2e17d335d53c"}],
+	"long_description":"This is supposed to be long descripton.",
+	"display_line_1":"5+5 Gram free"
+}''').then((httpResponse) {
+      if (httpResponse.statusCode == 200 ||
+          httpResponse.statusCode == 202 ||
+          httpResponse.statusCode == 201) {
         this._esEditProductState.isSubmitting = false;
         this._esEditProductState.isSubmitFailed = false;
         this._esEditProductState.isSubmitSuccess = true;
@@ -65,16 +75,18 @@ class EsEditProductBloc {
   }
 
   updateProduct(Function onUpdateProductSuccess) {
+    print('update Product');
     this._esEditProductState.isSubmitting = true;
     this._esEditProductState.isSubmitFailed = false;
     this._esEditProductState.isSubmitSuccess = false;
     this._updateState();
     var payload = new EsUpdateProductPayload(
-        productName: this.nameEditController.text,
-        productDescription: this.shortDescriptionEditController.text,
-        longDescription: this.longDescriptionEditController.text,
-        inStock: this._esEditProductState.isProductInStock);
+      productName: this.nameEditController.text,
+      productDescription: this.shortDescriptionEditController.text,
+      longDescription: this.longDescriptionEditController.text,
+    );
     var payloadString = json.encode(payload.toJson());
+    print(payloadString);
     this
         .httpService
         .esPatch(
@@ -83,7 +95,9 @@ class EsEditProductBloc {
                 this._esEditProductState.currentProductId),
             payloadString)
         .then((httpResponse) {
-      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+      if (httpResponse.statusCode == 200 ||
+          httpResponse.statusCode == 202 ||
+          httpResponse.statusCode == 201) {
         this._esEditProductState.isSubmitting = false;
         this._esEditProductState.isSubmitFailed = false;
         this._esEditProductState.isSubmitSuccess = true;
@@ -107,7 +121,7 @@ class EsEditProductBloc {
 
   setCurrentProduct(EsProduct product) {
     this._esEditProductState.currentProduct = product;
-    this._esEditProductState.isProductInStock = product.inStock;
+    // this._esEditProductState.isProductInStock = product.inStock;
     this._updateState();
   }
 
@@ -136,7 +150,7 @@ class EsEditProductState {
 
   get currentProductId => currentProduct.productId;
 
-  bool isProductInStock = false;
+  // bool isProductInStock = false;
 
   get isNewProduct => currentProduct == null;
 

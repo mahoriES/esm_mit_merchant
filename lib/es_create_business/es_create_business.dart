@@ -5,9 +5,7 @@ import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
 import 'package:foore/data/model/es_business.dart';
-import 'package:foore/data/model/es_clusters.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
-import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 
 class EsCreateBusinessPage extends StatefulWidget {
@@ -50,7 +48,7 @@ class EsCreateBusinessPageState
   void afterFirstLayout(BuildContext context) {
       final createBusinessBloc =
         Provider.of<EsCreateBusinessBloc>(context);
-      createBusinessBloc.getData();
+      // createBusinessBloc.getData();
   }
 
   Future<bool> _onWillPop() async {
@@ -96,15 +94,6 @@ class EsCreateBusinessPageState
               if (!snapshot.hasData) {
                 return Container();
               }
-               if (snapshot.data.isLoading) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.data.isLoadingFailed) {
-                  return SomethingWentWrong(
-                    onRetry: createBusinessBloc.getData,
-                  );
-                }
               return Scrollbar(
                 child: ListView(
                   children: <Widget>[
@@ -124,39 +113,22 @@ class EsCreateBusinessPageState
                         ),
                       ),
                     ),
-                    Container(
+                    const SizedBox(height: 20),
+                    Padding(
                       padding: const EdgeInsets.only(
                         top: 24.0,
                         left: 20,
                         right: 20,
-                        bottom: 8,
-                        // bottom: 8.0,
                       ),
-                      alignment: Alignment.bottomLeft,
-                      child: Text(
-                        'Circle',
-                        style: Theme.of(context).textTheme.subtitle2,
+                      child: TextFormField(
+                        controller:
+                            createBusinessBloc.circleEditController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Circle',
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 4.0,
-                      ),
-                      child: DropdownButton<EsCluster>(
-                        value: snapshot.data.selectedCluster,
-                        elevation: 4,
-                        onChanged: createBusinessBloc.setSelectedCluster,
-                        items: snapshot.data.clusters
-                            .map<DropdownMenuItem<EsCluster>>(
-                                (EsCluster cluster) {
-                          return DropdownMenuItem<EsCluster>(
-                            value: cluster,
-                            child: Text(cluster.clusterName),
-                          );
-                        }).toList(),
-                      ),
-                    ),
+                    )
                   ],
                 ),
               );

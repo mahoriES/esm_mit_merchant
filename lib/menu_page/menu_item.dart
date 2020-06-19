@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:foore/data/model/es_product.dart';
 
 class MenuItemWidget extends StatelessWidget {
-  final String name;
-  final Function onTap;
-  final String description;
-  final String price;
-  final String category;
-  const MenuItemWidget(
-      {this.name, this.onTap, this.description, this.price, this.category});
+  final EsProduct esProduct;
+  final Function(EsProduct) onTap;
+  final Function(EsProduct) onDelete;
+  const MenuItemWidget({this.esProduct, this.onTap, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: 20, left: 20,),
+      padding: EdgeInsets.only(
+        bottom: 20,
+        left: 20,
+      ),
       child: GestureDetector(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,27 +28,33 @@ class MenuItemWidget extends StatelessWidget {
                   child: Stack(
                     children: <Widget>[
                       Container(
-                        child: Image.network('https://picsum.photos/200'),
+                        child: esProduct.dPhotoUrl != ''
+                            ? Image.network(esProduct.dPhotoUrl)
+                            : Container(),
                       ),
-                      Positioned(
-                        left: 4,
-                        bottom: 4,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(2.0),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 4, vertical: 2),
-                            color: Colors.white70,
-                            child: Text(
-                              '+4',
-                              style:
-                                  Theme.of(context).textTheme.caption.copyWith(
-                                        color: Colors.black87,
-                                      ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      esProduct.dNumberOfMorePhotos > 0
+                          ? Positioned(
+                              left: 4,
+                              bottom: 4,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(2.0),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 4, vertical: 2),
+                                  color: Colors.white70,
+                                  child: Text(
+                                    '+${esProduct.dNumberOfMorePhotos}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .caption
+                                        .copyWith(
+                                          color: Colors.black87,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(),
                     ],
                   ),
                 ),
@@ -60,7 +67,7 @@ class MenuItemWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Apple',
+                      esProduct.dProductName,
                       style: Theme.of(context).textTheme.subtitle1.copyWith(
                             color: ListTileTheme.of(context).textColor,
                           ),
@@ -69,8 +76,7 @@ class MenuItemWidget extends StatelessWidget {
                       height: 6.0,
                     ),
                     Container(
-                      child: Text(
-                          "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', ",
+                      child: Text(esProduct.dProductDescription,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           softWrap: true,
@@ -86,7 +92,7 @@ class MenuItemWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
-                        Text('₹ 10.00',
+                        Text(esProduct.dPrice,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText2
@@ -98,29 +104,38 @@ class MenuItemWidget extends StatelessWidget {
                         Flexible(
                           child: Container(),
                         ),
-                        Text('+2 variations',
-                            style: Theme.of(context).textTheme.caption),
+                        esProduct.dNumberOfMoreVariations > 0
+                            ? Text(
+                                '+${esProduct.dNumberOfMoreVariations} variations',
+                                style: Theme.of(context).textTheme.caption)
+                            : Container(),
                       ],
                     )
                   ],
                 ),
               ),
             ),
-            PopupMenuButton(
-              onSelected: (result) {},
-              itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+            PopupMenuButton<int>(
+              onSelected: (result) {
+                if (result == 1) {
+                  this.onTap(this.esProduct);
+                } else if (result == 2) {
+                  this.onDelete(this.esProduct);
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
                 const PopupMenuItem(
-                  value: '',
+                  value: 1,
                   child: Text('Edit'),
                 ),
-                const PopupMenuItem(
-                  value: '',
-                  child: Text('Activate'),
-                ),
-                const PopupMenuItem(
-                  value: '',
-                  child: Text('Delete'),
-                ),
+                // const PopupMenuItem(
+                //   value: '',
+                //   child: Text('Activate'),
+                // ),
+                // const PopupMenuItem(
+                //   value: 2,
+                //   child: Text('Delete'),
+                // ),
               ],
             )
           ],

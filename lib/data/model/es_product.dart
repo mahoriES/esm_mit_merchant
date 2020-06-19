@@ -118,11 +118,49 @@ class EsProduct {
   String productDescription;
   bool isActive;
   bool inStock;
-  List<String> images;
+  List<EsImage> images;
   String longDescription;
   String displayLine1;
   String unitName;
-  List<String> skus;
+  List<EsSku> skus;
+
+  get dProductName {
+    if (productName != null) {
+      return productName;
+    }
+    return '';
+  }
+
+  get dProductDescription {
+    if (productDescription != null) {
+      return productDescription;
+    }
+    return '';
+  }
+
+  String get dPrice {
+    if (skus.length > 0) {
+      return skus[0].basePrice != null ? '₹ ${skus[0].basePrice}': '₹ 0.00';
+    }
+    return '₹ 0.00';
+  }
+
+  String get dPhotoUrl {
+    if (images.length > 0) {
+      return images[0].photoUrl != null ? images[0].photoUrl : '';
+    }
+    return '';
+  }
+
+  int get dNumberOfMoreVariations {
+    final numberOfMoreVariations = skus.length - 1;
+    return numberOfMoreVariations > 0 ? numberOfMoreVariations : 0;
+  }
+
+  int get dNumberOfMorePhotos {
+    final numberOfMorePhotos = images.length - 1;
+    return numberOfMorePhotos > 0 ? numberOfMorePhotos : 0;
+  }
 
   EsProduct(
       {this.productId,
@@ -142,11 +180,21 @@ class EsProduct {
     productDescription = json['product_description'];
     isActive = json['is_active'];
     inStock = json['in_stock'];
-    images = json['images'].cast<String>();
     longDescription = json['long_description'];
     displayLine1 = json['display_line_1'];
     unitName = json['unit_name'];
-    skus = json['skus'].cast<String>();
+    if (json['skus'] != null) {
+      skus = new List<EsSku>();
+      json['skus'].forEach((v) {
+        skus.add(new EsSku.fromJson(v));
+      });
+    }
+    if (json['images'] != null) {
+      images = new List<EsImage>();
+      json['images'].forEach((v) {
+        images.add(new EsImage.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -156,11 +204,15 @@ class EsProduct {
     data['product_description'] = this.productDescription;
     data['is_active'] = this.isActive;
     data['in_stock'] = this.inStock;
-    data['images'] = this.images;
     data['long_description'] = this.longDescription;
     data['display_line_1'] = this.displayLine1;
     data['unit_name'] = this.unitName;
-    data['skus'] = this.skus;
+    if (this.skus != null) {
+      data['skus'] = this.skus.map((v) => v.toJson()).toList();
+    }
+    if (this.images != null) {
+      data['images'] = this.images.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -177,6 +229,68 @@ class EsAddCategoryToProductPayload {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['category_id'] = this.categoryId;
+    return data;
+  }
+}
+
+class EsSku {
+  int skuId;
+  String skuCode;
+  bool isActive;
+  bool inStock;
+  Map<String, dynamic> charges;
+  int basePrice;
+  Map<String, dynamic> variationOptions;
+
+  EsSku(
+      {this.skuId,
+      this.skuCode,
+      this.isActive,
+      this.inStock,
+      this.charges,
+      this.basePrice,
+      this.variationOptions});
+
+  EsSku.fromJson(Map<String, dynamic> json) {
+    skuId = json['sku_id'];
+    skuCode = json['sku_code'];
+    isActive = json['is_active'];
+    inStock = json['in_stock'];
+    charges = json['charges'];
+    basePrice = json['base_price'];
+    variationOptions = json['variation_options'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['sku_id'] = this.skuId;
+    data['sku_code'] = this.skuCode;
+    data['is_active'] = this.isActive;
+    data['in_stock'] = this.inStock;
+    data['charges'] = this.charges;
+    data['variation_options'] = this.variationOptions;
+    return data;
+  }
+}
+
+class EsImage {
+  String photoId;
+  String photoUrl;
+  String contentType;
+
+  EsImage({this.photoId, this.photoUrl, this.contentType});
+
+  EsImage.fromJson(Map<String, dynamic> json) {
+    photoId = json['photo_id'];
+    photoUrl = json['photo_url'];
+    contentType = json['content_type'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['photo_id'] = this.photoId;
+    data['photo_url'] = this.photoUrl;
+    data['content_type'] = this.contentType;
     return data;
   }
 }
