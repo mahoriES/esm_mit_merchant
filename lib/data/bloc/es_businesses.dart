@@ -48,9 +48,9 @@ class EsBusinessesBloc {
     });
   }
 
-  setSelectedBusiness(EsBusinessInfo cluster) {
+  setSelectedBusiness(EsBusinessInfo businessInfo) {
     print('setSelectedBusiness');
-    this._esBusinessesState.selectedBusiness = cluster;
+    this._esBusinessesState.selectedBusiness = businessInfo;
     this._updateState();
   }
 

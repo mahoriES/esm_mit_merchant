@@ -63,6 +63,22 @@ class EsBusinessInfo {
   bool hasDelivery;
   EsCluster cluster;
 
+  get dBusinessName {
+    if (businessName != null) {
+      return businessName;
+    }
+    return ''; 
+  }
+
+  get dBusinessPrettyAddress {
+    if (address != null) {
+      if (address.prettyAddress != null) {
+        return address.prettyAddress;
+      }
+    }
+      return '';
+  }
+
   EsBusinessInfo(
       {this.businessId,
       this.businessName,

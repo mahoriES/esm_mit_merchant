@@ -5,6 +5,7 @@ import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/home_page/app_drawer.dart';
 import 'package:foore/widgets/empty_list.dart';
+import 'package:foore/widgets/es_select_business.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 
@@ -46,18 +47,7 @@ class _MenuPageState extends State<MenuPage> {
     deleteItem(EsProduct product) async {}
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: Text(
-          'Menu',
-        ),
-      ),
-      drawer: AppDrawer(),
+      appBar: EsSelectBusiness(esProductsBloc.getProductsFromSearch),
       body: SafeArea(
         child: Container(
           height: double.infinity,
