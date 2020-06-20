@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_business_profile.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
+import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
+import 'package:foore/es_business_profile/es_business_image_list.dart';
 import 'package:foore/es_business_profile/es_edit_business_description.dart';
 import 'package:foore/widgets/es_select_business.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import 'es_edit_business_address.dart';
@@ -25,12 +28,7 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    final httpService = Provider.of<HttpService>(context);
-    final businessBloc = Provider.of<EsBusinessesBloc>(context);
-    if (this.esBusinessProfileBloc == null) {
-      this.esBusinessProfileBloc =
-          EsBusinessProfileBloc(httpService, businessBloc);
-    }
+
     super.didChangeDependencies();
   }
 
@@ -43,6 +41,12 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final httpService = Provider.of<HttpService>(context);
+    final businessBloc = Provider.of<EsBusinessesBloc>(context);
+    if (this.esBusinessProfileBloc == null) {
+      this.esBusinessProfileBloc =
+          EsBusinessProfileBloc(httpService, businessBloc);
+    }
     editName() async {
       await Navigator.of(context).push(MaterialPageRoute(
           builder: (context) =>
@@ -387,64 +391,7 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                         ),
                       ),
                       SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: <Widget>[
-                            Material(
-                              elevation: 1.0,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(4.0),
-                                child: Container(
-                                  height: 120,
-                                  width: 120,
-                                  child: Container(
-                                    child: Image.network(
-                                        'https://picsum.photos/200'),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 12.0,
-                            ),
-                            Material(
-                              elevation: 1.0,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(4.0),
-                                child: Container(
-                                  height: 120,
-                                  width: 120,
-                                  child: Container(
-                                    child: Image.network(
-                                        'https://picsum.photos/200'),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 12.0,
-                            ),
-                            Container(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(4.0),
-                                child: Container(
-                                  height: 120,
-                                  width: 120,
-                                  color: Colors.grey[100],
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.add_a_photo,
-                                      // size: 40,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      EsBusinessProfileImageList(esBusinessProfileBloc),
                       SizedBox(height: 120),
                     ],
                   );
@@ -479,3 +426,4 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
     );
   }
 }
+

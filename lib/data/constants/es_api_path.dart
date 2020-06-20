@@ -40,7 +40,9 @@ class EsApiPaths {
   static final getCategories =
       (String businessId) => 'businesses/$businessId/catalog/categories';
 
-  static final getProfiles = 'auth/profiles';
-  static final postAddProfile = 'auth/profiles';
-  static final patchUpdateProfile = 'auth/profiles';
+  static const getProfiles = 'auth/profiles';
+  static const postAddProfile = 'auth/profiles';
+  static const patchUpdateProfile = 'auth/profiles';
+
+  static const uploadPhoto = 'media/photo/';
 }

@@ -59,7 +59,7 @@ class EsBusinessInfo {
   bool isOpen;
   EsAddress address;
   EsTiming timing;
-  List<String> images;
+  List<EsImages> images;
   List<String> phones;
   bool hasDelivery;
   EsCluster cluster;
@@ -70,7 +70,6 @@ class EsBusinessInfo {
     }
     return '';
   }
- 
 
   get dBusinessDescription {
     if (description != null) {
@@ -78,7 +77,7 @@ class EsBusinessInfo {
     }
     return '';
   }
- 
+
   get dBusinessPrettyAddress {
     if (address != null) {
       if (address.prettyAddress != null) {
@@ -131,6 +130,13 @@ class EsBusinessInfo {
     return [];
   }
 
+  List<EsImages> get dImages {
+    if (images != null) {
+      return images;
+    }
+    return [];
+  }
+
   EsBusinessInfo(
       {this.businessId,
       this.businessName,
@@ -155,7 +161,14 @@ class EsBusinessInfo {
         : null;
     timing =
         json['timing'] != null ? new EsTiming.fromJson(json['timing']) : null;
-    images = json['images'].cast<String>();
+
+    if (json['images'] != null) {
+      images = new List<EsImages>();
+      json['images'].forEach((v) {
+        images.add(new EsImages.fromJson(v));
+      });
+    }
+
     phones = json['phones'].cast<String>();
     hasDelivery = json['has_delivery'];
     cluster = json['cluster'] != null
@@ -176,11 +189,13 @@ class EsBusinessInfo {
     if (this.timing != null) {
       data['timing'] = this.timing.toJson();
     }
-    data['images'] = this.images;
     data['phones'] = this.phones;
     data['has_delivery'] = this.hasDelivery;
     if (this.cluster != null) {
       data['cluster'] = this.cluster.toJson();
+    }
+    if (this.images != null) {
+      data['images'] = this.images.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -394,8 +409,12 @@ class EsImages {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['photo_id'] = this.photoId;
-    data['photo_url'] = this.photoUrl;
-    data['content_type'] = this.contentType;
+    if (this.photoUrl != null) {
+      data['photo_url'] = this.photoUrl;
+    }
+    if (this.contentType != null) {
+      data['content_type'] = this.contentType;
+    }
     return data;
   }
 }

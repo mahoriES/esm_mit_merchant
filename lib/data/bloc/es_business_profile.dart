@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
+import 'package:foore/data/model/es_media.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'es_businesses.dart';
@@ -43,6 +46,8 @@ class EsBusinessProfileBloc {
             state.selectedBusiness.dBusinessPincode;
         this.addressEditController.text =
             state.selectedBusiness.dBusinessPrettyAddress;
+        this.descriptionEditController.text =
+            state.selectedBusiness.dBusinessDescription;
       }
       this._updateState();
     });
@@ -308,6 +313,56 @@ class EsBusinessProfileBloc {
       this.subscription.cancel();
     }
   }
+
+  Future<File> _pickImageFromGallery() async {
+    final pickedFile =
+        await ImagePicker.platform.pickImage(source: ImageSource.camera);
+    var file = new File(pickedFile.path);
+    return file;
+  }
+
+  selectImage() async {
+    try {
+      var file = await _pickImageFromGallery();
+      if (file != null) {
+        final uploadableFile = EsUploadableFile(file);
+        this
+            ._esBusinessProfileState
+            .uploadingImages
+            .add(EsUploadableFile(file));
+        this._updateState();
+        try {
+          var respnose =
+              await this.httpService.esUpload(EsApiPaths.uploadPhoto, file);
+          var uploadImageResponse =
+              EsUploadImageResponse.fromJson(json.decode(respnose));
+
+          var existingImages = List<EsImages>();
+          if (_esBusinessProfileState.selectedBusinessInfo.images != null) {
+            _esBusinessProfileState.selectedBusinessInfo.images
+                .forEach((element) {
+              existingImages.add(EsImages(photoId: element.photoId));
+            });
+          }
+          existingImages.add(EsImages(photoId: uploadImageResponse.photoId));
+          var updateBusinessPayload = EsUpdateBusinessPayload(
+            images: existingImages,
+          );
+
+          this.updateBusiness(updateBusinessPayload, () {
+            this._esBusinessProfileState.uploadingImages.remove(uploadableFile);
+            this._updateState();
+          }, () {
+            uploadableFile.setUploadFailed();
+            this._updateState();
+          });
+        } catch (err) {
+          uploadableFile.setUploadFailed();
+          this._updateState();
+        }
+      }
+    } catch (err) {}
+  }
 }
 
 class EsBusinessProfileState {
@@ -317,6 +372,7 @@ class EsBusinessProfileState {
   bool hasDelivery = false;
   bool isOpen = false;
   EsBusinessInfo selectedBusinessInfo;
+  List<EsUploadableFile> uploadingImages = List<EsUploadableFile>();
 
   EsBusinessProfileState() {
     this.isSubmitting = false;
