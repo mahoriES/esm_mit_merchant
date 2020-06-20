@@ -115,7 +115,7 @@ class EsBusinessesState {
   List<EsBusinessInfo> businesses;
 
   EsBusinessesState() {
-    this.isLoading = false;
+    this.isLoading = true;
     this.isLoadingFailed = false;
     this.businesses = new List<EsBusinessInfo>();
   }
