@@ -6,7 +6,8 @@ import 'package:foore/data/model/es_business.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EsCreateBusinessBloc {
-  EsCreateBusinessState _esCreateBusinessStateState = new EsCreateBusinessState();
+  EsCreateBusinessState _esCreateBusinessStateState =
+      new EsCreateBusinessState();
   final nameEditController = TextEditingController();
   final circleEditController = TextEditingController();
   final HttpService httpService;
@@ -15,13 +16,14 @@ class EsCreateBusinessBloc {
 
   EsCreateBusinessBloc(this.httpService) {
     this._subjectEsCreateBusinessState =
-        new BehaviorSubject<EsCreateBusinessState>.seeded(_esCreateBusinessStateState);
+        new BehaviorSubject<EsCreateBusinessState>.seeded(
+            _esCreateBusinessStateState);
   }
 
   Observable<EsCreateBusinessState> get createBusinessObservable =>
       _subjectEsCreateBusinessState.stream;
 
-  createBusiness(Function onCreateBusinessSuccess) {
+  createBusiness(Function onCreateBusinessSuccess, onFail) {
     this._esCreateBusinessStateState.isSubmitting = true;
     this._esCreateBusinessStateState.isSubmitFailed = false;
     this._esCreateBusinessStateState.isSubmitSuccess = false;
@@ -45,12 +47,14 @@ class EsCreateBusinessBloc {
           onCreateBusinessSuccess(createdBusinessInfo);
         }
       } else {
+        onFail();
         this._esCreateBusinessStateState.isSubmitting = false;
         this._esCreateBusinessStateState.isSubmitFailed = true;
         this._esCreateBusinessStateState.isSubmitSuccess = false;
       }
       this._updateState();
     }).catchError((onError) {
+      onFail();
       this._esCreateBusinessStateState.isSubmitting = false;
       this._esCreateBusinessStateState.isSubmitFailed = true;
       this._esCreateBusinessStateState.isSubmitSuccess = false;
@@ -65,7 +69,10 @@ class EsCreateBusinessBloc {
 
   _updateState() {
     if (!this._subjectEsCreateBusinessState.isClosed) {
-      this._subjectEsCreateBusinessState.sink.add(this._esCreateBusinessStateState);
+      this
+          ._subjectEsCreateBusinessState
+          .sink
+          .add(this._esCreateBusinessStateState);
     }
   }
 

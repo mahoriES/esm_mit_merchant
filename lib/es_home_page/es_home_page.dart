@@ -11,10 +11,10 @@ class EsHomePage extends StatefulWidget {
 }
 
 class _EsHomePageState extends State<EsHomePage> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
   final List<Widget> _widgetOptions = <Widget>[
     Container(),
-    Container(),
+    // Container(),
     MenuPage(),
     EsBusinessProfile()
   ];
@@ -44,12 +44,12 @@ class _EsHomePageState extends State<EsHomePage> {
               "Home",
             ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_basket),
-            title: Text(
-              'Orders',
-            ),
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.shopping_basket),
+          //   title: Text(
+          //     'Orders',
+          //   ),
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.menu),
             title: Text(

@@ -4,6 +4,7 @@ import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:foore/es_business_profile/es_edit_business_description.dart';
+import 'package:foore/es_create_business/es_create_business.dart';
 import 'package:foore/menu_page/add_menu_item_page.dart';
 import 'package:foore/widgets/es_select_business.dart';
 import 'package:provider/provider.dart';
@@ -457,7 +458,7 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
             horizontal: 25,
           ),
           onPressed: () async {
-            Navigator.of(context).pushNamed(AddMenuItemPage.routeName);
+            Navigator.of(context).pushNamed(EsCreateBusinessPage.routeName);
           },
           child: Container(
             child: Text(

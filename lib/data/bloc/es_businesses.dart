@@ -57,6 +57,12 @@ class EsBusinessesBloc {
   updateSelectedBusiness(EsBusinessInfo businessInfo) {
     print('setSelectedBusiness');
     this._esBusinessesState.selectedBusiness = businessInfo;
+    this._esBusinessesState.businesses = this._esBusinessesState.businesses.map((info) {
+      if(info.businessId == businessInfo.businessId) {
+        return businessInfo;
+      }
+      return info;
+    }).toList();
     this._updateState();
   }
 

@@ -14,12 +14,10 @@ class EsCreateBusinessPage extends StatefulWidget {
   EsCreateBusinessPage();
 
   @override
-  EsCreateBusinessPageState createState() =>
-      EsCreateBusinessPageState();
+  EsCreateBusinessPageState createState() => EsCreateBusinessPageState();
 }
 
-class EsCreateBusinessPageState
-    extends State<EsCreateBusinessPage>
+class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
     with AfterLayoutMixin<EsCreateBusinessPage> {
   final _formKey = GlobalKey<FormState>();
 
@@ -46,9 +44,8 @@ class EsCreateBusinessPageState
 
   @override
   void afterFirstLayout(BuildContext context) {
-      final createBusinessBloc =
-        Provider.of<EsCreateBusinessBloc>(context);
-      // createBusinessBloc.getData();
+    final createBusinessBloc = Provider.of<EsCreateBusinessBloc>(context);
+    // createBusinessBloc.getData();
   }
 
   Future<bool> _onWillPop() async {
@@ -63,8 +60,7 @@ class EsCreateBusinessPageState
 
   @override
   Widget build(BuildContext context) {
-    final createBusinessBloc =
-        Provider.of<EsCreateBusinessBloc>(context);
+    final createBusinessBloc = Provider.of<EsCreateBusinessBloc>(context);
 
     onCreateBusinessSuccess(EsBusinessInfo businessInfo) {
       var esBusinessesBloc = Provider.of<EsBusinessesBloc>(context);
@@ -74,8 +70,9 @@ class EsCreateBusinessPageState
 
     submit() {
       if (this._formKey.currentState.validate()) {
-        createBusinessBloc
-            .createBusiness(onCreateBusinessSuccess);
+        createBusinessBloc.createBusiness(onCreateBusinessSuccess, () {
+          this._showFailedAlertDialog();
+        });
       }
     }
 
@@ -105,8 +102,7 @@ class EsCreateBusinessPageState
                         right: 20,
                       ),
                       child: TextFormField(
-                        controller:
-                            createBusinessBloc.nameEditController,
+                        controller: createBusinessBloc.nameEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Business name',
@@ -121,8 +117,7 @@ class EsCreateBusinessPageState
                         right: 20,
                       ),
                       child: TextFormField(
-                        controller:
-                            createBusinessBloc.circleEditController,
+                        controller: createBusinessBloc.circleEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Circle',
@@ -134,10 +129,18 @@ class EsCreateBusinessPageState
               );
             }),
       ),
-      floatingActionButton: FoSubmitButton(
-        text: 'Save',
-        onPressed: submit,
-      ),
+      floatingActionButton: StreamBuilder<EsCreateBusinessState>(
+          stream: createBusinessBloc.createBusinessObservable,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Container();
+            }
+            return FoSubmitButton(
+              text: 'Save',
+              onPressed: submit,
+              isLoading: snapshot.data.isSubmitting,
+            );
+          }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
