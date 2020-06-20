@@ -172,12 +172,13 @@ class EsBusinessProfileBloc {
     this._esBusinessProfileState.isSubmitting = true;
     this._esBusinessProfileState.isSubmitFailed = false;
     this._esBusinessProfileState.isSubmitSuccess = false;
+    var payloadString = json.encode(payload.toJson());
     this._updateState();
     try {
       var httpResponse = await this.httpService.esPut(
           EsApiPaths.putUpdateBusinessAddress(
               this._esBusinessProfileState.selectedBusinessInfo.businessId),
-          payload);
+          payloadString);
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
         this._esBusinessProfileState.isSubmitting = false;
         this._esBusinessProfileState.isSubmitFailed = false;
