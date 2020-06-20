@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
+import 'package:foore/es_create_business/es_create_business.dart';
 import 'package:provider/provider.dart';
 
 class EsSelectBusiness extends PreferredSize {
@@ -34,36 +35,50 @@ class EsSelectBusiness extends PreferredSize {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          'Select business',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: true,
-                          style: Theme.of(context).textTheme.headline5,
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              'Select business',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: true,
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                            Expanded(
+                                child: Container(
+                              height: 1,
+                            )),
+                            FlatButton.icon(
+                                onPressed: () {
+                                   Navigator.of(context).pop();
+                                  Navigator.of(context).pushNamed(
+                                      EsCreateBusinessPage.routeName);
+                                },
+                                icon: Icon(Icons.add),
+                                label: Text('Add business'))
+                          ],
                         ),
                         Container(
                           height: 370,
-                          child: Expanded(
-                            child: ListView.builder(
-                              itemCount: snapshot.data.businesses.length,
-                              itemBuilder: (context, index) {
-                                final businessInfo =
-                                    snapshot.data.businesses[index];
-                                return ListTile(
-                                  onTap: () {
-                                    esBusinessesBloc
-                                        .setSelectedBusiness(businessInfo);
-                                    Navigator.pop(context);
-                                    if (onChangeBusiness != null) {
-                                      onChangeBusiness();
-                                    }
-                                  },
-                                  title: Text(businessInfo.dBusinessName),
-                                  subtitle:
-                                      Text(businessInfo.dBusinessPrettyAddress),
-                                );
-                              },
-                            ),
+                          child: ListView.builder(
+                            itemCount: snapshot.data.businesses.length,
+                            itemBuilder: (context, index) {
+                              final businessInfo =
+                                  snapshot.data.businesses[index];
+                              return ListTile(
+                                onTap: () {
+                                  esBusinessesBloc
+                                      .setSelectedBusiness(businessInfo);
+                                  Navigator.pop(context);
+                                  if (onChangeBusiness != null) {
+                                    onChangeBusiness();
+                                  }
+                                },
+                                title: Text(businessInfo.dBusinessName),
+                                subtitle:
+                                    Text(businessInfo.dBusinessPrettyAddress),
+                              );
+                            },
                           ),
                         )
                       ],

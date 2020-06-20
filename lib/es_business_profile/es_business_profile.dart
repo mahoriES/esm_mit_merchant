@@ -447,30 +447,30 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
           ),
         ),
       ),
-      floatingActionButton: Transform.translate(
-        offset: Offset(0, -15),
-        child: RaisedButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50.0),
-          ),
-          padding: EdgeInsets.symmetric(
-            vertical: 15,
-            horizontal: 25,
-          ),
-          onPressed: () async {
-            Navigator.of(context).pushNamed(EsCreateBusinessPage.routeName);
-          },
-          child: Container(
-            child: Text(
-              'Add business',
-              style: Theme.of(context).textTheme.subhead.copyWith(
-                    color: Colors.white,
-                  ),
-            ),
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: Transform.translate(
+      //   offset: Offset(0, -15),
+      //   child: RaisedButton(
+      //     shape: RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.circular(50.0),
+      //     ),
+      //     padding: EdgeInsets.symmetric(
+      //       vertical: 15,
+      //       horizontal: 25,
+      //     ),
+      //     onPressed: () async {
+      //       Navigator.of(context).pushNamed(EsCreateBusinessPage.routeName);
+      //     },
+      //     child: Container(
+      //       child: Text(
+      //         'Add business',
+      //         style: Theme.of(context).textTheme.subhead.copyWith(
+      //               color: Colors.white,
+      //             ),
+      //       ),
+      //     ),
+      //   ),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
