@@ -40,7 +40,7 @@ class EsCreateMerchantProfileBloc {
         .httpService
         .esPostWithToken(EsApiPaths.postAddProfile, payloadString, this.authBloc.authState.esJwtToken)
         .then((httpResponse) {
-      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202 || httpResponse.statusCode == 200) {
+      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202 || httpResponse.statusCode == 201) {
         this._esCreateMerchantProfileState.isSubmitting = false;
         this._esCreateMerchantProfileState.isSubmitFailed = false;
         this._esCreateMerchantProfileState.isSubmitSuccess = true;
