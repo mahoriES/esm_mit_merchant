@@ -34,7 +34,7 @@ class EsLoginBloc {
   sendCode() {
     this._loginState.isLoading = true;
     this._updateState();
-    final phoneNumberInput = this.phoneEditController.text;
+    final phoneNumberInput = '+91' + this.phoneEditController.text;
 
     final TPID = Environment.esTPID;
 
@@ -59,7 +59,7 @@ class EsLoginBloc {
   signUp(BuildContext context) {
     this._loginState.isLoading = true;
     this._updateState();
-    final phoneNumberInput = this.phoneEditController.text;
+    final phoneNumberInput = '+91' + this.phoneEditController.text;
 
     final TPID = Environment.esTPID;
 
@@ -70,7 +70,9 @@ class EsLoginBloc {
           .toJson()),
     )
         .then((httpResponse) {
-      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202 || httpResponse.statusCode == 201) {
+      if (httpResponse.statusCode == 200 ||
+          httpResponse.statusCode == 202 ||
+          httpResponse.statusCode == 201) {
         this._loginState.isLoading = false;
         this._loginState.isShowOtp = true;
       } else {
@@ -91,7 +93,7 @@ class EsLoginBloc {
       var authResponse = await _httpService.esPostWithoutAuth(
           EsApiPaths.postToken,
           json.encode(EsGetTokenPayload(
-                  phone: this.phoneEditController.text,
+                  phone: '+91' + this.phoneEditController.text,
                   token: this.otpEditController.text,
                   thirdPartyId: TPID)
               .toJson()));

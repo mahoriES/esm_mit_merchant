@@ -4,15 +4,25 @@ import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'auth.dart';
+
 class EsBusinessesBloc {
   EsBusinessesState _esBusinessesState = new EsBusinessesState();
   final HttpService _httpService;
+  final AuthBloc authBloc;
 
   BehaviorSubject<EsBusinessesState> _subjectEsBusinessesState;
 
-  EsBusinessesBloc(this._httpService) {
+  EsBusinessesBloc(this._httpService, this.authBloc){
     this._subjectEsBusinessesState =
         new BehaviorSubject<EsBusinessesState>.seeded(_esBusinessesState);
+    this.authBloc.authStateObservable.listen((event) {
+      if(event.isEsLoggedOut) {
+        this._esBusinessesState = new EsBusinessesState();
+        this._updateState();
+      }
+
+     });
   }
 
   Observable<EsBusinessesState> get esBusinessesStateObservable =>

@@ -92,7 +92,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                   },
                   child: Container(
                     child: Text(
-                      'Login',
+                      'Login with eSamudaay',
                       style: Theme.of(context).textTheme.subhead.copyWith(
                             color: Colors.white,
                           ),
@@ -102,7 +102,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                  SizedBox(
                   height: 16,
                 ),
-                RaisedButton(
+                FlatButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50.0),
                   ),
@@ -115,10 +115,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                   },
                   child: Container(
                     child: Text(
-                      'Sign Up',
-                      style: Theme.of(context).textTheme.subhead.copyWith(
-                            color: Colors.white,
-                          ),
+                      'Sign Up to eSamudaay',
                     ),
                   ),
                 ),

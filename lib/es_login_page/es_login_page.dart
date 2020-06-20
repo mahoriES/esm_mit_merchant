@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:foore/data/bloc/es_login.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/auth.dart';
@@ -10,7 +11,7 @@ class EsLoginPage extends StatefulWidget {
 
   final isSignUp;
 
-  EsLoginPage(this.isSignUp,{Key key}) : super(key: key);
+  EsLoginPage(this.isSignUp, {Key key}) : super(key: key);
 
   _EsLoginPageState createState() => _EsLoginPageState();
 }
@@ -40,10 +41,10 @@ class _EsLoginPageState extends State<EsLoginPage> {
   Widget build(BuildContext context) {
     onSendCode() {
       if (_formKeySendCode.currentState.validate()) {
-        if(widget.isSignUp) {
-        this._esLoginBloc.signUp(context);
+        if (widget.isSignUp) {
+          this._esLoginBloc.signUp(context);
         } else {
-         this._esLoginBloc.sendCode();
+          this._esLoginBloc.sendCode();
         }
       }
     }
@@ -85,10 +86,10 @@ class _EsLoginPageState extends State<EsLoginPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              width: 70.0,
+              width: 170.0,
               padding: EdgeInsets.only(top: 50.0, bottom: 10.0),
               child: Image(
-                image: AssetImage('assets/logo-black.png'),
+                image: AssetImage('assets/es-logo.png'),
               ),
             ),
             Expanded(
@@ -105,16 +106,18 @@ class _EsLoginPageState extends State<EsLoginPage> {
             // ),
             const SizedBox(height: 16.0),
             TextFormField(
-              controller: this._esLoginBloc.phoneEditController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Phone',
-              ),
-              validator: (String value) {
-                return value.length < 1 ? 'Required' : null;
-              },
-            ),
+                controller: this._esLoginBloc.phoneEditController,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Phone',
+                ),
+                validator: (String value) {
+                  return value.length < 1 ? 'Required' : null;
+                },
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(10),
+                ]),
             const SizedBox(height: 20),
             RaisedButton(
               padding: EdgeInsets.symmetric(
@@ -161,10 +164,10 @@ class _EsLoginPageState extends State<EsLoginPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              width: 70,
+              width: 170,
               padding: EdgeInsets.only(top: 50, bottom: 10),
               child: Image(
-                image: AssetImage('assets/logo-black.png'),
+                image: AssetImage('assets/es-logo.png'),
               ),
             ),
             Expanded(

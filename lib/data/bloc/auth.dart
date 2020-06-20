@@ -68,6 +68,7 @@ class AuthBloc {
     this._pushNotifications.subscribeForCurrentUser(HttpService(this));
     this.foAnalytics.identifyUser(authData);
     getReferralUrl();
+    this.authState.isEsLoading = false;
   }
 
   getReferralUrl() async {
@@ -104,6 +105,7 @@ class AuthBloc {
     this._pushNotifications.unsubscribeForCurrentUser();
     clearSharedPreferences();
     this._branchService.clear();
+    this.esLogoutSilently();
   }
 
   clearSharedPreferences() async {
@@ -179,9 +181,18 @@ class AuthBloc {
     this._storeEsAuthState();
   }
 
+  esLogoutSilently() {
+    this.authState.esAuthData = null;
+    this.authState.esMerchantProfile = null;
+    this.authState.isEsLoading = true;
+    this._updateState();
+    this._storeEsAuthState();
+  }
+
   esLogout() {
     this.authState.esAuthData = null;
     this.authState.isEsLoading = false;
+    this.authState.esMerchantProfile = null;
     this._updateState();
     this._storeEsAuthState();
   }

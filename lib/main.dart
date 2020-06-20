@@ -42,8 +42,8 @@ void main() {
             builder: (_, http, __) => OnboardingGuardBloc(http),
             dispose: (context, value) => value.dispose(),
           ),
-          ProxyProvider<HttpService, EsBusinessesBloc>(
-            builder: (_, http, __) => EsBusinessesBloc(http),
+          ProxyProvider2<HttpService,AuthBloc, EsBusinessesBloc>(
+            builder: (_, http,authBloc, __) => EsBusinessesBloc(http, authBloc),
             dispose: (context, value) => value.dispose(),
           ),
           Provider<AppTranslationsBloc>(

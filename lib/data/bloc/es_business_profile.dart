@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:foore/data/constants/es_api_path.dart';
@@ -19,24 +20,30 @@ class EsBusinessProfileBloc {
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
 
+  StreamSubscription subscription;
+
   BehaviorSubject<EsBusinessProfileState> _subjectEsBusinessProfileState;
 
   EsBusinessProfileBloc(this.httpService, this.esBusinessesBloc) {
     this._subjectEsBusinessProfileState =
         new BehaviorSubject<EsBusinessProfileState>.seeded(
             _esBusinessProfileState);
-    this.esBusinessesBloc.esBusinessesStateObservable.listen((state) {
+    this.subscription =
+        this.esBusinessesBloc.esBusinessesStateObservable.listen((state) {
       this._esBusinessProfileState.selectedBusinessInfo =
           state.selectedBusiness;
-      this._esBusinessProfileState.hasDelivery =
-          state.selectedBusiness.hasDelivery;
-      this._esBusinessProfileState.isOpen = state.selectedBusiness.isOpen;
-      this.nameEditController.text = state.selectedBusiness.dBusinessName;
+      if (state.selectedBusiness != null) {
+        this._esBusinessProfileState.hasDelivery =
+            state.selectedBusiness.hasDelivery;
+        this._esBusinessProfileState.isOpen = state.selectedBusiness.isOpen;
+        this.nameEditController.text = state.selectedBusiness.dBusinessName;
 
-      this.cityEditController.text = state.selectedBusiness.dBusinessCity;
-      this.pinCodeEditController.text = state.selectedBusiness.dBusinessPincode;
-      this.addressEditController.text =
-          state.selectedBusiness.dBusinessPrettyAddress;
+        this.cityEditController.text = state.selectedBusiness.dBusinessCity;
+        this.pinCodeEditController.text =
+            state.selectedBusiness.dBusinessPincode;
+        this.addressEditController.text =
+            state.selectedBusiness.dBusinessPrettyAddress;
+      }
       this._updateState();
     });
   }
@@ -297,6 +304,9 @@ class EsBusinessProfileBloc {
 
   dispose() {
     this._subjectEsBusinessProfileState.close();
+    if (this.subscription != null) {
+      this.subscription.cancel();
+    }
   }
 }
 
