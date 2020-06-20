@@ -13,16 +13,15 @@ class EsBusinessesBloc {
 
   BehaviorSubject<EsBusinessesState> _subjectEsBusinessesState;
 
-  EsBusinessesBloc(this._httpService, this.authBloc){
+  EsBusinessesBloc(this._httpService, this.authBloc) {
     this._subjectEsBusinessesState =
         new BehaviorSubject<EsBusinessesState>.seeded(_esBusinessesState);
     this.authBloc.authStateObservable.listen((event) {
-      if(event.isEsLoggedOut) {
+      if (event.isEsLoggedOut) {
         this._esBusinessesState = new EsBusinessesState();
         this._updateState();
       }
-
-     });
+    });
   }
 
   Observable<EsBusinessesState> get esBusinessesStateObservable =>
@@ -30,7 +29,7 @@ class EsBusinessesBloc {
 
   getData() {
     print('getData');
-      this.getBusinesses();
+    this.getBusinesses();
     // if (this._esBusinessesState.businesses.length == 0) {
     // }
   }
@@ -58,6 +57,10 @@ class EsBusinessesBloc {
     });
   }
 
+  addCreatedBusiness(EsBusinessInfo businessInfo) {
+    this._esBusinessesState.businesses.add(businessInfo);
+  }
+
   setSelectedBusiness(EsBusinessInfo businessInfo) {
     print('setSelectedBusiness');
     this._esBusinessesState.selectedBusiness = businessInfo;
@@ -67,8 +70,9 @@ class EsBusinessesBloc {
   updateSelectedBusiness(EsBusinessInfo businessInfo) {
     print('setSelectedBusiness');
     this._esBusinessesState.selectedBusiness = businessInfo;
-    this._esBusinessesState.businesses = this._esBusinessesState.businesses.map((info) {
-      if(info.businessId == businessInfo.businessId) {
+    this._esBusinessesState.businesses =
+        this._esBusinessesState.businesses.map((info) {
+      if (info.businessId == businessInfo.businessId) {
         return businessInfo;
       }
       return info;

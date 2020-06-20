@@ -64,6 +64,7 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
 
     onCreateBusinessSuccess(EsBusinessInfo businessInfo) {
       var esBusinessesBloc = Provider.of<EsBusinessesBloc>(context);
+      esBusinessesBloc.addCreatedBusiness(businessInfo);
       esBusinessesBloc.setSelectedBusiness(businessInfo);
       Navigator.of(context).pushNamed(EsHomePage.routeName);
     }
