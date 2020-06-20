@@ -86,6 +86,9 @@ class EsSelectBusiness extends PreferredSize {
           child: StreamBuilder<EsBusinessesState>(
               stream: esBusinessesBloc.esBusinessesStateObservable,
               builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container();
+                }
                 return Row(
                   children: <Widget>[
                     Icon(

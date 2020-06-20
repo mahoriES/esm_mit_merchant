@@ -264,7 +264,59 @@ class HttpService {
       };
       final httpResponse =
           await http.patch(esApiBaseUrl + path, headers: requestHeaders, body: body);
+      print(body);
+      print(httpResponse.request.url.toString());
+      print(httpResponse.statusCode);
+      print(httpResponse.body);
 
+      if (httpResponse.statusCode == 403 || httpResponse.statusCode == 401) {
+        this._authBloc.esLogout();
+        throw Exception('Auth Failed');
+      }
+      return httpResponse;
+    } else {
+      this._authBloc.esLogout();
+      throw Exception('Auth Failed');
+    }
+  }
+
+  Future<http.Response> esPut(path, body) async {
+    final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
+    if (esJwtToken != null) {
+      Map<String, String> requestHeaders = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'JWT $esJwtToken'
+      };
+      final httpResponse =
+          await http.put(esApiBaseUrl + path, headers: requestHeaders, body: body);
+    
+      print(body);
+      print(httpResponse.request.url.toString());
+      print(httpResponse.statusCode);
+      print(httpResponse.body);
+
+      if (httpResponse.statusCode == 403 || httpResponse.statusCode == 401) {
+        this._authBloc.esLogout();
+        throw Exception('Auth Failed');
+      }
+      return httpResponse;
+    } else {
+      this._authBloc.esLogout();
+      throw Exception('Auth Failed');
+    }
+  }
+
+  Future<http.Response> esDel(path) async {
+    final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
+    if (esJwtToken != null) {
+      Map<String, String> requestHeaders = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'JWT $esJwtToken'
+      };
+      final httpResponse =
+          await http.delete(esApiBaseUrl + path, headers: requestHeaders);
       print(httpResponse.request.url.toString());
       print(httpResponse.statusCode);
       print(httpResponse.body);

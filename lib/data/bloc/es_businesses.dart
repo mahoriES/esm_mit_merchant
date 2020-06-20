@@ -54,6 +54,12 @@ class EsBusinessesBloc {
     this._updateState();
   }
 
+  updateSelectedBusiness(EsBusinessInfo businessInfo) {
+    print('setSelectedBusiness');
+    this._esBusinessesState.selectedBusiness = businessInfo;
+    this._updateState();
+  }
+
   getSelectedBusinessId() {
     // print('get selected business id');
     // print(this._esBusinessesState.selectedBusiness.toJson().toString());

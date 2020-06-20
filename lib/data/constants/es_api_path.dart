@@ -15,7 +15,7 @@ class EsApiPaths {
   static final putUpdateBusinessAddress =
       (String businessId) => 'businesses/$businessId/address';
   static final patchUpdateBusinessInfo =
-      (String businessId) => 'businesses/$businessId/';
+      (String businessId) => 'businesses/$businessId';
 
   static final postAddCategoryToProduct =
       (String businessId, String productId) =>
