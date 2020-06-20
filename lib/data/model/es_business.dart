@@ -147,7 +147,7 @@ class EsBusinessInfo {
   EsBusinessInfo.fromJson(Map<String, dynamic> json) {
     businessId = json['business_id'];
     businessName = json['business_name'];
-    businessName = json['description'];
+    description = json['description'];
     status = json['status'];
     isOpen = json['is_open'];
     address = json['address'] != null
