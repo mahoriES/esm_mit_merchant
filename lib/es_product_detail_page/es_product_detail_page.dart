@@ -414,7 +414,7 @@ class VariationCard extends StatelessWidget {
                   Text('Price'),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Text('₹' + sku.dBasePrice),
+                    child: Text(sku.dBasePrice),
                   ),
                 ],
               ),

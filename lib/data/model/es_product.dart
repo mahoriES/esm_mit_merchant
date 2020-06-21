@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class EsAddProductPayload {
   String productName;
   String unitName;
@@ -161,9 +163,13 @@ class EsProduct {
 
   String get dPrice {
     if (skus.length > 0) {
-      return skus[0].basePrice != null ? '₹ ${skus[0].basePrice}' : '₹ 0.00';
+      return skus[0].basePrice != null ? '${getPrice(skus[0].basePrice)}' : '₹ 0.00';
     }
-    return '₹ 0.00';
+    return '₹0.00';
+  }
+
+  String getPrice(price) {
+    return NumberFormat.simpleCurrency(locale: 'en_IN').format(price/100);
   }
 
   String get dPhotoUrl {
@@ -267,9 +273,13 @@ class EsSku {
 
   get dBasePrice {
     if (basePrice != null) {
-      return basePrice.toString();
+      return getPrice(basePrice);
     }
-    return '₹ 0.00';
+    return '₹0.00';
+  }
+
+  String getPrice(price) {
+    return NumberFormat.simpleCurrency(locale: 'en_IN').format(price/100);
   }
 
   get dSkuCode {
