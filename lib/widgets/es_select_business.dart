@@ -28,35 +28,37 @@ class EsSelectBusiness extends PreferredSize {
                 }
                 return Container(
                   height: 600,
-                  padding: EdgeInsets.all(20),
                   color: Colors.white,
                   child: Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              'Select business',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: true,
-                              style: Theme.of(context).textTheme.headline5,
-                            ),
-                            Expanded(
-                                child: Container(
-                              height: 1,
-                            )),
-                            FlatButton.icon(
-                                onPressed: () {
-                                   Navigator.of(context).pop();
-                                  Navigator.of(context).pushNamed(
-                                      EsCreateBusinessPage.routeName);
-                                },
-                                icon: Icon(Icons.add),
-                                label: Text('Add business'))
-                          ],
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                'Select business',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
+                              Expanded(
+                                  child: Container(
+                                height: 1,
+                              )),
+                              FlatButton.icon(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pushNamed(
+                                        EsCreateBusinessPage.routeName);
+                                  },
+                                  icon: Icon(Icons.add),
+                                  label: Text('Add business'))
+                            ],
+                          ),
                         ),
                         Container(
                           height: 370,
@@ -77,6 +79,15 @@ class EsSelectBusiness extends PreferredSize {
                                 title: Text(businessInfo.dBusinessName),
                                 subtitle:
                                     Text(businessInfo.dBusinessPrettyAddress),
+                                leading: Icon(Icons.store),
+                                trailing: Chip(
+                                  label: Text(businessInfo.cluster.clusterName),
+                                  backgroundColor: Colors.white10,
+                                  labelStyle: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .copyWith(fontSize: 12.0),
+                                ),
                               );
                             },
                           ),
