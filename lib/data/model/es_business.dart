@@ -118,6 +118,15 @@ class EsBusinessInfo {
     return '';
   }
 
+  get dBusinessClusterName {
+    if (cluster != null) {
+      if (cluster.clusterName != null) {
+        return cluster.clusterName;
+      }
+    }
+    return '';
+  }
+
   List<String> get dPhones {
     if (phones != null) {
       return phones.map((phone) {

@@ -97,6 +97,17 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Expanded(
+                              child: Chip(
+                                label: Text(
+                                  businessInfo.dBusinessClusterName,
+                                  overflow: TextOverflow.ellipsis,
+                                  // style: TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor: Colors.white10,
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            Expanded(
                               child: Wrap(
                                 children: <Widget>[
                                   Padding(
@@ -137,17 +148,6 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                                             .setOpen(value);
                                       }),
                                 ],
-                              ),
-                            ),
-                            SizedBox(width: 20),
-                            Expanded(
-                              child: Chip(
-                                label: Text(
-                                  businessInfo.dBusinessClusterCode,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                backgroundColor: Theme.of(context).primaryColor,
                               ),
                             ),
                           ],
@@ -426,4 +426,3 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
     );
   }
 }
-
