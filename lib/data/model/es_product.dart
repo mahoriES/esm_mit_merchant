@@ -161,7 +161,7 @@ class EsProduct {
 
   String get dPrice {
     if (skus.length > 0) {
-      return skus[0].basePrice != null ? '₹ ${skus[0].basePrice}': '₹ 0.00';
+      return skus[0].basePrice != null ? '₹ ${skus[0].basePrice}' : '₹ 0.00';
     }
     return '₹ 0.00';
   }
@@ -262,6 +262,20 @@ class EsSku {
   Map<String, dynamic> charges;
   int basePrice;
   Map<String, dynamic> variationOptions;
+
+  get dBasePrice {
+    if (basePrice != null) {
+      return basePrice.toString();
+    }
+    return '';
+  }
+
+  get dSkuCode {
+    if (skuCode != null) {
+      return skuCode;
+    }
+    return '';
+  }
 
   EsSku(
       {this.skuId,

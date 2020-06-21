@@ -320,117 +320,121 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                     ),
                                   ),
                                 );
-                                return Chip(
-                                  backgroundColor:
-                                      Theme.of(context).primaryColor,
-                                  avatar: Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                  ),
-                                  label: Text(
-                                    "Add category",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .caption
-                                        .copyWith(color: Colors.white),
-                                  ),
-                                );
+                                // return Chip(
+                                //   backgroundColor:
+                                //       Theme.of(context).primaryColor,
+                                //   avatar: Icon(
+                                //     Icons.add,
+                                //     color: Colors.white,
+                                //   ),
+                                //   label: Text(
+                                //     "Add category",
+                                //     overflow: TextOverflow.ellipsis,
+                                //     style: Theme.of(context)
+                                //         .textTheme
+                                //         .caption
+                                //         .copyWith(color: Colors.white),
+                                //   ),
+                                // );
                               }),
                             ),
                           )
                         ],
                       ),
                     ),
-                    Padding(
+                    Container(
                       padding: const EdgeInsets.only(
                         top: 24.0,
                         left: 20,
                         right: 20,
+                        bottom: 8,
+                        // bottom: 8.0,
                       ),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Price',
-                        ),
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        'Variations',
+                        style: Theme.of(context).textTheme.subtitle2,
                       ),
                     ),
-                    Padding(
+                    Container(
                       padding: const EdgeInsets.only(
-                        top: 8.0,
-                        left: 8,
-                        right: 0,
+                        top: 10.0,
+                        left: 20,
+                        right: 20,
+                        bottom: 8,
+                        // bottom: 8.0,
                       ),
-                      child: CheckboxListTile(
-                        title: Text('Availability'),
-                        value: false,
-                        onChanged: (value) {},
-                      ),
+                      // alignment: Alignment.bottomLeft,
+                      child: Table(
+                          children: List.generate(
+                              widget.currentProduct.skus != null
+                                  ? widget.currentProduct.skus.length
+                                  : 0,
+                              (index) => TableRow(children: [
+                                    VariationCard(
+                                        widget.currentProduct.skus[index])
+                                  ]))),
                     ),
-                    // Container(
-                    //   padding: const EdgeInsets.only(
-                    //     top: 24.0,
-                    //     left: 20,
-                    //     right: 20,
-                    //     // bottom: 8.0,
-                    //   ),
-                    //   alignment: Alignment.bottomLeft,
-                    //   child: Text(
-                    //     'Product Name',
-                    //     style: Theme.of(context).textTheme.subtitle2,
-                    //   ),
-                    // ),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 20),
-                    //   child: Row(
-                    //     crossAxisAlignment: CrossAxisAlignment.center,
-                    //     children: <Widget>[
-                    //       Expanded(
-                    //         child: Text(
-                    //           "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', ",
-                    //           overflow: TextOverflow.ellipsis,
-                    //           style: Theme.of(context).textTheme.subtitle1,
-                    //         ),
-                    //       ),
-                    //       IconButton(
-                    //         onPressed: () {},
-                    //         icon: Icon(
-                    //           Icons.edit,
-                    //           color: Theme.of(context).primaryColor,
-                    //         ),
-                    //       )
-                    //     ],
-                    //   ),
-                    // ),
-                    // Container(
-                    //   padding: const EdgeInsets.only(
-                    //     top: 24.0,
-                    //     left: 20,
-                    //     right: 20,
-                    //   ),
-                    //   alignment: Alignment.bottomLeft,
-                    //   child: Text(
-                    //     'Short description',
-                    //     style: Theme.of(context).textTheme.subtitle2,
-                    //   ),
-                    // ),
-                    // Row(
-                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                    //   children: <Widget>[
-                    //     FlatButton(
-                    //       onPressed: () {},
-                    //       child: Text(
-                    //         "+ Add short description",
-                    //         overflow: TextOverflow.ellipsis,
-                    //       ),
-                    //     ),
-                    //],
-                    //),
                   ],
                 ),
               ),
             );
           }),
+    );
+  }
+}
+
+class VariationCard extends StatelessWidget {
+  final EsSku sku;
+  const VariationCard(
+    this.sku, {
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.only(
+          top: 20,
+          bottom: 10,
+          right: 20,
+          left: 20,
+        ),
+        margin: EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(border: Border.all(color: Colors.black12)),
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Text('Price'),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text('₹' + sku.dBasePrice),
+                    ),
+                  ],
+                ),
+                Expanded(child: Container()),
+                Column(
+                  children: <Widget>[
+                    Text('Active'),
+                    Checkbox(value: sku.isActive, onChanged: (val) {}),
+                  ],
+                ),
+                Expanded(child: Container()),
+                Column(
+                  children: <Widget>[
+                    Text('Stock'),
+                    Checkbox(value: sku.inStock, onChanged: (val) {}),
+                  ],
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 }
