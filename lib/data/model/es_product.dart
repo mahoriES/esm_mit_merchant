@@ -138,6 +138,27 @@ class EsProduct {
     return '';
   }
 
+  get dProductLongDescription {
+    if (longDescription != null) {
+      return longDescription;
+    }
+    return '';
+  }
+
+  get dUnit {
+    if (unitName != null) {
+      return unitName;
+    }
+    return '';
+  }
+
+  get dLine1 {
+    if (displayLine1 != null) {
+      return displayLine1;
+    }
+    return '';
+  }
+
   String get dPrice {
     if (skus.length > 0) {
       return skus[0].basePrice != null ? '₹ ${skus[0].basePrice}': '₹ 0.00';

@@ -8,6 +8,7 @@ import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_business_guard/es_businesses_guard.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/es_login_page/es_login_page.dart';
+import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
 import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
 import 'package:foore/setting_page/sender_code.dart';
@@ -240,6 +241,20 @@ class Router {
                     EsEditProductBloc(httpServiceBloc, esBusinessesBloc),
                 dispose: (context, value) => value.dispose(),
                 child: AddMenuItemPage(esProduct),
+              )),
+        );
+        break;
+      case EsProductDetailPage.routeName:
+        EsProduct esProduct = settings.arguments;
+        return MaterialPageRoute(
+          builder: (context) => EsAuthGuard(
+              unauthenticatedHandler: esUnauthenticatedHandler,
+              noMerchantProfileHandler: esNoMerchantProfileHandler,
+              child: Provider<EsEditProductBloc>(
+                builder: (context) =>
+                    EsEditProductBloc(httpServiceBloc, esBusinessesBloc),
+                dispose: (context, value) => value.dispose(),
+                child: EsProductDetailPage(esProduct),
               )),
         );
         break;

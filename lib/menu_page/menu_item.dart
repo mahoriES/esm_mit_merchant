@@ -3,9 +3,10 @@ import 'package:foore/data/model/es_product.dart';
 
 class MenuItemWidget extends StatelessWidget {
   final EsProduct esProduct;
+  final Function(EsProduct) onEdit;
   final Function(EsProduct) onTap;
   final Function(EsProduct) onDelete;
-  const MenuItemWidget({this.esProduct, this.onTap, this.onDelete});
+  const MenuItemWidget({this.esProduct, this.onEdit, this.onDelete, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +16,7 @@ class MenuItemWidget extends StatelessWidget {
         left: 20,
       ),
       child: GestureDetector(
+        onTap:() { this.onTap(this.esProduct);},
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -118,7 +120,7 @@ class MenuItemWidget extends StatelessWidget {
             PopupMenuButton<int>(
               onSelected: (result) {
                 if (result == 1) {
-                  this.onTap(this.esProduct);
+                  this.onEdit(this.esProduct);
                 } else if (result == 2) {
                   this.onDelete(this.esProduct);
                 }

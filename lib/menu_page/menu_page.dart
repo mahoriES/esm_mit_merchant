@@ -3,6 +3,7 @@ import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_products.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_product.dart';
+import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
 import 'package:foore/home_page/app_drawer.dart';
 import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/widgets/es_select_business.dart';
@@ -40,11 +41,16 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     editItem(EsProduct product) async {
       var result = await Navigator.of(context)
-          .pushNamed(AddMenuItemPage.routeName, arguments: product);
+          .pushNamed(EsProductDetailPage.routeName, arguments: product);
       esProductsBloc.getProductsFromSearch();
     }
 
     deleteItem(EsProduct product) async {}
+
+    viewItem(EsProduct product) async {
+      var result = await Navigator.of(context)
+          .pushNamed(EsProductDetailPage.routeName, arguments: product);
+    }
 
     return Scaffold(
       appBar: EsSelectBusiness(esProductsBloc.getProductsFromSearch),
@@ -109,7 +115,8 @@ class _MenuPageState extends State<MenuPage> {
                                     snapshot.data.items[index];
                                 return MenuItemWidget(
                                   esProduct: currentProduct,
-                                  onTap: editItem,
+                                  onEdit: editItem,
+                                  onTap: viewItem,
                                   onDelete: deleteItem,
                                 );
                               }),
