@@ -269,7 +269,7 @@ class EsSku {
     if (basePrice != null) {
       return basePrice.toString();
     }
-    return '';
+    return '₹ 0.00';
   }
 
   get dSkuCode {
