@@ -38,8 +38,23 @@ class _EsBusinessProfileImageListState
                     elevation: 1.0,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(4.0),
-                      child: Image.network(dImage.photoUrl,
-                          height: 120, width: 120),
+                      child: Stack(
+                        children: <Widget>[
+                          Image.network(dImage.photoUrl,
+                              height: 120, width: 120),
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: IconButton(
+                              icon: Icon(Icons.cancel),
+                              color: Colors.black54,
+                              onPressed: () {},
+                              iconSize: 20,
+                              visualDensity: VisualDensity.compact,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -47,7 +62,7 @@ class _EsBusinessProfileImageListState
               .toList();
           var uploadingList =
               List.generate(snapshot.data.uploadingImages.length + 1, (index) {
-            if (index == 0) {
+            if (index == snapshot.data.uploadingImages.length) {
               return GestureDetector(
                 onTap: widget.esBusinessProfileBloc.selectImage,
                 child: Container(
@@ -75,8 +90,53 @@ class _EsBusinessProfileImageListState
                 elevation: 1.0,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4.0),
-                  child: Image.file(snapshot.data.uploadingImages[index - 1].file,
-                      height: 120, width: 120),
+                  child: Stack(
+                    children: <Widget>[
+                      Image.file(snapshot.data.uploadingImages[index].file,
+                          height: 120, width: 120),
+                      Container(
+                        child:
+                            !snapshot.data.uploadingImages[index].isUploadFailed
+                                ? Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    child: Container(
+                                      height: 120,
+                                      width: 120,
+                                      child: Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  )
+                                : null,
+                      ),
+                      Container(
+                        child:
+                            snapshot.data.uploadingImages[index].isUploadFailed
+                                ? Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    child: Container(
+                                      height: 120,
+                                      width: 120,
+                                      color: Colors.white60,
+                                      child: Center(
+                                        child: Text(
+                                          'Upload failed',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .caption
+                                              .copyWith(
+                                                color: Colors.black,
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : null,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -84,8 +144,8 @@ class _EsBusinessProfileImageListState
 
           var listViewChildren = List<Widget>();
 
-          listViewChildren.addAll(uploadingList);
           listViewChildren.addAll(uploadedList);
+          listViewChildren.addAll(uploadingList);
 
           return Container(
             height: 120,
