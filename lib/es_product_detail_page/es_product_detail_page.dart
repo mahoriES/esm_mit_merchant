@@ -49,6 +49,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
   void afterFirstLayout(BuildContext context) {
     final esEditProductBloc = Provider.of<EsEditProductBloc>(context);
     esEditProductBloc.setCurrentProduct(widget.currentProduct);
+    esEditProductBloc.getCategories();
     esEditProductBloc.esEditProductStateObservable.listen((event) {
       if (event.isSubmitFailed) {
         this._showFailedAlertDialog();
@@ -310,12 +311,14 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                         children: <Widget>[
                           Expanded(
                             child: Wrap(
-                              children: List.generate(3, (index) {
+                              children: List.generate(
+                                  snapshot.data.categories.length, (index) {
                                 return Padding(
                                   padding: const EdgeInsets.only(right: 8.0),
                                   child: Chip(
                                     label: Text(
-                                      "It is a long establis",
+                                      snapshot
+                                          .data.categories[index].dCategoryName,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -393,47 +396,45 @@ class VariationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.only(
-          top: 20,
-          bottom: 10,
-          right: 20,
-          left: 20,
-        ),
-        margin: EdgeInsets.only(bottom: 12),
-        decoration: BoxDecoration(border: Border.all(color: Colors.black12)),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Text('Price'),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text('₹' + sku.dBasePrice),
-                    ),
-                  ],
-                ),
-                Expanded(child: Container()),
-                Column(
-                  children: <Widget>[
-                    Text('Active'),
-                    Checkbox(value: sku.isActive, onChanged: (val) {}),
-                  ],
-                ),
-                Expanded(child: Container()),
-                Column(
-                  children: <Widget>[
-                    Text('Stock'),
-                    Checkbox(value: sku.inStock, onChanged: (val) {}),
-                  ],
-                ),
-              ],
-            )
-          ],
-        ),
+    return Container(
+      padding: EdgeInsets.only(
+        top: 20,
+        bottom: 10,
+        right: 20,
+        left: 20,
+      ),
+      margin: EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(border: Border.all(color: Colors.black12)),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Text('Price'),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text('₹' + sku.dBasePrice),
+                  ),
+                ],
+              ),
+              Expanded(child: Container()),
+              Column(
+                children: <Widget>[
+                  Text('Active'),
+                  Checkbox(value: sku.isActive, onChanged: (val) {}),
+                ],
+              ),
+              Expanded(child: Container()),
+              Column(
+                children: <Widget>[
+                  Text('Stock'),
+                  Checkbox(value: sku.inStock, onChanged: (val) {}),
+                ],
+              ),
+            ],
+          )
+        ],
       ),
     );
   }

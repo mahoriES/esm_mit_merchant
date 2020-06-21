@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -119,6 +120,36 @@ class EsEditProductBloc {
     });
   }
 
+  getCategories() {
+    this._esEditProductState.isLoading = true;
+    this._esEditProductState.response = null;
+    this._esEditProductState.categories = List<EsCategory>();
+    this._updateState();
+    httpService
+        .esGet(EsApiPaths.getCategoriesForProduct(
+            this.esBusinessesBloc.getSelectedBusinessId(),
+            this._esEditProductState.currentProduct.productId.toString()))
+        .then((httpResponse) {
+      if (httpResponse.statusCode == 200) {
+        this._esEditProductState.isLoadingFailed = false;
+        this._esEditProductState.isLoading = false;
+        this._esEditProductState.response =
+            EsGetCategoriesForProductResponse.fromJson(
+                json.decode(httpResponse.body));
+        this._esEditProductState.categories =
+            this._esEditProductState.response.categories;
+      } else {
+        this._esEditProductState.isLoadingFailed = true;
+        this._esEditProductState.isLoading = false;
+      }
+      this._updateState();
+    }).catchError((onError) {
+      this._esEditProductState.isLoadingFailed = true;
+      this._esEditProductState.isLoading = false;
+      this._updateState();
+    });
+  }
+
   setCurrentProduct(EsProduct product) {
     this._esEditProductState.currentProduct = product;
     // this._esEditProductState.isProductInStock = product.inStock;
@@ -142,9 +173,14 @@ class EsEditProductBloc {
 }
 
 class EsEditProductState {
+  bool isLoading = true;
+  bool isLoadingFailed = false;
   bool isSubmitting = false;
   bool isSubmitSuccess = false;
   bool isSubmitFailed = false;
+
+  List<EsCategory> categories = List<EsCategory>();
+  EsGetCategoriesForProductResponse response;
 
   EsProduct currentProduct;
 

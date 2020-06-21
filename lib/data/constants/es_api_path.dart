@@ -33,7 +33,7 @@ class EsApiPaths {
       (String businessId) => 'businesses/$businessId/catalog/products';
   static final getCategoriesForProduct =
       (String businessId, String productId) =>
-          'businesses/$businessId/catalog/products/$productId/categories/';
+          'businesses/$businessId/catalog/products/$productId/categories';
 
   static final postAddCategory =
       (String businessId) => 'businesses/$businessId/catalog/categories';

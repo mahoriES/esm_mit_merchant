@@ -52,6 +52,13 @@ class EsCategory {
   bool isActive;
   List<String> images;
 
+  get dCategoryName {
+    if (categoryName != null) {
+      return categoryName;
+    }
+    return '';
+  }
+
   EsCategory(
       {this.categoryId,
       this.categoryName,
@@ -77,6 +84,29 @@ class EsCategory {
     data['parent_category_id'] = this.parentCategoryId;
     data['is_active'] = this.isActive;
     data['images'] = this.images;
+    return data;
+  }
+}
+
+class EsGetCategoriesForProductResponse {
+  List<EsCategory> categories;
+
+  EsGetCategoriesForProductResponse({this.categories});
+
+  EsGetCategoriesForProductResponse.fromJson(Map<String, dynamic> json) {
+    if (json['categories'] != null) {
+      categories = new List<EsCategory>();
+      json['categories'].forEach((v) {
+        categories.add(new EsCategory.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.categories != null) {
+      data['categories'] = this.categories.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
