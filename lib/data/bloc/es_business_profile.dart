@@ -49,6 +49,10 @@ class EsBusinessProfileBloc {
             state.selectedBusiness.dBusinessPrettyAddress;
         this.descriptionEditController.text =
             state.selectedBusiness.dBusinessDescription;
+        this._esBusinessProfileState.currentLocationPoint =
+            state.selectedBusiness.address != null
+                ? state.selectedBusiness.address.locationPoint
+                : null;
       }
       this._updateState();
     });
@@ -285,8 +289,12 @@ class EsBusinessProfileBloc {
         city: cityEditController.text,
         pincode: pinCodeEditController.text,
       ),
-      lat: 0,
-      lon: 0,
+      lat: _esBusinessProfileState.currentLocationPoint != null
+          ? _esBusinessProfileState.currentLocationPoint.lat
+          : 0,
+      lon: _esBusinessProfileState.currentLocationPoint != null
+          ? _esBusinessProfileState.currentLocationPoint.lon
+          : 0,
       prettyAddress: addressEditController.text,
     );
     this.addAddress(address, onSuccess, onFail);
