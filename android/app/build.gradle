@@ -93,6 +93,15 @@ dependencies {
     implementation 'io.branch.sdk.android:library:4.+'
 }
 
+ allprojects {
+       configurations.all {
+           resolutionStrategy.force "com.google.android.gms:play-services-basement:17.2.1"
+           resolutionStrategy.force "com.google.android.gms:play-services-base:17.2.1"
+           resolutionStrategy.force "com.google.android.gms:play-services-tasks:17.0.2"
+        }
+
+    }
+
 apply plugin: 'io.fabric'
 apply plugin: 'com.google.gms.google-services'
 

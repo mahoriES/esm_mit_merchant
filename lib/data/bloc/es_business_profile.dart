@@ -406,6 +406,13 @@ class EsBusinessProfileBloc {
       }
     } catch (err) {}
   }
+
+  setCurrentLocationPoint(lat, lng) {
+    print(lat + lng);
+    this._esBusinessProfileState.currentLocationPoint =
+        EsLocationPoint(lat: lat, lon: lng);
+    this._updateState();
+  }
 }
 
 class EsBusinessProfileState {
@@ -416,6 +423,7 @@ class EsBusinessProfileState {
   bool isOpen = false;
   EsBusinessInfo selectedBusinessInfo;
   List<EsUploadableFile> uploadingImages = List<EsUploadableFile>();
+  EsLocationPoint currentLocationPoint;
 
   EsBusinessProfileState() {
     this.isSubmitting = false;
