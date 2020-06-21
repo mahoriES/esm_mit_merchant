@@ -325,7 +325,7 @@ class EsBusinessProfileBloc {
 
   Future<File> _pickImageFromGallery() async {
     final pickedFile =
-        await ImagePicker.platform.pickImage(source: ImageSource.camera);
+        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
     var file = new File(pickedFile.path);
     return file;
   }
