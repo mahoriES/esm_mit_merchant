@@ -82,15 +82,15 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
     super.initState();
   }
 
-  Set<Marker> markers = Set.from([]);
+  // Set<Marker> markers = Set.from([]);
 
-  setMarkers(LatLng latLang) async {
-    final Marker marker =
-        Marker(markerId: MarkerId('foMarker'), position: latLang);
-    setState(() {
-      this.markers = Set.from([marker]);
-    });
-  }
+  // setMarkers(LatLng latLang) async {
+  //   final Marker marker =
+  //       Marker(markerId: MarkerId('foMarker'), position: latLang);
+  //   setState(() {
+  //     this.markers = Set.from([marker]);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -127,12 +127,16 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
                 0,
                 0,
               );
+              Set<Marker> markers = Set.from([]);
               if (snapshot.data.currentLocationPoint != null) {
                 latLang = LatLng(
                   snapshot.data.currentLocationPoint.lat ?? 0,
                   snapshot.data.currentLocationPoint.lon ?? 0,
                 );
-                this.setMarkers(latLang);
+                // this.setMarkers(latLang);
+                final Marker marker =
+                    Marker(markerId: MarkerId('foMarker'), position: latLang);
+                markers = Set.from([marker]);
                 _isReady.future.then((controller) {
                   controller.moveCamera(
                     CameraUpdate.newCameraPosition(
@@ -206,12 +210,12 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
                         onMapCreated: (GoogleMapController controller) {
                           _isReady.complete(controller);
                         },
-                        markers: this.markers,
+                        markers: markers,
                         onCameraMove: (CameraPosition position) {},
                         onTap: (LatLng latLng) {
                           widget.esBusinessProfileBloc.setCurrentLocationPoint(
                               latLng.latitude, latLang.longitude);
-                          this.setMarkers(latLang);
+                          // this.setMarkers(latLang);
                         },
                       ),
                     ),
