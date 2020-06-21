@@ -128,32 +128,32 @@ class _MenuPageState extends State<MenuPage> {
           ),
         ),
       ),
-      floatingActionButton: Transform.translate(
-        offset: Offset(0, -15),
-        child: RaisedButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50.0),
-          ),
-          padding: EdgeInsets.symmetric(
-            vertical: 15,
-            horizontal: 25,
-          ),
-          onPressed: () async {
-            var result = await Navigator.of(context)
-                .pushNamed(AddMenuItemPage.routeName);
-            esProductsBloc.getProductsFromSearch();
-          },
-          child: Container(
-            child: Text(
-              'Add item',
-              style: Theme.of(context).textTheme.subhead.copyWith(
-                    color: Colors.white,
-                  ),
-            ),
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: Transform.translate(
+      //   offset: Offset(0, -15),
+      //   child: RaisedButton(
+      //     shape: RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.circular(50.0),
+      //     ),
+      //     padding: EdgeInsets.symmetric(
+      //       vertical: 15,
+      //       horizontal: 25,
+      //     ),
+      //     onPressed: () async {
+      //       var result = await Navigator.of(context)
+      //           .pushNamed(AddMenuItemPage.routeName);
+      //       esProductsBloc.getProductsFromSearch();
+      //     },
+      //     child: Container(
+      //       child: Text(
+      //         'Add item',
+      //         style: Theme.of(context).textTheme.subhead.copyWith(
+      //               color: Colors.white,
+      //             ),
+      //       ),
+      //     ),
+      //   ),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

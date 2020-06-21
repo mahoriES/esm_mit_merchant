@@ -149,7 +149,7 @@ class MenuItemWidget extends StatelessWidget {
               itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
                 const PopupMenuItem(
                   value: 1,
-                  child: Text('Edit'),
+                  child: Text('View'),
                 ),
                 // const PopupMenuItem(
                 //   value: '',
