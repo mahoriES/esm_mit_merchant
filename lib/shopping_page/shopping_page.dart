@@ -55,14 +55,11 @@ class _ShoppingPageState extends State<ShoppingPage> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.5,
-                  child: Icon(
-                    Icons.shopping_cart,
-                    size: MediaQuery.of(context).size.width * 0.5,
-                    color: Colors.grey[200],
-                  ),
+                  height: MediaQuery.of(context).size.width * 0.5,
+                  child: Image.asset('assets/es-logo-small.png'),
                 ),
                 SizedBox(
-                  height: 16,
+                  height: 32,
                 ),
                 Text('Let customers order from home',
                     style: Theme.of(context).textTheme.title),

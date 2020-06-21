@@ -99,6 +99,7 @@ flutter:
   assets:
     - assets/logo-black.png
     - assets/es-logo.png
+    - assets/es-logo-small.png
     - assets/googlelogo.png
     - assets/google-icon.png
     - assets/messengerlogo.png
