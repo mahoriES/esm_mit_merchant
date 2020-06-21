@@ -6,7 +6,8 @@ class MenuItemWidget extends StatelessWidget {
   final Function(EsProduct) onEdit;
   final Function(EsProduct) onTap;
   final Function(EsProduct) onDelete;
-  const MenuItemWidget({this.esProduct, this.onEdit, this.onDelete, this.onTap});
+  const MenuItemWidget(
+      {this.esProduct, this.onEdit, this.onDelete, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,9 @@ class MenuItemWidget extends StatelessWidget {
         left: 20,
       ),
       child: GestureDetector(
-        onTap:() { this.onTap(this.esProduct);},
+        onTap: () {
+          this.onTap(this.esProduct);
+        },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -94,15 +97,33 @@ class MenuItemWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
-                        Text(esProduct.dPrice,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText2
-                                .copyWith(
-                                  color:
-                                      Theme.of(context).textTheme.caption.color,
-                                  // fontWeight: FontWeight.w600
-                                )),
+                        Container(
+                          child: esProduct.skus.length > 0
+                              ? Text(
+                                  esProduct.dPrice,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText2
+                                      .copyWith(
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .caption
+                                            .color,
+                                        // fontWeight: FontWeight.w600
+                                      ),
+                                )
+                              : Text(
+                                  'No skus',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText2
+                                      .copyWith(
+                                        color: Theme.of(context)
+                                            .errorColor,
+                                        // fontWeight: FontWeight.w600
+                                      ),
+                                ),
+                        ),
                         Flexible(
                           child: Container(),
                         ),
