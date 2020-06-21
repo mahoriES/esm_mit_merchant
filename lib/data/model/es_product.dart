@@ -167,8 +167,10 @@ class EsProduct {
   }
 
   String get dPhotoUrl {
-    if (images.length > 0) {
-      return images[0].photoUrl != null ? images[0].photoUrl : '';
+    if (images != null) {
+      if (images.length > 0) {
+        return images[0].photoUrl != null ? images[0].photoUrl : '';
+      }
     }
     return '';
   }
