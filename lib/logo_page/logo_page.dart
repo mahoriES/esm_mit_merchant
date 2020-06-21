@@ -19,9 +19,20 @@ class LogoPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  width: 120,
-                  child: Image(
-                    image: AssetImage('assets/logo-black.png'),
+                  height: 50,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Image(
+                        image: AssetImage(
+                          'assets/es-logo-small.png',
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      Image(
+                        image: AssetImage('assets/logo-black.png'),
+                      ),
+                    ],
                   ),
                 ),
               ]),
