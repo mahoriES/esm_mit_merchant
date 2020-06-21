@@ -384,11 +384,23 @@ class EsBusinessProfileBloc {
             this._updateState();
           }, () {
             print('failed');
-            uploadableFile.setUploadFailed();
+            var index = this
+                ._esBusinessProfileState
+                .uploadingImages
+                .indexWhere((element) => element.id == uploadableFile.id);
+            this
+                ._esBusinessProfileState
+                .uploadingImages[index]
+                .setUploadFailed();
             this._updateState();
           });
         } catch (err) {
-          uploadableFile.setUploadFailed();
+          print('failed');
+          var index = this
+              ._esBusinessProfileState
+              .uploadingImages
+              .indexWhere((element) => element.id == uploadableFile.id);
+          this._esBusinessProfileState.uploadingImages[index].setUploadFailed();
           this._updateState();
         }
       }
