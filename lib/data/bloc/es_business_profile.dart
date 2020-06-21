@@ -350,9 +350,12 @@ class EsBusinessProfileBloc {
           );
 
           this.updateBusiness(updateBusinessPayload, () {
-            this._esBusinessProfileState.uploadingImages.remove(uploadableFile);
+            print('success');
+            var index = this._esBusinessProfileState.uploadingImages.indexWhere((element) => element.id == uploadableFile.id);
+            print(this._esBusinessProfileState.uploadingImages.removeAt(index));
             this._updateState();
           }, () {
+            print('failed');
             uploadableFile.setUploadFailed();
             this._updateState();
           });

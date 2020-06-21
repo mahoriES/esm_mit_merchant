@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:uuid/uuid.dart';
+
 class EsUploadImageResponse {
   String photoId;
   String photoUrl;
@@ -24,9 +26,11 @@ class EsUploadImageResponse {
 
 class EsUploadableFile {
   final File file;
+  String id;
   bool isUploadFailed = false;
   EsUploadableFile(this.file);
   setUploadFailed() {
     this.isUploadFailed = true;
+    this.id = Uuid().v1();
   }
 }
