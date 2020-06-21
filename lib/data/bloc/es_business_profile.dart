@@ -6,6 +6,7 @@ import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:foore/data/model/es_media.dart';
+import 'package:foore/data/model/es_product.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -321,7 +322,31 @@ class EsBusinessProfileBloc {
     return file;
   }
 
-  selectImage() async {
+  removeImage(EsImages image) {
+    var existingImages = List<EsImages>();
+    if (_esBusinessProfileState.selectedBusinessInfo.images != null) {
+      _esBusinessProfileState.selectedBusinessInfo.images.forEach((element) {
+        if (image.photoId != element.photoId) {
+          existingImages.add(EsImages(photoId: element.photoId));
+        }
+      });
+    }
+    var updateBusinessPayload = EsUpdateBusinessPayload(
+      images: existingImages,
+    );
+    this.updateBusiness(updateBusinessPayload, () {}, () {});
+  }
+
+  removeUploadableImage(EsUploadableFile image) {
+    var index = this
+        ._esBusinessProfileState
+        .uploadingImages
+        .indexWhere((element) => element.id == image.id);
+    this._esBusinessProfileState.uploadingImages.removeAt(index);
+    this._updateState();
+  }
+
+  selectAndUploadImage() async {
     try {
       var file = await _pickImageFromGallery();
       if (file != null) {
@@ -351,8 +376,11 @@ class EsBusinessProfileBloc {
 
           this.updateBusiness(updateBusinessPayload, () {
             print('success');
-            var index = this._esBusinessProfileState.uploadingImages.indexWhere((element) => element.id == uploadableFile.id);
-            print(this._esBusinessProfileState.uploadingImages.removeAt(index));
+            var index = this
+                ._esBusinessProfileState
+                .uploadingImages
+                .indexWhere((element) => element.id == uploadableFile.id);
+            this._esBusinessProfileState.uploadingImages.removeAt(index);
             this._updateState();
           }, () {
             print('failed');

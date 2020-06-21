@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_business_profile.dart';
 import 'package:foore/data/model/es_business.dart';
-import 'package:foore/data/model/es_product.dart';
 
 class EsBusinessProfileImageList extends StatefulWidget {
   final EsBusinessProfileBloc esBusinessProfileBloc;
@@ -48,7 +47,10 @@ class _EsBusinessProfileImageListState
                             child: IconButton(
                               icon: Icon(Icons.cancel),
                               color: Colors.black54,
-                              onPressed: () {},
+                              onPressed: () {
+                                widget.esBusinessProfileBloc
+                                    .removeImage(dImage);
+                              },
                               iconSize: 20,
                               visualDensity: VisualDensity.compact,
                             ),
@@ -64,7 +66,7 @@ class _EsBusinessProfileImageListState
               List.generate(snapshot.data.uploadingImages.length + 1, (index) {
             if (index == snapshot.data.uploadingImages.length) {
               return GestureDetector(
-                onTap: widget.esBusinessProfileBloc.selectImage,
+                onTap: widget.esBusinessProfileBloc.selectAndUploadImage,
                 child: Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4.0),
@@ -135,6 +137,26 @@ class _EsBusinessProfileImageListState
                                   )
                                 : null,
                       ),
+                      Container(
+                        child:
+                            snapshot.data.uploadingImages[index].isUploadFailed
+                                ? Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: IconButton(
+                                      icon: Icon(Icons.cancel),
+                                      color: Colors.black54,
+                                      onPressed: () {
+                                        widget.esBusinessProfileBloc
+                                            .removeUploadableImage(snapshot
+                                                .data.uploadingImages[index]);
+                                      },
+                                      iconSize: 20,
+                                      visualDensity: VisualDensity.compact,
+                                    ),
+                                  )
+                                : null,
+                      ),
                     ],
                   ),
                 ),
@@ -143,7 +165,6 @@ class _EsBusinessProfileImageListState
           });
 
           var listViewChildren = List<Widget>();
-
           listViewChildren.addAll(uploadedList);
           listViewChildren.addAll(uploadingList);
 
