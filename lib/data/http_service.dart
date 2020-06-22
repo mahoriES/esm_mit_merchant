@@ -8,15 +8,16 @@ import 'dart:io';
 import 'dart:async';
 
 class HttpService {
-  String apiUrl = 'https://www.api.test.foore.io/api/v1/';
+  String apiUrl = 'https://www.api.foore.io/api/v1/';
 
-  String esApiBaseUrl = 'https://api.test.esamudaay.com/api/v1/';
+  String esApiBaseUrl = 'https://api.esamudaay.com/api/v1/';
 
   AuthBloc _authBloc;
 
   HttpService(AuthBloc authBloc) {
     this._authBloc = authBloc;
     this.apiUrl = Environment.apiUrl;
+    this.esApiBaseUrl = Environment.esApiUrl;
   }
 
   FoAnalytics get foAnalytics {
