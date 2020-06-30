@@ -5,6 +5,11 @@ import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:provider/provider.dart';
 
+import 'es_edit_product_display_line_1.dart';
+import 'es_edit_product_long_description.dart';
+import 'es_edit_product_short_description.dart';
+import 'es_edit_product_unit.dart';
+
 class EsProductDetailPage extends StatefulWidget {
   static const routeName = '/view-menu-item';
   final EsProduct currentProduct;
@@ -73,6 +78,28 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
       }
     }
 
+    editShortDescription() async {
+      await Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              EsEditProductShortDescriptionPage(esEditProductBloc)));
+    }
+
+    editLongDescription() async {
+      await Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              EsEditProductLongDescriptionPage(esEditProductBloc)));
+    }
+
+    editUnit() async {
+      await Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => EsEditProductUnitPage(esEditProductBloc)));
+    }
+
+    editDisplayLine1() async {
+      await Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => EsEditDisplayLine1Page(esEditProductBloc)));
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -134,7 +161,10 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ),
                       trailing: Switch(
                           value: widget.currentProduct.isActive,
-                          onChanged: (value) {}),
+                          onChanged: (isActive) {
+                            esEditProductBloc.updateIsActive(
+                                isActive, (product) {}, () {});
+                          }),
                     ),
                     ListTile(
                       title: Text(
@@ -143,7 +173,10 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ),
                       trailing: Switch(
                           value: widget.currentProduct.inStock,
-                          onChanged: (value) {}),
+                          onChanged: (inStock) {
+                            esEditProductBloc.updateInStock(
+                                inStock, (product) {}, () {});
+                          }),
                     ),
                     Container(
                       padding: const EdgeInsets.only(
@@ -159,27 +192,44 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                         style: Theme.of(context).textTheme.subtitle2,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              widget.currentProduct.dProductDescription,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.subtitle1,
+                    Container(
+                      child: widget.currentProduct.dProductDescription == ''
+                          ? Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                FlatButton(
+                                  onPressed: editShortDescription,
+                                  child: Text(
+                                    "+ Add short description",
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Text(
+                                      widget.currentProduct.dProductDescription,
+                                      overflow: TextOverflow.ellipsis,
+                                      style:
+                                          Theme.of(context).textTheme.subtitle1,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: editShortDescription,
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          // IconButton(
-                          //   onPressed: () {},
-                          //   icon: Icon(
-                          //     Icons.edit,
-                          //     color: Theme.of(context).primaryColor,
-                          //   ),
-                          // )
-                        ],
-                      ),
                     ),
                     Container(
                       padding: const EdgeInsets.only(
@@ -195,27 +245,45 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                         style: Theme.of(context).textTheme.subtitle2,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              widget.currentProduct.dProductLongDescription,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.subtitle1,
+                    Container(
+                      child: widget.currentProduct.dProductLongDescription == ''
+                          ? Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                FlatButton(
+                                  onPressed: editLongDescription,
+                                  child: Text(
+                                    "+ Add long description",
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Text(
+                                      widget.currentProduct
+                                          .dProductLongDescription,
+                                      overflow: TextOverflow.ellipsis,
+                                      style:
+                                          Theme.of(context).textTheme.subtitle1,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: editLongDescription,
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          // IconButton(
-                          //   onPressed: () {},
-                          //   icon: Icon(
-                          //     Icons.edit,
-                          //     color: Theme.of(context).primaryColor,
-                          //   ),
-                          // )
-                        ],
-                      ),
                     ),
                     Container(
                       padding: const EdgeInsets.only(
@@ -231,27 +299,44 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                         style: Theme.of(context).textTheme.subtitle2,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              widget.currentProduct.dLine1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.subtitle1,
+                    Container(
+                      child: widget.currentProduct.dLine1 == ''
+                          ? Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                FlatButton(
+                                  onPressed: editDisplayLine1,
+                                  child: Text(
+                                    "+ Add display line 1",
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Text(
+                                      widget.currentProduct.dLine1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style:
+                                          Theme.of(context).textTheme.subtitle1,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: editDisplayLine1,
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          // IconButton(
-                          //   onPressed: () {},
-                          //   icon: Icon(
-                          //     Icons.edit,
-                          //     color: Theme.of(context).primaryColor,
-                          //   ),
-                          // )
-                        ],
-                      ),
                     ),
                     Container(
                       padding: const EdgeInsets.only(
@@ -267,27 +352,44 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                         style: Theme.of(context).textTheme.subtitle2,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              widget.currentProduct.dUnit,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.subtitle1,
+                    Container(
+                      child: widget.currentProduct.dUnit == ''
+                          ? Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                FlatButton(
+                                  onPressed: editUnit,
+                                  child: Text(
+                                    "+ Add unit",
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Text(
+                                      widget.currentProduct.dUnit,
+                                      overflow: TextOverflow.ellipsis,
+                                      style:
+                                          Theme.of(context).textTheme.subtitle1,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: editUnit,
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          // IconButton(
-                          //   onPressed: () {},
-                          //   icon: Icon(
-                          //     Icons.edit,
-                          //     color: Theme.of(context).primaryColor,
-                          //   ),
-                          // )
-                        ],
-                      ),
                     ),
 //////////////////////////////////////////////////
                     Container(

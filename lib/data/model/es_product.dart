@@ -4,7 +4,7 @@ class EsAddProductPayload {
   String productName;
   String unitName;
   String productDescription;
-  List<String> images;
+  List<EsImage> images;
   String longDescription;
   String displayLine1;
 
@@ -20,7 +20,12 @@ class EsAddProductPayload {
     productName = json['product_name'];
     unitName = json['unit_name'];
     productDescription = json['product_description'];
-    images = json['images'].cast<String>();
+    if (json['images'] != null) {
+      images = new List<EsImage>();
+      json['images'].forEach((v) {
+        images.add(new EsImage.fromJson(v));
+      });
+    }
     longDescription = json['long_description'];
     displayLine1 = json['display_line_1'];
   }
@@ -30,7 +35,9 @@ class EsAddProductPayload {
     data['product_name'] = this.productName;
     data['unit_name'] = this.unitName;
     data['product_description'] = this.productDescription;
-    data['images'] = this.images;
+    if (this.images != null) {
+      data['images'] = this.images.map((v) => v.toJson()).toList();
+    }
     data['long_description'] = this.longDescription;
     data['display_line_1'] = this.displayLine1;
     return data;
@@ -41,7 +48,7 @@ class EsUpdateProductPayload {
   String productName;
   String unitName;
   String productDescription;
-  List<String> images;
+  List<EsImage> images;
   String longDescription;
   String displayLine1;
   bool inStock;
@@ -61,7 +68,12 @@ class EsUpdateProductPayload {
     productName = json['product_name'];
     unitName = json['unit_name'];
     productDescription = json['product_description'];
-    images = json['images'].cast<String>();
+    if (json['images'] != null) {
+      images = new List<EsImage>();
+      json['images'].forEach((v) {
+        images.add(new EsImage.fromJson(v));
+      });
+    }
     longDescription = json['long_description'];
     displayLine1 = json['display_line_1'];
     inStock = json['in_stock'];
@@ -70,14 +82,30 @@ class EsUpdateProductPayload {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['product_name'] = this.productName;
-    data['unit_name'] = this.unitName;
-    data['product_description'] = this.productDescription;
-    data['images'] = this.images;
-    data['long_description'] = this.longDescription;
-    data['display_line_1'] = this.displayLine1;
-    data['in_stock'] = this.inStock;
-    data['is_active'] = this.isActive;
+    if (this.productName != null) {
+      data['product_name'] = this.productName;
+    }
+    if (this.unitName != null) {
+      data['unit_name'] = this.unitName;
+    }
+    if (this.productDescription != null) {
+      data['product_description'] = this.productDescription;
+    }
+    if (this.images != null) {
+      data['images'] = this.images.map((v) => v.toJson()).toList();
+    }
+    if (this.longDescription != null) {
+      data['long_description'] = this.longDescription;
+    }
+    if (this.displayLine1 != null) {
+      data['display_line_1'] = this.displayLine1;
+    }
+    if (this.inStock != null) {
+      data['in_stock'] = this.inStock;
+    }
+    if (this.isActive != null) {
+      data['is_active'] = this.isActive;
+    }
     return data;
   }
 }
@@ -163,13 +191,15 @@ class EsProduct {
 
   String get dPrice {
     if (skus.length > 0) {
-      return skus[0].basePrice != null ? '${getPrice(skus[0].basePrice)}' : '₹ 0.00';
+      return skus[0].basePrice != null
+          ? '${getPrice(skus[0].basePrice)}'
+          : '₹ 0.00';
     }
     return '₹0.00';
   }
 
   String getPrice(price) {
-    return NumberFormat.simpleCurrency(locale: 'en_IN').format(price/100);
+    return NumberFormat.simpleCurrency(locale: 'en_IN').format(price / 100);
   }
 
   String get dPhotoUrl {
@@ -279,7 +309,7 @@ class EsSku {
   }
 
   String getPrice(price) {
-    return NumberFormat.simpleCurrency(locale: 'en_IN').format(price/100);
+    return NumberFormat.simpleCurrency(locale: 'en_IN').format(price / 100);
   }
 
   get dSkuCode {

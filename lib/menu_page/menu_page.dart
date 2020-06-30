@@ -4,7 +4,6 @@ import 'package:foore/data/bloc/es_products.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
-import 'package:foore/home_page/app_drawer.dart';
 import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/widgets/es_select_business.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
@@ -128,32 +127,32 @@ class _MenuPageState extends State<MenuPage> {
           ),
         ),
       ),
-      // floatingActionButton: Transform.translate(
-      //   offset: Offset(0, -15),
-      //   child: RaisedButton(
-      //     shape: RoundedRectangleBorder(
-      //       borderRadius: BorderRadius.circular(50.0),
-      //     ),
-      //     padding: EdgeInsets.symmetric(
-      //       vertical: 15,
-      //       horizontal: 25,
-      //     ),
-      //     onPressed: () async {
-      //       var result = await Navigator.of(context)
-      //           .pushNamed(AddMenuItemPage.routeName);
-      //       esProductsBloc.getProductsFromSearch();
-      //     },
-      //     child: Container(
-      //       child: Text(
-      //         'Add item',
-      //         style: Theme.of(context).textTheme.subhead.copyWith(
-      //               color: Colors.white,
-      //             ),
-      //       ),
-      //     ),
-      //   ),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Transform.translate(
+        offset: Offset(0, -15),
+        child: RaisedButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50.0),
+          ),
+          padding: EdgeInsets.symmetric(
+            vertical: 15,
+            horizontal: 25,
+          ),
+          onPressed: () async {
+            var result = await Navigator.of(context)
+                .pushNamed(AddMenuItemPage.routeName);
+            esProductsBloc.getProductsFromSearch();
+          },
+          child: Container(
+            child: Text(
+              'Add item',
+              style: Theme.of(context).textTheme.subhead.copyWith(
+                    color: Colors.white,
+                  ),
+            ),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

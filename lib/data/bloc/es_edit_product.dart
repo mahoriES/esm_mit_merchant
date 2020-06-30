@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_categories.dart';
+import 'package:foore/data/model/es_media.dart';
 import 'package:foore/data/model/es_product.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EsEditProductBloc {
@@ -12,6 +15,8 @@ class EsEditProductBloc {
   final nameEditController = TextEditingController();
   final shortDescriptionEditController = TextEditingController();
   final longDescriptionEditController = TextEditingController();
+  final displayLine1EditController = TextEditingController();
+  final unitEditController = TextEditingController();
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
 
@@ -35,22 +40,26 @@ class EsEditProductBloc {
         productName: this.nameEditController.text,
         productDescription: this.shortDescriptionEditController.text,
         longDescription: this.longDescriptionEditController.text,
-        images: [],
-        unitName: '',
+        images: [EsImage(photoId: "18d039fa-c478-4abc-852f-2e17d335d53c")],
+        unitName: 'Ml',
         displayLine1: '');
     var payloadString = json.encode(payload.toJson());
     print(payloadString);
-    this.httpService.esPost(
-        EsApiPaths.postAddProductToBusiness(
-            this.esBusinessesBloc.getSelectedBusinessId()),
-        '''{
-	"product_name":"Dettol-Extra2",
-	"unit_name":"Ml",
-	"product_description":"Herbal, works!",
-	"images":[{"photo_id": "18d039fa-c478-4abc-852f-2e17d335d53c"}],
-	"long_description":"This is supposed to be long descripton.",
-	"display_line_1":"5+5 Gram free"
-}''').then((httpResponse) {
+//     '''{
+// 	"product_name":"Dettol-Extra2",
+// 	"unit_name":"Ml",
+// 	"product_description":"Herbal, works!",
+// 	"images":[{"photo_id": "18d039fa-c478-4abc-852f-2e17d335d53c"}],
+// 	"long_description":"This is supposed to be long descripton.",
+// 	"display_line_1":"5+5 Gram free"
+// }'''
+    this
+        .httpService
+        .esPost(
+            EsApiPaths.postAddProductToBusiness(
+                this.esBusinessesBloc.getSelectedBusinessId()),
+            payloadString)
+        .then((httpResponse) {
       if (httpResponse.statusCode == 200 ||
           httpResponse.statusCode == 202 ||
           httpResponse.statusCode == 201) {
@@ -75,17 +84,13 @@ class EsEditProductBloc {
     });
   }
 
-  updateProduct(Function onUpdateProductSuccess) {
+  updateProduct(EsUpdateProductPayload payload, Function onUpdateProductSuccess,
+      Function onUpdateProductFailed) {
     print('update Product');
     this._esEditProductState.isSubmitting = true;
     this._esEditProductState.isSubmitFailed = false;
     this._esEditProductState.isSubmitSuccess = false;
     this._updateState();
-    var payload = new EsUpdateProductPayload(
-      productName: this.nameEditController.text,
-      productDescription: this.shortDescriptionEditController.text,
-      longDescription: this.longDescriptionEditController.text,
-    );
     var payloadString = json.encode(payload.toJson());
     print(payloadString);
     this
@@ -103,6 +108,7 @@ class EsEditProductBloc {
         this._esEditProductState.isSubmitFailed = false;
         this._esEditProductState.isSubmitSuccess = true;
         var updatedProduct = EsProduct.fromJson(json.decode(httpResponse.body));
+        this._esEditProductState.currentProduct = updatedProduct;
         if (onUpdateProductSuccess != null) {
           onUpdateProductSuccess(updatedProduct);
         }
@@ -110,12 +116,19 @@ class EsEditProductBloc {
         this._esEditProductState.isSubmitting = false;
         this._esEditProductState.isSubmitFailed = true;
         this._esEditProductState.isSubmitSuccess = false;
+        if (onUpdateProductFailed != null) {
+          onUpdateProductFailed();
+        }
       }
       this._updateState();
     }).catchError((onError) {
+      print(onError.toString());
       this._esEditProductState.isSubmitting = false;
       this._esEditProductState.isSubmitFailed = true;
       this._esEditProductState.isSubmitSuccess = false;
+      if (onUpdateProductFailed != null) {
+        onUpdateProductFailed();
+      }
       this._updateState();
     });
   }
@@ -170,6 +183,125 @@ class EsEditProductBloc {
   dispose() {
     this._subjectEsEditProductState.close();
   }
+
+  removeImage(EsImage image) {
+    var existingImages = List<EsImage>();
+    if (_esEditProductState.currentProduct.images != null) {
+      _esEditProductState.currentProduct.images.forEach((element) {
+        if (image.photoId != element.photoId) {
+          existingImages.add(EsImage(photoId: element.photoId));
+        }
+      });
+    }
+    var updateBusinessPayload = EsUpdateProductPayload(
+      images: existingImages,
+    );
+    this.updateProduct(updateBusinessPayload, () {}, () {});
+  }
+
+  removeUploadableImage(EsUploadableFile image) {
+    var index = this
+        ._esEditProductState
+        .uploadingImages
+        .indexWhere((element) => element.id == image.id);
+    this._esEditProductState.uploadingImages.removeAt(index);
+    this._updateState();
+  }
+
+  Future<File> _pickImageFromGallery() async {
+    final pickedFile =
+        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    final file = new File(pickedFile.path);
+    return file;
+  }
+
+  selectAndUploadImage() async {
+    try {
+      var file = await _pickImageFromGallery();
+      if (file != null) {
+        final uploadableFile = EsUploadableFile(file);
+        this._esEditProductState.uploadingImages.add(EsUploadableFile(file));
+        this._updateState();
+        try {
+          var respnose =
+              await this.httpService.esUpload(EsApiPaths.uploadPhoto, file);
+          var uploadImageResponse =
+              EsUploadImageResponse.fromJson(json.decode(respnose));
+
+          var existingImages = List<EsImage>();
+          if (_esEditProductState.currentProduct.images != null) {
+            _esEditProductState.currentProduct.images.forEach((element) {
+              existingImages.add(EsImage(photoId: element.photoId));
+            });
+          }
+          existingImages.add(EsImage(photoId: uploadImageResponse.photoId));
+          var updateProductPayload = EsUpdateProductPayload(
+              // images: existingImages,
+              );
+
+          this.updateProduct(updateProductPayload, () {
+            print('success');
+            var index = this
+                ._esEditProductState
+                .uploadingImages
+                .indexWhere((element) => element.id == uploadableFile.id);
+            this._esEditProductState.uploadingImages.removeAt(index);
+            this._updateState();
+          }, () {
+            print('failed');
+            var index = this
+                ._esEditProductState
+                .uploadingImages
+                .indexWhere((element) => element.id == uploadableFile.id);
+            this._esEditProductState.uploadingImages[index].setUploadFailed();
+            this._updateState();
+          });
+        } catch (err) {
+          print('failed');
+          var index = this
+              ._esEditProductState
+              .uploadingImages
+              .indexWhere((element) => element.id == uploadableFile.id);
+          this._esEditProductState.uploadingImages[index].setUploadFailed();
+          this._updateState();
+        }
+      }
+    } catch (err) {}
+  }
+
+  updateShortDescription(onSuccess, onFail) {
+    var payload = EsUpdateProductPayload(
+        productDescription: this.shortDescriptionEditController.text);
+    this.updateProduct(payload, onSuccess, onFail);
+  }
+
+  updateLongDescription(onSuccess, onFail) {
+    var payload = EsUpdateProductPayload(
+        productDescription: this.longDescriptionEditController.text);
+    this.updateProduct(payload, onSuccess, onFail);
+  }
+
+  updateDisplayLine1(onSuccess, onFail) {
+    var payload = EsUpdateProductPayload(
+        productDescription: this.displayLine1EditController.text);
+    this.updateProduct(payload, onSuccess, onFail);
+  }
+
+  updateUnit(onSuccess, onFail) {
+    var payload = EsUpdateProductPayload(
+        productDescription: this.unitEditController.text);
+    this.updateProduct(payload, onSuccess, onFail);
+  }
+
+  updateIsActive(isActive, onSuccess, onFail) {
+    var payload = EsUpdateProductPayload(isActive: isActive);
+    this.updateProduct(payload, onSuccess, onFail);
+  }
+
+  updateInStock(inStock, onSuccess, onFail) {
+    var payload = EsUpdateProductPayload(inStock: inStock);
+    this.updateProduct(payload, onSuccess, onFail);
+  }
 }
 
 class EsEditProductState {
@@ -179,12 +311,17 @@ class EsEditProductState {
   bool isSubmitSuccess = false;
   bool isSubmitFailed = false;
 
+  // Only used for creating product.
+  List<EsImage> uploadedImages = List<EsImage>();
+
+  List<EsUploadableFile> uploadingImages = List<EsUploadableFile>();
+
   List<EsCategory> categories = List<EsCategory>();
   EsGetCategoriesForProductResponse response;
 
   EsProduct currentProduct;
 
-  get currentProductId => currentProduct.productId;
+  int get currentProductId => currentProduct.productId;
 
   // bool isProductInStock = false;
 
