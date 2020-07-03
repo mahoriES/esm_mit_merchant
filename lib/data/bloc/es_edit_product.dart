@@ -47,16 +47,19 @@ class EsEditProductBloc {
     this._esEditProductState.isSubmitSuccess = false;
     this._updateState();
     var payload = new EsAddProductPayload(
-        productName: this.nameEditController.text,
-        productDescription: this.shortDescriptionEditController.text,
-        longDescription: this.longDescriptionEditController.text,
-        images: [EsImage(photoId: "18d039fa-c478-4abc-852f-2e17d335d53c")],
-        unitName: 'Ml',
-        displayLine1: '');
+      productName: this.nameEditController.text,
+      productDescription: this.shortDescriptionEditController.text,
+      longDescription: this.longDescriptionEditController.text,
+      images: _esEditProductState.uploadedImages
+          .map((e) => EsImage(photoId: e.photoId))
+          .toList(),
+      unitName: this.unitEditController.text,
+      displayLine1: this.displayLine1EditController.text,
+    );
     var payloadString = json.encode(payload.toJson());
     print(payloadString);
 //     '''{
-// 	"product_name":"Dettol-Extra2",
+// 	"product_name":"Dettol-Extra2",[EsImage(photoId: "18d039fa-c478-4abc-852f-2e17d335d53c")]
 // 	"unit_name":"Ml",
 // 	"product_description":"Herbal, works!",
 // 	"images":[{"photo_id": "18d039fa-c478-4abc-852f-2e17d335d53c"}],

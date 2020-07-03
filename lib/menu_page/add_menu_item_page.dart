@@ -138,68 +138,6 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
                         ),
                       ),
                     ),
-                    // Container(
-                    //   padding: const EdgeInsets.only(
-                    //     top: 24.0,
-                    //     left: 20,
-                    //     right: 20,
-                    //     bottom: 8,
-                    //     // bottom: 8.0,
-                    //   ),
-                    //   alignment: Alignment.bottomLeft,
-                    //   child: Text(
-                    //     'Categories',
-                    //     style: Theme.of(context).textTheme.subtitle2,
-                    //   ),
-                    // ),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 20),
-                    //   child: Row(
-                    //     crossAxisAlignment: CrossAxisAlignment.center,
-                    //     children: <Widget>[
-                    //       Expanded(
-                    //         child: Wrap(
-                    //           children: <Widget>[
-                    //             Padding(
-                    //               padding: const EdgeInsets.only(right: 8.0),
-                    //               child: Chip(
-                    //                 label: Text(
-                    //                   "It is a long establis",
-                    //                   overflow: TextOverflow.ellipsis,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //             Padding(
-                    //               padding: const EdgeInsets.only(right: 8.0),
-                    //               child: Chip(
-                    //                 label: Text(
-                    //                   "It is a long establis",
-                    //                   overflow: TextOverflow.ellipsis,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //             Chip(
-                    //               backgroundColor:
-                    //                   Theme.of(context).primaryColor,
-                    //               avatar: Icon(
-                    //                 Icons.add,
-                    //                 color: Colors.white,
-                    //               ),
-                    //               label: Text(
-                    //                 "Add category",
-                    //                 overflow: TextOverflow.ellipsis,
-                    //                 style: Theme.of(context)
-                    //                     .textTheme
-                    //                     .caption
-                    //                     .copyWith(color: Colors.white),
-                    //               ),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       )
-                    //     ],
-                    //   ),
-                    // ),
                     Padding(
                       padding: const EdgeInsets.only(
                         top: 24.0,
@@ -207,24 +145,28 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
                         right: 20,
                       ),
                       child: TextFormField(
+                        controller:
+                            esEditProductBloc.displayLine1EditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Price',
+                          labelText: 'Display line 1',
                         ),
                       ),
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(
-                    //     top: 8.0,
-                    //     left: 8,
-                    //     right: 0,
-                    //   ),
-                    //   child: CheckboxListTile(
-                    //     title: Text('Availability'),
-                    //     value: false,
-                    //     onChanged: (value) {},
-                    //   ),
-                    // ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 24.0,
+                        left: 20,
+                        right: 20,
+                      ),
+                      child: TextFormField(
+                        controller: esEditProductBloc.unitEditController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Unit',
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
