@@ -346,6 +346,15 @@ class EsEditProductBloc {
     this._updateState();
   }
 
+  removeUploadedImage(EsImage image) {
+    var index = this
+        ._esEditProductState
+        .uploadedImages
+        .indexWhere((element) => element.photoId == image.photoId);
+    this._esEditProductState.uploadedImages.removeAt(index);
+    this._updateState();
+  }
+
   Future<File> _pickImageFromGallery() async {
     final pickedFile =
         await ImagePicker.platform.pickImage(source: ImageSource.gallery);
@@ -442,6 +451,43 @@ class EsEditProductBloc {
   updateInStock(inStock, onSuccess, onFail) {
     var payload = EsUpdateProductPayload(inStock: inStock);
     this.updateProduct(payload, onSuccess, onFail);
+  }
+
+  selectAndUploadImageForAddProduct() async {
+    try {
+      var file = await _pickImageFromGallery();
+      if (file != null) {
+        final uploadableFile = EsUploadableFile(file);
+        this._esEditProductState.uploadingImages.add(EsUploadableFile(file));
+        this._updateState();
+        try {
+          var respnose =
+              await this.httpService.esUpload(EsApiPaths.uploadPhoto, file);
+          var uploadImageResponse =
+              EsUploadImageResponse.fromJson(json.decode(respnose));
+
+          this._esEditProductState.uploadedImages.add(
+                EsImage(
+                    photoId: uploadImageResponse.photoId,
+                    contentType: uploadImageResponse.contentType,
+                    photoUrl: uploadImageResponse.photoUrl),
+              );
+          var index = this
+              ._esEditProductState
+              .uploadingImages
+              .indexWhere((element) => element.id == uploadableFile.id);
+          this._esEditProductState.uploadingImages.removeAt(index);
+          this._updateState();
+        } catch (err) {
+          var index = this
+              ._esEditProductState
+              .uploadingImages
+              .indexWhere((element) => element.id == uploadableFile.id);
+          this._esEditProductState.uploadingImages[index].setUploadFailed();
+          this._updateState();
+        }
+      }
+    } catch (err) {}
   }
 }
 

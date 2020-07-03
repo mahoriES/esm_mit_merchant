@@ -66,7 +66,7 @@ class _EsAddMenuItemImageListState
               List.generate(snapshot.data.uploadingImages.length + 1, (index) {
             if (index == snapshot.data.uploadingImages.length) {
               return GestureDetector(
-                onTap: widget.esEdiProductBloc.selectAndUploadImage,
+                onTap: widget.esEdiProductBloc.selectAndUploadImageForAddProduct,
                 child: Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4.0),
