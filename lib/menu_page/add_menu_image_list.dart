@@ -49,7 +49,7 @@ class _EsAddMenuItemImageListState
                               color: Colors.black54,
                               onPressed: () {
                                 widget.esEdiProductBloc
-                                    .removeImage(dImage);
+                                    .removeUploadedImage(dImage);
                               },
                               iconSize: 20,
                               visualDensity: VisualDensity.compact,
