@@ -22,9 +22,12 @@ import 'data/bloc/es_edit_product.dart';
 import 'data/bloc/onboarding.dart';
 import 'data/bloc/people.dart';
 import 'data/http_service.dart';
+import 'data/model/es_categories.dart';
 import 'data/model/feedback.dart';
 import 'data/model/unirson.dart';
 import 'es_auth_guard/es_auth_guard.dart';
+import 'es_category_page/es_add_category.dart';
+import 'es_category_page/es_category_page.dart';
 import 'es_create_business/es_create_business.dart';
 import 'es_create_merchant_profile/es_create_merchant_profile.dart';
 import 'home_page/home_page.dart';
@@ -256,6 +259,24 @@ class Router {
                 dispose: (context, value) => value.dispose(),
                 child: EsProductDetailPage(esProduct),
               )),
+        );
+        break;
+      case EsCategoryPage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => EsAuthGuard(
+            unauthenticatedHandler: esUnauthenticatedHandler,
+            noMerchantProfileHandler: esNoMerchantProfileHandler,
+            child: EsCategoryPage(),
+          ),
+        );
+        break;
+      case EsAddCategoryPage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => EsAuthGuard(
+            unauthenticatedHandler: esUnauthenticatedHandler,
+            noMerchantProfileHandler: esNoMerchantProfileHandler,
+            child: EsAddCategoryPage(),
+          ),
         );
         break;
       default:

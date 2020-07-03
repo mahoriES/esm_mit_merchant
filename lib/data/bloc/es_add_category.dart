@@ -13,17 +13,17 @@ class EsAddCategoryBloc {
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
 
-  BehaviorSubject<EsAddCategoryState> _subjectEsEditProductState;
+  BehaviorSubject<EsAddCategoryState> _subjectAddCategoryState;
 
   EsAddCategoryBloc(this.httpService, this.esBusinessesBloc) {
-    this._subjectEsEditProductState =
+    this._subjectAddCategoryState =
         new BehaviorSubject<EsAddCategoryState>.seeded(_esAddCategoryState);
   }
 
-  Observable<EsAddCategoryState> get esEditProductStateObservable =>
-      _subjectEsEditProductState.stream;
+  Observable<EsAddCategoryState> get esAddCategoryStateObservable =>
+      _subjectAddCategoryState.stream;
 
-  addCategory(Function onAddCategorySuccess) {
+  addCategory(Function(EsCategory) onAddCategorySuccess) {
     this._esAddCategoryState.isSubmitting = true;
     this._esAddCategoryState.isSubmitFailed = false;
     this._esAddCategoryState.isSubmitSuccess = false;
@@ -32,11 +32,13 @@ class EsAddCategoryBloc {
         categoryName: this.nameEditController.text,
         categoryDescription: this.descriptionEditController.text);
     var payloadString = json.encode(payload.toJson());
+    print(payloadString);
     this
         .httpService
         .esPost(
-            EsApiPaths.postAddProductToBusiness(
-                this.esBusinessesBloc.getSelectedBusinessId()),
+            EsApiPaths.postAddCategory(
+              this.esBusinessesBloc.getSelectedBusinessId(),
+            ),
             payloadString)
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
@@ -67,13 +69,13 @@ class EsAddCategoryBloc {
   }
 
   _updateState() {
-    if (!this._subjectEsEditProductState.isClosed) {
-      this._subjectEsEditProductState.sink.add(this._esAddCategoryState);
+    if (!this._subjectAddCategoryState.isClosed) {
+      this._subjectAddCategoryState.sink.add(this._esAddCategoryState);
     }
   }
 
   dispose() {
-    this._subjectEsEditProductState.close();
+    this._subjectAddCategoryState.close();
   }
 }
 

@@ -2,24 +2,33 @@ import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
-import 'package:foore/data/bloc/es_edit_product.dart';
+import 'package:foore/data/bloc/es_add_category.dart';
+import 'package:foore/data/bloc/es_businesses.dart';
+import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_product.dart';
+import 'package:provider/provider.dart';
 
-class EsEditProductLongDescriptionPage extends StatefulWidget {
-  static const routeName = '/create-business-page';
-
-  final EsEditProductBloc esEditProductBloc;
-
-  EsEditProductLongDescriptionPage(this.esEditProductBloc);
-
+class EsAddCategoryPage extends StatefulWidget {
+  static const routeName = '/add-category';
   @override
-  EsEditProductLongDescriptionPageState createState() =>
-      EsEditProductLongDescriptionPageState();
+  EsAddCategoryPageState createState() => EsAddCategoryPageState();
 }
 
-class EsEditProductLongDescriptionPageState
-    extends State<EsEditProductLongDescriptionPage>
-    with AfterLayoutMixin<EsEditProductLongDescriptionPage> {
+class EsAddCategoryPageState extends State<EsAddCategoryPage>
+    with AfterLayoutMixin<EsAddCategoryPage> {
+  EsAddCategoryBloc esCategoriesBloc;
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    final httpService = Provider.of<HttpService>(context);
+    final businessBloc = Provider.of<EsBusinessesBloc>(context);
+    if (this.esCategoriesBloc == null) {
+      this.esCategoriesBloc = EsAddCategoryBloc(httpService, businessBloc);
+    }
+    super.didChangeDependencies();
+  }
+
   final _formKey = GlobalKey<FormState>();
 
   _showFailedAlertDialog() async {
@@ -58,7 +67,7 @@ class EsEditProductLongDescriptionPageState
 
   @override
   Widget build(BuildContext context) {
-     onSuccess(EsProduct product) {
+    onSuccess(EsProduct product) {
       Navigator.of(context).pop();
     }
 
@@ -68,21 +77,23 @@ class EsEditProductLongDescriptionPageState
 
     submit() {
       if (this._formKey.currentState.validate()) {
-        widget.esEditProductBloc.updateLongDescription(onSuccess, onFail);
+        this.esCategoriesBloc.addCategory((esCategory) {
+          Navigator.of(context).pop(esCategory);
+        });
       }
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Update product long description',
+          'Add category',
         ),
       ),
       body: Form(
         key: _formKey,
         onWillPop: _onWillPop,
-        child: StreamBuilder<EsEditProductState>(
-            stream: widget.esEditProductBloc.esEditProductStateObservable,
+        child: StreamBuilder<EsAddCategoryState>(
+            stream: this.esCategoriesBloc.esAddCategoryStateObservable,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Container();
@@ -98,11 +109,25 @@ class EsEditProductLongDescriptionPageState
                         right: 20,
                       ),
                       child: TextFormField(
-                        controller: widget
-                            .esEditProductBloc.longDescriptionEditController,
+                        controller: this.esCategoriesBloc.nameEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Product long description',
+                          labelText: 'Category name',
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 24.0,
+                        left: 20,
+                        right: 20,
+                      ),
+                      child: TextFormField(
+                        controller:
+                            this.esCategoriesBloc.descriptionEditController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Category description',
                         ),
                       ),
                     ),
@@ -111,8 +136,8 @@ class EsEditProductLongDescriptionPageState
               );
             }),
       ),
-      floatingActionButton: StreamBuilder<EsEditProductState>(
-          stream: widget.esEditProductBloc.esEditProductStateObservable,
+      floatingActionButton: StreamBuilder<EsAddCategoryState>(
+          stream: this.esCategoriesBloc.esAddCategoryStateObservable,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Container();

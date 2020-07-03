@@ -2,11 +2,15 @@ import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
+import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/data/model/es_product.dart';
+import 'package:foore/es_category_page/es_category_page.dart';
 import 'package:provider/provider.dart';
 
 import 'es_edit_product_display_line_1.dart';
+import 'es_edit_product_image_list.dart';
 import 'es_edit_product_long_description.dart';
+import 'es_edit_product_name.dart';
 import 'es_edit_product_short_description.dart';
 import 'es_edit_product_unit.dart';
 
@@ -70,6 +74,19 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
   @override
   Widget build(BuildContext context) {
     final esEditProductBloc = Provider.of<EsEditProductBloc>(context);
+
+    addCategory() async {
+      var selectedCategories =
+          await Navigator.of(context).pushNamed(EsCategoryPage.routeName);
+      if (selectedCategories != null) {
+        esEditProductBloc.addCategoriesToProduct(selectedCategories);
+      }
+    }
+
+    removeCategory(EsCategory category) {
+      esEditProductBloc.removeCategoryFromProduct(category);
+    }
+
     submit() {
       if (this._formKey.currentState.validate()) {
         esEditProductBloc.addProduct((EsProduct product) {
@@ -82,6 +99,12 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
       await Navigator.of(context).push(MaterialPageRoute(
           builder: (context) =>
               EsEditProductShortDescriptionPage(esEditProductBloc)));
+    }
+
+    editName() async {
+      await Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              EsEditProductNamePage(esEditProductBloc)));
     }
 
     editLongDescription() async {
@@ -118,49 +141,14 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
               child: Scrollbar(
                 child: ListView(
                   children: <Widget>[
-                    Visibility(
-                      visible: widget.currentProduct.images != null
-                          ? widget.currentProduct.images.length > 0
-                          : false,
-                      child: Container(
-                        height: 130,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 20),
-                        child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: widget.currentProduct.images != null
-                                ? widget.currentProduct.images.length
-                                : 0,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                padding: EdgeInsets.only(right: 12),
-                                child: Material(
-                                  elevation: 1.0,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(4.0),
-                                    child: Container(
-                                      height: 120,
-                                      width: 120,
-                                      child: Container(
-                                        child: Image.network(widget
-                                            .currentProduct
-                                            .images[index]
-                                            .photoUrl),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
-                      ),
-                    ),
+                    EsEditProductImageList(esEditProductBloc),
                     ListTile(
                       title: Text(
                         "Active",
                         overflow: TextOverflow.ellipsis,
                       ),
                       trailing: Switch(
-                          value: widget.currentProduct.isActive,
+                          value: snapshot.data.currentProduct.isActive,
                           onChanged: (isActive) {
                             esEditProductBloc.updateIsActive(
                                 isActive, (product) {}, () {});
@@ -172,7 +160,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                         overflow: TextOverflow.ellipsis,
                       ),
                       trailing: Switch(
-                          value: widget.currentProduct.inStock,
+                          value: snapshot.data.currentProduct.inStock,
                           onChanged: (inStock) {
                             esEditProductBloc.updateInStock(
                                 inStock, (product) {}, () {});
@@ -188,12 +176,65 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ),
                       alignment: Alignment.bottomLeft,
                       child: Text(
+                        'Name',
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
+                    ),
+                    Container(
+                      child: snapshot.data.currentProduct.dProductName == ''
+                          ? Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                FlatButton(
+                                  onPressed: editName,
+                                  child: Text(
+                                    "+ Add name",
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Text(
+                                      snapshot.data.currentProduct.dProductName,
+                                      overflow: TextOverflow.ellipsis,
+                                      style:
+                                          Theme.of(context).textTheme.subtitle1,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: editName,
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                    ),
+                     Container(
+                      padding: const EdgeInsets.only(
+                        top: 20.0,
+                        left: 20,
+                        right: 20,
+                        bottom: 4,
+                        // bottom: 8.0,
+                      ),
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
                         'Short description',
                         style: Theme.of(context).textTheme.subtitle2,
                       ),
                     ),
                     Container(
-                      child: widget.currentProduct.dProductDescription == ''
+                      child: snapshot.data.currentProduct.dProductDescription == ''
                           ? Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -214,7 +255,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                 children: <Widget>[
                                   Expanded(
                                     child: Text(
-                                      widget.currentProduct.dProductDescription,
+                                      snapshot.data.currentProduct.dProductDescription,
                                       overflow: TextOverflow.ellipsis,
                                       style:
                                           Theme.of(context).textTheme.subtitle1,
@@ -246,7 +287,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ),
                     ),
                     Container(
-                      child: widget.currentProduct.dProductLongDescription == ''
+                      child: snapshot.data.currentProduct.dProductLongDescription == ''
                           ? Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -267,7 +308,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                 children: <Widget>[
                                   Expanded(
                                     child: Text(
-                                      widget.currentProduct
+                                      snapshot.data.currentProduct
                                           .dProductLongDescription,
                                       overflow: TextOverflow.ellipsis,
                                       style:
@@ -300,7 +341,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ),
                     ),
                     Container(
-                      child: widget.currentProduct.dLine1 == ''
+                      child: snapshot.data.currentProduct.dLine1 == ''
                           ? Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -321,7 +362,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                 children: <Widget>[
                                   Expanded(
                                     child: Text(
-                                      widget.currentProduct.dLine1,
+                                      snapshot.data.currentProduct.dLine1,
                                       overflow: TextOverflow.ellipsis,
                                       style:
                                           Theme.of(context).textTheme.subtitle1,
@@ -353,7 +394,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ),
                     ),
                     Container(
-                      child: widget.currentProduct.dUnit == ''
+                      child: snapshot.data.currentProduct.dUnit == ''
                           ? Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -374,7 +415,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                 children: <Widget>[
                                   Expanded(
                                     child: Text(
-                                      widget.currentProduct.dUnit,
+                                      snapshot.data.currentProduct.dUnit,
                                       overflow: TextOverflow.ellipsis,
                                       style:
                                           Theme.of(context).textTheme.subtitle1,
@@ -414,10 +455,35 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                           Expanded(
                             child: Wrap(
                               children: List.generate(
-                                  snapshot.data.categories.length, (index) {
+                                  snapshot.data.categories.length + 1, (index) {
+                                if (index == snapshot.data.categories.length) {
+                                  return InkWell(
+                                    onTap: addCategory,
+                                    child: Chip(
+                                      backgroundColor:
+                                          Theme.of(context).primaryColor,
+                                      avatar: Icon(
+                                        Icons.add,
+                                        color: Colors.white,
+                                      ),
+                                      label: Text(
+                                        "Add category",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption
+                                            .copyWith(color: Colors.white),
+                                      ),
+                                    ),
+                                  );
+                                }
                                 return Padding(
                                   padding: const EdgeInsets.only(right: 8.0),
                                   child: Chip(
+                                    onDeleted: () {
+                                      removeCategory(
+                                          snapshot.data.categories[index]);
+                                    },
                                     label: Text(
                                       snapshot
                                           .data.categories[index].dCategoryName,
@@ -425,22 +491,6 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                     ),
                                   ),
                                 );
-                                // return Chip(
-                                //   backgroundColor:
-                                //       Theme.of(context).primaryColor,
-                                //   avatar: Icon(
-                                //     Icons.add,
-                                //     color: Colors.white,
-                                //   ),
-                                //   label: Text(
-                                //     "Add category",
-                                //     overflow: TextOverflow.ellipsis,
-                                //     style: Theme.of(context)
-                                //         .textTheme
-                                //         .caption
-                                //         .copyWith(color: Colors.white),
-                                //   ),
-                                // );
                               }),
                             ),
                           )
@@ -472,12 +522,12 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       // alignment: Alignment.bottomLeft,
                       child: Table(
                           children: List.generate(
-                              widget.currentProduct.skus != null
+                              snapshot.data.currentProduct.skus != null
                                   ? widget.currentProduct.skus.length
                                   : 0,
                               (index) => TableRow(children: [
                                     VariationCard(
-                                        widget.currentProduct.skus[index])
+                                        snapshot.data.currentProduct.skus[index])
                                   ]))),
                     ),
                   ],

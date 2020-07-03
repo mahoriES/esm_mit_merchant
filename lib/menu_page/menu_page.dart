@@ -49,6 +49,7 @@ class _MenuPageState extends State<MenuPage> {
     viewItem(EsProduct product) async {
       var result = await Navigator.of(context)
           .pushNamed(EsProductDetailPage.routeName, arguments: product);
+      esProductsBloc.getProductsFromSearch();
     }
 
     return Scaffold(

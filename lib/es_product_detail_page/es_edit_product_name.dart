@@ -5,21 +5,19 @@ import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
 
-class EsEditProductLongDescriptionPage extends StatefulWidget {
-  static const routeName = '/create-business-page';
-
+class EsEditProductNamePage extends StatefulWidget {
   final EsEditProductBloc esEditProductBloc;
 
-  EsEditProductLongDescriptionPage(this.esEditProductBloc);
+  EsEditProductNamePage(this.esEditProductBloc);
 
   @override
-  EsEditProductLongDescriptionPageState createState() =>
-      EsEditProductLongDescriptionPageState();
+  EsEditProductNamePageState createState() =>
+      EsEditProductNamePageState();
 }
 
-class EsEditProductLongDescriptionPageState
-    extends State<EsEditProductLongDescriptionPage>
-    with AfterLayoutMixin<EsEditProductLongDescriptionPage> {
+class EsEditProductNamePageState
+    extends State<EsEditProductNamePage>
+    with AfterLayoutMixin<EsEditProductNamePage> {
   final _formKey = GlobalKey<FormState>();
 
   _showFailedAlertDialog() async {
@@ -58,7 +56,7 @@ class EsEditProductLongDescriptionPageState
 
   @override
   Widget build(BuildContext context) {
-     onSuccess(EsProduct product) {
+    onSuccess(EsProduct product) {
       Navigator.of(context).pop();
     }
 
@@ -68,14 +66,14 @@ class EsEditProductLongDescriptionPageState
 
     submit() {
       if (this._formKey.currentState.validate()) {
-        widget.esEditProductBloc.updateLongDescription(onSuccess, onFail);
+        widget.esEditProductBloc.updateName(onSuccess, onFail);
       }
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Update product long description',
+          'Update product name',
         ),
       ),
       body: Form(
@@ -99,10 +97,10 @@ class EsEditProductLongDescriptionPageState
                       ),
                       child: TextFormField(
                         controller: widget
-                            .esEditProductBloc.longDescriptionEditController,
+                            .esEditProductBloc.nameEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Product long description',
+                          labelText: 'Name',
                         ),
                       ),
                     ),

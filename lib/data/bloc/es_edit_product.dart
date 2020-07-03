@@ -30,6 +30,14 @@ class EsEditProductBloc {
   Observable<EsEditProductState> get esEditProductStateObservable =>
       _subjectEsEditProductState.stream;
 
+  updateControllers(EsProduct product) {
+    nameEditController.text = product.dProductName;
+    shortDescriptionEditController.text = product.dProductDescription;
+    longDescriptionEditController.text = product.dProductLongDescription;
+    displayLine1EditController.text = product.dLine1;
+    unitEditController.text = product.dUnit;
+  }
+
   addProduct(Function onAddProductSuccess) {
     print('add Product');
     this._esEditProductState.isSubmitting = true;
@@ -84,9 +92,10 @@ class EsEditProductBloc {
     });
   }
 
-  updateProduct(EsUpdateProductPayload payload, Function onUpdateProductSuccess,
+  updateProduct(
+      EsUpdateProductPayload payload,
+      Function(EsProduct) onUpdateProductSuccess,
       Function onUpdateProductFailed) {
-    print('update Product');
     this._esEditProductState.isSubmitting = true;
     this._esEditProductState.isSubmitFailed = false;
     this._esEditProductState.isSubmitSuccess = false;
@@ -109,6 +118,7 @@ class EsEditProductBloc {
         this._esEditProductState.isSubmitSuccess = true;
         var updatedProduct = EsProduct.fromJson(json.decode(httpResponse.body));
         this._esEditProductState.currentProduct = updatedProduct;
+        updateControllers(updatedProduct);
         if (onUpdateProductSuccess != null) {
           onUpdateProductSuccess(updatedProduct);
         }
@@ -129,6 +139,83 @@ class EsEditProductBloc {
       if (onUpdateProductFailed != null) {
         onUpdateProductFailed();
       }
+      this._updateState();
+    });
+  }
+
+  addCategoriesToProduct(List<EsCategory> categories) {
+    var payload = AddCategoriesToProductPayload(
+        categoryIds: categories.map((e) => e.categoryId).toList());
+    this._esEditProductState.isSubmitting = true;
+    this._esEditProductState.isSubmitFailed = false;
+    this._esEditProductState.isSubmitSuccess = false;
+    this._updateState();
+    var payloadString = json.encode(payload.toJson());
+    print(payloadString);
+    this
+        .httpService
+        .esPut(
+            EsApiPaths.putAddCategoriesToProduct(
+                this.esBusinessesBloc.getSelectedBusinessId(),
+                this._esEditProductState.currentProductId),
+            payloadString)
+        .then((httpResponse) {
+      if (httpResponse.statusCode == 200 ||
+          httpResponse.statusCode == 202 ||
+          httpResponse.statusCode == 201) {
+        this._esEditProductState.isSubmitting = false;
+        this._esEditProductState.isSubmitFailed = false;
+        this._esEditProductState.isSubmitSuccess = true;
+        this._esEditProductState.categories.addAll(categories);
+      } else {
+        this._esEditProductState.isSubmitting = false;
+        this._esEditProductState.isSubmitFailed = true;
+        this._esEditProductState.isSubmitSuccess = false;
+      }
+      this._updateState();
+    }).catchError((onError) {
+      print(onError.toString());
+      this._esEditProductState.isSubmitting = false;
+      this._esEditProductState.isSubmitFailed = true;
+      this._esEditProductState.isSubmitSuccess = false;
+      this._updateState();
+    });
+  }
+
+  removeCategoryFromProduct(EsCategory category) {
+    this._esEditProductState.isSubmitting = true;
+    this._esEditProductState.isSubmitFailed = false;
+    this._esEditProductState.isSubmitSuccess = false;
+    this._updateState();
+    this
+        .httpService
+        .esDel(EsApiPaths.delRemoveCategoryFromProduct(
+            this.esBusinessesBloc.getSelectedBusinessId(),
+            this._esEditProductState.currentProductId,
+            category.categoryId))
+        .then((httpResponse) {
+      if (httpResponse.statusCode == 200 ||
+          httpResponse.statusCode == 202 ||
+          httpResponse.statusCode == 201) {
+        this._esEditProductState.isSubmitting = false;
+        this._esEditProductState.isSubmitFailed = false;
+        this._esEditProductState.isSubmitSuccess = true;
+        this._esEditProductState.categories = this
+            ._esEditProductState
+            .categories
+            .where((element) => element.categoryId != category.categoryId)
+            .toList();
+      } else {
+        this._esEditProductState.isSubmitting = false;
+        this._esEditProductState.isSubmitFailed = true;
+        this._esEditProductState.isSubmitSuccess = false;
+      }
+      this._updateState();
+    }).catchError((onError) {
+      print(onError.toString());
+      this._esEditProductState.isSubmitting = false;
+      this._esEditProductState.isSubmitFailed = true;
+      this._esEditProductState.isSubmitSuccess = false;
       this._updateState();
     });
   }
@@ -165,6 +252,7 @@ class EsEditProductBloc {
 
   setCurrentProduct(EsProduct product) {
     this._esEditProductState.currentProduct = product;
+    updateControllers(product);
     // this._esEditProductState.isProductInStock = product.inStock;
     this._updateState();
   }
@@ -193,10 +281,10 @@ class EsEditProductBloc {
         }
       });
     }
-    var updateBusinessPayload = EsUpdateProductPayload(
+    var updateProductPayload = EsUpdateProductPayload(
       images: existingImages,
     );
-    this.updateProduct(updateBusinessPayload, () {}, () {});
+    this.updateProduct(updateProductPayload, (product) {}, () {});
   }
 
   removeUploadableImage(EsUploadableFile image) {
@@ -236,11 +324,10 @@ class EsEditProductBloc {
           }
           existingImages.add(EsImage(photoId: uploadImageResponse.photoId));
           var updateProductPayload = EsUpdateProductPayload(
-              // images: existingImages,
-              );
+            images: existingImages,
+          );
 
-          this.updateProduct(updateProductPayload, () {
-            print('success');
+          this.updateProduct(updateProductPayload, (product) {
             var index = this
                 ._esEditProductState
                 .uploadingImages
@@ -248,7 +335,6 @@ class EsEditProductBloc {
             this._esEditProductState.uploadingImages.removeAt(index);
             this._updateState();
           }, () {
-            print('failed');
             var index = this
                 ._esEditProductState
                 .uploadingImages
@@ -257,7 +343,6 @@ class EsEditProductBloc {
             this._updateState();
           });
         } catch (err) {
-          print('failed');
           var index = this
               ._esEditProductState
               .uploadingImages
@@ -269,6 +354,12 @@ class EsEditProductBloc {
     } catch (err) {}
   }
 
+  updateName(onSuccess, onFail) {
+    var payload = EsUpdateProductPayload(
+        productName: this.nameEditController.text);
+    this.updateProduct(payload, onSuccess, onFail);
+  }
+
   updateShortDescription(onSuccess, onFail) {
     var payload = EsUpdateProductPayload(
         productDescription: this.shortDescriptionEditController.text);
@@ -277,19 +368,19 @@ class EsEditProductBloc {
 
   updateLongDescription(onSuccess, onFail) {
     var payload = EsUpdateProductPayload(
-        productDescription: this.longDescriptionEditController.text);
+        longDescription: this.longDescriptionEditController.text);
     this.updateProduct(payload, onSuccess, onFail);
   }
 
   updateDisplayLine1(onSuccess, onFail) {
     var payload = EsUpdateProductPayload(
-        productDescription: this.displayLine1EditController.text);
+        displayLine1: this.displayLine1EditController.text);
     this.updateProduct(payload, onSuccess, onFail);
   }
 
   updateUnit(onSuccess, onFail) {
-    var payload = EsUpdateProductPayload(
-        productDescription: this.unitEditController.text);
+    var payload =
+        EsUpdateProductPayload(unitName: this.unitEditController.text);
     this.updateProduct(payload, onSuccess, onFail);
   }
 

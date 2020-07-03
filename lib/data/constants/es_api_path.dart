@@ -17,11 +17,10 @@ class EsApiPaths {
   static final patchUpdateBusinessInfo =
       (String businessId) => 'businesses/$businessId';
 
-  static final postAddCategoryToProduct =
-      (String businessId, int productId) =>
-          'businesses/$businessId/catalog/products/$productId/categories';
-  static final delRemoveCategoryFromProduct = (String businessId,
-          String productId, String categoryId) =>
+  static final putAddCategoriesToProduct = (String businessId, int productId) =>
+      'businesses/$businessId/catalog/products/$productId/categories';
+  static final delRemoveCategoryFromProduct = (String businessId, int productId,
+          int categoryId) =>
       'businesses/$businessId/catalog/products/$productId/categories/$categoryId';
   static final patchUpdateProduct = (String businessId, int productId) =>
       'businesses/$businessId/catalog/products/$productId';

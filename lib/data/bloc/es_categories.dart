@@ -56,6 +56,17 @@ class EsCategoriesBloc {
   dispose() {
     this._subjectEsCategoriesState.close();
   }
+
+  setCategorySelected(int categoryId, bool isSelected) {
+    this._esCategoriesState.items =
+        this._esCategoriesState.items.map((esCategory) {
+      if (esCategory.categoryId == categoryId) {
+        esCategory.dIsSelected = isSelected;
+      }
+      return esCategory;
+    }).toList();
+    this._updateState();
+  }
 }
 
 class EsCategoriesState {
@@ -63,6 +74,12 @@ class EsCategoriesState {
   EsGetCategoriesResponse response;
   List<EsCategory> items = new List<EsCategory>();
   bool isLoadingFailed = false;
+  int get numberOfSelectedItems =>
+      items.where((element) => element.dIsSelected).length;
+
+  List<EsCategory> get selectedCategories =>
+      items.where((element) => element.dIsSelected).toList();
+
   EsCategoriesState() {
     this.isLoading = false;
     this.isLoadingFailed = false;

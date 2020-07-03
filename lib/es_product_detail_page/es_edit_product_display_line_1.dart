@@ -66,14 +66,14 @@ class EsEditDisplayLine1PageState
 
     submit() {
       if (this._formKey.currentState.validate()) {
-        widget.esEditProductBloc.updateShortDescription(onSuccess, onFail);
+        widget.esEditProductBloc.updateDisplayLine1(onSuccess, onFail);
       }
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Update business description',
+          'Update display line 1',
         ),
       ),
       body: Form(
@@ -97,10 +97,10 @@ class EsEditDisplayLine1PageState
                       ),
                       child: TextFormField(
                         controller: widget
-                            .esEditProductBloc.shortDescriptionEditController,
+                            .esEditProductBloc.displayLine1EditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Business description',
+                          labelText: 'Display line 1',
                         ),
                       ),
                     ),

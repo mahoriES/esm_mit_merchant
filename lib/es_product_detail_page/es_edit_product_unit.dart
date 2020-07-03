@@ -97,7 +97,7 @@ class EsEditProductUnitPageState extends State<EsEditProductUnitPage>
                       ),
                       child: TextFormField(
                         controller: widget
-                            .esEditProductBloc.shortDescriptionEditController,
+                            .esEditProductBloc.unitEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Product unit',
