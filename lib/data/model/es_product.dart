@@ -371,3 +371,22 @@ class EsImage {
     return data;
   }
 }
+
+class AddSkuPayload {
+  int basePrice;
+  String skuCode;
+
+  AddSkuPayload({this.basePrice, this.skuCode});
+
+  AddSkuPayload.fromJson(Map<String, dynamic> json) {
+    basePrice = json['base_price'];
+    skuCode = json['sku_code'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['base_price'] = this.basePrice;
+    data['sku_code'] = this.skuCode;
+    return data;
+  }
+}

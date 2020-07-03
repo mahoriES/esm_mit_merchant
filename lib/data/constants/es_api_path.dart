@@ -44,4 +44,7 @@ class EsApiPaths {
   static const patchUpdateProfile = 'auth/profiles';
 
   static const uploadPhoto = 'media/photo/';
+
+  static final postAddSkuToProduct = (String businessId, int productId) =>
+      'businesses/$businessId/catalog/products/$productId/skus';
 }

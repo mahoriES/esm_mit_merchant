@@ -17,6 +17,8 @@ class EsEditProductBloc {
   final longDescriptionEditController = TextEditingController();
   final displayLine1EditController = TextEditingController();
   final unitEditController = TextEditingController();
+  final skuPriceEditController = TextEditingController();
+  final skuCodeEditController = TextEditingController();
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
 
@@ -178,6 +180,51 @@ class EsEditProductBloc {
       this._esEditProductState.isSubmitting = false;
       this._esEditProductState.isSubmitFailed = true;
       this._esEditProductState.isSubmitSuccess = false;
+      this._updateState();
+    });
+  }
+
+  addSkuToProduct(onSuccess, onFail) {
+    var payload = AddSkuPayload(
+      basePrice: int.parse(skuPriceEditController.text) * 100,
+      skuCode: skuCodeEditController.text,
+    );
+    this._esEditProductState.isSubmitting = true;
+    this._esEditProductState.isSubmitFailed = false;
+    this._esEditProductState.isSubmitSuccess = false;
+    this._updateState();
+    var payloadString = json.encode(payload.toJson());
+    print(payloadString);
+    this
+        .httpService
+        .esPost(
+            EsApiPaths.postAddSkuToProduct(
+                this.esBusinessesBloc.getSelectedBusinessId(),
+                this._esEditProductState.currentProductId),
+            payloadString)
+        .then((httpResponse) {
+      if (httpResponse.statusCode == 200 ||
+          httpResponse.statusCode == 202 ||
+          httpResponse.statusCode == 201) {
+        this._esEditProductState.isSubmitting = false;
+        this._esEditProductState.isSubmitFailed = false;
+        this._esEditProductState.isSubmitSuccess = true;
+        var addedSku = EsSku.fromJson(json.decode(httpResponse.body));
+        this._esEditProductState.currentProduct.skus.add(addedSku);
+        onSuccess();
+      } else {
+        this._esEditProductState.isSubmitting = false;
+        this._esEditProductState.isSubmitFailed = true;
+        this._esEditProductState.isSubmitSuccess = false;
+        onFail();
+      }
+      this._updateState();
+    }).catchError((onError) {
+      print(onError.toString());
+      this._esEditProductState.isSubmitting = false;
+      this._esEditProductState.isSubmitFailed = true;
+      this._esEditProductState.isSubmitSuccess = false;
+      onFail();
       this._updateState();
     });
   }
@@ -355,8 +402,8 @@ class EsEditProductBloc {
   }
 
   updateName(onSuccess, onFail) {
-    var payload = EsUpdateProductPayload(
-        productName: this.nameEditController.text);
+    var payload =
+        EsUpdateProductPayload(productName: this.nameEditController.text);
     this.updateProduct(payload, onSuccess, onFail);
   }
 

@@ -13,6 +13,7 @@ import 'es_edit_product_long_description.dart';
 import 'es_edit_product_name.dart';
 import 'es_edit_product_short_description.dart';
 import 'es_edit_product_unit.dart';
+import 'es_edit_product_variation.dart';
 
 class EsProductDetailPage extends StatefulWidget {
   static const routeName = '/view-menu-item';
@@ -103,8 +104,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
 
     editName() async {
       await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) =>
-              EsEditProductNamePage(esEditProductBloc)));
+          builder: (context) => EsEditProductNamePage(esEditProductBloc)));
     }
 
     editLongDescription() async {
@@ -121,6 +121,11 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
     editDisplayLine1() async {
       await Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => EsEditDisplayLine1Page(esEditProductBloc)));
+    }
+
+    addSku() async {
+      await Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => EsEditProductVariationPage(esEditProductBloc)));
     }
 
     return Scaffold(
@@ -219,7 +224,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                               ),
                             ),
                     ),
-                     Container(
+                    Container(
                       padding: const EdgeInsets.only(
                         top: 20.0,
                         left: 20,
@@ -234,7 +239,8 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ),
                     ),
                     Container(
-                      child: snapshot.data.currentProduct.dProductDescription == ''
+                      child: snapshot.data.currentProduct.dProductDescription ==
+                              ''
                           ? Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -255,7 +261,8 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                 children: <Widget>[
                                   Expanded(
                                     child: Text(
-                                      snapshot.data.currentProduct.dProductDescription,
+                                      snapshot.data.currentProduct
+                                          .dProductDescription,
                                       overflow: TextOverflow.ellipsis,
                                       style:
                                           Theme.of(context).textTheme.subtitle1,
@@ -287,7 +294,9 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ),
                     ),
                     Container(
-                      child: snapshot.data.currentProduct.dProductLongDescription == ''
+                      child: snapshot.data.currentProduct
+                                  .dProductLongDescription ==
+                              ''
                           ? Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -521,14 +530,34 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ),
                       // alignment: Alignment.bottomLeft,
                       child: Table(
-                          children: List.generate(
-                              snapshot.data.currentProduct.skus != null
-                                  ? widget.currentProduct.skus.length
-                                  : 0,
-                              (index) => TableRow(children: [
-                                    VariationCard(
-                                        snapshot.data.currentProduct.skus[index])
-                                  ]))),
+                        children: List.generate(
+                            snapshot.data.currentProduct.skus != null
+                                ? widget.currentProduct.skus.length + 1
+                                : 0, (index) {
+                          if (snapshot.data.currentProduct.skus == null ||
+                              widget.currentProduct.skus.length == index) {
+                            return TableRow(children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  FlatButton(
+                                    onPressed: addSku,
+                                    child: Text(
+                                      "+ Add variation",
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ]);
+                          }
+
+                          return TableRow(children: [
+                            VariationCard(
+                                snapshot.data.currentProduct.skus[index]),
+                          ]);
+                        }),
+                      ),
                     ),
                   ],
                 ),
