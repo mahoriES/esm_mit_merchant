@@ -181,7 +181,7 @@ class EsOrderItemWidget extends StatelessWidget {
                               children: <Widget>[
                                 RaisedButton(
                                   onPressed: () {
-                                    this.onMarkReady(this.esOrder);
+                                    this.onAssign(this.esOrder);
                                   },
                                   child: Text(
                                     'Assign',
