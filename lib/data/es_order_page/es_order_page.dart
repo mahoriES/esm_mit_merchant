@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/widgets/es_select_business.dart';
 
 import 'es_order_list.dart';
@@ -95,11 +96,11 @@ class _EsOrderPageState extends State<EsOrderPage>
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  EsOrderList(),
-                  EsOrderList(),
-                  EsOrderList(),
-                  EsOrderList(),
-                  EsOrderList(),
+                  EsOrderList(EsOrderStatus.CREATED),
+                  EsOrderList(EsOrderStatus.MERCHANT_ACCEPTED),
+                  EsOrderList(EsOrderStatus.REQUESTING_TO_DA),
+                  EsOrderList(EsOrderStatus.COMPLETED),
+                  EsOrderList(EsOrderStatus.READY_FOR_PICKUP),
                 ],
               ),
             ),

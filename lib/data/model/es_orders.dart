@@ -73,15 +73,15 @@ class EsOrder {
   }
 
   get dIsNew {
-    return this.orderStatus == 'CREATED';
+    return this.orderStatus == EsOrderStatus.CREATED;
   }
 
   get dIsPreparing {
-    return this.orderStatus == 'ACCEPTED';
+    return this.orderStatus == EsOrderStatus.MERCHANT_ACCEPTED;
   }
 
   get dIsReady {
-    return this.orderStatus == 'READY';
+    return this.orderStatus == EsOrderStatus.READY_FOR_PICKUP;
   }
 
   String get dOrderTotal {

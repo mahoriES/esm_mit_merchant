@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/constants/es_api_path.dart';
@@ -10,13 +11,21 @@ class EsOrdersBloc {
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
 
+  String orderStatus;
+
   String searchText = '';
+
+  StreamSubscription<EsBusinessesState> _subscription;
 
   BehaviorSubject<EsOrdersState> _subjectEsOrdersState;
 
-  EsOrdersBloc(this.httpService, this.esBusinessesBloc) {
+  EsOrdersBloc(this.orderStatus, this.httpService, this.esBusinessesBloc) {
     this._subjectEsOrdersState =
         new BehaviorSubject<EsOrdersState>.seeded(_esOrdersState);
+    this._subscription =
+        this.esBusinessesBloc.esBusinessesStateObservable.listen((event) {
+      this.getOrders();
+    });
   }
 
   Observable<EsOrdersState> get esProductStateObservable =>
@@ -27,7 +36,11 @@ class EsOrdersBloc {
     this._esOrdersState.isLoading = true;
     this._esOrdersState.response = null;
     this._updateState();
-    httpService.esGet(EsApiPaths.getOrders).then((httpResponse) {
+    httpService
+        .esGet(EsApiPaths.getOrders +
+            '?order_status=${this.orderStatus}' +
+            '&business_id=${this.esBusinessesBloc.getSelectedBusinessId()}')
+        .then((httpResponse) {
       if (httpResponse.statusCode == 200) {
         this._esOrdersState.isLoadingFailed = false;
         this._esOrdersState.isLoading = false;
@@ -78,14 +91,14 @@ class EsOrdersBloc {
     });
   }
 
-  acceptOrder(Function onSuccess, Function onFail) {
+  acceptOrder(String orderId, Function onSuccess, Function onFail) {
     this._esOrdersState.isSubmitting = true;
     this._esOrdersState.isSubmitFailed = false;
     this._esOrdersState.isSubmitSuccess = false;
     this._updateState();
     this
         .httpService
-        .esPost(EsApiPaths.postAcceptOrder, '')
+        .esPost(EsApiPaths.postAcceptOrder(orderId), '')
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
         this._esOrdersState.isSubmitting = false;
@@ -187,12 +200,12 @@ class EsOrdersBloc {
     });
   }
 
-  markReady(Function onSuccess, Function onFail) {
+  markReady(String orderId, Function onSuccess, Function onFail) {
     this._esOrdersState.isSubmitting = true;
     this._esOrdersState.isSubmitFailed = false;
     this._esOrdersState.isSubmitSuccess = false;
     this._updateState();
-    this.httpService.esPost(EsApiPaths.postReadyOrder, '').then((httpResponse) {
+    this.httpService.esPost(EsApiPaths.postReadyOrder(orderId), '').then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
         this._esOrdersState.isSubmitting = false;
         this._esOrdersState.isSubmitFailed = false;
@@ -257,6 +270,7 @@ class EsOrdersBloc {
 
   dispose() {
     this._subjectEsOrdersState.close();
+    this._subscription.cancel();
   }
 }
 
