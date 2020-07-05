@@ -121,6 +121,63 @@ class _EsOrderListState extends State<EsOrderList> {
     );
   }
 
+  _showCancelAlertDialog(EsOrder order, EsOrdersBloc esOrdersBloc) async {
+    return await showDialog<bool>(
+      context: context,
+      barrierDismissible: true,
+      useRootNavigator: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return StreamBuilder<EsOrdersState>(
+            stream: esOrdersBloc.esProductStateObservable,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container();
+              }
+              if (snapshot.data.isSubmitting) {
+                return AlertDialog(
+                  content: Container(
+                      height: 100,
+                      child: Center(child: CircularProgressIndicator())),
+                );
+              }
+              return AlertDialog(
+                title: Text('Choose a reason for cancellation'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: snapshot.data.cancellationReasons
+                      .map(
+                        (e) => ListTile(
+                          onTap: () {
+                            esOrdersBloc.cancelOrder(order.orderId, e, (a) {
+                              Navigator.of(context, rootNavigator: true)
+                                  .pop(true);
+                            }, () {
+                              Navigator.of(context, rootNavigator: true)
+                                  .pop(false);
+                            });
+                          },
+                          title: Text(e),
+                        ),
+                      )
+                      .toList(),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text(
+                      'Close',
+                      style: Theme.of(context).textTheme.button,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop(false);
+                    },
+                  ),
+                ],
+              );
+            });
+      },
+    );
+  }
+
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
@@ -158,11 +215,17 @@ class _EsOrderListState extends State<EsOrderList> {
     }
 
     cancelItem(EsOrder order) async {
-      esOrdersBloc.getOrders();
+      var isAccepted = await _showCancelAlertDialog(order, this.esOrdersBloc);
+      if (isAccepted == true) {
+        esOrdersBloc.getOrders();
+      }
     }
 
     assignItem(EsOrder order) async {
-      esOrdersBloc.getOrders();
+      // var isAccepted = await _showCancelAlertDialog(order, this.esOrdersBloc);
+      // if (isAccepted == true) {
+      //   esOrdersBloc.getOrders();
+      // }
     }
 
     return Container(

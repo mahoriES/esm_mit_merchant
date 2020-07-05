@@ -125,7 +125,7 @@ class EsOrdersBloc {
     });
   }
 
-  cancelOrder(String cancellationReason, Function onSuccess, Function onFail) {
+  cancelOrder(String orderId, String cancellationReason, Function onSuccess, Function onFail) {
     this._esOrdersState.isSubmitting = true;
     this._esOrdersState.isSubmitFailed = false;
     this._esOrdersState.isSubmitSuccess = false;
@@ -136,7 +136,7 @@ class EsOrdersBloc {
     var payloadString = json.encode(payload.toJson());
     this
         .httpService
-        .esPost(EsApiPaths.postCancelOrder, payloadString)
+        .esPost(EsApiPaths.postCancelOrder(orderId), payloadString)
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
         this._esOrdersState.isSubmitting = false;
