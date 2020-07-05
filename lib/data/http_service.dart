@@ -16,7 +16,7 @@ class HttpService {
 
   HttpService(AuthBloc authBloc) {
     this._authBloc = authBloc;
-    this.apiUrl = Environment.apiUrl;
+    // this.apiUrl = Environment.apiUrl;
     this.esApiBaseUrl = 'https://api.test.esamudaay.com/api/v1/';
   }
 

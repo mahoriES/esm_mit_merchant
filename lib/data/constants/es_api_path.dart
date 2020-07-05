@@ -47,4 +47,17 @@ class EsApiPaths {
 
   static final postAddSkuToProduct = (String businessId, int productId) =>
       'businesses/$businessId/catalog/products/$productId/skus';
+
+  static final getOrders = 'orders';
+
+  static final postAcceptOrder = (String orderId) => 'orders/$orderId/accept';
+  static final postCancelOrder = (String orderId) => 'orders/$orderId/cancel';
+  static final postOrderRequestDeliveryAgent =
+      (String orderId) => 'orders/$orderId/request_delivery';
+  static final postCompleteOrder =
+      (String orderId) => 'orders/$orderId/complete';
+  static final postReadyOrder = (String orderId) => 'orders/$orderId/ready';
+
+  static final getDeliveryAgents =
+      (String businessId) => 'businesses/$businessId/deliveryagents';
 }

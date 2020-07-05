@@ -21,6 +21,7 @@ import 'auth_guard/auth_guard.dart';
 import 'data/bloc/es_edit_product.dart';
 import 'data/bloc/onboarding.dart';
 import 'data/bloc/people.dart';
+import 'data/es_order_page/es_order_page.dart';
 import 'data/http_service.dart';
 import 'data/model/es_categories.dart';
 import 'data/model/feedback.dart';
@@ -276,6 +277,15 @@ class Router {
             unauthenticatedHandler: esUnauthenticatedHandler,
             noMerchantProfileHandler: esNoMerchantProfileHandler,
             child: EsAddCategoryPage(),
+          ),
+        );
+        break;
+      case EsOrderPage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => EsAuthGuard(
+            unauthenticatedHandler: esUnauthenticatedHandler,
+            noMerchantProfileHandler: esNoMerchantProfileHandler,
+            child: EsOrderPage(),
           ),
         );
         break;

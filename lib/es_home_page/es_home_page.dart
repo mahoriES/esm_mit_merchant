@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/data/es_order_page/es_order_page.dart';
 import 'package:foore/es_business_profile/es_business_profile.dart';
 import 'package:foore/menu_page/menu_page.dart';
 import '../router.dart';
@@ -11,10 +12,10 @@ class EsHomePage extends StatefulWidget {
 }
 
 class _EsHomePageState extends State<EsHomePage> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 1;
   final List<Widget> _widgetOptions = <Widget>[
     Container(),
-    // Container(),
+    EsOrderPage(),
     MenuPage(),
     EsBusinessProfile()
   ];
@@ -44,12 +45,12 @@ class _EsHomePageState extends State<EsHomePage> {
               "Home",
             ),
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.shopping_basket),
-          //   title: Text(
-          //     'Orders',
-          //   ),
-          // ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_basket),
+            title: Text(
+              'Orders',
+            ),
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.menu),
             title: Text(
