@@ -98,9 +98,9 @@ class _EsOrderPageState extends State<EsOrderPage>
                 children: [
                   EsOrderList(EsOrderStatus.CREATED),
                   EsOrderList(EsOrderStatus.MERCHANT_ACCEPTED),
+                  EsOrderList(EsOrderStatus.READY_FOR_PICKUP),
                   EsOrderList(EsOrderStatus.REQUESTING_TO_DA),
                   EsOrderList(EsOrderStatus.COMPLETED),
-                  EsOrderList(EsOrderStatus.READY_FOR_PICKUP),
                 ],
               ),
             ),

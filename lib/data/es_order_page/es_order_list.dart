@@ -178,6 +178,88 @@ class _EsOrderListState extends State<EsOrderList> {
     );
   }
 
+  _showAssignAlertDialog(EsOrder order, EsOrdersBloc esOrdersBloc) async {
+    return await showDialog<bool>(
+      context: context,
+      barrierDismissible: true,
+      useRootNavigator: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return StreamBuilder<EsOrdersState>(
+            stream: esOrdersBloc.esProductStateObservable,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container();
+              }
+              if (snapshot.data.isSubmitting) {
+                return AlertDialog(
+                  content: Container(
+                      height: 100,
+                      child: Center(child: CircularProgressIndicator())),
+                );
+              }
+
+              if (snapshot.data.agents.length > 0) {
+                return AlertDialog(
+                  content: Text(
+                      'You do not have any delivery partners. Please contact us if you need help onboarding delivery partners'),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text(
+                        'Close',
+                        style: Theme.of(context).textTheme.button,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context, rootNavigator: true).pop(false);
+                      },
+                    ),
+                  ],
+                );
+              }
+
+              return AlertDialog(
+                title: Text('Choose delivery partners'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: snapshot.data.agents
+                      .map(
+                        (deliveryAgent) => CheckboxListTile(
+                          value: deliveryAgent.dIsSelected,
+                          onChanged: (value) {
+                            esOrdersBloc.selectDeliveryAgent(
+                                deliveryAgent, value);
+                          },
+                          title: Text(deliveryAgent.name ?? ''),
+                        ),
+                      )
+                      .toList(),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text(
+                      'Close',
+                      style: Theme.of(context).textTheme.button,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop(false);
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('Assign'),
+                    onPressed: () {
+                      esOrdersBloc.assignOrder(order.orderId, (a) {
+                        Navigator.of(context, rootNavigator: true).pop(true);
+                      }, () {
+                        Navigator.of(context, rootNavigator: true).pop(false);
+                      });
+                    },
+                  ),
+                ],
+              );
+            });
+      },
+    );
+  }
+
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
@@ -222,10 +304,10 @@ class _EsOrderListState extends State<EsOrderList> {
     }
 
     assignItem(EsOrder order) async {
-      // var isAccepted = await _showCancelAlertDialog(order, this.esOrdersBloc);
-      // if (isAccepted == true) {
-      //   esOrdersBloc.getOrders();
-      // }
+      var isAccepted = await _showAssignAlertDialog(order, this.esOrdersBloc);
+      if (isAccepted == true) {
+        esOrdersBloc.getOrders();
+      }
     }
 
     return Container(
@@ -250,8 +332,8 @@ class _EsOrderListState extends State<EsOrderList> {
                     );
                   } else if (snapshot.data.items.length == 0) {
                     return EmptyList(
-                      titleText: 'No products found',
-                      subtitleText: "Press 'Add item' to add new products",
+                      titleText: 'No orders found',
+                      subtitleText: "",
                     );
                   } else {
                     return NotificationListener<ScrollNotification>(

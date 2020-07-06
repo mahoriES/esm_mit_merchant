@@ -50,8 +50,8 @@ class EsOrderItemWidget extends StatelessWidget {
                           flex: 1,
                           child: Container(),
                         ),
-                        Text('12 July',
-                            style: Theme.of(context).textTheme.caption),
+                        // Text('12 July',
+                        //     style: Theme.of(context).textTheme.caption),
                       ],
                     ),
                     SizedBox(
@@ -173,7 +173,7 @@ class EsOrderItemWidget extends StatelessWidget {
                           : null,
                     ),
                     Container(
-                      child: esOrder.dIsReady
+                      child: esOrder.dIsShowAssign
                           ? Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.start,

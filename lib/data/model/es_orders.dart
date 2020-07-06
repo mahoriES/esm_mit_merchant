@@ -72,6 +72,13 @@ class EsOrder {
     return this.deliveryType != 'SELF_PICK_UP';
   }
 
+  // static String getCreatedTimeText(FeedbackItem feedbackItem) {
+  //   var lastInteractionDate = DateTime.parse(feedbackItem.created);
+  //   var formatter = new DateFormat('hh:mm a, dd MMM, yyyy');
+  //   String timeText = formatter.format(lastInteractionDate);
+  //   return timeText;
+  // }
+
   get dIsNew {
     return this.orderStatus == EsOrderStatus.CREATED;
   }
@@ -82,6 +89,14 @@ class EsOrder {
 
   get dIsReady {
     return this.orderStatus == EsOrderStatus.READY_FOR_PICKUP;
+  }
+
+  get dIsShowAssign {
+    return this.orderStatus == EsOrderStatus.READY_FOR_PICKUP && dIsDelivery;
+  }
+
+  get dIsShowComplete {
+    return this.orderStatus == EsOrderStatus.READY_FOR_PICKUP && !dIsDelivery;
   }
 
   String get dOrderTotal {
@@ -297,6 +312,34 @@ class EsRequestDeliveryPayload {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['deliveryagent_ids'] = this.deliveryagentIds;
+    return data;
+  }
+}
+
+class EsDeliveryAgent {
+  String name;
+  String phone;
+  String deliveryagentId;
+
+  bool dIsSelected = false;
+
+  selectAgent(bool isSelected) {
+    this.dIsSelected = isSelected;
+  }
+
+  EsDeliveryAgent({this.name, this.phone, this.deliveryagentId});
+
+  EsDeliveryAgent.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    phone = json['phone'];
+    deliveryagentId = json['deliveryagent_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['phone'] = this.phone;
+    data['deliveryagent_id'] = this.deliveryagentId;
     return data;
   }
 }

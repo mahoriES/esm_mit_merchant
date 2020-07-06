@@ -125,7 +125,8 @@ class EsOrdersBloc {
     });
   }
 
-  cancelOrder(String orderId, String cancellationReason, Function onSuccess, Function onFail) {
+  cancelOrder(String orderId, String cancellationReason, Function onSuccess,
+      Function onFail) {
     this._esOrdersState.isSubmitting = true;
     this._esOrdersState.isSubmitFailed = false;
     this._esOrdersState.isSubmitSuccess = false;
@@ -163,7 +164,7 @@ class EsOrdersBloc {
     });
   }
 
-  assignOrder(Function onSuccess, Function onFail) {
+  assignOrder(String orderId, Function onSuccess, Function onFail) {
     this._esOrdersState.isSubmitting = true;
     this._esOrdersState.isSubmitFailed = false;
     this._esOrdersState.isSubmitSuccess = false;
@@ -173,7 +174,8 @@ class EsOrdersBloc {
     var payloadString = json.encode(payload.toJson());
     this
         .httpService
-        .esPost(EsApiPaths.postCreateBusiness, payloadString)
+        .esPost(
+            EsApiPaths.postOrderRequestDeliveryAgent(orderId), payloadString)
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
         this._esOrdersState.isSubmitting = false;
@@ -205,7 +207,10 @@ class EsOrdersBloc {
     this._esOrdersState.isSubmitFailed = false;
     this._esOrdersState.isSubmitSuccess = false;
     this._updateState();
-    this.httpService.esPost(EsApiPaths.postReadyOrder(orderId), '').then((httpResponse) {
+    this
+        .httpService
+        .esPost(EsApiPaths.postReadyOrder(orderId), '')
+        .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
         this._esOrdersState.isSubmitting = false;
         this._esOrdersState.isSubmitFailed = false;
@@ -233,7 +238,7 @@ class EsOrdersBloc {
 
   getDeliveryAgents() {
     this._esOrdersState.isLoadingAgents = true;
-    this._esOrdersState.agentsResponse = null;
+    this._esOrdersState.agents = [];
     this._updateState();
     httpService
         .esGet(
@@ -247,9 +252,10 @@ class EsOrdersBloc {
           httpResponse.statusCode == 202) {
         this._esOrdersState.isLoadingAgentsFailed = false;
         this._esOrdersState.isLoadingAgents = false;
-        // this._esOrdersState.agentsResponse =
-        //     EsGetOrdersResponse.fromJson(json.decode(httpResponse.body));
-        // this._esOrdersState.items = this._esOrdersState.response.results;
+        this._esOrdersState.agents = new List<EsDeliveryAgent>();
+        json.decode(httpResponse.body).forEach((v) {
+          this._esOrdersState.agents.add(new EsDeliveryAgent.fromJson(v));
+        });
       } else {
         this._esOrdersState.isLoadingAgentsFailed = true;
         this._esOrdersState.isLoadingAgents = false;
@@ -260,6 +266,16 @@ class EsOrdersBloc {
       this._esOrdersState.isLoadingAgents = false;
       this._updateState();
     });
+  }
+
+  selectDeliveryAgent(EsDeliveryAgent agent, bool isSelected) {
+    this._esOrdersState.agents = this._esOrdersState.agents.map((ag) {
+      if (ag.deliveryagentId == agent.deliveryagentId) {
+        ag.selectAgent(isSelected);
+      }
+      return ag;
+    }).toList();
+    this._updateState();
   }
 
   _updateState() {
@@ -286,7 +302,7 @@ class EsOrdersState {
   bool isSubmitting;
   bool isSubmitSuccess;
   bool isSubmitFailed;
-  var agentsResponse;
+  List<EsDeliveryAgent> agents;
 
   List<String> cancellationReasons = [
     'Kitchen full',
@@ -296,7 +312,9 @@ class EsOrdersState {
     'Other'
   ];
 
-  List<String> selectedDeliveryAgentIds;
+  List<String> get selectedDeliveryAgentIds =>
+      agents.map((e) => e.deliveryagentId).toList();
+
   EsOrdersState() {
     this.isLoading = false;
     this.isLoadingFailed = false;
