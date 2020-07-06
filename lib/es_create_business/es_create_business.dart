@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
@@ -122,6 +123,51 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Circle',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    InkWell(
+                      onTap: () async {
+                        await Share.whatsAppTo('+917829862689');
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 16.0,
+                          horizontal: 16.0,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.blue.withOpacity(0.1),
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              child: Text(
+                                'Get in touch with us to get Circle code for your business.',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  // decoration: TextDecoration.underline,
+                                ),
+                                softWrap: true,
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(),
+                            ),
+                            Container(
+                              margin: EdgeInsets.all(1.0),
+                              height: 20,
+                              width: 20,
+                              child: Image(
+                                image: AssetImage('assets/whatsapp.png'),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     )
