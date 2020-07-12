@@ -91,6 +91,68 @@ class EsOrdersBloc {
     });
   }
 
+  getOrderItems(String orderId) {
+    print("getOrderItems");
+    if (this._esOrdersState.orderItemsKV.containsKey(orderId)) {
+      return;
+    }
+    //for (var order in this._esOrdersState.items) {
+    //  if (order.orderId == orderId) {
+    //    if (order.items != null) {
+    //      return;
+    //    }
+    //  }
+    //}
+
+    this._esOrdersState.isSubmitting = true;
+    this._esOrdersState.isSubmitFailed = false;
+    this._esOrdersState.isSubmitSuccess = false;
+    this._updateState();
+    this
+        .httpService
+        .esGet(EsApiPaths.getOrderDetail(orderId))
+        .then((httpResponse) {
+      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
+        print("getOrderItems.response");
+        this._esOrdersState.isSubmitting = false;
+        this._esOrdersState.isSubmitFailed = false;
+        this._esOrdersState.isSubmitSuccess = true;
+        this._esOrdersState.orderItemsKV.putIfAbsent(
+            orderId, () => EsOrder.getItems(json.decode(httpResponse.body)));
+        //print(
+        //    "..............................Adding items ..............................");
+        //print(json.decode(httpResponse.body)['order_items']);
+
+        //var orderItem;
+        //for (var json_item in json.decode(httpResponse.body)['order_items']) {
+        //  orderItem = EsOrderItem.fromJson(json_item);
+        //  //print(orderItem);
+        //}
+
+        for (var order in this._esOrdersState.items) {
+          if (order.orderId == orderId) {
+            order.orderItems = this._esOrdersState.orderItemsKV[orderId];
+            //print("founde.....");
+            break;
+          }
+        }
+        //print(EsOrder.getItems(json.decode(httpResponse.body)));
+        //print("................Added items..............................");
+      } else {
+        //print("Errorr...");
+        this._esOrdersState.isSubmitting = false;
+        this._esOrdersState.isSubmitFailed = true;
+        this._esOrdersState.isSubmitSuccess = false;
+      }
+      this._updateState();
+    }).catchError((onError) {
+      this._esOrdersState.isSubmitting = false;
+      this._esOrdersState.isSubmitFailed = true;
+      this._esOrdersState.isSubmitSuccess = false;
+      this._updateState();
+    });
+  }
+
   acceptOrder(String orderId, Function onSuccess, Function onFail) {
     this._esOrdersState.isSubmitting = true;
     this._esOrdersState.isSubmitFailed = false;
@@ -237,6 +299,9 @@ class EsOrdersBloc {
   }
 
   getDeliveryAgents() {
+    if (this._esOrdersState.agents != null) {
+      return;
+    }
     this._esOrdersState.isLoadingAgents = true;
     this._esOrdersState.agents = [];
     this._updateState();
@@ -256,6 +321,12 @@ class EsOrdersBloc {
         json.decode(httpResponse.body).forEach((v) {
           this._esOrdersState.agents.add(new EsDeliveryAgent.fromJson(v));
         });
+
+        print("aggentss...........start");
+        for (var agnt in this._esOrdersState.agents) {
+          print(agnt.deliveryagentId);
+        }
+        print("aggentss...........done");
       } else {
         this._esOrdersState.isLoadingAgentsFailed = true;
         this._esOrdersState.isLoadingAgents = false;
@@ -303,6 +374,8 @@ class EsOrdersState {
   bool isSubmitSuccess;
   bool isSubmitFailed;
   List<EsDeliveryAgent> agents;
+  Map<String, List<EsOrderItem>> orderItemsKV =
+      new Map<String, List<EsOrderItem>>();
 
   List<String> cancellationReasons = [
     'Kitchen full',

@@ -58,6 +58,8 @@ class EsApiPaths {
       (String orderId) => 'orders/$orderId/complete';
   static final postReadyOrder = (String orderId) => 'orders/$orderId/ready';
 
+  static final getOrderDetail = (String orderId) => 'orders/$orderId';
+
   static final getDeliveryAgents =
       (String businessId) => 'businesses/$businessId/deliveryagents';
 }

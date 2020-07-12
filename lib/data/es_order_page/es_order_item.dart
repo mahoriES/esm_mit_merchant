@@ -7,12 +7,24 @@ class EsOrderItemWidget extends StatelessWidget {
   final Function(EsOrder) onMarkReady;
   final Function(EsOrder) onCancel;
   final Function(EsOrder) onAssign;
+  final Function(EsOrder) onGetOrderItems;
   const EsOrderItemWidget(
       {this.esOrder,
       this.onAccept,
       this.onCancel,
       this.onMarkReady,
-      this.onAssign});
+      this.onAssign,
+      this.onGetOrderItems});
+
+  createOrderItemText() {
+    //List<String> itemStrings =
+    //    this.esOrder.orderItems.map((e) => e.toString()).toList();
+    //for (var st in itemStrings) {
+    //  print(st);
+    //}
+    return this.esOrder.orderItems.map((e) => Text(e.toString())).toList();
+    //return this.esOrder.orderItems.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +35,8 @@ class EsOrderItemWidget extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          this.onMarkReady(this.esOrder);
+          //this.onMarkReady(this.esOrder);
+          //TODO: Remove this whole gesture detector
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +52,7 @@ class EsOrderItemWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         Text(
-                          '#' + esOrder.orderShortNumber,
+                          'Order #' + esOrder.orderShortNumber,
                           style: Theme.of(context).textTheme.bodyText2.copyWith(
                                 color:
                                     Theme.of(context).textTheme.caption.color,
@@ -50,8 +63,8 @@ class EsOrderItemWidget extends StatelessWidget {
                           flex: 1,
                           child: Container(),
                         ),
-                        // Text('12 July',
-                        //     style: Theme.of(context).textTheme.caption),
+                        Text(esOrder.getCreatedTimeText(),
+                            style: Theme.of(context).textTheme.caption),
                       ],
                     ),
                     SizedBox(
@@ -87,34 +100,56 @@ class EsOrderItemWidget extends StatelessWidget {
                           style: Theme.of(context).textTheme.subtitle1.copyWith(
                                 color: ListTileTheme.of(context).textColor,
                               ),
-                        ),
+                        )
                       ],
                     ),
-                    SizedBox(
-                      height: esOrder.deliveryAddress != null ? 6.0 : 0.0,
-                    ),
-                    Container(
-                      child: esOrder.deliveryAddress != null
-                          ? Text(
-                              esOrder.deliveryAddress.addressName != null
-                                  ? esOrder.deliveryAddress.addressName
-                                  : '',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: true,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText2
-                                  .copyWith(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .caption
-                                        .color,
-                                  ))
-                          : null,
-                    ),
+                    esOrder.deliveryAddress != null
+                        ? Text(
+                            esOrder.deliveryAddress.prettyAddress != null
+                                ? esOrder.deliveryAddress.prettyAddress
+                                : '',
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText2
+                                .copyWith(
+                                  color:
+                                      Theme.of(context).textTheme.caption.color,
+                                ))
+                        : SizedBox(),
                     SizedBox(
                       height: 6.0,
+                    ),
+                    //Container(
+                    //  padding: EdgeInsets.symmetric(vertical: 4),
+                    //  width: double.infinity,
+                    //  color: Colors.blueGrey[100],
+                    //  child: Text(
+                    //    "Details",
+                    //    style: TextStyle(
+                    //      fontSize: 22,
+                    //    ),
+                    //  ),
+                    //),
+                    SizedBox(
+                      height: 12.0,
+                    ),
+                    Container(
+                      child: esOrder.orderItems == null
+                          ? FlatButton.icon(
+                              onPressed: () {
+                                this.onGetOrderItems(this.esOrder);
+                              },
+                              icon: Icon(Icons.details),
+                              label: Text("show items"))
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: this.createOrderItemText()),
+                    ),
+                    SizedBox(
+                      height: 12.0,
                     ),
                     Text(
                       esOrder.dOrderTotal,

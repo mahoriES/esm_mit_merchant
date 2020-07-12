@@ -60,6 +60,8 @@ class EsOrder {
   String cancellationNote;
   List<String> businessPhones;
   List<String> customerPhones;
+  String created;
+  List<EsOrderItem> orderItems;
 
   get dDeliveryType {
     if (this.deliveryType == 'SELF_PICK_UP') {
@@ -72,12 +74,12 @@ class EsOrder {
     return this.deliveryType != 'SELF_PICK_UP';
   }
 
-  // static String getCreatedTimeText(FeedbackItem feedbackItem) {
-  //   var lastInteractionDate = DateTime.parse(feedbackItem.created);
-  //   var formatter = new DateFormat('hh:mm a, dd MMM, yyyy');
-  //   String timeText = formatter.format(lastInteractionDate);
-  //   return timeText;
-  // }
+  String getCreatedTimeText() {
+    var lastInteractionDate = DateTime.parse(this.created);
+    var formatter = new DateFormat('hh:mm a, dd MMM, yyyy');
+    String timeText = formatter.format(lastInteractionDate);
+    return timeText;
+  }
 
   get dIsNew {
     return this.orderStatus == EsOrderStatus.CREATED;
@@ -124,7 +126,20 @@ class EsOrder {
       this.deliveryAddress,
       this.cancellationNote,
       this.businessPhones,
-      this.customerPhones});
+      this.customerPhones,
+      this.created});
+
+  static getItems(Map<String, dynamic> json) {
+    var items = new List<EsOrderItem>();
+    if (json['order_items'] != null) {
+      json['order_items'].forEach((v) {
+        var item = new EsOrderItem.fromJson(v);
+        items.add(item);
+        //print("item - " + item.toString());
+      });
+    }
+    return items;
+  }
 
   EsOrder.fromJson(Map<String, dynamic> json) {
     orderId = json['order_id'];
@@ -153,6 +168,7 @@ class EsOrder {
     cancellationNote = json['cancellation_note'];
     businessPhones = json['business_phones'].cast<String>();
     customerPhones = json['customer_phones'].cast<String>();
+    created = json['created'];
   }
 
   Map<String, dynamic> toJson() {
@@ -341,5 +357,38 @@ class EsDeliveryAgent {
     data['phone'] = this.phone;
     data['deliveryagent_id'] = this.deliveryagentId;
     return data;
+  }
+}
+
+class EsOrderItem {
+  String productName;
+  int itemQuantity;
+  String itemTotal;
+  String skuId;
+
+  EsOrderItem(
+      {this.skuId, this.productName, this.itemQuantity, this.itemTotal});
+
+  EsOrderItem.fromJson(Map<String, dynamic> json) {
+    productName = json['product_name'];
+    itemQuantity = json['quantity'];
+    //itemTotal = itemQuantity * json['unit_price'];
+    itemTotal = getPrice(itemQuantity * json['unit_price']);
+    //skuId = json['sku_id'];
+    //print("esorderItem: " + this.productName);
+    //print("Done....");
+  }
+
+  String getPrice(price) {
+    return NumberFormat.simpleCurrency(locale: 'en_IN').format(price / 100);
+  }
+
+  @override
+  String toString() {
+    return productName +
+        "  x  " +
+        itemQuantity.toString() +
+        "      " +
+        itemTotal.toString();
   }
 }

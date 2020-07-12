@@ -198,7 +198,7 @@ class _EsOrderListState extends State<EsOrderList> {
                 );
               }
 
-              if (snapshot.data.agents.length > 0) {
+              if (snapshot.data.agents.length == 0) {
                 return AlertDialog(
                   content: Text(
                       'You do not have any delivery partners. Please contact us if you need help onboarding delivery partners'),
@@ -310,6 +310,10 @@ class _EsOrderListState extends State<EsOrderList> {
       }
     }
 
+    getOrderItems(EsOrder order) async {
+      esOrdersBloc.getOrderItems(order.orderId);
+    }
+
     return Container(
       height: double.infinity,
       width: double.infinity,
@@ -372,6 +376,7 @@ class _EsOrderListState extends State<EsOrderList> {
                               onMarkReady: markReady,
                               onCancel: cancelItem,
                               onAssign: assignItem,
+                              onGetOrderItems: getOrderItems,
                             );
                           }),
                     );
