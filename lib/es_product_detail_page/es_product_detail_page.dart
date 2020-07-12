@@ -592,6 +592,15 @@ class VariationCard extends StatelessWidget {
             children: <Widget>[
               Column(
                 children: <Widget>[
+                  Text('Code'),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(sku.skuCode),
+                  ),
+                ],
+              ),
+              Column(
+                children: <Widget>[
                   Text('Price'),
                   Padding(
                     padding: const EdgeInsets.all(16.0),

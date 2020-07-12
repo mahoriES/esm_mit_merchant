@@ -58,14 +58,6 @@ class EsEditProductBloc {
     );
     var payloadString = json.encode(payload.toJson());
     print(payloadString);
-//     '''{
-// 	"product_name":"Dettol-Extra2",[EsImage(photoId: "18d039fa-c478-4abc-852f-2e17d335d53c")]
-// 	"unit_name":"Ml",
-// 	"product_description":"Herbal, works!",
-// 	"images":[{"photo_id": "18d039fa-c478-4abc-852f-2e17d335d53c"}],
-// 	"long_description":"This is supposed to be long descripton.",
-// 	"display_line_1":"5+5 Gram free"
-// }'''
     this
         .httpService
         .esPost(
@@ -189,7 +181,7 @@ class EsEditProductBloc {
 
   addSkuToProduct(onSuccess, onFail) {
     var payload = AddSkuPayload(
-      basePrice: int.parse(skuPriceEditController.text) * 100,
+      basePrice: (double.parse(skuPriceEditController.text) * 100).toInt(),
       skuCode: skuCodeEditController.text,
     );
     this._esEditProductState.isSubmitting = true;
