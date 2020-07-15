@@ -16,7 +16,8 @@ if (flutterVersionCode == null) {
     flutterVersionCode = '1'
 }
 
-def flutterVersionName = '0.2.0'
+//def flutterVersionName = '0.2.0.staging''
+def flutterVersionName = '0.2.2'
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
@@ -95,9 +96,10 @@ dependencies {
 
  allprojects {
        configurations.all {
-           resolutionStrategy.force "com.google.android.gms:play-services-basement:17.2.1"
-           resolutionStrategy.force "com.google.android.gms:play-services-base:17.2.1"
-           resolutionStrategy.force "com.google.android.gms:play-services-tasks:17.0.2"
+           //resolutionStrategy.force "com.google.android.gms:play-services-basement:17.2.1"
+           //https://stackoverflow.com/questions/60812702/java-lang-nosuchmethoderror-no-static-method-isatleastrz
+           resolutionStrategy.force "com.google.android.gms:play-services-base:17.1.0"
+           //resolutionStrategy.force "com.google.android.gms:play-services-tasks:17.0.2"
         }
 
     }

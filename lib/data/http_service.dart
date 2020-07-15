@@ -18,6 +18,7 @@ class HttpService {
     this._authBloc = authBloc;
     this.apiUrl = Environment.apiUrl;
     this.esApiBaseUrl = Environment.esApiUrl;
+    //Uncomment below 2 when releaseing for eSamudaay staging
     //this.apiUrl = 'https://www.api.foore.io/api/v1/';
     //this.esApiBaseUrl = 'https://api.test.esamudaay.com/api/v1/';
   }
