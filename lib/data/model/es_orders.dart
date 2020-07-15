@@ -75,7 +75,7 @@ class EsOrder {
   }
 
   String getCreatedTimeText() {
-    var lastInteractionDate = DateTime.parse(this.created);
+    var lastInteractionDate = DateTime.parse(this.created).toLocal();
     var formatter = new DateFormat('hh:mm a, dd MMM, yyyy');
     String timeText = formatter.format(lastInteractionDate);
     return timeText;
