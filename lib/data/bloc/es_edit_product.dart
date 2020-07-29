@@ -41,7 +41,7 @@ class EsEditProductBloc {
   }
 
   addProduct(Function onAddProductSuccess) {
-    print('add Product');
+    //print('add Product');
     this._esEditProductState.isSubmitting = true;
     this._esEditProductState.isSubmitFailed = false;
     this._esEditProductState.isSubmitSuccess = false;
@@ -57,7 +57,7 @@ class EsEditProductBloc {
       displayLine1: this.displayLine1EditController.text,
     );
     var payloadString = json.encode(payload.toJson());
-    print(payloadString);
+    //print(payloadString);
     this
         .httpService
         .esPost(
@@ -290,6 +290,67 @@ class EsEditProductBloc {
       this._esEditProductState.isLoading = false;
       this._updateState();
     });
+  }
+
+  Future<bool> updateSku(int skuId, payloadString) async {
+    bool success = false;
+    this._esEditProductState.isSubmitting = true;
+    this._esEditProductState.isSubmitFailed = false;
+    this._esEditProductState.isSubmitSuccess = false;
+    this._updateState();
+
+    try {
+      var httpResponse = await this.httpService.esPatch(
+          EsApiPaths.updateSku(this.esBusinessesBloc.getSelectedBusinessId(),
+              this._esEditProductState.currentProductId, skuId),
+          payloadString);
+      if (httpResponse.statusCode == 200 ||
+          httpResponse.statusCode == 202 ||
+          httpResponse.statusCode == 201) {
+        this._esEditProductState.isSubmitting = false;
+        this._esEditProductState.isSubmitFailed = false;
+        this._esEditProductState.isSubmitSuccess = true;
+        success = true;
+      } else {
+        this._esEditProductState.isSubmitting = false;
+        this._esEditProductState.isSubmitFailed = true;
+        this._esEditProductState.isSubmitSuccess = false;
+      }
+    } catch (err) {
+      print(err.toString());
+      this._esEditProductState.isSubmitting = false;
+      this._esEditProductState.isSubmitFailed = true;
+      this._esEditProductState.isSubmitSuccess = false;
+    }
+
+    return success;
+  }
+
+  updateSkuInStock(int skuId, bool inStock) async {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['in_stock'] = inStock;
+    var payloadString = json.encode(data);
+    print(payloadString);
+    bool sucess = await updateSku(skuId, payloadString);
+    if (sucess) {
+      this._esEditProductState.currentProduct.setInStockForSku(skuId, inStock);
+    }
+    this._updateState();
+  }
+
+  updateSkuInActive(int skuId, bool isActive) async {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['is_active'] = isActive;
+    var payloadString = json.encode(data);
+    print(payloadString);
+    bool sucess = await updateSku(skuId, payloadString);
+    if (sucess) {
+      this
+          ._esEditProductState
+          .currentProduct
+          .setIsActiveForSku(skuId, isActive);
+    }
+    this._updateState();
   }
 
   setCurrentProduct(EsProduct product) {

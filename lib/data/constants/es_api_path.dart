@@ -62,4 +62,8 @@ class EsApiPaths {
 
   static final getDeliveryAgents =
       (String businessId) => 'businesses/$businessId/deliveryagents';
+    
+  static final updateSku = (String businessId, int productId, int skuId) =>
+      'businesses/$businessId/catalog/products/$productId/skus/$skuId';
+
 }

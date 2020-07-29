@@ -154,6 +154,24 @@ class EsProduct {
   String unitName;
   List<EsSku> skus;
 
+  setInStockForSku(int skuId, bool inStock) {
+    for (var sku in this.skus) {
+      if (sku.skuId == skuId) {
+        sku.setInStock(inStock);
+        break;
+      }
+    }
+  }
+
+  setIsActiveForSku(int skuId, bool isActive) {
+    for (var sku in this.skus) {
+      if (sku.skuId == skuId) {
+        sku.setIsActive(isActive);
+        break;
+      }
+    }
+  }
+
   get dProductName {
     if (productName != null) {
       return productName;
@@ -317,6 +335,14 @@ class EsSku {
       return skuCode;
     }
     return '';
+  }
+
+  setInStock(bool inStock) {
+    this.inStock = inStock;
+  }
+
+  setIsActive(bool isActive) {
+    this.isActive = isActive;
   }
 
   EsSku(

@@ -554,7 +554,8 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
 
                           return TableRow(children: [
                             VariationCard(
-                                snapshot.data.currentProduct.skus[index]),
+                                snapshot.data.currentProduct.skus[index],
+                                esEditProductBloc),
                           ]);
                         }),
                       ),
@@ -570,8 +571,10 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
 
 class VariationCard extends StatelessWidget {
   final EsSku sku;
+  final EsEditProductBloc esEditProductBloc;
   const VariationCard(
-    this.sku, {
+    this.sku,
+    this.esEditProductBloc, {
     Key key,
   }) : super(key: key);
 
@@ -612,14 +615,24 @@ class VariationCard extends StatelessWidget {
               Column(
                 children: <Widget>[
                   Text('Active'),
-                  Checkbox(value: sku.isActive, onChanged: (val) {}),
+                  Checkbox(
+                      value: sku.isActive,
+                      onChanged: (val) {
+                        this
+                            .esEditProductBloc
+                            .updateSkuInActive(sku.skuId, val);
+                      }),
                 ],
               ),
               Expanded(child: Container()),
               Column(
                 children: <Widget>[
                   Text('Stock'),
-                  Checkbox(value: sku.inStock, onChanged: (val) {}),
+                  Checkbox(
+                      value: sku.inStock,
+                      onChanged: (val) {
+                        this.esEditProductBloc.updateSkuInStock(sku.skuId, val);
+                      }),
                 ],
               ),
             ],
