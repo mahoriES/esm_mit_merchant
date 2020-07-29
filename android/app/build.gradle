@@ -16,8 +16,8 @@ if (flutterVersionCode == null) {
     flutterVersionCode = '1'
 }
 
-def flutterVersionName = '0.2.4.staging'
-//def flutterVersionName = '0.2.3'
+//def flutterVersionName = '0.2.4.staging'
+def flutterVersionName = '0.2.4'
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
