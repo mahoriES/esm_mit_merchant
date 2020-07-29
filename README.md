@@ -15,4 +15,4 @@ flutter build appbundle --release
 
 Updated pubspec.yaml version code (After +)
 Override app build.gradle 'flutterVersionName' if required.
-Updated data->http_service.dart to change API paths.
+Updated data->http_service.dart to change API paths
