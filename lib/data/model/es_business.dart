@@ -87,6 +87,10 @@ class EsBusinessInfo {
     return '';
   }
 
+  get dBusinessNotApproved {
+    return status == 1;
+  }
+
   get dBusinessPincode {
     if (address != null) {
       if (address.geoAddr.pincode != null) {

@@ -77,9 +77,22 @@ class EsSelectBusiness extends PreferredSize {
                                   }
                                 },
                                 title: Text(businessInfo.dBusinessName),
-                                subtitle:
-                                    Text(businessInfo.dBusinessPrettyAddress),
+                                subtitle: businessInfo.dBusinessNotApproved
+                                    ? Column(
+                                      crossAxisAlignment:CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(businessInfo
+                                              .dBusinessPrettyAddress),
+                                          Text(
+                                            "Not Approved",
+                                            style: TextStyle(
+                                                color: Colors.redAccent),
+                                          ),
+                                        ],
+                                      )
+                                    : Text(businessInfo.dBusinessPrettyAddress),
                                 leading: Icon(Icons.store),
+                                isThreeLine: businessInfo.dBusinessNotApproved,
                                 trailing: Chip(
                                   label: Text(businessInfo.cluster.clusterName),
                                   backgroundColor: Colors.white10,
