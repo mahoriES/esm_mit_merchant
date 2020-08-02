@@ -148,30 +148,6 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                 child: ListView(
                   children: <Widget>[
                     EsEditProductImageList(esEditProductBloc),
-                    // ListTile(
-                    //   title: Text(
-                    //     "Active",
-                    //     overflow: TextOverflow.ellipsis,
-                    //   ),
-                    //   trailing: Switch(
-                    //       value: snapshot.data.currentProduct.isActive,
-                    //       onChanged: (isActive) {
-                    //         esEditProductBloc.updateIsActive(
-                    //             isActive, (product) {}, () {});
-                    //       }),
-                    // ),
-                    // ListTile(
-                    //   title: Text(
-                    //     "Stock",
-                    //     overflow: TextOverflow.ellipsis,
-                    //   ),
-                    //   trailing: Switch(
-                    //       value: snapshot.data.currentProduct.inStock,
-                    //       onChanged: (inStock) {
-                    //         esEditProductBloc.updateInStock(
-                    //             inStock, (product) {}, () {});
-                    //       }),
-                    // ),
                     Container(
                       padding: const EdgeInsets.only(
                         top: 20.0,
