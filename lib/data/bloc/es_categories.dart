@@ -9,10 +9,12 @@ class EsCategoriesBloc {
   final EsCategoriesState _esCategoriesState = new EsCategoriesState();
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
+  final List<int> preSelectedCategoryIds;
 
   BehaviorSubject<EsCategoriesState> _subjectEsCategoriesState;
 
-  EsCategoriesBloc(this.httpService, this.esBusinessesBloc) {
+  EsCategoriesBloc(
+      this.httpService, this.esBusinessesBloc, this.preSelectedCategoryIds) {
     this._subjectEsCategoriesState =
         new BehaviorSubject<EsCategoriesState>.seeded(_esCategoriesState);
   }
@@ -35,6 +37,11 @@ class EsCategoriesBloc {
             EsGetCategoriesResponse.fromJson(json.decode(httpResponse.body));
         this._esCategoriesState.items =
             this._esCategoriesState.response.categories;
+        for (EsCategory cat in this._esCategoriesState.items) {
+          if (this.preSelectedCategoryIds.contains(cat.categoryId)) {
+            cat.dIsSelected = true;
+          }
+        }
       } else {
         this._esCategoriesState.isLoadingFailed = true;
         this._esCategoriesState.isLoading = false;
@@ -67,6 +74,11 @@ class EsCategoriesBloc {
     }).toList();
     this._updateState();
   }
+
+  addUserCreatedCategory(EsCategory userCreatedCategory) {
+    this._esCategoriesState.items.add(userCreatedCategory);
+    this._updateState();
+  }
 }
 
 class EsCategoriesState {
@@ -79,6 +91,15 @@ class EsCategoriesState {
 
   List<EsCategory> get selectedCategories =>
       items.where((element) => element.dIsSelected).toList();
+
+  List<EsCategory> get parentCategories =>
+      items.where((element) => element.parentCategoryId == null).toList();
+
+  List<EsCategory> getSubCategories(int parentCategoryId) {
+    return items
+        .where((element) => element.parentCategoryId == parentCategoryId)
+        .toList();
+  }
 
   EsCategoriesState() {
     this.isLoading = false;

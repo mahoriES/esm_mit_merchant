@@ -140,7 +140,7 @@ class EsEditProductBloc {
     });
   }
 
-  addCategoriesToProduct(List<EsCategory> categories) {
+  putCategoriesToProduct(List<EsCategory> categories) {
     var payload = AddCategoriesToProductPayload(
         categoryIds: categories.map((e) => e.categoryId).toList());
     this._esEditProductState.isSubmitting = true;

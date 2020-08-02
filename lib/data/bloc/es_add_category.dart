@@ -63,6 +63,47 @@ class EsAddCategoryBloc {
     });
   }
 
+  addSubCategory(
+      int parentCategoryId, Function(EsCategory) onAddCategorySuccess) {
+    this._esAddCategoryState.isSubmitting = true;
+    this._esAddCategoryState.isSubmitFailed = false;
+    this._esAddCategoryState.isSubmitSuccess = false;
+    this._updateState();
+    var payload = new EsAddSubCategoryPayload(
+        categoryName: this.nameEditController.text,
+        parentCategoryId: parentCategoryId);
+    var payloadString = json.encode(payload.toJson());
+    print(payloadString);
+    this
+        .httpService
+        .esPost(
+            EsApiPaths.postAddCategory(
+              this.esBusinessesBloc.getSelectedBusinessId(),
+            ),
+            payloadString)
+        .then((httpResponse) {
+      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+        this._esAddCategoryState.isSubmitting = false;
+        this._esAddCategoryState.isSubmitFailed = false;
+        this._esAddCategoryState.isSubmitSuccess = true;
+        var addedCategory = EsCategory.fromJson(json.decode(httpResponse.body));
+        if (onAddCategorySuccess != null) {
+          onAddCategorySuccess(addedCategory);
+        }
+      } else {
+        this._esAddCategoryState.isSubmitting = false;
+        this._esAddCategoryState.isSubmitFailed = true;
+        this._esAddCategoryState.isSubmitSuccess = false;
+      }
+      this._updateState();
+    }).catchError((onError) {
+      this._esAddCategoryState.isSubmitting = false;
+      this._esAddCategoryState.isSubmitFailed = true;
+      this._esAddCategoryState.isSubmitSuccess = false;
+      this._updateState();
+    });
+  }
+
   setIsSubmitting(bool isSubmitting) {
     this._esAddCategoryState.isSubmitting = isSubmitting;
     this._updateState();

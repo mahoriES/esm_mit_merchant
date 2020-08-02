@@ -50,11 +50,27 @@ class EsAddCategoryPayload {
   }
 }
 
+class EsAddSubCategoryPayload {
+  String categoryName;
+  int parentCategoryId;
+
+  EsAddSubCategoryPayload({this.categoryName, this.parentCategoryId});
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.categoryName != null) {
+      data['category_name'] = this.categoryName;
+    }
+    data['parent_category_id'] = this.parentCategoryId;
+    return data;
+  }
+}
+
 class EsCategory {
   int categoryId;
   String categoryName;
   String categoryDescription;
-  String parentCategoryId;
+  int parentCategoryId;
   bool isActive;
   List<String> images;
 
@@ -78,7 +94,7 @@ class EsCategory {
     this._isSelected = isSelected;
   }
 
-  get dIsSelected => this._isSelected??false;
+  get dIsSelected => this._isSelected ?? false;
 
   EsCategory(
       {this.categoryId,
@@ -131,7 +147,6 @@ class EsGetCategoriesForProductResponse {
     return data;
   }
 }
-
 
 class AddCategoriesToProductPayload {
   List<int> categoryIds;

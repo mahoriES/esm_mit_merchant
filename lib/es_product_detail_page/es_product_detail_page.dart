@@ -76,11 +76,12 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
   Widget build(BuildContext context) {
     final esEditProductBloc = Provider.of<EsEditProductBloc>(context);
 
-    addCategory() async {
-      var selectedCategories =
-          await Navigator.of(context).pushNamed(EsCategoryPage.routeName);
+    addCategory(List<int> preSelectedCategories) async {
+      var selectedCategories = await Navigator.of(context).pushNamed(
+          EsCategoryPage.routeName,
+          arguments: preSelectedCategories);
       if (selectedCategories != null) {
-        esEditProductBloc.addCategoriesToProduct(selectedCategories);
+        esEditProductBloc.putCategoriesToProduct(selectedCategories);
       }
     }
 
@@ -467,7 +468,11 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                   snapshot.data.categories.length + 1, (index) {
                                 if (index == snapshot.data.categories.length) {
                                   return InkWell(
-                                    onTap: addCategory,
+                                    onTap: () {
+                                      addCategory(snapshot.data.categories
+                                          .map((e) => e.categoryId)
+                                          .toList());
+                                    },
                                     child: Chip(
                                       backgroundColor:
                                           Theme.of(context).primaryColor,
@@ -612,7 +617,7 @@ class VariationCard extends StatelessWidget {
                 ],
               ),
               Expanded(child: Container()),
-              Column(
+              /*Column(
                 children: <Widget>[
                   Text('Active'),
                   Checkbox(
@@ -625,6 +630,7 @@ class VariationCard extends StatelessWidget {
                 ],
               ),
               Expanded(child: Container()),
+              */
               Column(
                 children: <Widget>[
                   Text('Stock'),

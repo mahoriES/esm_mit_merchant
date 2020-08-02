@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:foore/create_promotion_page/create_promotion_page.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
+import 'package:foore/data/bloc/es_categories.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_business_guard/es_businesses_guard.dart';
+import 'package:foore/es_category_page/es_add_subcategory.dart';
+import 'package:foore/es_category_page/es_subcategory_page.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/es_login_page/es_login_page.dart';
 import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
@@ -263,11 +266,23 @@ class Router {
         );
         break;
       case EsCategoryPage.routeName:
+        List<int> selectedCategories = settings.arguments;
         return MaterialPageRoute(
           builder: (context) => EsAuthGuard(
             unauthenticatedHandler: esUnauthenticatedHandler,
             noMerchantProfileHandler: esNoMerchantProfileHandler,
-            child: EsCategoryPage(),
+            child: EsCategoryPage(selectedCategoryIds: selectedCategories),
+          ),
+        );
+        break;
+      case EsSubCategoryPage.routeName:
+        EsSabCategoryParam categoryParam = settings.arguments;
+        return MaterialPageRoute(
+          builder: (context) => EsAuthGuard(
+            unauthenticatedHandler: esUnauthenticatedHandler,
+            noMerchantProfileHandler: esNoMerchantProfileHandler,
+            child: EsSubCategoryPage(
+                categoryParam.parentCategory, categoryParam.esCategoriesBloc),
           ),
         );
         break;
@@ -277,6 +292,18 @@ class Router {
             unauthenticatedHandler: esUnauthenticatedHandler,
             noMerchantProfileHandler: esNoMerchantProfileHandler,
             child: EsAddCategoryPage(),
+          ),
+        );
+        break;
+
+      case EsAddSubCategoryPage.routeName:
+        EsAddSubCategoryPageParams addSubCategoryParam = settings.arguments;
+        return MaterialPageRoute(
+          builder: (context) => EsAuthGuard(
+            unauthenticatedHandler: esUnauthenticatedHandler,
+            noMerchantProfileHandler: esNoMerchantProfileHandler,
+            child: EsAddSubCategoryPage(addSubCategoryParam.parentCategoryId,
+                addSubCategoryParam.parentCategoryName),
           ),
         );
         break;
