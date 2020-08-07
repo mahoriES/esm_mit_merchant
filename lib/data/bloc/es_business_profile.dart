@@ -15,6 +15,7 @@ import 'es_businesses.dart';
 class EsBusinessProfileBloc {
   EsBusinessProfileState _esBusinessProfileState = new EsBusinessProfileState();
   final nameEditController = TextEditingController();
+  final upiAddressEditController = TextEditingController();
   final descriptionEditController = TextEditingController();
   final addressEditController = TextEditingController();
   final cityEditController = TextEditingController();
@@ -41,6 +42,8 @@ class EsBusinessProfileBloc {
             state.selectedBusiness.hasDelivery;
         this._esBusinessProfileState.isOpen = state.selectedBusiness.isOpen;
         this.nameEditController.text = state.selectedBusiness.dBusinessName;
+        this.upiAddressEditController.text =
+            state.selectedBusiness.dBusinessPaymentUpiAddress;
 
         this.cityEditController.text = state.selectedBusiness.dBusinessCity;
         this.pinCodeEditController.text =
@@ -279,6 +282,12 @@ class EsBusinessProfileBloc {
   updateDescription(onSuccess, onFail) {
     var payload = EsUpdateBusinessPayload(
         description: this.descriptionEditController.text);
+    this.updateBusiness(payload, onSuccess, onFail);
+  }
+
+  updateUpiAddress(onSuccess, onFail) {
+    var payload =
+        EsUpdateBusinessPayload(upiAddress: this.upiAddressEditController.text);
     this.updateBusiness(payload, onSuccess, onFail);
   }
 

@@ -20,8 +20,8 @@ class HttpService {
     this.esApiBaseUrl = Environment.esApiUrl;
 
     //Uncomment below 2 when releaseing for eSamudaay staging and comment for PROD
-    //this.apiUrl = 'https://www.api.foore.io/api/v1/';
-    //this.esApiBaseUrl = 'https://api.test.esamudaay.com/api/v1/';
+    this.apiUrl = 'https://www.api.foore.io/api/v1/';
+    this.esApiBaseUrl = 'https://api.test.esamudaay.com/api/v1/';
   }
 
   FoAnalytics get foAnalytics {

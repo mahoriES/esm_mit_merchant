@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 
 import 'es_edit_business_address.dart';
 import 'es_edit_business_name.dart';
+import 'es_edit_business_payment_upi_address.dart';
 import 'es_edit_business_phone.dart';
 
 class EsBusinessProfile extends StatefulWidget {
@@ -51,6 +52,12 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
       await Navigator.of(context).push(MaterialPageRoute(
           builder: (context) =>
               EsEditBusinessNamePage(this.esBusinessProfileBloc)));
+    }
+
+    editUpiAddress() async {
+      await Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              EsEditBusinessUpiPage(this.esBusinessProfileBloc)));
     }
 
     addPhone() async {
@@ -267,6 +274,59 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                                       onPressed: addPhone,
                                       icon: Icon(
                                         Icons.add,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(
+                          top: 24.0,
+                          left: 20,
+                          right: 20,
+                          // bottom: 8.0,
+                        ),
+                        alignment: Alignment.bottomLeft,
+                        child: Text(
+                          'UPI Payment',
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
+                      ),
+                      Container(
+                        child: businessInfo.dBusinessPaymentUpiAddress == ''
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  FlatButton(
+                                    onPressed: editUpiAddress,
+                                    child: Text(
+                                      "+ Add UPI ID",
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text(
+                                        businessInfo.dBusinessPaymentUpiAddress,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: editUpiAddress,
+                                      icon: Icon(
+                                        Icons.edit,
                                         color: Theme.of(context).primaryColor,
                                       ),
                                     )

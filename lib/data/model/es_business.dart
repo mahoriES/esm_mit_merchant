@@ -63,6 +63,7 @@ class EsBusinessInfo {
   List<String> phones;
   bool hasDelivery;
   EsCluster cluster;
+  EsBusinessPaymentInfo paymentInfo;
 
   get dBusinessName {
     if (businessName != null) {
@@ -150,6 +151,19 @@ class EsBusinessInfo {
     return [];
   }
 
+  get dBusinessPaymentUpiAddress {
+    if (paymentInfo != null) {
+      if (paymentInfo.upiAddress != null) {
+        return paymentInfo.upiAddress;
+      }
+    }
+    return '';
+  }
+
+  get dBusinessPaymentStatus {
+    return (paymentInfo != null) && (paymentInfo.upiStatus == true);
+  }
+
   EsBusinessInfo(
       {this.businessId,
       this.businessName,
@@ -161,7 +175,8 @@ class EsBusinessInfo {
       this.description,
       this.phones,
       this.hasDelivery,
-      this.cluster});
+      this.cluster,
+      this.paymentInfo});
 
   EsBusinessInfo.fromJson(Map<String, dynamic> json) {
     businessId = json['business_id'];
@@ -187,6 +202,9 @@ class EsBusinessInfo {
     cluster = json['cluster'] != null
         ? new EsCluster.fromJson(json['cluster'])
         : null;
+    paymentInfo = json['payment_info'] != null
+        ? new EsBusinessPaymentInfo.fromJson(json['payment_info'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -209,6 +227,9 @@ class EsBusinessInfo {
     }
     if (this.images != null) {
       data['images'] = this.images.map((v) => v.toJson()).toList();
+    }
+    if (this.paymentInfo != null) {
+      data['payment_info'] = this.paymentInfo.toJson();
     }
     return data;
   }
@@ -321,6 +342,8 @@ class EsUpdateBusinessPayload {
   bool hasDelivery;
   EsCluster cluster;
   String description;
+  String upiAddress;
+  bool upiStatus;
 
   EsUpdateBusinessPayload(
       {this.businessId,
@@ -333,7 +356,9 @@ class EsUpdateBusinessPayload {
       this.phones,
       this.hasDelivery,
       this.cluster,
-      this.description});
+      this.description,
+      this.upiAddress,
+      this.upiStatus});
 
   EsUpdateBusinessPayload.fromJson(Map<String, dynamic> json) {
     businessId = json['business_id'];
@@ -402,6 +427,13 @@ class EsUpdateBusinessPayload {
     if (this.description != null) {
       data['description'] = this.description;
     }
+
+    if (this.upiAddress != null) {
+      data['upi'] = this.upiAddress;
+    }
+    if (this.upiStatus != null) {
+      data['upi_status'] = (this.upiStatus == true);
+    }
     return data;
   }
 }
@@ -461,6 +493,26 @@ class EsAddressPayload {
     if (this.geoAddr != null) {
       data['geo_addr'] = this.geoAddr.toJson();
     }
+    return data;
+  }
+}
+
+class EsBusinessPaymentInfo {
+  String upiAddress;
+  bool upiStatus;
+
+  EsBusinessPaymentInfo({this.upiAddress, this.upiStatus});
+
+  EsBusinessPaymentInfo.fromJson(Map<String, dynamic> json) {
+    upiAddress = json['upi'];
+    upiStatus = json['upi_active'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['upi'] = this.upiAddress;
+    data['upi_status'] = this.upiStatus;
+
     return data;
   }
 }
