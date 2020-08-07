@@ -291,6 +291,11 @@ class EsBusinessProfileBloc {
     this.updateBusiness(payload, onSuccess, onFail);
   }
 
+  updateUpiStatus(bool status, onSuccess, onFail) {
+    var payload = EsUpdateBusinessPayload(upiStatus: status);
+    this.updateBusiness(payload, onSuccess, onFail);
+  }
+
   updateAddress(onSuccess, onFail) {
     var address = EsAddressPayload(
       addressName: '',

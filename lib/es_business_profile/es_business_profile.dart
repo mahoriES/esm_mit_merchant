@@ -60,6 +60,10 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
               EsEditBusinessUpiPage(this.esBusinessProfileBloc)));
     }
 
+    setUpiStatus(bool status) async {
+      await this.esBusinessProfileBloc.updateUpiStatus(status, null, null);
+    }
+
     addPhone() async {
       await Navigator.of(context).push(MaterialPageRoute(
           builder: (context) =>
@@ -77,8 +81,6 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
           builder: (context) =>
               EsEditBusinessDescriptionPage(this.esBusinessProfileBloc)));
     }
-
-    // deleteItem(EsProduct product) async {}
 
     return Scaffold(
       appBar: EsSelectBusiness(() {}),
@@ -282,18 +284,30 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                               ),
                       ),
                       Container(
-                        padding: const EdgeInsets.only(
-                          top: 24.0,
-                          left: 20,
-                          right: 20,
-                          // bottom: 8.0,
-                        ),
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          'UPI Payment',
-                          style: Theme.of(context).textTheme.subtitle2,
-                        ),
-                      ),
+                          padding: const EdgeInsets.only(
+                            //top: 24.0,
+                            left: 20,
+                            right: 20,
+                            // bottom: 8.0,
+                          ),
+                          alignment: Alignment.bottomLeft,
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Text(
+                                  'UPI Payment',
+                                  style: Theme.of(context).textTheme.subtitle2,
+                                ),
+                              ),
+                              Switch(
+                                  value: businessInfo.dBusinessPaymentStatus,
+                                  onChanged: (value) {
+                                    this
+                                        .esBusinessProfileBloc
+                                        .updateUpiStatus(value, null, null);
+                                  }),
+                            ],
+                          )),
                       Container(
                         child: businessInfo.dBusinessPaymentUpiAddress == ''
                             ? Row(
