@@ -69,9 +69,17 @@ class EsOrderItemWidget extends StatelessWidget {
                         child: Container(),
                       ),
                       esOrder.dIsStatusNew
-                          ? Icon(Icons.new_releases, size: 16) //For new
+                          ? Icon(
+                              Icons.new_releases,
+                              size: 16,
+                              color: Colors.orange,
+                            ) //For new
                           : esOrder.dIsStatusCancelled
-                              ? Icon(Icons.cancel, size: 16) //For cancelled
+                              ? Icon(
+                                  Icons.cancel,
+                                  size: 16,
+                                  color: Colors.red,
+                                ) //For cancelled
                               : esOrder.dIsStatusComplete
                                   ? Icon(Icons.done_all, size: 16) //Complete
                                   : Icon(Icons.sync, size: 16),
@@ -189,7 +197,7 @@ class EsOrderItemWidget extends StatelessWidget {
                           children: <Widget>[
                               Row(
                                 children: <Widget>[
-                                  Icon(Icons.comment, size: 16),
+                                  Icon(Icons.announcement, size: 16),
                                   SizedBox(width: 4),
                                   Text(
                                     "Cancellation Note",
@@ -317,22 +325,53 @@ class EsOrderItemWidget extends StatelessWidget {
                           : SizedBox(),
                     ],
                   ),
-                  SizedBox(
-                    height: 4.0,
-                  ),
-
-                  esOrder.customerNote != null
-                      ? Text(
-                          esOrder.customerNote,
-                          style: Theme.of(context).textTheme.caption.copyWith(
-                                color: ListTileTheme.of(context).textColor,
-                              ),
-                        )
-                      : Container(),
+                  //SizedBox(
+                  //  height: 4.0,
+                  //),
 
                   SizedBox(
                     height: 16.0,
                   ),
+                  ////////////////////////////////////
+                  ///// Customer Infomation
+                  ////////////////////////////////////
+
+                  (esOrder.customerNote != null)
+                      ? Row(
+                          children: <Widget>[
+                            Icon(Icons.comment, size: 16),
+                            SizedBox(width: 4),
+                            Text(
+                              "Customer Note",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1
+                                  .copyWith(
+                                      color:
+                                          ListTileTheme.of(context).textColor,
+                                      fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        )
+                      : Container(),
+                  (esOrder.customerNote != null)
+                      ? SizedBox(
+                          height: 4.0,
+                        )
+                      : Container(),
+                  (esOrder.customerNote != null)
+                      ? Text(
+                          esOrder.customerNote,
+                          style: Theme.of(context).textTheme.subtitle2.copyWith(
+                                color: ListTileTheme.of(context).textColor,
+                              ),
+                        )
+                      : Container(),
+                  (esOrder.customerNote != null)
+                      ? SizedBox(
+                          height: 16.0,
+                        )
+                      : Container(),
 
                   Container(
                     child: esOrder.dIsNew
