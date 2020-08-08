@@ -36,11 +36,13 @@ class EsOrdersBloc {
     this._esOrdersState.isLoading = true;
     this._esOrdersState.response = null;
     this._updateState();
-    httpService
-        .esGet(EsApiPaths.getOrders +
+    String apiPath = this.orderStatus == null
+        ? EsApiPaths.getOrders +
+            '&business_id=${this.esBusinessesBloc.getSelectedBusinessId()}'
+        : EsApiPaths.getOrders +
             '?order_status=${this.orderStatus}' +
-            '&business_id=${this.esBusinessesBloc.getSelectedBusinessId()}')
-        .then((httpResponse) {
+            '&business_id=${this.esBusinessesBloc.getSelectedBusinessId()}';
+    httpService.esGet(apiPath).then((httpResponse) {
       if (httpResponse.statusCode == 200) {
         this._esOrdersState.isLoadingFailed = false;
         this._esOrdersState.isLoading = false;

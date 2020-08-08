@@ -79,7 +79,7 @@ class _EsOrderPageState extends State<EsOrderPage>
                   ),
                   Tab(
                     child: Text(
-                      'Completed',
+                      'All',
                       style: TextStyle(
                         color: Colors.black54,
                       ),
@@ -100,7 +100,7 @@ class _EsOrderPageState extends State<EsOrderPage>
                   EsOrderList(EsOrderStatus.MERCHANT_ACCEPTED),
                   EsOrderList(EsOrderStatus.READY_FOR_PICKUP),
                   EsOrderList(EsOrderStatus.REQUESTING_TO_DA),
-                  EsOrderList(EsOrderStatus.COMPLETED),
+                  EsOrderList(null),
                 ],
               ),
             ),
