@@ -377,6 +377,8 @@ class _EsOrderListState extends State<EsOrderList> {
                               onCancel: cancelItem,
                               onAssign: assignItem,
                               onGetOrderItems: getOrderItems,
+                              showStatus: this.widget.status ==
+                                  null, //Show only when we are not filtering for specific status
                             );
                           }),
                     );

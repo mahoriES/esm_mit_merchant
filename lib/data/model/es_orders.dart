@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:intl/intl.dart';
 
@@ -8,6 +9,10 @@ class EsOrderStatus {
   static const REQUESTING_TO_DA = 'REQUESTING_TO_DA';
   static const COMPLETED = 'COMPLETED';
   static const MERCHANT_CANCELLED = 'MERCHANT_CANCELLED';
+  static const MERCHANT_UPDATED = 'MERCHANT_UPDATED';
+  static const ASSIGNED_TO_DA = 'ASSIGNED_TO_DA';
+  static const PICKED_UP_BY_DA = 'PICKED_UP_BY_DA';
+  static const CUSTOMER_CANCELLED = 'CUSTOMER_CANCELLED';
 }
 
 class EsGetOrdersResponse {
@@ -63,6 +68,34 @@ class EsOrder {
   String created;
   List<EsOrderItem> orderItems;
 
+  get dIsStatusNew {
+    bool withCustomer = false;
+
+    switch (this.orderStatus) {
+      case EsOrderStatus.CREATED:
+      case EsOrderStatus.MERCHANT_UPDATED:
+        withCustomer = true;
+        break;
+    }
+    return withCustomer;
+  }
+
+  get dIsStatusCancelled {
+    bool isCancelled = false;
+
+    switch (this.orderStatus) {
+      case EsOrderStatus.CUSTOMER_CANCELLED:
+      case EsOrderStatus.MERCHANT_CANCELLED:
+        isCancelled = true;
+        break;
+    }
+    return isCancelled;
+  }
+
+  get dIsStatusComplete {
+    return this.orderStatus == EsOrderStatus.COMPLETED;
+  }
+
   get dDeliveryType {
     if (this.deliveryType == 'SELF_PICK_UP') {
       return 'Self Pickup';
@@ -79,6 +112,47 @@ class EsOrder {
     var formatter = new DateFormat('hh:mm a, dd MMM, yyyy');
     String timeText = formatter.format(lastInteractionDate);
     return timeText;
+  }
+
+  get dStatusString {
+    String statusString = "Unknown";
+    switch (this.orderStatus) {
+      case EsOrderStatus.CREATED:
+        statusString = "New";
+        break;
+      case EsOrderStatus.COMPLETED:
+        statusString = "Complete";
+        break;
+      case EsOrderStatus.MERCHANT_ACCEPTED:
+        statusString = "Preparing";
+        break;
+      case EsOrderStatus.MERCHANT_CANCELLED:
+        statusString = "Merchant Cancelled";
+        break;
+      case EsOrderStatus.READY_FOR_PICKUP:
+        statusString = "Ready";
+        break;
+      case EsOrderStatus.REQUESTING_TO_DA:
+        statusString = "Searching Agent";
+        break;
+      case EsOrderStatus.ASSIGNED_TO_DA:
+        statusString = "Agent Assigned";
+        break;
+      case EsOrderStatus.CUSTOMER_CANCELLED:
+        statusString = "Customer cancelled";
+        break;
+      case EsOrderStatus.MERCHANT_UPDATED:
+        statusString = "Merchant updated";
+        break;
+      case EsOrderStatus.PICKED_UP_BY_DA:
+        statusString = "Delivering";
+        break;
+      case EsOrderStatus.READY_FOR_PICKUP:
+        statusString = "Waiting pickup";
+        break;
+      default:
+    }
+    return statusString;
   }
 
   get dIsNew {
@@ -383,6 +457,7 @@ class EsOrderItem {
     return NumberFormat.simpleCurrency(locale: 'en_IN').format(price / 100);
   }
 
+  
   @override
   String toString() {
     return productName +

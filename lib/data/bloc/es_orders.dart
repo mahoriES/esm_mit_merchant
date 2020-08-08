@@ -38,7 +38,7 @@ class EsOrdersBloc {
     this._updateState();
     String apiPath = this.orderStatus == null
         ? EsApiPaths.getOrders +
-            '&business_id=${this.esBusinessesBloc.getSelectedBusinessId()}'
+            '?business_id=${this.esBusinessesBloc.getSelectedBusinessId()}'
         : EsApiPaths.getOrders +
             '?order_status=${this.orderStatus}' +
             '&business_id=${this.esBusinessesBloc.getSelectedBusinessId()}';
