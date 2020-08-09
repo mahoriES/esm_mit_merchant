@@ -260,9 +260,60 @@ class _EsOrderListState extends State<EsOrderList> {
     );
   }
 
+  _showUpdateStatusAlertDialog(
+      String newStatus, EsOrder order, EsOrdersBloc esOrdersBloc) async {
+    return await showDialog<bool>(
+      context: context,
+      barrierDismissible: true,
+      useRootNavigator: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return StreamBuilder<EsOrdersState>(
+            stream: esOrdersBloc.esProductStateObservable,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container();
+              }
+              if (snapshot.data.isSubmitting) {
+                return AlertDialog(
+                  content: Container(
+                      height: 100,
+                      child: Center(child: CircularProgressIndicator())),
+                );
+              }
+              return AlertDialog(
+                title: Container(),
+                content: Text(
+                    'Do you want to update payment status of order to $newStatus?'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text(
+                      'Cancel',
+                      style: Theme.of(context).textTheme.button,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop(false);
+                    },
+                  ),
+                  FlatButton(
+                    child: Text(newStatus),
+                    onPressed: () {
+                      esOrdersBloc.updateOrderPaymentStatus(
+                          order.orderId, newStatus, (a) {
+                        Navigator.of(context, rootNavigator: true).pop(true);
+                      }, () {
+                        Navigator.of(context, rootNavigator: true).pop(false);
+                      });
+                    },
+                  ),
+                ],
+              );
+            });
+      },
+    );
+  }
+
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     final httpService = Provider.of<HttpService>(context);
     final businessBloc = Provider.of<EsBusinessesBloc>(context);
     if (this.esOrdersBloc == null) {
@@ -305,6 +356,14 @@ class _EsOrderListState extends State<EsOrderList> {
 
     assignItem(EsOrder order) async {
       var isAccepted = await _showAssignAlertDialog(order, this.esOrdersBloc);
+      if (isAccepted == true) {
+        esOrdersBloc.getOrders();
+      }
+    }
+
+    updatePaymentStatus(EsOrder order, String newStatus) async {
+      var isAccepted = await _showUpdateStatusAlertDialog(
+          newStatus, order, this.esOrdersBloc);
       if (isAccepted == true) {
         esOrdersBloc.getOrders();
       }
@@ -379,6 +438,7 @@ class _EsOrderListState extends State<EsOrderList> {
                               onGetOrderItems: getOrderItems,
                               showStatus: this.widget.status ==
                                   null, //Show only when we are not filtering for specific status
+                              onUpdatePaymentStatus: updatePaymentStatus,
                             );
                           }),
                     );

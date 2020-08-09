@@ -214,6 +214,43 @@ class EsOrdersBloc {
     });
   }
 
+  updateOrderPaymentStatus(
+      String orderId, String newStatus, Function onSuccess, Function onFail) {
+    this._esOrdersState.isSubmitting = true;
+    this._esOrdersState.isSubmitFailed = false;
+    this._esOrdersState.isSubmitSuccess = false;
+    this._updateState();
+
+    var apiCall = (newStatus == EsOrderPaymentStatus.APPROVED)
+        ? this.httpService.esPost(EsApiPaths.orderPaymentUpdate(orderId), '')
+        : this.httpService.esDel(EsApiPaths.orderPaymentUpdate(orderId));
+
+    apiCall.then((httpResponse) {
+      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
+        this._esOrdersState.isSubmitting = false;
+        this._esOrdersState.isSubmitFailed = false;
+        this._esOrdersState.isSubmitSuccess = true;
+        var createdBusinessInfo =
+            EsOrder.fromJson(json.decode(httpResponse.body));
+        if (onSuccess != null) {
+          onSuccess(createdBusinessInfo);
+        }
+      } else {
+        onFail();
+        this._esOrdersState.isSubmitting = false;
+        this._esOrdersState.isSubmitFailed = true;
+        this._esOrdersState.isSubmitSuccess = false;
+      }
+      this._updateState();
+    }).catchError((onError) {
+      onFail();
+      this._esOrdersState.isSubmitting = false;
+      this._esOrdersState.isSubmitFailed = true;
+      this._esOrdersState.isSubmitSuccess = false;
+      this._updateState();
+    });
+  }
+
   assignOrder(String orderId, Function onSuccess, Function onFail) {
     this._esOrdersState.isSubmitting = true;
     this._esOrdersState.isSubmitFailed = false;

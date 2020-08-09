@@ -10,6 +10,7 @@ class EsOrderItemWidget extends StatelessWidget {
   final Function(EsOrder) onCancel;
   final Function(EsOrder) onAssign;
   final Function(EsOrder) onGetOrderItems;
+  final Function(EsOrder, String) onUpdatePaymentStatus;
   final bool showStatus;
   const EsOrderItemWidget(
       {this.esOrder,
@@ -18,9 +19,8 @@ class EsOrderItemWidget extends StatelessWidget {
       this.onMarkReady,
       this.onAssign,
       this.onGetOrderItems,
-      this.showStatus});
-
-  updateOrderPaymentStatus(String newStatus) {}
+      this.showStatus,
+      this.onUpdatePaymentStatus});
 
   createOrderItemText() {
     return this
@@ -180,7 +180,7 @@ class EsOrderItemWidget extends StatelessWidget {
 
                   UpiPaymentRow(
                     buildContext: context,
-                    onClick: updateOrderPaymentStatus,
+                    onClick: onUpdatePaymentStatus,
                     esOrder: esOrder,
                   ),
 
@@ -437,7 +437,7 @@ class EsOrderItemWidget extends StatelessWidget {
 }
 
 class UpiPaymentRow extends StatelessWidget {
-  final Function onClick;
+  final Function(EsOrder, String) onClick;
   final EsOrder esOrder;
   final BuildContext buildContext;
 
@@ -456,7 +456,9 @@ class UpiPaymentRow extends StatelessWidget {
         ),
         Flexible(child: Container()),
         InkWell(
-            onTap: onClick(EsOrderPaymentStatus.APPROVED),
+            onTap: () {
+              onClick(esOrder, EsOrderPaymentStatus.APPROVED);
+            },
             child: Text(
               "Mark Paid",
               style: TextStyle(
@@ -479,7 +481,9 @@ class UpiPaymentRow extends StatelessWidget {
         ),
         Flexible(child: Container()),
         InkWell(
-            onTap: onClick(EsOrderPaymentStatus.APPROVED),
+            onTap: () {
+              onClick(esOrder, EsOrderPaymentStatus.APPROVED);
+            },
             child: Text(
               "Approve Payment",
               style: TextStyle(
@@ -502,7 +506,9 @@ class UpiPaymentRow extends StatelessWidget {
         ),
         Flexible(child: Container()),
         InkWell(
-            onTap: onClick(EsOrderPaymentStatus.REJECTED),
+            onTap: () {
+              onClick(esOrder, EsOrderPaymentStatus.REJECTED);
+            },
             child: Text(
               "Reject Payment",
               style: TextStyle(
@@ -525,7 +531,9 @@ class UpiPaymentRow extends StatelessWidget {
         ),
         Flexible(child: Container()),
         InkWell(
-            onTap: onClick(EsOrderPaymentStatus.REJECTED),
+            onTap: () {
+              onClick(esOrder, EsOrderPaymentStatus.REJECTED);
+            },
             child: Text(
               "Approve Payment",
               style: TextStyle(
