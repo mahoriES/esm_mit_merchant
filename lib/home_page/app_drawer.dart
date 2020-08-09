@@ -1,7 +1,7 @@
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:foore/environments/environment.dart';
+import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/language_selection_page/language_selection_page.dart';
 import 'package:foore/setting_page/settting_page.dart';
 import 'package:foore/share_page/share_page.dart';
@@ -82,6 +82,14 @@ class AppDrawer extends StatelessWidget {
             flex: 1,
           ),
           ListTile(
+            leading: Icon(Icons.store),
+            title: Text("My eSamudaay"),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(EsHomePage.routeName);
+            },
+          ),
+          ListTile(
             leading: Icon(Icons.language),
             title: Text(
                 AppTranslations.of(context).text("drawer_button_language")),
@@ -104,8 +112,8 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.message),
-            title: Text(AppTranslations.of(context)
-                .text('drawer_button_contact_us')),
+            title: Text(
+                AppTranslations.of(context).text('drawer_button_contact_us')),
             onTap: () async {
               await Share.whatsAppTo('+917829862689');
             },

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/onboarding.dart';
 import 'package:foore/data/model/gmb_location.dart';
+import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/home_page/app_drawer.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
 import 'package:foore/onboarding_page/location_search_page.dart';
