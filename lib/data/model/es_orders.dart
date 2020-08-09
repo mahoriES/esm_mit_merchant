@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:intl/intl.dart';
 
@@ -13,6 +12,29 @@ class EsOrderStatus {
   static const ASSIGNED_TO_DA = 'ASSIGNED_TO_DA';
   static const PICKED_UP_BY_DA = 'PICKED_UP_BY_DA';
   static const CUSTOMER_CANCELLED = 'CUSTOMER_CANCELLED';
+}
+
+class EsOrderPaymentStatus {
+  static const PENDING = 'PENDING';
+  static const INITIATED = 'INITIATED';
+  static const APPROVED = 'APPROVED';
+  static const REJECTED = 'REJECTED';
+
+  static String paymentString(paymentStatus) {
+    String paymentString = "Payment pending";
+    switch (paymentStatus) {
+      case EsOrderPaymentStatus.INITIATED:
+        paymentString = "Customer Paid";
+        break;
+      case EsOrderPaymentStatus.APPROVED:
+        paymentString = "Payment Approved";
+        break;
+      case EsOrderPaymentStatus.REJECTED:
+        paymentString = "Payment Rejected";
+        break;
+    }
+    return paymentString;
+  }
 }
 
 class EsGetOrdersResponse {
@@ -67,6 +89,17 @@ class EsOrder {
   List<String> customerPhones;
   String created;
   List<EsOrderItem> orderItems;
+  EsOrderPaymentInfo paymentInfo;
+
+  get dPaymentStatus {
+    return paymentInfo == null
+        ? EsOrderPaymentStatus.PENDING
+        : paymentInfo.paymentStatus;
+  }
+
+  get dPaymentDateTimeString {
+    return paymentInfo == null ? null : paymentInfo.lastUpdated;
+  }
 
   get dIsStatusNew {
     bool withCustomer = false;
@@ -201,7 +234,8 @@ class EsOrder {
       this.cancellationNote,
       this.businessPhones,
       this.customerPhones,
-      this.created});
+      this.created,
+      this.paymentInfo});
 
   static getItems(Map<String, dynamic> json) {
     var items = new List<EsOrderItem>();
@@ -209,7 +243,6 @@ class EsOrder {
       json['order_items'].forEach((v) {
         var item = new EsOrderItem.fromJson(v);
         items.add(item);
-        //print("item - " + item.toString());
       });
     }
     return items;
@@ -243,6 +276,9 @@ class EsOrder {
     businessPhones = json['business_phones'].cast<String>();
     customerPhones = json['customer_phones'].cast<String>();
     created = json['created'];
+    paymentInfo = json['payment_info'] != null
+        ? EsOrderPaymentInfo.fromJson(json['payment_info'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -439,25 +475,31 @@ class EsOrderItem {
   int itemQuantity;
   String itemTotal;
   String skuId;
+  //We will just use the first key for variation. This will break in future.
+  String variationOption;
 
   EsOrderItem(
       {this.skuId, this.productName, this.itemQuantity, this.itemTotal});
 
-  EsOrderItem.fromJson(Map<String, dynamic> json) {
-    productName = json['product_name'];
-    itemQuantity = json['quantity'];
-    //itemTotal = itemQuantity * json['unit_price'];
-    itemTotal = getPrice(itemQuantity * json['unit_price']);
-    //skuId = json['sku_id'];
-    //print("esorderItem: " + this.productName);
-    //print("Done....");
+  EsOrderItem.fromJson(Map<String, dynamic> inputJson) {
+    productName = inputJson['product_name'];
+    itemQuantity = inputJson['quantity'];
+    itemTotal = getPrice(itemQuantity * inputJson['unit_price']);
+    skuId = inputJson['sku_id'].toString();
+
+    if (inputJson.containsKey('variation_option') &&
+        inputJson['variation_option'] != null) {
+      Map<String, dynamic> variationOptions = inputJson['variation_option'];
+      if (variationOptions.isNotEmpty) {
+        variationOption = variationOptions.values.toList()[0];
+      }
+    }
   }
 
   String getPrice(price) {
     return NumberFormat.simpleCurrency(locale: 'en_IN').format(price / 100);
   }
 
-  
   @override
   String toString() {
     return productName +
@@ -465,5 +507,17 @@ class EsOrderItem {
         itemQuantity.toString() +
         "      " +
         itemTotal.toString();
+  }
+}
+
+class EsOrderPaymentInfo {
+  String paymentStatus;
+  String lastUpdated;
+
+  EsOrderPaymentInfo({this.paymentStatus, this.lastUpdated});
+
+  EsOrderPaymentInfo.fromJson(Map<String, dynamic> inputJson) {
+    paymentStatus = inputJson['status'];
+    lastUpdated = inputJson['dt'];
   }
 }

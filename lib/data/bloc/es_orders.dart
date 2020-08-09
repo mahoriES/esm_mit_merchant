@@ -115,31 +115,17 @@ class EsOrdersBloc {
         .esGet(EsApiPaths.getOrderDetail(orderId))
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
-        print("getOrderItems.response");
         this._esOrdersState.isSubmitting = false;
         this._esOrdersState.isSubmitFailed = false;
         this._esOrdersState.isSubmitSuccess = true;
         this._esOrdersState.orderItemsKV.putIfAbsent(
             orderId, () => EsOrder.getItems(json.decode(httpResponse.body)));
-        //print(
-        //    "..............................Adding items ..............................");
-        //print(json.decode(httpResponse.body)['order_items']);
-
-        //var orderItem;
-        //for (var json_item in json.decode(httpResponse.body)['order_items']) {
-        //  orderItem = EsOrderItem.fromJson(json_item);
-        //  //print(orderItem);
-        //}
-
         for (var order in this._esOrdersState.items) {
           if (order.orderId == orderId) {
             order.orderItems = this._esOrdersState.orderItemsKV[orderId];
-            //print("founde.....");
             break;
           }
         }
-        //print(EsOrder.getItems(json.decode(httpResponse.body)));
-        //print("................Added items..............................");
       } else {
         //print("Errorr...");
         this._esOrdersState.isSubmitting = false;

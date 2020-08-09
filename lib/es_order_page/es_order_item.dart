@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:foore/data/model/es_orders.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -19,18 +20,18 @@ class EsOrderItemWidget extends StatelessWidget {
       this.onGetOrderItems,
       this.showStatus});
 
+  updateOrderPaymentStatus(String newStatus) {}
+
   createOrderItemText() {
-    //List<String> itemStrings =
-    //    this.esOrder.orderItems.map((e) => e.toString()).toList();
-    //for (var st in itemStrings) {
-    //  print(st);
-    //}
     return this
         .esOrder
         .orderItems
         .map((e) => Row(
               children: <Widget>[
                 Text(e.productName),
+                e.variationOption != null
+                    ? Text("(" + e.variationOption + ")")
+                    : Container(),
                 Text("  x  "),
                 Text(e.itemQuantity.toString()),
                 Flexible(child: Container()),
@@ -176,6 +177,13 @@ class EsOrderItemWidget extends StatelessWidget {
                       ),
                     ],
                   ),
+
+                  UpiPaymentRow(
+                    buildContext: context,
+                    onClick: updateOrderPaymentStatus,
+                    esOrder: esOrder,
+                  ),
+
                   SizedBox(
                     height: 8.0,
                   ),
@@ -328,37 +336,6 @@ class EsOrderItemWidget extends StatelessWidget {
                   //SizedBox(
                   //  height: 4.0,
                   //),
-
-                  SizedBox(
-                    height: 16.0,
-                  ),
-                  ////////////////////////////////////
-                  ///// Customer Infomation
-                  ////////////////////////////////////
-
-                  (esOrder.customerNote != null)
-                      ? Row(
-                          children: <Widget>[
-                            Icon(Icons.comment, size: 16),
-                            SizedBox(width: 4),
-                            Text(
-                              "Customer Note",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1
-                                  .copyWith(
-                                      color:
-                                          ListTileTheme.of(context).textColor,
-                                      fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        )
-                      : Container(),
-                  (esOrder.customerNote != null)
-                      ? SizedBox(
-                          height: 4.0,
-                        )
-                      : Container(),
                   (esOrder.customerNote != null)
                       ? Text(
                           esOrder.customerNote,
@@ -367,11 +344,10 @@ class EsOrderItemWidget extends StatelessWidget {
                               ),
                         )
                       : Container(),
-                  (esOrder.customerNote != null)
-                      ? SizedBox(
-                          height: 16.0,
-                        )
-                      : Container(),
+
+                  SizedBox(
+                    height: 16.0,
+                  ),
 
                   Container(
                     child: esOrder.dIsNew
@@ -381,16 +357,6 @@ class EsOrderItemWidget extends StatelessWidget {
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               RaisedButton(
-                                onPressed: () {
-                                  this.onAccept(this.esOrder);
-                                },
-                                child: Text(
-                                  'Accept',
-                                ),
-                              ),
-                              Flexible(child: Container()),
-                              //SizedBox(width: 16),
-                              RaisedButton(
                                 color:
                                     Theme.of(context).errorColor.withAlpha(150),
                                 onPressed: () {
@@ -398,6 +364,15 @@ class EsOrderItemWidget extends StatelessWidget {
                                 },
                                 child: Text(
                                   'Cancel',
+                                ),
+                              ),
+                              Flexible(child: Container()),
+                              RaisedButton(
+                                onPressed: () {
+                                  this.onAccept(this.esOrder);
+                                },
+                                child: Text(
+                                  'Accept',
                                 ),
                               ),
                             ],
@@ -411,6 +386,7 @@ class EsOrderItemWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
+                              Flexible(child: Container()),
                               RaisedButton(
                                 onPressed: () {
                                   this.onMarkReady(this.esOrder);
@@ -430,6 +406,7 @@ class EsOrderItemWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
+                              Flexible(child: Container()),
                               RaisedButton(
                                 onPressed: () {
                                   this.onAssign(this.esOrder);
@@ -447,13 +424,8 @@ class EsOrderItemWidget extends StatelessWidget {
                   ),
                   Divider(
                     color: Colors.blue[200],
-                    thickness: 4,
-                    //height: 22,
-                    //color: Colors.black,
+                    thickness: 2,
                   ),
-                  //SizedBox(
-                  //  width: 8.0,
-                  //),
                 ],
               ),
             ),
@@ -461,5 +433,122 @@ class EsOrderItemWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class UpiPaymentRow extends StatelessWidget {
+  final Function onClick;
+  final EsOrder esOrder;
+  final BuildContext buildContext;
+
+  const UpiPaymentRow({this.esOrder, this.onClick, this.buildContext});
+
+  Widget getForStatusPending() {
+    return Row(
+      children: <Widget>[
+        Icon(Icons.access_time, size: 16),
+        SizedBox(width: 4),
+        Text(
+          EsOrderPaymentStatus.paymentString(esOrder.dPaymentStatus),
+          style: Theme.of(buildContext).textTheme.subtitle2.copyWith(
+                color: ListTileTheme.of(buildContext).textColor,
+              ),
+        ),
+        Flexible(child: Container()),
+        InkWell(
+            onTap: onClick(EsOrderPaymentStatus.APPROVED),
+            child: Text(
+              "Mark Paid",
+              style: TextStyle(
+                  decoration: TextDecoration.underline, color: Colors.green),
+            )),
+      ],
+    );
+  }
+
+  Widget getForStatusInitiated() {
+    return Row(
+      children: <Widget>[
+        Icon(Icons.new_releases, size: 16, color: Colors.orange),
+        SizedBox(width: 4),
+        Text(
+          EsOrderPaymentStatus.paymentString(esOrder.dPaymentStatus),
+          style: Theme.of(buildContext).textTheme.subtitle2.copyWith(
+                color: ListTileTheme.of(buildContext).textColor,
+              ),
+        ),
+        Flexible(child: Container()),
+        InkWell(
+            onTap: onClick(EsOrderPaymentStatus.APPROVED),
+            child: Text(
+              "Approve Payment",
+              style: TextStyle(
+                  decoration: TextDecoration.underline, color: Colors.green),
+            )),
+      ],
+    );
+  }
+
+  Widget getForStatusApproved() {
+    return Row(
+      children: <Widget>[
+        Icon(Icons.done, size: 16, color: Colors.green),
+        SizedBox(width: 4),
+        Text(
+          EsOrderPaymentStatus.paymentString(esOrder.dPaymentStatus),
+          style: Theme.of(buildContext).textTheme.subtitle2.copyWith(
+                color: ListTileTheme.of(buildContext).textColor,
+              ),
+        ),
+        Flexible(child: Container()),
+        InkWell(
+            onTap: onClick(EsOrderPaymentStatus.REJECTED),
+            child: Text(
+              "Reject Payment",
+              style: TextStyle(
+                  decoration: TextDecoration.underline, color: Colors.red),
+            )),
+      ],
+    );
+  }
+
+  Widget getForStatusRejected() {
+    return Row(
+      children: <Widget>[
+        Icon(Icons.cancel, size: 16, color: Colors.red),
+        SizedBox(width: 4),
+        Text(
+          EsOrderPaymentStatus.paymentString(esOrder.dPaymentStatus),
+          style: Theme.of(buildContext).textTheme.subtitle2.copyWith(
+                color: ListTileTheme.of(buildContext).textColor,
+              ),
+        ),
+        Flexible(child: Container()),
+        InkWell(
+            onTap: onClick(EsOrderPaymentStatus.REJECTED),
+            child: Text(
+              "Approve Payment",
+              style: TextStyle(
+                  decoration: TextDecoration.underline, color: Colors.green),
+            )),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return [EsOrderStatus.CREATED, EsOrderStatus.MERCHANT_UPDATED]
+            .contains(esOrder.orderStatus)
+        ? Container()
+        : Container(
+            padding: EdgeInsets.only(top: 8),
+            child: esOrder.dPaymentStatus == EsOrderPaymentStatus.PENDING
+                ? getForStatusPending()
+                : esOrder.dPaymentStatus == EsOrderPaymentStatus.INITIATED
+                    ? getForStatusInitiated()
+                    : esOrder.dPaymentStatus == EsOrderPaymentStatus.APPROVED
+                        ? getForStatusApproved()
+                        : getForStatusRejected(),
+          );
   }
 }
