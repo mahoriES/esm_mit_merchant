@@ -34,11 +34,11 @@ class EsEditProductBloc {
       _subjectEsEditProductState.stream;
 
   updateControllers(EsProduct product) {
-    nameEditController.text = product.dProductName;
-    shortDescriptionEditController.text = product.dProductDescription;
-    longDescriptionEditController.text = product.dProductLongDescription;
-    displayLine1EditController.text = product.dLine1;
-    unitEditController.text = product.dUnit;
+    nameEditController.text = product?.dProductName;
+    shortDescriptionEditController.text = product?.dProductDescription;
+    longDescriptionEditController.text = product?.dProductLongDescription;
+    displayLine1EditController.text = product?.dLine1;
+    unitEditController.text = product?.dUnit;
   }
 
   updateControllersForSku(EsSku sku) {

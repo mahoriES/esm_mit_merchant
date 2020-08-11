@@ -346,12 +346,6 @@ class EsOrdersBloc {
         json.decode(httpResponse.body).forEach((v) {
           this._esOrdersState.agents.add(new EsDeliveryAgent.fromJson(v));
         });
-
-        print("aggentss...........start");
-        for (var agnt in this._esOrdersState.agents) {
-          print(agnt.deliveryagentId);
-        }
-        print("aggentss...........done");
       } else {
         this._esOrdersState.isLoadingAgentsFailed = true;
         this._esOrdersState.isLoadingAgents = false;

@@ -494,9 +494,15 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                         ],
                       ),
                     ),
+                    SizedBox(height: 16),
+                    Divider(
+                      //height: 8,
+                      thickness: 4,
+                      //color: Colors.blue,
+                    ),
                     Container(
                       padding: const EdgeInsets.only(
-                        top: 24.0,
+                        top: 16.0,
                         left: 20,
                         right: 20,
                         bottom: 8,
@@ -581,60 +587,51 @@ class VariationCard extends StatelessWidget {
       ),
       margin: EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(border: Border.all(color: Colors.black12)),
-      child: Column(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Text('Code'),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(sku.skuCode),
-                  ),
-                ],
-              ),
-              IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    this.onSkuClick(this.sku);
-                  }),
-              //Column(
-              //  children: <Widget>[
-              //    Text('Price'),
-              //    Padding(
-              //      padding: const EdgeInsets.all(16.0),
-              //      child: Text(sku.dBasePrice),
-              //    ),
-              //  ],
-              //),
-              Expanded(child: Container()),
-              /*Column(
-                children: <Widget>[
-                  Text('Active'),
-                  Checkbox(
-                      value: sku.isActive,
-                      onChanged: (val) {
-                        this
-                            .esEditProductBloc
-                            .updateSkuInActive(sku.skuId, val);
-                      }),
-                ],
-              ),
-              Expanded(child: Container()),
-              */
-              Column(
-                children: <Widget>[
-                  Text('Stock'),
-                  Checkbox(
-                      value: sku.inStock,
-                      onChanged: (val) {
-                        this.esEditProductBloc.updateSkuInStock(sku.skuId, val);
-                      }),
-                ],
-              ),
-            ],
-          )
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                (sku.variationValue != null) && sku.variationValue.isNotEmpty
+                    ? Text(sku.dBasePrice + " (" + sku.variationValue + ")")
+                    : Text(sku.dBasePrice),
+                SizedBox(height: 4),
+                Text(
+                  sku.skuCode,
+                  style: Theme.of(context).textTheme.subtitle2,
+                ),
+                SizedBox(height: 4),
+                Row(
+                  children: <Widget>[
+                    Text(
+                      sku.inStock ? "In stock" : "Not in stock",
+                      style: TextStyle(
+                          color: sku.inStock
+                              ? Colors.green[400]
+                              : Colors.red[400]),
+                    ),
+                    SizedBox(width: 16),
+                    Text(
+                      sku.isActive ? "Is active" : "Not active",
+                      style: TextStyle(
+                          color: sku.isActive
+                              ? Colors.green[400]
+                              : Colors.red[400]),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          IconButton(
+              color: Theme.of(context).primaryColor,
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                this.onSkuClick(this.sku);
+              })
         ],
       ),
     );

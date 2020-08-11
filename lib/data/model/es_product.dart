@@ -378,9 +378,9 @@ class EsSku {
     charges = json['charges'];
     basePrice = json['base_price'];
     variationOptions = json['variation_options'];
-    if (json.containsKey('variation_option') &&
-        json['variation_option'] != null) {
-      Map<String, dynamic> variationOptions = json['variation_option'];
+    if (json.containsKey('variation_options') &&
+        json['variation_options'] != null) {
+      Map<String, dynamic> variationOptions = json['variation_options'];
       if (variationOptions.isNotEmpty) {
         variationValue = variationOptions.values.toList()[0];
       }
@@ -398,7 +398,7 @@ class EsSku {
       //final Map<String, dynamic> variation_options = new Map<String, dynamic>();
       //variation_options['variation_options'] = this.variationValue;
       //data['variation_options'] = variation_options;
-      data['variation_options'] = {'weight': this.variationValue};
+      data['variation_options'] = {'Weight': this.variationValue};
     }
     return data;
   }
@@ -462,7 +462,7 @@ class AddSkuPayload {
       //final Map<String, dynamic> variation_options = new Map<String, dynamic>();
       //variation_options['variation_options'] = this.variationValue;
       //data['variation_options'] = variation_options;
-      data['variation_options'] = {'weight': this.variationValue};
+      data['variation_options'] = {'Weight': this.variationValue};
     }
     data['is_active'] = this.isActive;
     data['in_stock'] = this.inStock;
