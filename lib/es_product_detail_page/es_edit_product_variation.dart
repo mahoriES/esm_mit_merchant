@@ -7,18 +7,20 @@ import 'package:foore/data/model/es_product.dart';
 
 class EsEditProductVariationPage extends StatefulWidget {
   final EsEditProductBloc esEditProductBloc;
+  final EsSku currentSku;
 
-  EsEditProductVariationPage(this.esEditProductBloc);
+  EsEditProductVariationPage(this.esEditProductBloc, this.currentSku);
 
   @override
   EsEditProductVariationPageState createState() =>
       EsEditProductVariationPageState();
 }
 
-class EsEditProductVariationPageState
-    extends State<EsEditProductVariationPage>
+class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
     with AfterLayoutMixin<EsEditProductVariationPage> {
   final _formKey = GlobalKey<FormState>();
+  bool inStock = true;
+  bool isActive = true;
 
   _showFailedAlertDialog() async {
     await showDialog(
@@ -42,7 +44,13 @@ class EsEditProductVariationPageState
   }
 
   @override
-  void afterFirstLayout(BuildContext context) {}
+  void afterFirstLayout(BuildContext context) {
+    if (widget.currentSku != null) {
+      widget.esEditProductBloc.setCurrentSku(widget.currentSku);
+      this.isActive = widget.currentSku.isActive;
+      this.inStock = widget.currentSku.inStock;
+    }
+  }
 
   Future<bool> _onWillPop() async {
     Navigator.pop(context);
@@ -66,14 +74,22 @@ class EsEditProductVariationPageState
 
     submit() {
       if (this._formKey.currentState.validate()) {
-        widget.esEditProductBloc.addSkuToProduct(onSuccess, onFail);
+        if (widget.currentSku == null) {
+          widget.esEditProductBloc
+              .addSkuToProduct(this.inStock, this.isActive, onSuccess, onFail);
+        } else {
+          widget.esEditProductBloc.editCurrentSku(widget.currentSku.skuId,
+              this.inStock, this.isActive, onSuccess, onFail);
+        }
       }
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Add variation',
+          widget.currentSku != null
+              ? "Edit ${widget.currentSku.skuCode}"
+              : 'Add variation',
         ),
       ),
       body: Form(
@@ -96,11 +112,28 @@ class EsEditProductVariationPageState
                         right: 20,
                       ),
                       child: TextFormField(
-                        controller: widget
-                            .esEditProductBloc.skuPriceEditController,
+                        enabled: widget.currentSku == null,
+                        controller:
+                            widget.esEditProductBloc.skuCodeEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Price',
+                          labelText: 'Sku code',
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 24.0,
+                        left: 20,
+                        right: 20,
+                      ),
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        controller:
+                            widget.esEditProductBloc.skuPriceEditController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Price (eg. 120.0)',
                         ),
                       ),
                     ),
@@ -112,12 +145,42 @@ class EsEditProductVariationPageState
                       ),
                       child: TextFormField(
                         controller: widget
-                            .esEditProductBloc.skuCodeEditController,
+                            .esEditProductBloc.skuVariationValueEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Sku code',
+                          labelText: 'Variation (eg. 500gm)',
                         ),
                       ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 24.0,
+                        left: 20,
+                        right: 20,
+                      ),
+                      child: SwitchListTile(
+                          value: this.isActive,
+                          onChanged: (updatedVal) {
+                            setState(() {
+                              this.isActive = updatedVal;
+                            });
+                          },
+                          title: Text("Active")),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 24.0,
+                        left: 20,
+                        right: 20,
+                      ),
+                      child: SwitchListTile(
+                          value: this.inStock,
+                          onChanged: (updatedVal) {
+                            setState(() {
+                              this.inStock = updatedVal;
+                            });
+                          },
+                          title: Text("Stock")),
                     ),
                   ],
                 ),

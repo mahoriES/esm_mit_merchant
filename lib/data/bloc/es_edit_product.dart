@@ -19,6 +19,7 @@ class EsEditProductBloc {
   final unitEditController = TextEditingController();
   final skuPriceEditController = TextEditingController();
   final skuCodeEditController = TextEditingController();
+  final skuVariationValueEditController = TextEditingController();
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
 
@@ -38,6 +39,12 @@ class EsEditProductBloc {
     longDescriptionEditController.text = product.dProductLongDescription;
     displayLine1EditController.text = product.dLine1;
     unitEditController.text = product.dUnit;
+  }
+
+  updateControllersForSku(EsSku sku) {
+    skuCodeEditController.text = sku.skuCode;
+    skuPriceEditController.text = (sku.basePrice / 100).toString();
+    skuVariationValueEditController.text = sku.variationValue;
   }
 
   addProduct(Function onAddProductSuccess) {
@@ -179,11 +186,13 @@ class EsEditProductBloc {
     });
   }
 
-  addSkuToProduct(onSuccess, onFail) {
+  addSkuToProduct(bool inStock, bool isActive, onSuccess, onFail) {
     var payload = AddSkuPayload(
-      basePrice: (double.parse(skuPriceEditController.text) * 100).toInt(),
-      skuCode: skuCodeEditController.text,
-    );
+        basePrice: (double.parse(skuPriceEditController.text) * 100).toInt(),
+        skuCode: skuCodeEditController.text,
+        variationValue: skuVariationValueEditController.text,
+        inStock: inStock,
+        isActive: isActive);
     this._esEditProductState.isSubmitting = true;
     this._esEditProductState.isSubmitFailed = false;
     this._esEditProductState.isSubmitSuccess = false;
@@ -206,6 +215,54 @@ class EsEditProductBloc {
         this._esEditProductState.isSubmitSuccess = true;
         var addedSku = EsSku.fromJson(json.decode(httpResponse.body));
         this._esEditProductState.currentProduct.skus.add(addedSku);
+        onSuccess();
+      } else {
+        this._esEditProductState.isSubmitting = false;
+        this._esEditProductState.isSubmitFailed = true;
+        this._esEditProductState.isSubmitSuccess = false;
+        onFail();
+      }
+      this._updateState();
+    }).catchError((onError) {
+      print(onError.toString());
+      this._esEditProductState.isSubmitting = false;
+      this._esEditProductState.isSubmitFailed = true;
+      this._esEditProductState.isSubmitSuccess = false;
+      onFail();
+      this._updateState();
+    });
+  }
+
+  editCurrentSku(int skuId, bool inStock, bool isActive, onSuccess, onFail) {
+    var payload = AddSkuPayload(
+        basePrice: (double.parse(skuPriceEditController.text) * 100).toInt(),
+        variationValue: skuVariationValueEditController.text,
+        inStock: inStock,
+        isActive: isActive);
+    this._esEditProductState.isSubmitting = true;
+    this._esEditProductState.isSubmitFailed = false;
+    this._esEditProductState.isSubmitSuccess = false;
+    this._updateState();
+    var payloadString = json.encode(payload.toJson());
+    print(payloadString);
+
+    this
+        .httpService
+        .esPatch(
+            EsApiPaths.updateSku(this.esBusinessesBloc.getSelectedBusinessId(),
+                this._esEditProductState.currentProductId, skuId),
+            payloadString)
+        .then((httpResponse) {
+      if (httpResponse.statusCode == 200 ||
+          httpResponse.statusCode == 202 ||
+          httpResponse.statusCode == 201) {
+        this._esEditProductState.isSubmitting = false;
+        this._esEditProductState.isSubmitFailed = false;
+        this._esEditProductState.isSubmitSuccess = true;
+        var updatedSku = EsSku.fromJson(json.decode(httpResponse.body));
+
+        this._esEditProductState.currentProduct.updateSku(updatedSku);
+
         onSuccess();
       } else {
         this._esEditProductState.isSubmitting = false;
@@ -357,6 +414,12 @@ class EsEditProductBloc {
     this._esEditProductState.currentProduct = product;
     updateControllers(product);
     // this._esEditProductState.isProductInStock = product.inStock;
+    this._updateState();
+  }
+
+  setCurrentSku(EsSku sku) {
+    this._esEditProductState.currentSku = sku;
+    updateControllersForSku(sku);
     this._updateState();
   }
 
@@ -560,12 +623,13 @@ class EsEditProductState {
   EsGetCategoriesForProductResponse response;
 
   EsProduct currentProduct;
+  EsSku currentSku;
 
-  int get currentProductId => currentProduct.productId;
+  int get currentProductId => currentProduct?.productId;
+  int get currentSkuId => currentSku?.skuId;
 
-  // bool isProductInStock = false;
-
-  get isNewProduct => currentProduct == null;
+  bool get isNewProduct => currentProduct == null;
+  bool get isNewSku => currentSku == null;
 
   EsEditProductState();
 }

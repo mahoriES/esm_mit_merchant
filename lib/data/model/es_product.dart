@@ -172,6 +172,21 @@ class EsProduct {
     }
   }
 
+  updateSku(EsSku updatedSku) {
+    for (EsSku currentSku in this.skus) {
+      if (currentSku.skuId == updatedSku.skuId) {
+        //Match
+        currentSku.basePrice = updatedSku.basePrice;
+        currentSku.variationOptions = updatedSku.variationOptions;
+        currentSku.inStock = updatedSku.inStock;
+        currentSku.isActive = updatedSku.isActive;
+        currentSku.variationValue = updatedSku.variationValue;
+
+        break;
+      }
+    }
+  }
+
   get dProductName {
     if (productName != null) {
       return productName;
@@ -318,6 +333,7 @@ class EsSku {
   Map<String, dynamic> charges;
   int basePrice;
   Map<String, dynamic> variationOptions;
+  String variationValue;
 
   get dBasePrice {
     if (basePrice != null) {
@@ -362,6 +378,13 @@ class EsSku {
     charges = json['charges'];
     basePrice = json['base_price'];
     variationOptions = json['variation_options'];
+    if (json.containsKey('variation_option') &&
+        json['variation_option'] != null) {
+      Map<String, dynamic> variationOptions = json['variation_option'];
+      if (variationOptions.isNotEmpty) {
+        variationValue = variationOptions.values.toList()[0];
+      }
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -371,7 +394,12 @@ class EsSku {
     data['is_active'] = this.isActive;
     data['in_stock'] = this.inStock;
     data['charges'] = this.charges;
-    data['variation_options'] = this.variationOptions;
+    if (variationValue != null && variationValue.isNotEmpty) {
+      //final Map<String, dynamic> variation_options = new Map<String, dynamic>();
+      //variation_options['variation_options'] = this.variationValue;
+      //data['variation_options'] = variation_options;
+      data['variation_options'] = {'weight': this.variationValue};
+    }
     return data;
   }
 }
@@ -401,18 +429,43 @@ class EsImage {
 class AddSkuPayload {
   int basePrice;
   String skuCode;
+  String variationValue;
+  bool isActive;
+  bool inStock;
 
-  AddSkuPayload({this.basePrice, this.skuCode});
+  AddSkuPayload(
+      {this.basePrice,
+      this.skuCode,
+      this.variationValue,
+      this.isActive,
+      this.inStock});
 
-  AddSkuPayload.fromJson(Map<String, dynamic> json) {
-    basePrice = json['base_price'];
-    skuCode = json['sku_code'];
+  AddSkuPayload.fromJson(Map<String, dynamic> inputJson) {
+    basePrice = inputJson['base_price'];
+    skuCode = inputJson['sku_code'];
+    isActive = inputJson['is_active'];
+    inStock = inputJson['in_stock'];
+    if (inputJson.containsKey('variation_option') &&
+        inputJson['variation_option'] != null) {
+      Map<String, dynamic> variationOptions = inputJson['variation_option'];
+      if (variationOptions.isNotEmpty) {
+        variationValue = variationOptions.values.toList()[0];
+      }
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['base_price'] = this.basePrice;
     data['sku_code'] = this.skuCode;
+    if (variationValue != null && variationValue.isNotEmpty) {
+      //final Map<String, dynamic> variation_options = new Map<String, dynamic>();
+      //variation_options['variation_options'] = this.variationValue;
+      //data['variation_options'] = variation_options;
+      data['variation_options'] = {'weight': this.variationValue};
+    }
+    data['is_active'] = this.isActive;
+    data['in_stock'] = this.inStock;
     return data;
   }
 }

@@ -126,7 +126,14 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
 
     addSku() async {
       await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => EsEditProductVariationPage(esEditProductBloc)));
+          builder: (context) =>
+              EsEditProductVariationPage(esEditProductBloc, null)));
+    }
+
+    editSku(EsSku sku) async {
+      await Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              EsEditProductVariationPage(esEditProductBloc, sku)));
     }
 
     return Scaffold(
@@ -535,8 +542,10 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
 
                           return TableRow(children: [
                             VariationCard(
-                                snapshot.data.currentProduct.skus[index],
-                                esEditProductBloc),
+                              snapshot.data.currentProduct.skus[index],
+                              esEditProductBloc,
+                              editSku,
+                            ),
                           ]);
                         }),
                       ),
@@ -553,9 +562,11 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
 class VariationCard extends StatelessWidget {
   final EsSku sku;
   final EsEditProductBloc esEditProductBloc;
+  final Function(EsSku sku) onSkuClick;
   const VariationCard(
     this.sku,
-    this.esEditProductBloc, {
+    this.esEditProductBloc,
+    this.onSkuClick, {
     Key key,
   }) : super(key: key);
 
@@ -583,15 +594,20 @@ class VariationCard extends StatelessWidget {
                   ),
                 ],
               ),
-              Column(
-                children: <Widget>[
-                  Text('Price'),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(sku.dBasePrice),
-                  ),
-                ],
-              ),
+              IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    this.onSkuClick(this.sku);
+                  }),
+              //Column(
+              //  children: <Widget>[
+              //    Text('Price'),
+              //    Padding(
+              //      padding: const EdgeInsets.all(16.0),
+              //      child: Text(sku.dBasePrice),
+              //    ),
+              //  ],
+              //),
               Expanded(child: Container()),
               /*Column(
                 children: <Widget>[
