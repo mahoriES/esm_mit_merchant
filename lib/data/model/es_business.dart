@@ -64,6 +64,7 @@ class EsBusinessInfo {
   bool hasDelivery;
   EsCluster cluster;
   EsBusinessPaymentInfo paymentInfo;
+  EsBusinessNotificationInfo notificationInfo;
 
   get dBusinessName {
     if (businessName != null) {
@@ -164,6 +165,28 @@ class EsBusinessInfo {
     return (paymentInfo != null) && (paymentInfo.upiStatus == true);
   }
 
+  bool get notificationEmailStatus =>
+      (notificationInfo != null) && (notificationInfo.notifyViaEmail == true);
+
+  bool get notificationPhoneStatus =>
+      (notificationInfo != null) && (notificationInfo.notifyViaPhone == true);
+
+  List<String> get notificationEmails {
+    if (notificationInfo != null &&
+        notificationInfo.notificationEmails != null) {
+      return notificationInfo.notificationEmails;
+    }
+    return List<String>();
+  }
+
+  List<String> get notificationPhones {
+    if (notificationInfo != null &&
+        notificationInfo.notificationPhones != null) {
+      return notificationInfo.notificationPhones;
+    }
+    return List<String>();
+  }
+
   EsBusinessInfo(
       {this.businessId,
       this.businessName,
@@ -176,7 +199,8 @@ class EsBusinessInfo {
       this.phones,
       this.hasDelivery,
       this.cluster,
-      this.paymentInfo});
+      this.paymentInfo,
+      this.notificationInfo});
 
   EsBusinessInfo.fromJson(Map<String, dynamic> json) {
     businessId = json['business_id'];
@@ -204,6 +228,9 @@ class EsBusinessInfo {
         : null;
     paymentInfo = json['payment_info'] != null
         ? new EsBusinessPaymentInfo.fromJson(json['payment_info'])
+        : null;
+    notificationInfo = json['notification_info'] != null
+        ? new EsBusinessNotificationInfo.fromJson(json['notification_info'])
         : null;
   }
 
@@ -344,6 +371,10 @@ class EsUpdateBusinessPayload {
   String description;
   String upiAddress;
   bool upiStatus;
+  List<String> notificationEmails;
+  List<String> notificationPhones;
+  bool notifyViaPhone;
+  bool notifyViaEmail;
 
   EsUpdateBusinessPayload(
       {this.businessId,
@@ -358,7 +389,11 @@ class EsUpdateBusinessPayload {
       this.cluster,
       this.description,
       this.upiAddress,
-      this.upiStatus});
+      this.upiStatus,
+      this.notificationEmails,
+      this.notificationPhones,
+      this.notifyViaEmail,
+      this.notifyViaPhone});
 
   EsUpdateBusinessPayload.fromJson(Map<String, dynamic> json) {
     businessId = json['business_id'];
@@ -434,6 +469,23 @@ class EsUpdateBusinessPayload {
     if (this.upiStatus != null) {
       data['upi_status'] = (this.upiStatus == true);
     }
+
+    if (this.notifyViaEmail != null) {
+      data['notify_via_email'] = (this.notifyViaEmail == true);
+    }
+
+    if (this.notifyViaPhone != null) {
+      data['notify_via_phone'] = (this.notifyViaPhone == true);
+    }
+
+    if (this.notificationEmails != null) {
+      data['notification_emails'] = this.notificationEmails;
+    }
+
+    if (this.notificationPhones != null) {
+      data['notification_phones'] = this.notificationPhones;
+    }
+
     return data;
   }
 }
@@ -513,6 +565,34 @@ class EsBusinessPaymentInfo {
     data['upi'] = this.upiAddress;
     data['upi_status'] = this.upiStatus;
 
+    return data;
+  }
+}
+
+class EsBusinessNotificationInfo {
+  List<String> notificationEmails;
+  List<String> notificationPhones;
+  bool notifyViaEmail;
+  bool notifyViaPhone;
+  EsBusinessNotificationInfo(
+      {this.notificationEmails,
+      this.notificationPhones,
+      this.notifyViaEmail,
+      this.notifyViaPhone});
+
+  EsBusinessNotificationInfo.fromJson(Map<String, dynamic> json) {
+    notificationEmails = json['notification_emails'].cast<String>();
+    notificationPhones = json['notification_phones'].cast<String>();
+    notifyViaEmail = json['notify_via_email'];
+    notifyViaPhone = json['notify_via_phone'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['notification_emails'] = this.notificationEmails;
+    data['notification_phones'] = this.notificationPhones;
+    data['notify_via_email'] = this.notifyViaEmail;
+    data['notify_via_phone'] = this.notifyViaPhone;
     return data;
   }
 }

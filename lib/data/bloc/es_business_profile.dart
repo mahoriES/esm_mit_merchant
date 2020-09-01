@@ -21,6 +21,8 @@ class EsBusinessProfileBloc {
   final cityEditController = TextEditingController();
   final pinCodeEditController = TextEditingController();
   final phoneNumberEditingControllers = TextEditingController();
+  final notificationPhoneEditingControllers = TextEditingController();
+  final notificationEmailEditingControllers = TextEditingController();
 
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
@@ -328,6 +330,52 @@ class EsBusinessProfileBloc {
     phones.removeAt(phones.indexOf(number));
     var payload = EsUpdateBusinessPayload(phones: phones);
     this.updateBusiness(payload, null, null);
+  }
+
+  addNotificationPhone(onSuccess, onFail) {
+    var phones = List<String>();
+    phones.addAll(
+        _esBusinessProfileState.selectedBusinessInfo.notificationPhones);
+    phones.add(this.notificationPhoneEditingControllers.text);
+    var payload = EsUpdateBusinessPayload(notificationPhones: phones);
+    this.updateBusiness(payload, onSuccess, onFail);
+  }
+
+  deleteNotificationPhoneWithNumber(number) {
+    var phones = List<String>();
+    phones.addAll(
+        _esBusinessProfileState.selectedBusinessInfo.notificationPhones);
+    phones.removeAt(phones.indexOf(number));
+    var payload = EsUpdateBusinessPayload(notificationPhones: phones);
+    this.updateBusiness(payload, null, null);
+  }
+
+  addNotificationEmail(onSuccess, onFail) {
+    var emails = List<String>();
+    emails.addAll(
+        _esBusinessProfileState.selectedBusinessInfo.notificationEmails);
+    emails.add(this.notificationEmailEditingControllers.text);
+    var payload = EsUpdateBusinessPayload(notificationEmails: emails);
+    this.updateBusiness(payload, onSuccess, onFail);
+  }
+
+  deleteNotificationEmail(number) {
+    var emails = List<String>();
+    emails.addAll(
+        _esBusinessProfileState.selectedBusinessInfo.notificationEmails);
+    emails.removeAt(emails.indexOf(number));
+    var payload = EsUpdateBusinessPayload(notificationEmails: emails);
+    this.updateBusiness(payload, null, null);
+  }
+
+  updateNotificationEmailStatus(bool status, onSuccess, onFail) {
+    var payload = EsUpdateBusinessPayload(notifyViaEmail: status);
+    this.updateBusiness(payload, onSuccess, onFail);
+  }
+
+  updateNotificationPhoneStatus(bool status, onSuccess, onFail) {
+    var payload = EsUpdateBusinessPayload(notifyViaPhone: status);
+    this.updateBusiness(payload, onSuccess, onFail);
   }
 
   dispose() {
