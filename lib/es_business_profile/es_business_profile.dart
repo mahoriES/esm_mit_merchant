@@ -6,6 +6,7 @@ import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:foore/es_business_profile/es_business_image_list.dart';
 import 'package:foore/es_business_profile/es_edit_business_description.dart';
+import 'package:foore/es_business_profile/es_edit_text_generic.dart';
 import 'package:foore/widgets/es_select_business.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -48,20 +49,22 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
       this.esBusinessProfileBloc =
           EsBusinessProfileBloc(httpService, businessBloc);
     }
+
     editName() async {
       await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) =>
-              EsEditBusinessNamePage(this.esBusinessProfileBloc)));
+          builder: (context) => EsEditBaseTextPage(
+                this.esBusinessProfileBloc,
+                'Add phone number',
+                'Phone number',
+                this.esBusinessProfileBloc.phoneNumberEditingControllers,
+                this.esBusinessProfileBloc.addPhone,
+              )));
     }
 
     editUpiAddress() async {
       await Navigator.of(context).push(MaterialPageRoute(
           builder: (context) =>
               EsEditBusinessUpiPage(this.esBusinessProfileBloc)));
-    }
-
-    setUpiStatus(bool status) async {
-      await this.esBusinessProfileBloc.updateUpiStatus(status, null, null);
     }
 
     addPhone() async {
@@ -82,6 +85,264 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
               EsEditBusinessDescriptionPage(this.esBusinessProfileBloc)));
     }
 
+    Widget getBaseHeaderWidget(String headerName) {
+      return Container(
+        padding: const EdgeInsets.only(
+          top: 24.0,
+          left: 20,
+          right: 20,
+          // bottom: 8.0,
+        ),
+        alignment: Alignment.bottomLeft,
+        child: Text(
+          headerName,
+          style: Theme.of(context).textTheme.subtitle2,
+        ),
+      );
+    }
+
+    Widget getPhoneWidget(businessInfo) {
+      return Container(
+        child: businessInfo.dPhones.length == 0
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  FlatButton(
+                    onPressed: addPhone,
+                    child: Text(
+                      "+ Add phone",
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              )
+            : Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Wrap(
+                        children: businessInfo.dPhones
+                            .map((phone) => Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: Chip(
+                                    label: Text(
+                                      phone,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    onDeleted: () {
+                                      this
+                                          .esBusinessProfileBloc
+                                          .deletePhoneWithNumber(phone);
+                                    },
+                                  ),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: addPhone,
+                      icon: Icon(
+                        Icons.add,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+      );
+    }
+
+    Widget getUpiHeaderWidget(businessInfo) {
+      return Container(
+          padding: const EdgeInsets.only(
+            //top: 24.0,
+            left: 20,
+            right: 20,
+            // bottom: 8.0,
+          ),
+          alignment: Alignment.bottomLeft,
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  'UPI Payment',
+                  style: Theme.of(context).textTheme.subtitle2,
+                ),
+              ),
+              Switch(
+                  value: businessInfo.dBusinessPaymentStatus,
+                  onChanged: (value) {
+                    this
+                        .esBusinessProfileBloc
+                        .updateUpiStatus(value, null, null);
+                  }),
+            ],
+          ));
+    }
+
+    Widget getUpiWidget(businessInfo) {
+      return Container(
+        child: businessInfo.dBusinessPaymentUpiAddress == ''
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  FlatButton(
+                    onPressed: editUpiAddress,
+                    child: Text(
+                      "+ Add UPI ID",
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              )
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        businessInfo.dBusinessPaymentUpiAddress,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: editUpiAddress,
+                      icon: Icon(
+                        Icons.edit,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+      );
+    }
+
+    Widget getBusinessNameWidget(businessInfo) {
+      return Container(
+        child: businessInfo.dBusinessName == ''
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  FlatButton(
+                    onPressed: editName,
+                    child: Text(
+                      "+ Add business name",
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              )
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        businessInfo.dBusinessName,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: editName,
+                      icon: Icon(
+                        Icons.edit,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+      );
+    }
+
+    Widget getAddressWidget(businessInfo) {
+      return Container(
+        child: businessInfo.dBusinessPrettyAddress == ''
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  FlatButton(
+                    onPressed: addAddress,
+                    child: Text(
+                      "+ Add address",
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              )
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        businessInfo.dBusinessPrettyAddress,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: addAddress,
+                      icon: Icon(
+                        Icons.edit,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+      );
+    }
+
+    Widget getDescriptionWidget(businessInfo) {
+      return Container(
+        child: businessInfo.dBusinessDescription == ''
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  FlatButton(
+                    onPressed: addDescription,
+                    child: Text(
+                      "+ Add description",
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              )
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        businessInfo.dBusinessDescription,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: addDescription,
+                      icon: Icon(
+                        Icons.edit,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+      );
+    }
+
     return Scaffold(
       appBar: EsSelectBusiness(() {}),
       body: SafeArea(
@@ -90,413 +351,86 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
           width: double.infinity,
           child: SingleChildScrollView(
             child: StreamBuilder<EsBusinessProfileState>(
-                stream: this.esBusinessProfileBloc.createBusinessObservable,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Container();
-                  }
-                  EsBusinessInfo businessInfo =
-                      snapshot.data.selectedBusinessInfo;
-                  return Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Expanded(
-                              child: Chip(
-                                label: Text(
-                                  businessInfo.dBusinessClusterName,
-                                  overflow: TextOverflow.ellipsis,
-                                  // style: TextStyle(color: Colors.white),
+              stream: this.esBusinessProfileBloc.createBusinessObservable,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container();
+                }
+                EsBusinessInfo businessInfo =
+                    snapshot.data.selectedBusinessInfo;
+                return Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: Wrap(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 0, top: 13, bottom: 13),
+                                  child: Text(
+                                    "Delivery",
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                                backgroundColor: Colors.white10,
-                              ),
+                                Switch(
+                                    value: snapshot.data.hasDelivery,
+                                    onChanged: (value) {
+                                      this
+                                          .esBusinessProfileBloc
+                                          .setDelivery(value);
+                                    }),
+                              ],
                             ),
-                            SizedBox(width: 20),
-                            Expanded(
-                              child: Wrap(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 0, top: 13, bottom: 13),
-                                    child: Text(
-                                      "Delivery",
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  Switch(
-                                      value: snapshot.data.hasDelivery,
-                                      onChanged: (value) {
-                                        this
-                                            .esBusinessProfileBloc
-                                            .setDelivery(value);
-                                      }),
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: 20),
-                            Expanded(
-                              child: Wrap(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 0, top: 13, bottom: 13),
-                                    child: Text(
-                                      "Open",
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  Switch(
-                                      value: snapshot.data.isOpen,
-                                      onChanged: (value) {
-                                        this
-                                            .esBusinessProfileBloc
-                                            .setOpen(value);
-                                      }),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(
-                          top: 24.0,
-                          left: 20,
-                          right: 20,
-                          // bottom: 8.0,
-                        ),
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          'Name',
-                          style: Theme.of(context).textTheme.subtitle2,
-                        ),
-                      ),
-                      Container(
-                        child: businessInfo.dBusinessName == ''
-                            ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  FlatButton(
-                                    onPressed: editName,
-                                    child: Text(
-                                      "+ Add business name",
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        businessInfo.dBusinessName,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: editName,
-                                      icon: Icon(
-                                        Icons.edit,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(
-                          top: 24.0,
-                          left: 20,
-                          right: 20,
-                          // bottom: 8.0,
-                        ),
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          'Phone',
-                          style: Theme.of(context).textTheme.subtitle2,
-                        ),
-                      ),
-                      Container(
-                        child: businessInfo.dPhones.length == 0
-                            ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  FlatButton(
-                                    onPressed: addPhone,
-                                    child: Text(
-                                      "+ Add phone",
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Wrap(
-                                        children: businessInfo.dPhones
-                                            .map((phone) => Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 8.0),
-                                                  child: Chip(
-                                                    label: Text(
-                                                      phone,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                    onDeleted: () {
-                                                      this
-                                                          .esBusinessProfileBloc
-                                                          .deletePhoneWithNumber(
-                                                              phone);
-                                                    },
-                                                  ),
-                                                ))
-                                            .toList(),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: addPhone,
-                                      icon: Icon(
-                                        Icons.add,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                      ),
-                      Container(
-                          padding: const EdgeInsets.only(
-                            //top: 24.0,
-                            left: 20,
-                            right: 20,
-                            // bottom: 8.0,
                           ),
-                          alignment: Alignment.bottomLeft,
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Text(
-                                  'UPI Payment',
-                                  style: Theme.of(context).textTheme.subtitle2,
-                                ),
-                              ),
-                              Switch(
-                                  value: businessInfo.dBusinessPaymentStatus,
-                                  onChanged: (value) {
-                                    this
-                                        .esBusinessProfileBloc
-                                        .updateUpiStatus(value, null, null);
-                                  }),
-                            ],
-                          )),
-                      Container(
-                        child: businessInfo.dBusinessPaymentUpiAddress == ''
-                            ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  FlatButton(
-                                    onPressed: editUpiAddress,
-                                    child: Text(
-                                      "+ Add UPI ID",
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                          SizedBox(width: 20),
+                          Expanded(
+                            child: Wrap(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 0, top: 13, bottom: 13),
+                                  child: Text(
+                                    "Store Open",
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ],
-                              )
-                            : Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        businessInfo.dBusinessPaymentUpiAddress,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: editUpiAddress,
-                                      icon: Icon(
-                                        Icons.edit,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    )
-                                  ],
                                 ),
-                              ),
+                                Switch(
+                                    value: snapshot.data.isOpen,
+                                    onChanged: (value) {
+                                      this.esBusinessProfileBloc.setOpen(value);
+                                    }),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      Container(
-                        padding: const EdgeInsets.only(
-                          top: 24.0,
-                          left: 20,
-                          right: 20,
-                        ),
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          'Address',
-                          style: Theme.of(context).textTheme.subtitle2,
-                        ),
-                      ),
-                      Container(
-                        child: businessInfo.dBusinessPrettyAddress == ''
-                            ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  FlatButton(
-                                    onPressed: addAddress,
-                                    child: Text(
-                                      "+ Add address",
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        businessInfo.dBusinessPrettyAddress,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: addAddress,
-                                      icon: Icon(
-                                        Icons.edit,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(
-                          top: 24.0,
-                          left: 20,
-                          right: 20,
-                        ),
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          'Description',
-                          style: Theme.of(context).textTheme.subtitle2,
-                        ),
-                      ),
-                      Container(
-                        child: businessInfo.dBusinessDescription == ''
-                            ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  FlatButton(
-                                    onPressed: addDescription,
-                                    child: Text(
-                                      "+ Add description",
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        businessInfo.dBusinessDescription,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: addDescription,
-                                      icon: Icon(
-                                        Icons.edit,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(
-                          top: 24.0,
-                          left: 20,
-                          right: 20,
-                        ),
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          'Photos',
-                          style: Theme.of(context).textTheme.subtitle2,
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      EsBusinessProfileImageList(esBusinessProfileBloc),
-                      SizedBox(height: 120),
-                    ],
-                  );
-                }),
+                    ),
+                    getBaseHeaderWidget('Name'),
+                    getBusinessNameWidget(businessInfo),
+                    getBaseHeaderWidget('Phone'),
+                    getPhoneWidget(businessInfo),
+                    getUpiHeaderWidget(businessInfo),
+                    getUpiWidget(businessInfo),
+                    getBaseHeaderWidget('Address'),
+                    getAddressWidget(businessInfo),
+                    getBaseHeaderWidget('Description'),
+                    getDescriptionWidget(businessInfo),
+                    getBaseHeaderWidget('Photos'),
+                    SizedBox(height: 20),
+                    EsBusinessProfileImageList(esBusinessProfileBloc),
+                    SizedBox(height: 120),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
-      // floatingActionButton: Transform.translate(
-      //   offset: Offset(0, -15),
-      //   child: RaisedButton(
-      //     shape: RoundedRectangleBorder(
-      //       borderRadius: BorderRadius.circular(50.0),
-      //     ),
-      //     padding: EdgeInsets.symmetric(
-      //       vertical: 15,
-      //       horizontal: 25,
-      //     ),
-      //     onPressed: () async {
-      //       Navigator.of(context).pushNamed(EsCreateBusinessPage.routeName);
-      //     },
-      //     child: Container(
-      //       child: Text(
-      //         'Add business',
-      //         style: Theme.of(context).textTheme.subhead.copyWith(
-      //               color: Colors.white,
-      //             ),
-      //       ),
-      //     ),
-      //   ),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
