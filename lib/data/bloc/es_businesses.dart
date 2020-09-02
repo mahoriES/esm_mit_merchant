@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
@@ -7,6 +8,12 @@ import 'package:rxdart/rxdart.dart';
 import 'auth.dart';
 
 class EsBusinessesBloc {
+  static const FILENAME = 'es_businesses.dart';
+  static const CLASSNAME = 'EsBusinessesBloc';
+  static void esdyPrint(String message) {
+    debugPrint(FILENAME + " : " + CLASSNAME + " : " + message);
+  }
+
   EsBusinessesState _esBusinessesState = new EsBusinessesState();
   final HttpService _httpService;
   final AuthBloc authBloc;
@@ -28,7 +35,7 @@ class EsBusinessesBloc {
       _subjectEsBusinessesState.stream;
 
   getData() {
-    print('getData');
+    esdyPrint('getData');
     this.getBusinesses();
   }
 
@@ -60,13 +67,13 @@ class EsBusinessesBloc {
   }
 
   setSelectedBusiness(EsBusinessInfo businessInfo) {
-    print('setSelectedBusiness');
+    esdyPrint('setSelectedBusiness');
     this._esBusinessesState.selectedBusiness = businessInfo;
     this._updateState();
   }
 
   updateSelectedBusiness(EsBusinessInfo businessInfo) {
-    print('setSelectedBusiness');
+    esdyPrint('setSelectedBusiness');
     this._esBusinessesState.selectedBusiness = businessInfo;
     this._esBusinessesState.businesses =
         this._esBusinessesState.businesses.map((info) {
@@ -94,6 +101,12 @@ class EsBusinessesBloc {
 }
 
 class EsBusinessesState {
+  static const FILENAME = 'es_businesses.dart';
+  static const CLASSNAME = 'EsBusinessesBloc';
+  static void esdyPrint(String message) {
+    debugPrint(FILENAME + " : " + CLASSNAME + " : " + message);
+  }
+
   bool isLoading;
   bool isLoadingFailed;
 
@@ -101,9 +114,9 @@ class EsBusinessesState {
 
   get isCreateBusinessRequired {
     bool isRequired = (!isLoading) && (businesses.length == 0);
-    print("isCreateBusinessRequired: " + businesses.length.toString());
-    print("isCreateBusinessRequired: " + isLoading.toString());
-    print("isCreateBusinessRequired: " + isRequired.toString());
+    esdyPrint("isCreateBusinessRequired: " + businesses.length.toString());
+    esdyPrint("isCreateBusinessRequired: " + isLoading.toString());
+    esdyPrint("isCreateBusinessRequired: " + isRequired.toString());
     return isRequired;
   }
 
@@ -127,7 +140,7 @@ class EsBusinessesState {
     this.businesses = response.results;
     if (this.businesses.length > 0) {
       selectedBusiness = this.businesses[0];
-      print(selectedBusiness.businessId);
+      esdyPrint(selectedBusiness.businessId);
     }
   }
 }

@@ -6,13 +6,19 @@ import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:foore/data/model/es_media.dart';
-import 'package:foore/data/model/es_product.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'es_businesses.dart';
 
 class EsBusinessProfileBloc {
+  static const FILENAME = 'es_business_profile.dart';
+  static const CLASSNAME = 'EsBusinessProfileBloc';
+  static void esdyPrint(String message) {
+    debugPrint(FILENAME + " : " + CLASSNAME + " : " + message);
+  }
+
   EsBusinessProfileState _esBusinessProfileState = new EsBusinessProfileState();
   final nameEditController = TextEditingController();
   final upiAddressEditController = TextEditingController();
@@ -445,7 +451,7 @@ class EsBusinessProfileBloc {
           );
 
           this.updateBusiness(updateBusinessPayload, () {
-            print('success');
+            esdyPrint("sucess");
             var index = this
                 ._esBusinessProfileState
                 .uploadingImages
@@ -453,7 +459,7 @@ class EsBusinessProfileBloc {
             this._esBusinessProfileState.uploadingImages.removeAt(index);
             this._updateState();
           }, () {
-            print('failed');
+            esdyPrint('failed');
             var index = this
                 ._esBusinessProfileState
                 .uploadingImages
@@ -465,7 +471,7 @@ class EsBusinessProfileBloc {
             this._updateState();
           });
         } catch (err) {
-          print('failed');
+          esdyPrint('failed');
           var index = this
               ._esBusinessProfileState
               .uploadingImages
@@ -478,7 +484,7 @@ class EsBusinessProfileBloc {
   }
 
   setCurrentLocationPoint(lat, lng) {
-    print(lat + lng);
+    esdyPrint(lat + lng);
     this._esBusinessProfileState.currentLocationPoint =
         EsLocationPoint(lat: lat, lon: lng);
     this._updateState();

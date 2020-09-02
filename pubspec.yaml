@@ -61,7 +61,7 @@ dependencies:
 
   sprintf: ^4.0.2
 
-  contacts_service: ^0.3.9
+  contacts_service: ^0.4.6
 
   permission_handler: ^4.0.0
 
