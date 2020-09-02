@@ -99,11 +99,6 @@ class _EsLoginPageState extends State<EsLoginPage> {
               'Connect your eSamudaay account',
               style: Theme.of(context).textTheme.subtitle1,
             ),
-            // const SizedBox(height: 32.0),
-            // Text(
-            //   widget.isSignUp ?'Sign up with eSamudaay account':'Login with eSamudaay account',
-            //   style: Theme.of(context).textTheme.subtitle,
-            // ),
             const SizedBox(height: 16.0),
             TextFormField(
                 controller: this._esLoginBloc.phoneEditController,
