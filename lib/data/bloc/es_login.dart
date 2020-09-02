@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_auth.dart';
@@ -36,14 +37,21 @@ class EsLoginBloc {
     this._updateState();
     final phoneNumberInput = '+91' + this.phoneEditController.text;
 
-    final TPID = Environment.esTPID;
+
 
     _httpService
         .esGetWithoutAuth(
-            EsApiPaths.getOTP + '?phone=$phoneNumberInput&third_party_id=$TPID')
+            EsApiPaths.getOTP + '?phone=$phoneNumberInput&third_party_id=${Environment.esTPID}')
         .then((httpResponse) {
-      print(httpResponse.body);
+      debugPrint("es_login.dart: " + "sendCode :" + httpResponse.body);
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+        if (!Environment.isProd) {
+          //Staging show toast for OTP
+          Fluttertoast.showToast(
+              msg: "OTP: " + json.decode(httpResponse.body)['token'].toString(),
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM);
+        }
         this._loginState.isLoading = false;
         this._loginState.isShowOtp = true;
       } else {
@@ -61,18 +69,25 @@ class EsLoginBloc {
     this._updateState();
     final phoneNumberInput = '+91' + this.phoneEditController.text;
 
-    final TPID = Environment.esTPID;
 
     _httpService
         .esPostWithoutAuth(
       EsApiPaths.postSignUp,
-      json.encode(EsSignUpPayload(phone: phoneNumberInput, thirdPartyId: TPID)
+      json.encode(EsSignUpPayload(phone: phoneNumberInput, thirdPartyId: Environment.esTPID)
           .toJson()),
     )
         .then((httpResponse) {
+      debugPrint("es_login.dart: " + "signUp :" + httpResponse.body);
       if (httpResponse.statusCode == 200 ||
           httpResponse.statusCode == 202 ||
           httpResponse.statusCode == 201) {
+        if (!Environment.isProd) {
+          //Staging show toast for OTP
+          Fluttertoast.showToast(
+              msg: "OTP: " + json.decode(httpResponse.body)['token'].toString(),
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM);
+        }
         this._loginState.isLoading = false;
         this._loginState.isShowOtp = true;
       } else {
@@ -89,13 +104,12 @@ class EsLoginBloc {
     try {
       this._loginState.isSubmitOtp = true;
       this._updateState();
-      final TPID = Environment.esTPID;
       var authResponse = await _httpService.esPostWithoutAuth(
           EsApiPaths.postToken,
           json.encode(EsGetTokenPayload(
                   phone: '+91' + this.phoneEditController.text,
                   token: this.otpEditController.text,
-                  thirdPartyId: TPID)
+                  thirdPartyId: Environment.esTPID)
               .toJson()));
 
       if (authResponse.statusCode == 200 || authResponse.statusCode == 202) {
