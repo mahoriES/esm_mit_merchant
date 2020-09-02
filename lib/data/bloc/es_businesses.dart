@@ -30,8 +30,6 @@ class EsBusinessesBloc {
   getData() {
     print('getData');
     this.getBusinesses();
-    // if (this._esBusinessesState.businesses.length == 0) {
-    // }
   }
 
   getBusinesses() {
@@ -81,8 +79,6 @@ class EsBusinessesBloc {
   }
 
   getSelectedBusinessId() {
-    // print('get selected business id');
-    // print(this._esBusinessesState.selectedBusiness.toJson().toString());
     return this._esBusinessesState.selectedBusinessId;
   }
 
@@ -103,7 +99,13 @@ class EsBusinessesState {
 
   get isShowBusinesses => !isLoading && businesses.length > 0;
 
-  get isCreateBusinessRequired => !isLoading && businesses.length == 0;
+  get isCreateBusinessRequired {
+    bool isRequired = (!isLoading) && (businesses.length == 0);
+    print("isCreateBusinessRequired: " + businesses.length.toString());
+    print("isCreateBusinessRequired: " + isLoading.toString());
+    print("isCreateBusinessRequired: " + isRequired.toString());
+    return isRequired;
+  }
 
   EsBusinessInfo selectedBusiness;
 

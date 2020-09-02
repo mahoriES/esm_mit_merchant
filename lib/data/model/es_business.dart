@@ -37,6 +37,7 @@ class EsGetBusinessesResponse {
         results.add(new EsBusinessInfo.fromJson(v));
       });
     }
+    print("<< EsGetBusinessesResponse.fromJson: " + results.length.toString());
   }
 
   Map<String, dynamic> toJson() {
@@ -161,7 +162,7 @@ class EsBusinessInfo {
     return '';
   }
 
-  get dBusinessPaymentStatus {
+  bool get dBusinessPaymentStatus {
     return (paymentInfo != null) && (paymentInfo.upiStatus == true);
   }
 
@@ -229,6 +230,9 @@ class EsBusinessInfo {
     paymentInfo = json['payment_info'] != null
         ? new EsBusinessPaymentInfo.fromJson(json['payment_info'])
         : null;
+
+    //"notification_info":{"notification_emails":null,"notification_phones":null,"notify_via_email":false,"notify_via_phone":false}
+
     notificationInfo = json['notification_info'] != null
         ? new EsBusinessNotificationInfo.fromJson(json['notification_info'])
         : null;
@@ -581,8 +585,14 @@ class EsBusinessNotificationInfo {
       this.notifyViaPhone});
 
   EsBusinessNotificationInfo.fromJson(Map<String, dynamic> json) {
-    notificationEmails = json['notification_emails'].cast<String>();
-    notificationPhones = json['notification_phones'].cast<String>();
+    //"notification_emails":null,"notification_phones":null,"notify_via_email":false,"notify_via_phone":false
+
+    notificationEmails = json['notification_emails'] == null
+        ? []
+        : json['notification_emails'].cast<String>();
+    notificationPhones = json['notification_phones'] == null
+        ? []
+        : json['notification_phones'].cast<String>();
     notifyViaEmail = json['notify_via_email'];
     notifyViaPhone = json['notify_via_phone'];
   }

@@ -26,17 +26,16 @@ class EsBusinessesGuard extends StatefulWidget {
   }
 }
 
-class _EsBusinessesGuardState extends State<EsBusinessesGuard>  with AfterLayoutMixin<EsBusinessesGuard> {
-  
+class _EsBusinessesGuardState extends State<EsBusinessesGuard>
+    with AfterLayoutMixin<EsBusinessesGuard> {
   Widget currentWidget;
   StreamSubscription<EsBusinessesState> _subscription;
 
   @override
   void afterFirstLayout(BuildContext context) {
-     final esBusinessesBloc = Provider.of<EsBusinessesBloc>(context);
-     esBusinessesBloc.getData();
+    final esBusinessesBloc = Provider.of<EsBusinessesBloc>(context);
+    esBusinessesBloc.getData();
   }
-
 
   @override
   void initState() {

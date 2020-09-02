@@ -146,12 +146,11 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
                         child: Row(
                           children: <Widget>[
                             Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
                               child: Text(
-                                'Get in touch with us to get Circle code for your business.',
+                                'Get in touch with us to get Circle code',
+                                overflow: TextOverflow.ellipsis ,
                                 style: TextStyle(
                                   color: Colors.blue,
-                                  // decoration: TextDecoration.underline,
                                 ),
                                 softWrap: true,
                               ),
