@@ -5,9 +5,11 @@ import 'package:foore/data/model/es_business.dart';
 
 class EsBusinessProfileImageList extends StatefulWidget {
   final EsBusinessProfileBloc esBusinessProfileBloc;
+  final bool allowMany; //allow uploading multiple photos
 
   EsBusinessProfileImageList(
     this.esBusinessProfileBloc, {
+    this.allowMany = true,
     Key key,
   }) : super(key: key);
 
@@ -19,6 +21,27 @@ class EsBusinessProfileImageList extends StatefulWidget {
 class _EsBusinessProfileImageListState
     extends State<EsBusinessProfileImageList> {
   File imageFile;
+
+  List<Widget> getChildrenListView(List<Widget> uploadedList,
+      List<Widget> uploadingList, Widget uploadIcon) {
+    var listViewChildren = List<Widget>();
+
+    if (widget.allowMany) {
+      listViewChildren.addAll(uploadedList);
+      listViewChildren.addAll(uploadingList);
+      listViewChildren.add(uploadIcon);
+    } else {
+      if (uploadedList != null && uploadedList.length > 0) {
+        listViewChildren.addAll(uploadedList);
+      } else if (uploadingList != null && uploadingList.length > 0) {
+        listViewChildren.addAll(uploadingList);
+      } else {
+        listViewChildren.add(uploadIcon);
+      }
+    }
+
+    return listViewChildren;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +62,7 @@ class _EsBusinessProfileImageListState
                       borderRadius: BorderRadius.circular(4.0),
                       child: Stack(
                         children: <Widget>[
-                          Image.network(dImage.photoUrl,
-                              height: 120, width: 120),
+                          Image.network(dImage.photoUrl, height: 60, width: 60),
                           Positioned(
                             top: 0,
                             right: 0,
@@ -63,29 +85,7 @@ class _EsBusinessProfileImageListState
               )
               .toList();
           var uploadingList =
-              List.generate(snapshot.data.uploadingImages.length + 1, (index) {
-            if (index == snapshot.data.uploadingImages.length) {
-              return GestureDetector(
-                onTap: widget.esBusinessProfileBloc.selectAndUploadImage,
-                child: Container(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4.0),
-                    child: Container(
-                      height: 120,
-                      width: 120,
-                      color: Colors.grey[100],
-                      child: Center(
-                        child: Icon(
-                          Icons.add_a_photo,
-                          // size: 40,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }
+              List.generate(snapshot.data.uploadingImages.length, (index) {
             return Padding(
               padding: const EdgeInsets.only(right: 16.0),
               child: Material(
@@ -95,7 +95,7 @@ class _EsBusinessProfileImageListState
                   child: Stack(
                     children: <Widget>[
                       Image.file(snapshot.data.uploadingImages[index].file,
-                          height: 120, width: 120),
+                          height: 60, width: 60),
                       Container(
                         child:
                             !snapshot.data.uploadingImages[index].isUploadFailed
@@ -103,8 +103,8 @@ class _EsBusinessProfileImageListState
                                     top: 0,
                                     left: 0,
                                     child: Container(
-                                      height: 120,
-                                      width: 120,
+                                      height: 60,
+                                      width: 60,
                                       child: Center(
                                         child: CircularProgressIndicator(),
                                       ),
@@ -119,8 +119,8 @@ class _EsBusinessProfileImageListState
                                     top: 0,
                                     left: 0,
                                     child: Container(
-                                      height: 120,
-                                      width: 120,
+                                      height: 60,
+                                      width: 60,
                                       color: Colors.white60,
                                       child: Center(
                                         child: Text(
@@ -164,17 +164,35 @@ class _EsBusinessProfileImageListState
             );
           });
 
-          var listViewChildren = List<Widget>();
-          listViewChildren.addAll(uploadedList);
-          listViewChildren.addAll(uploadingList);
+          var uploadIcon = GestureDetector(
+            onTap: widget.esBusinessProfileBloc.selectAndUploadImage,
+            child: Container(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4.0),
+                child: Container(
+                  height: 60,
+                  width: 60,
+                  color: Colors.grey[100],
+                  child: Center(
+                    child: Icon(
+                      Icons.add_a_photo,
+                      // size: 40,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
 
           return Container(
-            height: 120,
+            height: 60,
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ListView(
               scrollDirection: Axis.horizontal,
-              children: listViewChildren,
+              children:
+                  getChildrenListView(uploadedList, uploadingList, uploadIcon),
             ),
           );
         });

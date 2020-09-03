@@ -6,13 +6,19 @@ import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:foore/data/model/es_media.dart';
-import 'package:foore/data/model/es_product.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'es_businesses.dart';
 
 class EsBusinessProfileBloc {
+  static const FILENAME = 'es_business_profile.dart';
+  static const CLASSNAME = 'EsBusinessProfileBloc';
+  static void esdyPrint(String message) {
+    debugPrint(FILENAME + " : " + CLASSNAME + " : " + message);
+  }
+
   EsBusinessProfileState _esBusinessProfileState = new EsBusinessProfileState();
   final nameEditController = TextEditingController();
   final upiAddressEditController = TextEditingController();
@@ -21,6 +27,8 @@ class EsBusinessProfileBloc {
   final cityEditController = TextEditingController();
   final pinCodeEditController = TextEditingController();
   final phoneNumberEditingControllers = TextEditingController();
+  final notificationPhoneEditingControllers = TextEditingController();
+  final notificationEmailEditingControllers = TextEditingController();
 
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
@@ -330,6 +338,52 @@ class EsBusinessProfileBloc {
     this.updateBusiness(payload, null, null);
   }
 
+  addNotificationPhone(onSuccess, onFail) {
+    var phones = List<String>();
+    phones.addAll(
+        _esBusinessProfileState.selectedBusinessInfo.notificationPhones);
+    phones.add(this.notificationPhoneEditingControllers.text);
+    var payload = EsUpdateBusinessPayload(notificationPhones: phones);
+    this.updateBusiness(payload, onSuccess, onFail);
+  }
+
+  deleteNotificationPhoneWithNumber(number) {
+    var phones = List<String>();
+    phones.addAll(
+        _esBusinessProfileState.selectedBusinessInfo.notificationPhones);
+    phones.removeAt(phones.indexOf(number));
+    var payload = EsUpdateBusinessPayload(notificationPhones: phones);
+    this.updateBusiness(payload, null, null);
+  }
+
+  addNotificationEmail(onSuccess, onFail) {
+    var emails = List<String>();
+    emails.addAll(
+        _esBusinessProfileState.selectedBusinessInfo.notificationEmails);
+    emails.add(this.notificationEmailEditingControllers.text);
+    var payload = EsUpdateBusinessPayload(notificationEmails: emails);
+    this.updateBusiness(payload, onSuccess, onFail);
+  }
+
+  deleteNotificationEmail(number) {
+    var emails = List<String>();
+    emails.addAll(
+        _esBusinessProfileState.selectedBusinessInfo.notificationEmails);
+    emails.removeAt(emails.indexOf(number));
+    var payload = EsUpdateBusinessPayload(notificationEmails: emails);
+    this.updateBusiness(payload, null, null);
+  }
+
+  updateNotificationEmailStatus(bool status, onSuccess, onFail) {
+    var payload = EsUpdateBusinessPayload(notifyViaEmail: status);
+    this.updateBusiness(payload, onSuccess, onFail);
+  }
+
+  updateNotificationPhoneStatus(bool status, onSuccess, onFail) {
+    var payload = EsUpdateBusinessPayload(notifyViaPhone: status);
+    this.updateBusiness(payload, onSuccess, onFail);
+  }
+
   dispose() {
     this._subjectEsBusinessProfileState.close();
     if (this.subscription != null) {
@@ -397,7 +451,7 @@ class EsBusinessProfileBloc {
           );
 
           this.updateBusiness(updateBusinessPayload, () {
-            print('success');
+            esdyPrint("sucess");
             var index = this
                 ._esBusinessProfileState
                 .uploadingImages
@@ -405,7 +459,7 @@ class EsBusinessProfileBloc {
             this._esBusinessProfileState.uploadingImages.removeAt(index);
             this._updateState();
           }, () {
-            print('failed');
+            esdyPrint('failed');
             var index = this
                 ._esBusinessProfileState
                 .uploadingImages
@@ -417,7 +471,7 @@ class EsBusinessProfileBloc {
             this._updateState();
           });
         } catch (err) {
-          print('failed');
+          esdyPrint('failed');
           var index = this
               ._esBusinessProfileState
               .uploadingImages
@@ -430,7 +484,7 @@ class EsBusinessProfileBloc {
   }
 
   setCurrentLocationPoint(lat, lng) {
-    print(lat + lng);
+    esdyPrint(lat + lng);
     this._esBusinessProfileState.currentLocationPoint =
         EsLocationPoint(lat: lat, lon: lng);
     this._updateState();

@@ -4,19 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_business_profile.dart';
 
-class EsEditBusinessNamePage extends StatefulWidget {
-  static const routeName = '/create-business-page';
-
+class EsEditBaseTextPage extends StatefulWidget {
   final EsBusinessProfileBloc esBusinessProfileBloc;
+  final String title;
+  final String labelText;
+  final Function onSave;
+  final TextEditingController textEditingController;
 
-  EsEditBusinessNamePage(this.esBusinessProfileBloc);
+  EsEditBaseTextPage(this.esBusinessProfileBloc, this.title, this.labelText,
+      this.textEditingController, this.onSave);
 
   @override
-  EsEditBusinessNamePageState createState() => EsEditBusinessNamePageState();
+  EsEditBaseTextPageState createState() => EsEditBaseTextPageState();
 }
 
-class EsEditBusinessNamePageState extends State<EsEditBusinessNamePage>
-    with AfterLayoutMixin<EsEditBusinessNamePage> {
+class EsEditBaseTextPageState extends State<EsEditBaseTextPage>
+    with AfterLayoutMixin<EsEditBaseTextPage> {
   final _formKey = GlobalKey<FormState>();
 
   _showFailedAlertDialog() async {
@@ -65,14 +68,14 @@ class EsEditBusinessNamePageState extends State<EsEditBusinessNamePage>
 
     submit() {
       if (this._formKey.currentState.validate()) {
-        widget.esBusinessProfileBloc.updateName(onSuccess, onFail);
+        widget.onSave(onSuccess, onFail);
       }
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Update business name',
+          widget.title,
         ),
       ),
       body: Form(
@@ -95,11 +98,10 @@ class EsEditBusinessNamePageState extends State<EsEditBusinessNamePage>
                         right: 20,
                       ),
                       child: TextFormField(
-                        controller:
-                            widget.esBusinessProfileBloc.nameEditController,
+                        controller: widget.textEditingController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Business name',
+                          labelText: widget.labelText,
                         ),
                       ),
                     ),
