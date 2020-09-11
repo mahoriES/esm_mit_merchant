@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/check_in_page/check_in_page.dart';
 
 import 'package:provider/provider.dart';
 
@@ -21,7 +22,9 @@ class _PeoplePageState extends State<PeoplePage>
     peopleBloc.getPeopleFromSearch();
   }
 
-  onGetReviews() async {}
+  onGetReviews() async {
+    await CheckInPage.open(context);
+  }
 
   @override
   Widget build(BuildContext context) {

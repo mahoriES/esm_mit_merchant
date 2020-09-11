@@ -51,22 +51,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           BottomNavigationBarItem(
-            icon: CircleAvatar(
-              radius: 12.0,
-              backgroundColor: _selectedIndex != 1
-                  ? Colors.grey[600]
-                  : Theme.of(context).primaryColor,
-              foregroundColor: Colors.white,
-              child: Icon(
-                Icons.add,
-                size: 14.0,
-              ),
-            ),
-            title: Text(
-              AppTranslations.of(context).text('tab_nearby'),
-            ),
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.feedback),
             title: Text(
               AppTranslations.of(context).text("tab_reviews"),

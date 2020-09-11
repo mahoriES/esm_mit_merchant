@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/check_in_page/check_in_page.dart';
 
 
 import 'package:foore/widgets/empty_list.dart';
@@ -38,7 +39,9 @@ class _ReviewPageState extends State<ReviewPage> {
     super.dispose();
   }
 
-  onGetReviews() async {}
+  onGetReviews() async {
+    await CheckInPage.open(context);
+  }
 
   @override
   Widget build(BuildContext context) {
