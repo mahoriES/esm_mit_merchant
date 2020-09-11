@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:foore/create_promotion_page/create_promotion_page.dart';
+
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
@@ -15,7 +15,7 @@ import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart
 import 'package:foore/onboarding_page/location_claim.dart';
 import 'package:foore/setting_page/sender_code.dart';
 import 'package:foore/setting_page/settting_page.dart';
-import 'package:foore/share_page/share_page.dart';
+
 import 'package:foore/shopping_page/shopping_page.dart';
 import 'package:provider/provider.dart';
 
@@ -159,19 +159,12 @@ class Router {
       case GoogleLoginNotDonePage.routeName:
         return GoogleLoginNotDonePage.generateRoute(settings);
         break;
-      case SharePage.routeName:
-        return SharePage.generateRoute(settings);
-        break;
       case SettingPage.routeName:
         return SettingPage.generateRoute(settings, httpServiceBloc);
         break;
       case SenderCodePage.routeName:
         return SenderCodePage.generateRoute(settings, httpServiceBloc);
         break;
-      case CreatePromotionPage.routeName:
-        return CreatePromotionPage.generateRoute(
-            settings, this.httpServiceBloc);
-      //Es
       case ShoppingPage.routeName:
         return MaterialPageRoute(
           builder: (context) => ShoppingPage(),

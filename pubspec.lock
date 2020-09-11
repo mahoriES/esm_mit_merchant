@@ -85,13 +85,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.2"
-  esys_flutter_share:
-    dependency: "direct main"
-    description:
-      path: esys-flutter-share
-      relative: true
-    source: path
-    version: "1.0.2"
   fake_async:
     dependency: transitive
     description:
@@ -106,13 +99,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.6"
-  firebase_crashlytics:
-    dependency: "direct main"
-    description:
-      name: firebase_crashlytics
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.1+2"
   firebase_messaging:
     dependency: "direct main"
     description:
@@ -192,10 +178,24 @@ packages:
   google_sign_in:
     dependency: "direct main"
     description:
-      path: google_sign_in
-      relative: true
-    source: path
-    version: "4.1.0"
+      name: google_sign_in
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.5.3"
+  google_sign_in_platform_interface:
+    dependency: transitive
+    description:
+      name: google_sign_in_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.2"
+  google_sign_in_web:
+    dependency: transitive
+    description:
+      name: google_sign_in_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.1+1"
   http:
     dependency: "direct main"
     description:
@@ -238,6 +238,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
+  js:
+    dependency: transitive
+    description:
+      name: js
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.2"
   location_permissions:
     dependency: transitive
     description:
@@ -273,13 +280,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
-  path_provider:
-    dependency: transitive
-    description:
-      name: path_provider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.4.5"
   pedantic:
     dependency: transitive
     description:
@@ -336,6 +336,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.22.2"
+  sentry:
+    dependency: "direct main"
+    description:
+      name: sentry
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -404,13 +411,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  upi_india:
-    dependency: "direct main"
-    description:
-      path: UPI
-      relative: true
-    source: path
-    version: "1.1.1"
   url_launcher:
     dependency: "direct main"
     description:
@@ -425,6 +425,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  usage:
+    dependency: transitive
+    description:
+      name: usage
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.4.2"
   uuid:
     dependency: "direct main"
     description:

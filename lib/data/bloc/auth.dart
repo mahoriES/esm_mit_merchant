@@ -80,6 +80,7 @@ class AuthBloc {
     final isAuthTypeGoogle = await _getIsAuthTypeGoogle();
     if (isAuthTypeGoogle) {
       try {
+        print("googleLoginSilently");
         await this.googleSignIn.signInSilently(suppressErrors: false);
       } catch (exception) {
         this.logout();

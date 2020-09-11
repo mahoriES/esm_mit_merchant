@@ -1,11 +1,10 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:foore/data/bloc/auth.dart';
-import 'package:foore/share_page/share_page.dart';
+
+
 import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
-import 'package:foore/check_in_page/check_in_page.dart';
+
 import 'package:foore/data/bloc/review.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/feedback.dart';
@@ -39,16 +38,7 @@ class _ReviewPageState extends State<ReviewPage> {
     super.dispose();
   }
 
-  onGetReviews() async {
-    bool isDone = await CheckInPage.open(context);
-    final authBloc = Provider.of<AuthBloc>(context);
-    if (isDone == true) {
-      bool shouldShowSharePage = await authBloc.shouldShowSharePrompt();
-      if (shouldShowSharePage) {
-        Navigator.of(context).pushNamed(SharePage.routeName);
-      }
-    }
-  }
+  onGetReviews() async {}
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 import 'package:flutter/material.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/login.dart';
@@ -29,11 +29,13 @@ class LoginBloc {
   Observable<LoginState> get loginStateObservable => _subjectLoginState.stream;
 
   Future<void> signInWithGoogle(BuildContext context) async {
+    
     if (this._loginState.isLoading == false) {
       this._loginState.isLoading = true;
       this._loginState.isSubmitFailed = false;
       this._updateState();
       try {
+        print("signInWithGoogle");
         GoogleSignInAccount account = await _authBloc.googleSignIn.signIn();
         GoogleSignInAuthentication authentication =
             await account.authentication;
@@ -43,16 +45,19 @@ class LoginBloc {
         AuthInfo loginInfo = await getAuthInfoWithGoogleAuthStateId(
             authStateResponse.authStateId);
         this._authBloc.login(loginInfo, authType: AuthType.Google);
+        print("signInWithGoogle Refreshing backend");
         refreshBackend();
         Navigator.of(context).pushNamedAndRemoveUntil(Router.homeRoute,(Route<dynamic> route) => false);
         this._loginState.isLoading = false;
         this._loginState.isSubmitFailed = false;
         this._updateState();
       } catch (error, s) {
+        print("signInWithGoogle Error");
         this._loginState.isSubmitFailed = true;
         this._loginState.isLoading = false;
         this._updateState();
-        Crashlytics.instance.recordError(error, s);
+        //TODO: Custom sentry error
+        
       }
     }
   }
@@ -69,8 +74,7 @@ class LoginBloc {
       return authStateIdResponse;
     } else {
       var responseBody = authStateIdHttpResponse.body ?? '';
-      Crashlytics.instance.log(
-          'url: google/account/login/init/, responseCode: ${authStateIdHttpResponse.statusCode}, response$responseBody');
+      //TODO: Custom sentry error
       throw "Err";
     }
   }
@@ -90,8 +94,7 @@ class LoginBloc {
       }
     } else {
       var responseBody = httpResponse.body ?? '';
-      Crashlytics.instance.log(
-          'url: google/account/login/info/?auth_state_id=$authStateId, responseCode: ${httpResponse.statusCode}, response$responseBody');
+      //TODO: Custom sentry error
       this._authBloc.googleSignIn.signOut();
       throw "Err";
     }

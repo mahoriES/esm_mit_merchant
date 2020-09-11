@@ -1,5 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 import 'package:flutter/material.dart';
 import 'package:foore/data/model/login.dart';
 import 'package:foore/environments/environment.dart';
@@ -89,7 +89,8 @@ class FoAnalytics {
       }
     } catch (err, stacktrace) {
       print(stacktrace.toString());
-      Crashlytics.instance.recordError(err, stacktrace);
+      //TODO: Custom sentry error
+
     }
   }
 
@@ -99,8 +100,8 @@ class FoAnalytics {
       Intercom.logEvent('Navigate to : $screenName');
     } catch (err, stacktrace) {
       print(stacktrace.toString());
+//TODO: Custom sentry error
 
-      Crashlytics.instance.recordError(err, stacktrace);
     }
   }
 
@@ -115,7 +116,8 @@ class FoAnalytics {
             .setUserProperty(name: name, value: value.toString());
       }
     } catch (err, stacktrace) {
-      Crashlytics.instance.recordError(err, stacktrace);
+      //TODO: Custom sentry error
+
       print(stacktrace.toString());
     }
   }

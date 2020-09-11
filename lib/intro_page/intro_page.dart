@@ -143,6 +143,7 @@ class _IntroPageState extends State<IntroPage>
                                   padding: EdgeInsets.all(0.0),
                                   color: const Color(0xFF4285F4),
                                   onPressed: () {
+                                    //print("introLogin onPressed");
                                     loginBloc.signInWithGoogle(context);
                                   },
                                   child: Row(

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/data/bloc/auth.dart';
@@ -114,8 +114,8 @@ class LocationClaimBloc {
         }
       }
     } else {
-      Crashlytics.instance.log(
-          'url: $url , responseCode: ${httpResponse.statusCode} , response: ${httpResponse.body ?? ''}');
+      //TODO: Custom sentry error
+      
     }
     if (accountName != null) {
       this._onboardingState.accountName = accountName;
@@ -152,8 +152,7 @@ class LocationClaimBloc {
       this._onboardingState.googleLocation = null;
       this._updateState();
     } else {
-      Crashlytics.instance.log(
-          'url: $url , responseCode: ${httpResponse.statusCode} , body: $body , response: ${httpResponse.body ?? ''}');
+      //TODO: Custom sentry error
       throw 'Error';
     }
   }
@@ -183,8 +182,7 @@ class LocationClaimBloc {
 
       this._updateState();
     } else {
-      Crashlytics.instance.log(
-          'url: $url , responseCode: ${httpResponse.statusCode} , body: $body , response: ${httpResponse.body ?? ''}');
+      //TODO: Custom sentry error
       throw 'Error';
     }
   }

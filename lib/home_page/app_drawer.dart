@@ -1,10 +1,9 @@
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/environments/environment.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/language_selection_page/language_selection_page.dart';
 import 'package:foore/setting_page/settting_page.dart';
-import 'package:foore/share_page/share_page.dart';
+
 import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/auth.dart';
 
@@ -100,22 +99,6 @@ class AppDrawer extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (context) => LanguageSelectionPage()),
               );
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.share),
-            title: Text(
-                AppTranslations.of(context).text("share_page_button_share")),
-            onTap: () {
-              Navigator.of(context).popAndPushNamed(SharePage.routeName);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.message),
-            title: Text(
-                AppTranslations.of(context).text('drawer_button_contact_us')),
-            onTap: () async {
-              await Share.whatsAppTo('+917829862689');
             },
           ),
           ListTile(
