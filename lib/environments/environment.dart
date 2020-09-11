@@ -2,6 +2,7 @@ import 'package:package_info/package_info.dart';
 
 class Environment {
   //Set False for Staging build
+  static get isProd => true;
 
   static get apiUrl =>
       isProd ? EnvironmentProd._apiUrl : EnvironmentPreprod._apiUrl;
@@ -22,9 +23,6 @@ class Environment {
   static get intercomIosApiKey => isProd
       ? EnvironmentProd._intercom_ios_api_key
       : EnvironmentPreprod._intercom_ios_api_key;
-
-  static get isProd => true;
-  // static get isProd => const bool.fromEnvironment('dart.vm.product');
 
   static Future<String> get version async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();

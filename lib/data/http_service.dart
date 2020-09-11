@@ -8,9 +8,9 @@ import 'dart:io';
 import 'dart:async';
 
 class HttpService {
-  String apiUrl = 'https://www.api.foore.io/api/v1/';
+  String apiUrl;
 
-  String esApiBaseUrl = 'https://api.test.esamudaay.com/api/v1/';
+  String esApiBaseUrl.
 
   AuthBloc _authBloc;
 
