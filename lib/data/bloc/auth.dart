@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:foore/data/bloc/push_notifications.dart';
-import 'package:foore/data/branch_service.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_auth.dart';
 import 'package:foore/data/model/es_profiles.dart';
@@ -29,11 +28,10 @@ class AuthBloc {
 
   BehaviorSubject<AuthState> _subjectAuthState;
 
-  BranchService _branchService;
+
 
   AuthBloc() {
     this._subjectAuthState = new BehaviorSubject<AuthState>.seeded(authState);
-    this._branchService = new BranchService(this);
     this._loadAuthState();
     this._loadEsAuthState();
   }
@@ -67,14 +65,11 @@ class AuthBloc {
     }
     this._pushNotifications.subscribeForCurrentUser(HttpService(this));
     this.foAnalytics.identifyUser(authData);
-    getReferralUrl();
+
     this.authState.isEsLoading = false;
   }
 
-  getReferralUrl() async {
-    var url = await this._branchService.getReferralUrl();
-    return url;
-  }
+
 
   Future<bool> googleLoginSilently() async {
     final isAuthTypeGoogle = await _getIsAuthTypeGoogle();
@@ -93,9 +88,7 @@ class AuthBloc {
     }
   }
 
-  Future<bool> shouldShowSharePrompt() async {
-    return await this._branchService.shouldShowSharePrompt();
-  }
+  
 
   logout() {
     this.authState.authData = null;
@@ -105,7 +98,7 @@ class AuthBloc {
     this.foAnalytics.resetUserIdentity();
     this._pushNotifications.unsubscribeForCurrentUser();
     clearSharedPreferences();
-    this._branchService.clear();
+  
     this.esLogoutSilently();
   }
 

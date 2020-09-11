@@ -52,7 +52,7 @@ class LoginBloc {
         this._loginState.isSubmitFailed = false;
         this._updateState();
       } catch (error, s) {
-        print("signInWithGoogle Error");
+        print("signInWithGoogle Error"+s.toString());
         this._loginState.isSubmitFailed = true;
         this._loginState.isLoading = false;
         this._updateState();

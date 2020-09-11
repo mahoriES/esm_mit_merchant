@@ -4,7 +4,6 @@ import io.flutter.app.FlutterApplication
 import android.content.Context
 import androidx.multidex.MultiDex
 
-import io.branch.referral.Branch
 
 
 class App : FlutterApplication() {
@@ -17,11 +16,6 @@ class App : FlutterApplication() {
     override fun onCreate() {
         super.onCreate()
 
-        // Branch logging for debugging
-        Branch.enableDebugMode()
-
-        // Branch object initialization
-        Branch.getAutoInstance(this)
     }
 
 }
