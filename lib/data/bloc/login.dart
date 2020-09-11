@@ -35,10 +35,16 @@ class LoginBloc {
       this._loginState.isSubmitFailed = false;
       this._updateState();
       try {
-        print("signInWithGoogle");
+        print("signInWithGoogle - 1");
+        //print("_authBloc"+str(_authBloc));
+        //print("_authBloc.googleSignIn"+str(_authBloc.googleSignIn));
+
         GoogleSignInAccount account = await _authBloc.googleSignIn.signIn();
+
+        print("signInWithGoogle - 2");
         GoogleSignInAuthentication authentication =
             await account.authentication;
+        print("signInWithGoogle - 3");
         print('GOOGLE_ACCESS_TOKEN: ' + authentication.accessToken);
         GoogleAuthStateIdResponse authStateResponse =
             await getGoogleAuthStateId(authentication.serverAuthCode);

@@ -10,7 +10,7 @@ import 'dart:async';
 class HttpService {
   String apiUrl;
 
-  String esApiBaseUrl.
+  String esApiBaseUrl;
 
   AuthBloc _authBloc;
 
