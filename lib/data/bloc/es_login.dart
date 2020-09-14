@@ -37,11 +37,9 @@ class EsLoginBloc {
     this._updateState();
     final phoneNumberInput = '+91' + this.phoneEditController.text;
 
-
-
     _httpService
-        .esGetWithoutAuth(
-            EsApiPaths.getOTP + '?phone=$phoneNumberInput&third_party_id=${Environment.esTPID}')
+        .esGetWithoutAuth(EsApiPaths.getOTP +
+            '?phone=$phoneNumberInput&third_party_id=${Environment.esTPID}')
         .then((httpResponse) {
       debugPrint("es_login.dart: " + "sendCode :" + httpResponse.body);
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
@@ -69,11 +67,11 @@ class EsLoginBloc {
     this._updateState();
     final phoneNumberInput = '+91' + this.phoneEditController.text;
 
-
     _httpService
         .esPostWithoutAuth(
       EsApiPaths.postSignUp,
-      json.encode(EsSignUpPayload(phone: phoneNumberInput, thirdPartyId: Environment.esTPID)
+      json.encode(EsSignUpPayload(
+              phone: phoneNumberInput, thirdPartyId: Environment.esTPID)
           .toJson()),
     )
         .then((httpResponse) {
@@ -121,8 +119,9 @@ class EsLoginBloc {
           var profilesResponseData = EsGetProfilesResponse.fromJson(
               json.decode(profilesResponse.body));
           this._authBloc.esLogin(authData, profilesResponseData.merchant);
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              EsHomePage.routeName, (Route<dynamic> route) => false);
+          // Navigator.of(context).pushNamedAndRemoveUntil(
+          //     EsHomePage.routeName, (Route<dynamic> route) => false);
+          Navigator.of(context).pop();
           this._loginState.isSubmitOtp = false;
           this._updateState();
           return;

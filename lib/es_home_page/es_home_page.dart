@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:foore/es_business_profile/es_business_profile.dart';
 import 'package:foore/es_order_page/es_order_page.dart';
+import 'package:foore/home_page/home_page.dart';
 import 'package:foore/menu_page/menu_page.dart';
 import '../router.dart';
 
 class EsHomePage extends StatefulWidget {
-  static const routeName = '/esHome';
+  static const routeName = '/';
   EsHomePage();
   @override
   _EsHomePageState createState() => _EsHomePageState();
@@ -14,15 +15,15 @@ class EsHomePage extends StatefulWidget {
 class _EsHomePageState extends State<EsHomePage> {
   int _selectedIndex = 1;
   final List<Widget> _widgetOptions = <Widget>[
-    Container(),
     EsOrderPage(),
     MenuPage(),
-    EsBusinessProfile()
+    EsBusinessProfile(),
+    Container(),
   ];
 
   void _onItemTapped(int index) {
-    if (index == 0) {
-      Navigator.of(context).pushNamed(Router.homeRoute);
+    if (index == 3) {
+      Navigator.of(context).pushNamed(HomePage.routeName);
     }
     {
       setState(() {
@@ -40,12 +41,6 @@ class _EsHomePageState extends State<EsHomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.chevron_left),
-            title: Text(
-              "Home",
-            ),
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.shopping_basket),
             title: Text(
               'Orders',
@@ -61,6 +56,12 @@ class _EsHomePageState extends State<EsHomePage> {
             icon: Icon(Icons.store),
             title: Text(
               'Profile',
+            ),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.feedback),
+            title: Text(
+              "Reviews",
             ),
           ),
         ],

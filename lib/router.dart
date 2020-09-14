@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
+import 'package:foore/data/bloc/es_create_merchant_profile.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_business_guard/es_businesses_guard.dart';
 import 'package:foore/es_category_page/es_add_subcategory.dart';
@@ -175,8 +176,13 @@ class Router {
       case homeRoute:
         return MaterialPageRoute(
           builder: (context) => EsAuthGuard(
-            unauthenticatedHandler: esUnauthenticatedHandler,
-            noMerchantProfileHandler: esNoMerchantProfileHandler,
+            unauthenticatedPage: ShoppingPage(),
+            noMerchantProfilePage: Provider(
+              builder: (context) =>
+                  EsCreateMerchantProfileBloc(httpServiceBloc, authBloc),
+              dispose: (context, value) => value.dispose(),
+              child: EsCreateMerchantProfilePage(),
+            ),
             child: EsBusinessesGuard(
               createBusinessRequiredHandler: esCreateBusinessRequiredHandler,
               child: MultiProvider(

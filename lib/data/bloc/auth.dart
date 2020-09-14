@@ -28,8 +28,6 @@ class AuthBloc {
 
   BehaviorSubject<AuthState> _subjectAuthState;
 
-
-
   AuthBloc() {
     this._subjectAuthState = new BehaviorSubject<AuthState>.seeded(authState);
     this._loadAuthState();
@@ -69,8 +67,6 @@ class AuthBloc {
     this.authState.isEsLoading = false;
   }
 
-
-
   Future<bool> googleLoginSilently() async {
     final isAuthTypeGoogle = await _getIsAuthTypeGoogle();
     if (isAuthTypeGoogle) {
@@ -88,8 +84,6 @@ class AuthBloc {
     }
   }
 
-  
-
   logout() {
     this.authState.authData = null;
     this.authState.isLoading = false;
@@ -98,7 +92,7 @@ class AuthBloc {
     this.foAnalytics.resetUserIdentity();
     this._pushNotifications.unsubscribeForCurrentUser();
     clearSharedPreferences();
-  
+
     this.esLogoutSilently();
   }
 
@@ -178,7 +172,7 @@ class AuthBloc {
   esLogoutSilently() {
     this.authState.esAuthData = null;
     this.authState.esMerchantProfile = null;
-    this.authState.isEsLoading = true;
+    this.authState.isEsLoading = false;
     this._updateState();
     this._storeEsAuthState();
   }
