@@ -77,7 +77,7 @@ class Router {
     print(settings.name);
     this.authBloc.foAnalytics.setCurrentScreen(settings.name);
     switch (settings.name) {
-      case homeRoute:
+      case HomePage.routeName:
         return MaterialPageRoute(
           builder: (context) => AuthGuard(
             unauthenticatedHandler: unauthenticatedHandler,
@@ -103,30 +103,22 @@ class Router {
       case ReplyGmb.routeName:
         FeedbackItem feedbackItem = settings.arguments;
         return MaterialPageRoute(
-          builder: (context) => AuthGuard(
-            unauthenticatedHandler: unauthenticatedHandler,
-            child: ReplyGmb(feedbackItem),
-          ),
+          builder: (context) => ReplyGmb(feedbackItem),
           fullscreenDialog: true,
         );
       case UnirsonCheckInPage.routeName:
         UnirsonItem unirsonItem = settings.arguments;
         return MaterialPageRoute(
-          builder: (context) => AuthGuard(
-            unauthenticatedHandler: unauthenticatedHandler,
-            child: UnirsonCheckInPage(unirsonItem),
-          ),
+          builder: (context) => UnirsonCheckInPage(unirsonItem),
           fullscreenDialog: true,
         );
       case OnboardingPage.routeName:
         return MaterialPageRoute(
-          builder: (context) => AuthGuard(
-              unauthenticatedHandler: unauthenticatedHandler,
-              child: Provider<OnboardingBloc>(
-                builder: (context) => OnboardingBloc(httpServiceBloc),
-                dispose: (context, value) => value.dispose(),
-                child: OnboardingPage(),
-              )),
+          builder: (context) => Provider<OnboardingBloc>(
+            builder: (context) => OnboardingBloc(httpServiceBloc),
+            dispose: (context, value) => value.dispose(),
+            child: OnboardingPage(),
+          ),
         );
         break;
       case LoginPage.routeName:
@@ -180,7 +172,7 @@ class Router {
           builder: (context) => EsLoginPage(true),
         );
         break;
-      case EsHomePage.routeName:
+      case homeRoute:
         return MaterialPageRoute(
           builder: (context) => EsAuthGuard(
             unauthenticatedHandler: esUnauthenticatedHandler,
@@ -202,14 +194,11 @@ class Router {
         break;
       case EsCreateBusinessPage.routeName:
         return MaterialPageRoute(
-          builder: (context) => EsAuthGuard(
-              unauthenticatedHandler: esUnauthenticatedHandler,
-              noMerchantProfileHandler: esNoMerchantProfileHandler,
-              child: Provider<EsCreateBusinessBloc>(
-                builder: (context) => EsCreateBusinessBloc(httpServiceBloc),
-                dispose: (context, value) => value.dispose(),
-                child: EsCreateBusinessPage(),
-              )),
+          builder: (context) => Provider<EsCreateBusinessBloc>(
+            builder: (context) => EsCreateBusinessBloc(httpServiceBloc),
+            dispose: (context, value) => value.dispose(),
+            child: EsCreateBusinessPage(),
+          ),
         );
         break;
       case EsCreateMerchantProfilePage.routeName:
@@ -218,93 +207,66 @@ class Router {
         break;
       case MenuPage.routeName:
         return MaterialPageRoute(
-          builder: (context) => EsAuthGuard(
-              unauthenticatedHandler: esUnauthenticatedHandler,
-              noMerchantProfileHandler: esNoMerchantProfileHandler,
-              child: Provider<OnboardingBloc>(
-                builder: (context) => OnboardingBloc(httpServiceBloc),
-                dispose: (context, value) => value.dispose(),
-                child: MenuPage(),
-              )),
+          builder: (context) => Provider<OnboardingBloc>(
+            builder: (context) => OnboardingBloc(httpServiceBloc),
+            dispose: (context, value) => value.dispose(),
+            child: MenuPage(),
+          ),
         );
         break;
       case AddMenuItemPage.routeName:
         EsProduct esProduct = settings.arguments;
         return MaterialPageRoute(
-          builder: (context) => EsAuthGuard(
-              unauthenticatedHandler: esUnauthenticatedHandler,
-              noMerchantProfileHandler: esNoMerchantProfileHandler,
-              child: Provider<EsEditProductBloc>(
-                builder: (context) =>
-                    EsEditProductBloc(httpServiceBloc, esBusinessesBloc),
-                dispose: (context, value) => value.dispose(),
-                child: AddMenuItemPage(esProduct),
-              )),
+          builder: (context) => Provider<EsEditProductBloc>(
+            builder: (context) =>
+                EsEditProductBloc(httpServiceBloc, esBusinessesBloc),
+            dispose: (context, value) => value.dispose(),
+            child: AddMenuItemPage(esProduct),
+          ),
         );
         break;
       case EsProductDetailPage.routeName:
         EsProduct esProduct = settings.arguments;
         return MaterialPageRoute(
-          builder: (context) => EsAuthGuard(
-              unauthenticatedHandler: esUnauthenticatedHandler,
-              noMerchantProfileHandler: esNoMerchantProfileHandler,
-              child: Provider<EsEditProductBloc>(
-                builder: (context) =>
-                    EsEditProductBloc(httpServiceBloc, esBusinessesBloc),
-                dispose: (context, value) => value.dispose(),
-                child: EsProductDetailPage(esProduct),
-              )),
+          builder: (context) => Provider<EsEditProductBloc>(
+            builder: (context) =>
+                EsEditProductBloc(httpServiceBloc, esBusinessesBloc),
+            dispose: (context, value) => value.dispose(),
+            child: EsProductDetailPage(esProduct),
+          ),
         );
         break;
       case EsCategoryPage.routeName:
         List<int> selectedCategories = settings.arguments;
         return MaterialPageRoute(
-          builder: (context) => EsAuthGuard(
-            unauthenticatedHandler: esUnauthenticatedHandler,
-            noMerchantProfileHandler: esNoMerchantProfileHandler,
-            child: EsCategoryPage(selectedCategoryIds: selectedCategories),
-          ),
+          builder: (context) =>
+              EsCategoryPage(selectedCategoryIds: selectedCategories),
         );
         break;
       case EsSubCategoryPage.routeName:
         EsSabCategoryParam categoryParam = settings.arguments;
         return MaterialPageRoute(
-          builder: (context) => EsAuthGuard(
-            unauthenticatedHandler: esUnauthenticatedHandler,
-            noMerchantProfileHandler: esNoMerchantProfileHandler,
-            child: EsSubCategoryPage(
-                categoryParam.parentCategory, categoryParam.esCategoriesBloc),
-          ),
+          builder: (context) => EsSubCategoryPage(
+              categoryParam.parentCategory, categoryParam.esCategoriesBloc),
         );
         break;
       case EsAddCategoryPage.routeName:
         return MaterialPageRoute(
-          builder: (context) => EsAuthGuard(
-            unauthenticatedHandler: esUnauthenticatedHandler,
-            noMerchantProfileHandler: esNoMerchantProfileHandler,
-            child: EsAddCategoryPage(),
-          ),
+          builder: (context) => EsAddCategoryPage(),
         );
         break;
 
       case EsAddSubCategoryPage.routeName:
         EsAddSubCategoryPageParams addSubCategoryParam = settings.arguments;
         return MaterialPageRoute(
-          builder: (context) => EsAuthGuard(
-            unauthenticatedHandler: esUnauthenticatedHandler,
-            noMerchantProfileHandler: esNoMerchantProfileHandler,
-            child: EsAddSubCategoryPage(addSubCategoryParam.parentCategoryId,
-                addSubCategoryParam.parentCategoryName),
-          ),
+          builder: (context) => EsAddSubCategoryPage(
+              addSubCategoryParam.parentCategoryId,
+              addSubCategoryParam.parentCategoryName),
         );
         break;
       case EsOrderPage.routeName:
         return MaterialPageRoute(
-          builder: (context) => EsAuthGuard(
-            unauthenticatedHandler: esUnauthenticatedHandler,
-            noMerchantProfileHandler: esNoMerchantProfileHandler,
-            child: EsOrderPage(),
-          ),
+          builder: (context) => EsOrderPage(),
         );
         break;
       default:
