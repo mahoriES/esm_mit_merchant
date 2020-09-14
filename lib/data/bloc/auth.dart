@@ -92,8 +92,7 @@ class AuthBloc {
     this.foAnalytics.resetUserIdentity();
     this._pushNotifications.unsubscribeForCurrentUser();
     clearSharedPreferences();
-
-    this.esLogoutSilently();
+    // this.esLogoutSilently();
   }
 
   clearSharedPreferences() async {
