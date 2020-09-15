@@ -17,7 +17,7 @@ if (flutterVersionCode == null) {
 }
 
 //def flutterVersionName = '0.3.1.staging'
-def flutterVersionName = '0.3.3'
+def flutterVersionName = '0.3.4'
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
@@ -34,7 +34,7 @@ if (keystorePropertiesFile.exists()) {
 
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -46,8 +46,8 @@ android {
 
     defaultConfig {
         applicationId "in.foore.mobile"
-        minSdkVersion 21
-        targetSdkVersion 28
+        minSdkVersion 16
+        targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -75,7 +75,7 @@ android {
         }
 
         debug {
-            //applicationIdSuffix ".debug"
+            applicationIdSuffix ".debug"
         }
     }
 }

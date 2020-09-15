@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:foore/data/http_service.dart';
-import 'package:intercom_flutter/intercom_flutter.dart';
 
 class PushNotifications {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -31,7 +30,6 @@ class PushNotifications {
       var fcmToken = FcmToken(token);
       var payloadString = json.encode(fcmToken.toJson());
       httpService.foPost('fcm/add/foore/', payloadString);
-      Intercom.sendTokenToIntercom(fcmToken.fcmToken);
     }
     return token;
   }
