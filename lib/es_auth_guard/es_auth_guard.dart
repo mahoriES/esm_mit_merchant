@@ -10,16 +10,17 @@ typedef void EsAuthGuardNoMerchantProfileHandler(BuildContext context);
 
 class EsAuthGuard extends StatefulWidget {
   final Widget child;
-  final EsAuthGuardUnauthenticatedHandler unauthenticatedHandler;
-  final EsAuthGuardNoMerchantProfileHandler noMerchantProfileHandler;
+  final Widget unauthenticatedPage;
+  final Widget noMerchantProfilePage;
 
   EsAuthGuard({
     @required this.child,
-    @required this.unauthenticatedHandler,
-    @required this.noMerchantProfileHandler,
+    @required this.unauthenticatedPage,
+    @required this.noMerchantProfilePage,
   }) {
     assert(this.child != null);
-    assert(this.unauthenticatedHandler != null);
+    assert(this.unauthenticatedPage != null);
+    assert(this.noMerchantProfilePage != null);
   }
 
   @override
@@ -50,29 +51,22 @@ class _EsAuthGuardState extends State<EsAuthGuard> {
   @override
   Widget build(BuildContext context) {
     final authBloc = Provider.of<AuthBloc>(context);
-    _subscription =
-        authBloc.authStateObservable.listen(_onAuthenticationChange);
-
     return StreamBuilder<AuthState>(
       stream: authBloc.authStateObservable,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.isEsLoading) {
-            currentWidget = LogoPage();
+            currentWidget = Container(child: Text('Text'),);
           } else if (snapshot.data.isEsMerchantLoggedIn) {
             currentWidget = widget.child;
+          } else if (snapshot.data.isEsLoggedOut) {
+            currentWidget = widget.unauthenticatedPage;
+          } else if (snapshot.data.isMerchantProfileNotExist) {
+            currentWidget = widget.noMerchantProfilePage;
           }
         }
         return currentWidget;
       },
     );
-  }
-
-  _onAuthenticationChange(AuthState authState) {
-    if (authState.isEsLoggedOut) {
-      widget.unauthenticatedHandler(context);
-    } else if(authState.isMerchantProfileNotExist) {
-      widget.noMerchantProfileHandler(context);
-    }
   }
 }

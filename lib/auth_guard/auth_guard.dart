@@ -9,14 +9,14 @@ typedef void AuthGuardUnauthenticatedHandler(BuildContext context);
 
 class AuthGuard extends StatefulWidget {
   final Widget child;
-  final AuthGuardUnauthenticatedHandler unauthenticatedHandler;
+  final Widget unauthenticatedPage;
 
   AuthGuard({
     @required this.child,
-    @required this.unauthenticatedHandler,
+    @required this.unauthenticatedPage,
   }) {
     assert(this.child != null);
-    assert(this.unauthenticatedHandler != null);
+    assert(this.unauthenticatedPage != null);
   }
 
   @override
@@ -35,20 +35,20 @@ class _AuthGuardState extends State<AuthGuard> {
     currentWidget = LogoPage();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    if (_subscription != null) {
-      _subscription.cancel();
-      _subscription = null;
-    }
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   if (_subscription != null) {
+  //     _subscription.cancel();
+  //     _subscription = null;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     final authBloc = Provider.of<AuthBloc>(context);
-    _subscription =
-        authBloc.authStateObservable.listen(_onAuthenticationChange);
+    // _subscription =
+    //     authBloc.authStateObservable.listen(_onAuthenticationChange);
 
     return StreamBuilder<AuthState>(
       stream: authBloc.authStateObservable,
@@ -58,6 +58,8 @@ class _AuthGuardState extends State<AuthGuard> {
             currentWidget = LogoPage();
           } else if (snapshot.data.isLoggedIn) {
             currentWidget = widget.child;
+          } else if(snapshot.data.isLoggedOut) {
+            currentWidget = widget.unauthenticatedPage;
           }
         }
         return currentWidget;
@@ -65,9 +67,9 @@ class _AuthGuardState extends State<AuthGuard> {
     );
   }
 
-  _onAuthenticationChange(AuthState authState) {
-    if (authState.isLoggedOut) {
-      widget.unauthenticatedHandler(context);
-    }
-  }
+  // _onAuthenticationChange(AuthState authState) {
+  //   if (authState.isLoggedOut) {
+  //     widget.unauthenticatedHandler(context);
+  //   }
+  // }
 }

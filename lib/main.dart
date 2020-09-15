@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/app_translations_delegate.dart';
+import 'package:foore/sentry_handler.dart';
 import 'package:foore/theme/light.dart';
 import 'package:provider/provider.dart';
 import 'data/bloc/analytics.dart';
@@ -15,15 +16,26 @@ import 'router.dart';
 import 'data/bloc/app_translations_bloc.dart';
 import 'data/bloc/auth.dart';
 import 'data/http_service.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, //top bar color
     statusBarIconBrightness: Brightness.dark, //top bar icons
   ));
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  runZoned<Future<void>>(() async {
+
+  FlutterError.onError = (FlutterErrorDetails details) {
+    if (!SentryHandler().isInProdMode) {
+      // In development mode, simply print to console.
+      FlutterError.dumpErrorToConsole(details);
+    } else {
+      // In production mode, report to the application zone to report to
+      // Sentry.
+      Zone.current.handleUncaughtError(details.exception, details.stack);
+    }
+  };
+
+  runZonedGuarded(() async {
     runApp(
       MultiProvider(
         providers: [
@@ -42,8 +54,9 @@ void main() {
             builder: (_, http, __) => OnboardingGuardBloc(http),
             dispose: (context, value) => value.dispose(),
           ),
-          ProxyProvider2<HttpService,AuthBloc, EsBusinessesBloc>(
-            builder: (_, http,authBloc, __) => EsBusinessesBloc(http, authBloc),
+          ProxyProvider2<HttpService, AuthBloc, EsBusinessesBloc>(
+            builder: (_, http, authBloc, __) =>
+                EsBusinessesBloc(http, authBloc),
             dispose: (context, value) => value.dispose(),
           ),
           Provider<AppTranslationsBloc>(
@@ -54,7 +67,11 @@ void main() {
         child: ReviewApp(),
       ),
     );
-  }, onError: Crashlytics.instance.recordError);
+  }, (Object error, StackTrace stackTrace) {
+    /// Whenever an error occurs, call the `reportError` function. This sends
+    /// Dart errors to the dev env or prod env of Sentry based on current status.
+    SentryHandler().reportError(error, stackTrace);
+  });
 }
 
 class ReviewApp extends StatefulWidget {

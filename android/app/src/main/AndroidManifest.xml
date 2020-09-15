@@ -36,16 +36,6 @@
                 <data android:scheme="https" android:host="foore.app.link" />
             </intent-filter>
         </activity>
-        <!-- Branch init -->
-        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_cgRzWv8klJM27ocyT3cD8makuxkwNoe5" />
-        <!-- Branch testing (TestMode "true" to simulate fresh installs on dev environment) -->
-        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
-        <!-- Branch install referrer tracking -->
-        <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBGRrg0YVy9U3SUF34GoAeGbUP_s5RAYAY"/>
         <service android:name="io.maido.intercom.PushInterceptService" android:enabled="true" android:exported="true">
             <intent-filter>

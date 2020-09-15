@@ -10,14 +10,14 @@ typedef void OnboardingGuardOnboardingRequiredHandler(BuildContext context);
 
 class OnboardingGuard extends StatefulWidget {
   final Widget child;
-  final OnboardingGuardOnboardingRequiredHandler onboardingRequiredHandler;
+  final Widget onboardingRequiredPage;
 
   OnboardingGuard({
     @required this.child,
-    @required this.onboardingRequiredHandler,
+    @required this.onboardingRequiredPage,
   }) {
     assert(this.child != null);
-    assert(this.onboardingRequiredHandler != null);
+    assert(this.onboardingRequiredPage != null);
   }
 
   @override
@@ -44,20 +44,20 @@ class _OnboardingGuardState extends State<OnboardingGuard>  with AfterLayoutMixi
     currentWidget = LogoPage();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    if (_subscription != null) {
-      _subscription.cancel();
-      _subscription = null;
-    }
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   if (_subscription != null) {
+  //     _subscription.cancel();
+  //     _subscription = null;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     final onboardingBloc = Provider.of<OnboardingGuardBloc>(context);
-    _subscription = onboardingBloc.onboardingStateObservable
-        .listen(_onOnboardingChange);
+    // _subscription = onboardingBloc.onboardingStateObservable
+    //     .listen(_onOnboardingChange);
 
     return StreamBuilder<OnboardingGuardState>(
       stream: onboardingBloc.onboardingStateObservable,
@@ -65,6 +65,8 @@ class _OnboardingGuardState extends State<OnboardingGuard>  with AfterLayoutMixi
         if (snapshot.hasData) {
           if (snapshot.data.isShowChild) {
             currentWidget = widget.child;
+          } else if(snapshot.data.isOnboardingRequired) {
+            currentWidget = widget.onboardingRequiredPage;
           }
         }
         return currentWidget;
@@ -72,9 +74,9 @@ class _OnboardingGuardState extends State<OnboardingGuard>  with AfterLayoutMixi
     );
   }
 
-  _onOnboardingChange(OnboardingGuardState onboardingState) {
-    if (onboardingState.isOnboardingRequired) {
-      widget.onboardingRequiredHandler(context);
-    }
-  }
+  // _onOnboardingChange(OnboardingGuardState onboardingState) {
+  //   if (onboardingState.isOnboardingRequired) {
+  //     widget.onboardingRequiredHandler(context);
+  //   }
+  // }
 }

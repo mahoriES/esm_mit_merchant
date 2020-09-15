@@ -27,17 +27,11 @@ class _ShoppingPageState extends State<ShoppingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: Text(
-          'My Store',
-        ),
+        // title: Text(
+        //   'My Store',
+        // ),
       ),
-      drawer: AppDrawer(),
+      // drawer: AppDrawer(),
       body: SafeArea(
         child: Container(
           height: double.infinity,

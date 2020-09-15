@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
@@ -128,9 +127,7 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
                     ),
                     const SizedBox(height: 20),
                     InkWell(
-                      onTap: () async {
-                        await Share.whatsAppTo('+917829862689');
-                      },
+                      onTap: () async {},
                       child: Container(
                         margin: EdgeInsets.symmetric(
                           horizontal: 16.0,
@@ -148,7 +145,7 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
                             Container(
                               child: Text(
                                 'Get in touch with us to get Circle code',
-                                overflow: TextOverflow.ellipsis ,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: Colors.blue,
                                 ),

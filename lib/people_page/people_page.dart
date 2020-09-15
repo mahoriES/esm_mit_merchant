@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:foore/data/bloc/auth.dart';
-import 'package:foore/share_page/share_page.dart';
-import 'package:provider/provider.dart';
 import 'package:foore/check_in_page/check_in_page.dart';
+
+import 'package:provider/provider.dart';
+
 import 'package:foore/data/bloc/people.dart';
 import '../app_translations.dart';
 import 'unirson_list.dart';
@@ -23,14 +23,7 @@ class _PeoplePageState extends State<PeoplePage>
   }
 
   onGetReviews() async {
-    bool isDone = await CheckInPage.open(context);
-    final authBloc = Provider.of<AuthBloc>(context);
-    if (isDone == true) {
-      bool shouldShowSharePage = await authBloc.shouldShowSharePrompt();
-      if (shouldShowSharePage) {
-        Navigator.of(context).pushNamed(SharePage.routeName);
-      }
-    }
+    await CheckInPage.open(context);
   }
 
   @override
@@ -78,7 +71,8 @@ class _PeoplePageState extends State<PeoplePage>
           onPressed: this.onGetReviews,
           child: Container(
             child: Text(
-              AppTranslations.of(context).text("review_page_button_get_reviews"),
+              AppTranslations.of(context)
+                  .text("review_page_button_get_reviews"),
               style: Theme.of(context).textTheme.subhead.copyWith(
                     color: Colors.white,
                   ),
