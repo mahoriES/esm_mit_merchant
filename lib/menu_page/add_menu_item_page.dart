@@ -108,51 +108,51 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: TextFormField(
-                        controller:
-                            esEditProductBloc.shortDescriptionEditController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Short description',
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: TextFormField(
-                        controller:
-                            esEditProductBloc.longDescriptionEditController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Long description',
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: TextFormField(
-                        controller:
-                            esEditProductBloc.displayLine1EditController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Display line 1',
-                        ),
-                      ),
-                    ),
+                    //Padding(
+                    //  padding: const EdgeInsets.only(
+                    //    top: 24.0,
+                    //    left: 20,
+                    //    right: 20,
+                    //  ),
+                    //  child: TextFormField(
+                    //    controller:
+                    //        esEditProductBloc.shortDescriptionEditController,
+                    //    decoration: InputDecoration(
+                    //      border: OutlineInputBorder(),
+                    //      labelText: 'Short description',
+                    //    ),
+                    //  ),
+                    //),
+                    //Padding(
+                    //  padding: const EdgeInsets.only(
+                    //    top: 24.0,
+                    //    left: 20,
+                    //    right: 20,
+                    //  ),
+                    //  child: TextFormField(
+                    //    controller:
+                    //        esEditProductBloc.longDescriptionEditController,
+                    //    decoration: InputDecoration(
+                    //      border: OutlineInputBorder(),
+                    //      labelText: 'Long description',
+                    //    ),
+                    //  ),
+                    //),
+                    //Padding(
+                    //  padding: const EdgeInsets.only(
+                    //    top: 24.0,
+                    //    left: 20,
+                    //    right: 20,
+                    //  ),
+                    //  child: TextFormField(
+                    //    controller:
+                    //        esEditProductBloc.displayLine1EditController,
+                    //    decoration: InputDecoration(
+                    //      border: OutlineInputBorder(),
+                    //      labelText: 'Display line 1',
+                    //    ),
+                    //  ),
+                    //),
                     Padding(
                       padding: const EdgeInsets.only(
                         top: 24.0,
