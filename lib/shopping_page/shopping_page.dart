@@ -27,10 +27,10 @@ class _ShoppingPageState extends State<ShoppingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: Text(
-        //   'My Store',
-        // ),
-      ),
+          // title: Text(
+          //   'My Store',
+          // ),
+          ),
       // drawer: AppDrawer(),
       body: SafeArea(
         child: Container(
@@ -47,26 +47,43 @@ class _ShoppingPageState extends State<ShoppingPage> {
                   flex: 1,
                   child: Container(),
                 ),
+                //Container(
+                //  width: MediaQuery.of(context).size.width * 0.5,
+                //  height: MediaQuery.of(context).size.width * 0.5,
+                //  child: Image.asset('assets/es-logo-small.png'),
+                //),
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  height: MediaQuery.of(context).size.width * 0.5,
-                  child: Image.asset('assets/es-logo-small.png'),
+                  height: 50,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Image(
+                        image: AssetImage(
+                          'assets/es-logo-small.png',
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      Image(
+                        image: AssetImage('assets/logo-black.png'),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 32,
                 ),
-                Text('Let customers order from home',
-                    style: Theme.of(context).textTheme.title),
-                SizedBox(
-                  height: 16,
-                ),
+                //Text('Let customers order from home',
+                //    style: Theme.of(context).textTheme.title),
+                //SizedBox(
+                //  height: 16,
+                //),
                 Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
+                    width: MediaQuery.of(context).size.width * 0.8,
                     child: Text(
-                      'Create your online store',
+                      'Create your online store and get more google reviews',
                       textAlign: TextAlign.center,
                     )),
-                     Flexible(
+                Flexible(
                   flex: 3,
                   child: Container(),
                 ),
@@ -83,14 +100,14 @@ class _ShoppingPageState extends State<ShoppingPage> {
                   },
                   child: Container(
                     child: Text(
-                      'Login with eSamudaay',
+                      'Login with phone',
                       style: Theme.of(context).textTheme.subhead.copyWith(
                             color: Colors.white,
                           ),
                     ),
                   ),
                 ),
-                 SizedBox(
+                SizedBox(
                   height: 16,
                 ),
                 FlatButton(
@@ -102,18 +119,18 @@ class _ShoppingPageState extends State<ShoppingPage> {
                     horizontal: 25,
                   ),
                   onPressed: () {
-                    Navigator.of(context).pushNamed(EsLoginPage.signUpRouteName);
+                    Navigator.of(context)
+                        .pushNamed(EsLoginPage.signUpRouteName);
                   },
                   child: Container(
                     child: Text(
-                      'Sign Up to eSamudaay',
+                      'Create new account',
                     ),
                   ),
                 ),
-                 SizedBox(
+                SizedBox(
                   height: 32,
                 ),
-               
               ],
             ),
           ),
