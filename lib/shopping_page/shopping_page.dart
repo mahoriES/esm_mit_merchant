@@ -78,9 +78,11 @@ class _ShoppingPageState extends State<ShoppingPage> {
                 //  height: 16,
                 //),
                 Container(
+                  margin: EdgeInsets.only(top:8),
                     width: MediaQuery.of(context).size.width * 0.8,
                     child: Text(
-                      'Create your online store and get more google reviews',
+                      'Create your online store \n&\n Get more google reviews',
+                      style: TextStyle(fontSize: 16),
                       textAlign: TextAlign.center,
                     )),
                 Flexible(
