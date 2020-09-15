@@ -81,9 +81,13 @@ class Router {
       case HomePage.routeName:
         return MaterialPageRoute(
           builder: (context) => AuthGuard(
-            unauthenticatedHandler: unauthenticatedHandler,
+            unauthenticatedPage: IntroPage(),
             child: OnboardingGuard(
-              onboardingRequiredHandler: onboardingRequiredHandler,
+              onboardingRequiredPage: Provider<OnboardingBloc>(
+                builder: (context) => OnboardingBloc(httpServiceBloc),
+                dispose: (context, value) => value.dispose(),
+                child: OnboardingPage(),
+              ),
               child: MultiProvider(
                 providers: [
                   Provider<PeopleBloc>(
@@ -192,7 +196,8 @@ class Router {
                     dispose: (context, value) => value.dispose(),
                   ),
                 ],
-                child: EsHomePage(),
+                child: EsHomePage(httpServiceBloc
+                ),
               ),
             ),
           ),
