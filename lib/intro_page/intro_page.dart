@@ -89,9 +89,10 @@ class _IntroPageState extends State<IntroPage>
 
     return WillPopScope(
       onWillPop: _onWillPop,
-      child: isShowLogin
-          ? introLogin(context)
-          : LanguageSelectionPage(onSelectLanguage: onSelectLanguage),
+      //child: isShowLogin
+      //    ? introLogin(context)
+      //    : LanguageSelectionPage(onSelectLanguage: onSelectLanguage),
+      child: introLogin(context),
     );
   }
 

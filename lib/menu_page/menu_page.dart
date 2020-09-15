@@ -6,6 +6,7 @@ import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
 import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/widgets/es_select_business.dart';
+
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 
@@ -26,13 +27,13 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     final httpService = Provider.of<HttpService>(context);
     final businessBloc = Provider.of<EsBusinessesBloc>(context);
     if (this.esProductsBloc == null) {
       this.esProductsBloc = EsProductsBloc(httpService, businessBloc);
     }
     this.esProductsBloc.getProductsFromSearch();
+
     super.didChangeDependencies();
   }
 
@@ -53,7 +54,7 @@ class _MenuPageState extends State<MenuPage> {
     }
 
     return Scaffold(
-      appBar: EsSelectBusiness(esProductsBloc.getProductsFromSearch),
+      //appBar: EsSelectBusiness(esProductsBloc.getProductsFromSearch),
       body: SafeArea(
         child: Container(
           height: double.infinity,

@@ -41,8 +41,8 @@ class EsLoginBloc {
         .esGetWithoutAuth(EsApiPaths.getOTP +
             '?phone=$phoneNumberInput&third_party_id=${Environment.esTPID}')
         .then((httpResponse) {
-      debugPrint("es_login.dart: " + "sendCode :" + httpResponse.body);
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
+        debugPrint("es_login.dart: " + "sendCode :" + httpResponse.body);
         if (!Environment.isProd) {
           //Staging show toast for OTP
           Fluttertoast.showToast(
@@ -52,11 +52,20 @@ class EsLoginBloc {
         }
         this._loginState.isLoading = false;
         this._loginState.isShowOtp = true;
+      } else if (httpResponse.statusCode == 400) {
+        debugPrint("es_login.dart: " + "sendCode :" + httpResponse.body);
+        Fluttertoast.showToast(
+            msg: json.decode(httpResponse.body)['message'].toString(),
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM);
+        this._loginState.isLoading = false;
       } else {
+        debugPrint("es_login.dart: " + "sendCode :" + httpResponse.body);
         this._loginState.isLoading = false;
       }
       this._updateState();
-    }).catchError((onError) {
+    }).catchError((onError, s) {
+      debugPrint("es_login.dart: " + "sendCode :" + s.toString());
       this._loginState.isLoading = false;
       this._updateState();
     });
@@ -69,16 +78,15 @@ class EsLoginBloc {
 
     _httpService
         .esPostWithoutAuth(
-      EsApiPaths.postSignUp,
-      json.encode(EsSignUpPayload(
-              phone: phoneNumberInput, thirdPartyId: Environment.esTPID)
-          .toJson()),
-    )
+            EsApiPaths.postSignUp,
+            json.encode(EsSignUpPayload(
+                    phone: phoneNumberInput, thirdPartyId: Environment.esTPID)
+                .toJson()))
         .then((httpResponse) {
-      debugPrint("es_login.dart: " + "signUp :" + httpResponse.body);
       if (httpResponse.statusCode == 200 ||
           httpResponse.statusCode == 202 ||
           httpResponse.statusCode == 201) {
+        debugPrint("es_login.dart: " + "signUp :" + httpResponse.body);
         if (!Environment.isProd) {
           //Staging show toast for OTP
           Fluttertoast.showToast(
@@ -88,11 +96,21 @@ class EsLoginBloc {
         }
         this._loginState.isLoading = false;
         this._loginState.isShowOtp = true;
+      } else if (httpResponse.statusCode == 400) {
+        debugPrint("es_login.dart: " + "signUp :" + httpResponse.body);
+        Fluttertoast.showToast(
+            msg: json.decode(httpResponse.body)['message'].toString(),
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM);
+        this._loginState.isLoading = false;
       } else {
+        debugPrint("es_login.dart: " + "signUp :" + httpResponse.body);
         this._loginState.isLoading = false;
       }
+
       this._updateState();
-    }).catchError((onError) {
+    }).catchError((onError, s) {
+      debugPrint("es_login.dart: " + "signUp :" + s.toString());
       this._loginState.isLoading = false;
       this._updateState();
     });

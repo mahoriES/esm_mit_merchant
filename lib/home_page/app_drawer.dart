@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foore/environments/environment.dart';
-import 'package:foore/es_home_page/es_home_page.dart';
+
 import 'package:foore/language_selection_page/language_selection_page.dart';
-import 'package:foore/setting_page/settting_page.dart';
 
 import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/auth.dart';
@@ -26,10 +25,21 @@ class AppDrawer extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     height: 28.0,
-                    margin: EdgeInsets.only(bottom: 5.0),
+                    margin: EdgeInsets.only(bottom: 8.0),
                     alignment: Alignment.centerLeft,
-                    child: Image(
-                      image: AssetImage('assets/logo-black.png'),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Image(
+                          image: AssetImage(
+                            'assets/es-logo-small.png',
+                          ),
+                        ),
+                        SizedBox(width: 20),
+                        Image(
+                          image: AssetImage('assets/logo-black.png'),
+                        ),
+                      ],
                     ),
                   ),
                   new VersionName()
@@ -41,52 +51,21 @@ class AppDrawer extends StatelessWidget {
             ),
             height: 140,
           ),
-          StreamBuilder<AuthState>(
-              stream: authBloc.authStateObservable,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Container();
-                }
-                return ListTile(
-                  onTap: () {
-                    Navigator.of(context).pushNamed(SettingPage.routeName);
-                  },
-                  leading: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Container(
-                      height: double.infinity,
-                      width: 50,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFECEFF1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Text(
-                        snapshot.data.firstLetterOfUserName,
-                        style: TextStyle(
-                          color: Colors.orangeAccent,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                  title: Text(snapshot.data.userName ?? ''),
-                  subtitle: Text(snapshot.data.userEmail ?? ''),
-                  trailing: Icon(Icons.chevron_right),
-                );
-              }),
+          StreamBuilder(
+            stream: authBloc.authStateObservable,
+            builder: (context, AsyncSnapshot<AuthState> snapshot) {
+              if (!snapshot.hasData) {
+                return SizedBox.shrink();
+              }
+              return ListTile(
+                title: Text(snapshot.data.getMerchantName()),
+                subtitle: Text(snapshot.data.getMerchantPhone()),
+              );
+            },
+          ),
           Expanded(
             child: Container(),
             flex: 1,
-          ),
-          ListTile(
-            leading: Icon(Icons.store),
-            title: Text("My eSamudaay"),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushNamed(EsHomePage.routeName);
-            },
           ),
           ListTile(
             leading: Icon(Icons.language),
@@ -106,7 +85,7 @@ class AppDrawer extends StatelessWidget {
             title:
                 Text(AppTranslations.of(context).text("drawer_button_logout")),
             onTap: () {
-              authBloc.logout();
+              authBloc.logout(esLogout: true);
             },
           ),
         ],

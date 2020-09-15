@@ -392,7 +392,6 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
     }
 
     return Scaffold(
-      appBar: EsSelectBusiness(() {}),
       body: SafeArea(
         child: Container(
           height: double.infinity,
@@ -461,7 +460,8 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                     Divider(thickness: 2),
                     getBaseHeaderWidget('Logo'),
                     SizedBox(height: 20),
-                    EsBusinessProfileImageList(esBusinessProfileBloc, allowMany: false),
+                    EsBusinessProfileImageList(esBusinessProfileBloc,
+                        allowMany: false),
                     SizedBox(height: 8),
                     getBaseHeaderWidget('Name'),
                     getBusinessNameWidget(businessInfo),
