@@ -196,8 +196,7 @@ class Router {
                     dispose: (context, value) => value.dispose(),
                   ),
                 ],
-                child: EsHomePage(httpServiceBloc
-                ),
+                child: EsHomePage(httpServiceBloc),
               ),
             ),
           ),
@@ -237,13 +236,15 @@ class Router {
         );
         break;
       case EsProductDetailPage.routeName:
-        EsProduct esProduct = settings.arguments;
+        EsProductDetailPageParam esProductDetailPageParam = settings.arguments;
+
         return MaterialPageRoute(
           builder: (context) => Provider<EsEditProductBloc>(
             builder: (context) =>
                 EsEditProductBloc(httpServiceBloc, esBusinessesBloc),
             dispose: (context, value) => value.dispose(),
-            child: EsProductDetailPage(esProduct),
+            child: EsProductDetailPage(esProductDetailPageParam.currentProduct,
+                openSkuAddUpfront: esProductDetailPageParam.openSkuAddUpfront),
           ),
         );
         break;

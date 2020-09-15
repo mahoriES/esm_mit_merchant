@@ -5,7 +5,7 @@ import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
 import 'package:foore/widgets/empty_list.dart';
-import 'package:foore/widgets/es_select_business.dart';
+
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 
@@ -26,34 +26,43 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     final httpService = Provider.of<HttpService>(context);
     final businessBloc = Provider.of<EsBusinessesBloc>(context);
     if (this.esProductsBloc == null) {
       this.esProductsBloc = EsProductsBloc(httpService, businessBloc);
     }
     this.esProductsBloc.getProductsFromSearch();
+
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     editItem(EsProduct product) async {
-      var result = await Navigator.of(context)
-          .pushNamed(EsProductDetailPage.routeName, arguments: product);
+      EsProductDetailPageParam esProductDetailPageParam =
+          EsProductDetailPageParam(
+              currentProduct: product, openSkuAddUpfront: false);
+
+      var result = await Navigator.of(context).pushNamed(
+          EsProductDetailPage.routeName,
+          arguments: esProductDetailPageParam);
       esProductsBloc.getProductsFromSearch();
     }
 
     deleteItem(EsProduct product) async {}
 
-    viewItem(EsProduct product) async {
-      var result = await Navigator.of(context)
-          .pushNamed(EsProductDetailPage.routeName, arguments: product);
+    viewItem(EsProduct product, {bool openSkuAddUpfront = false}) async {
+      EsProductDetailPageParam esProductDetailPageParam =
+          EsProductDetailPageParam(
+              currentProduct: product, openSkuAddUpfront: openSkuAddUpfront);
+      var result = await Navigator.of(context).pushNamed(
+          EsProductDetailPage.routeName,
+          arguments: esProductDetailPageParam);
       esProductsBloc.getProductsFromSearch();
     }
 
     return Scaffold(
-      appBar: EsSelectBusiness(esProductsBloc.getProductsFromSearch),
+      //appBar: EsSelectBusiness(esProductsBloc.getProductsFromSearch),
       body: SafeArea(
         child: Container(
           height: double.infinity,
@@ -139,9 +148,15 @@ class _MenuPageState extends State<MenuPage> {
             horizontal: 25,
           ),
           onPressed: () async {
-            var result = await Navigator.of(context)
+            dynamic product = await Navigator.of(context)
                 .pushNamed(AddMenuItemPage.routeName);
-            esProductsBloc.getProductsFromSearch();
+            if (product != null) {
+              //Open product detail for recently added product
+              debugPrint("Moving to product detail with add sku==true");
+              viewItem(product, openSkuAddUpfront: true);
+            } else {
+              esProductsBloc.getProductsFromSearch();
+            }
           },
           child: Container(
             child: Text(

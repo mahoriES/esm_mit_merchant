@@ -85,19 +85,28 @@ class _EsLoginPageState extends State<EsLoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            Expanded(
+              child: Container(),
+            ),
             Container(
-              width: 170.0,
-              padding: EdgeInsets.only(top: 50.0, bottom: 10.0),
-              child: Image(
-                image: AssetImage('assets/es-logo.png'),
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image(
+                    image: AssetImage(
+                      'assets/es-logo-small.png',
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  Image(
+                    image: AssetImage('assets/logo-black.png'),
+                  ),
+                ],
               ),
             ),
             Expanded(
               child: Container(),
-            ),
-            Text(
-              'Connect your eSamudaay account',
-              style: Theme.of(context).textTheme.subtitle1,
             ),
             const SizedBox(height: 16.0),
             TextFormField(
@@ -158,11 +167,24 @@ class _EsLoginPageState extends State<EsLoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            Expanded(
+              child: Container(),
+            ),
             Container(
-              width: 170,
-              padding: EdgeInsets.only(top: 50, bottom: 10),
-              child: Image(
-                image: AssetImage('assets/es-logo.png'),
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image(
+                    image: AssetImage(
+                      'assets/es-logo-small.png',
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  Image(
+                    image: AssetImage('assets/logo-black.png'),
+                  ),
+                ],
               ),
             ),
             Expanded(

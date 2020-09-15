@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:foore/data/model/es_orders.dart';
-import 'package:foore/widgets/es_select_business.dart';
 
 import 'es_order_list.dart';
 
@@ -36,7 +35,6 @@ class _EsOrderPageState extends State<EsOrderPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: EsSelectBusiness(() {}),
       body: SafeArea(
         child: Column(
           children: <Widget>[

@@ -84,15 +84,18 @@ class AuthBloc {
     }
   }
 
-  logout() {
+  logout({bool esLogout = false}) {
     this.authState.authData = null;
     this.authState.isLoading = false;
     this._updateState();
     this.googleSignIn.signOut();
     this.foAnalytics.resetUserIdentity();
     this._pushNotifications.unsubscribeForCurrentUser();
-    clearSharedPreferences();
-    // this.esLogoutSilently();
+
+    if (esLogout) {
+      this.esLogout();
+      clearSharedPreferences();
+    }
   }
 
   clearSharedPreferences() async {
@@ -264,6 +267,19 @@ class AuthState {
   String get esJwtToken => esAuthData != null ? esAuthData.token : null;
   String get esMerchantJwtToken =>
       esMerchantProfile != null ? esMerchantProfile.token : null;
+  String getMerchantPhone() {
+    if (esAuthData != null && esAuthData.user != null) {
+      return esAuthData.user.phone;
+    }
+    return "";
+  }
+
+  String getMerchantName() {
+    if (esMerchantProfile != null && esMerchantProfile.data != null) {
+      return esMerchantProfile.data.profileName;
+    }
+    return "";
+  }
 
   AuthState() {
     this.isLoading = false;

@@ -7,8 +7,9 @@ import 'package:provider/provider.dart';
 
 class EsSelectBusiness extends PreferredSize {
   final onChangeBusiness;
+  final bool allowChange;
 
-  EsSelectBusiness(this.onChangeBusiness);
+  EsSelectBusiness(this.onChangeBusiness, {this.allowChange = true});
 
   @override
   Size get preferredSize => Size.fromHeight(80);
@@ -79,7 +80,8 @@ class EsSelectBusiness extends PreferredSize {
                                 title: Text(businessInfo.dBusinessName),
                                 subtitle: businessInfo.dBusinessNotApproved
                                     ? Column(
-                                      crossAxisAlignment:CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(businessInfo
                                               .dBusinessPrettyAddress),
@@ -117,10 +119,10 @@ class EsSelectBusiness extends PreferredSize {
     final esBusinessesBloc = Provider.of<EsBusinessesBloc>(context);
     return SafeArea(
       child: GestureDetector(
-        onTap: showStoreSelector,
+        onTap: allowChange ? showStoreSelector : null,
         child: Container(
           height: preferredSize.height,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           color: Colors.white,
           child: StreamBuilder<EsBusinessesState>(
               stream: esBusinessesBloc.esBusinessesStateObservable,
@@ -129,15 +131,10 @@ class EsSelectBusiness extends PreferredSize {
                   return Container();
                 }
                 return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Icon(
-                      Icons.store,
-                      color: Colors.black87,
-                      size: 40,
-                    ),
                     SafeArea(
                       child: Container(
-                        width: (MediaQuery.of(context).size.width * 0.7 - 80),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Column(
@@ -175,14 +172,16 @@ class EsSelectBusiness extends PreferredSize {
                         ),
                       ),
                     ),
-                    Transform.rotate(
-                      angle: pi / 2,
-                      child: Icon(
-                        Icons.chevron_right,
-                        color: Colors.black26,
-                        size: 25,
-                      ),
-                    ),
+                    allowChange
+                        ? Transform.rotate(
+                            angle: pi / 2,
+                            child: Icon(
+                              Icons.chevron_right,
+                              color: Colors.black26,
+                              //size: 25,
+                            ),
+                          )
+                        : SizedBox.shrink(),
                   ],
                 );
               }),

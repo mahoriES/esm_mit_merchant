@@ -358,9 +358,6 @@ class HttpService {
     final httpResponse =
         await http.get(esApiBaseUrl + path, headers: requestHeaders);
 
-    print(httpResponse.request.url.toString());
-    print(httpResponse.statusCode);
-    print(httpResponse.body);
     return httpResponse;
   }
 

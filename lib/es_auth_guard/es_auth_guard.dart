@@ -56,7 +56,7 @@ class _EsAuthGuardState extends State<EsAuthGuard> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.isEsLoading) {
-            currentWidget = Container(child: Text('Text'),);
+            currentWidget = SizedBox.shrink();
           } else if (snapshot.data.isEsMerchantLoggedIn) {
             currentWidget = widget.child;
           } else if (snapshot.data.isEsLoggedOut) {
