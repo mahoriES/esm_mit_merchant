@@ -56,25 +56,25 @@ android {
         multiDexEnabled true
     }
 
-    signingConfigs {
-       release {
-           keyAlias keystoreProperties['keyAlias']
-           keyPassword keystoreProperties['keyPassword']
-           storeFile file(keystoreProperties['storeFile'])
-           storePassword keystoreProperties['storePassword']
-       }
-    }
+    // signingConfigs {
+    //    release {
+    //        keyAlias keystoreProperties['keyAlias']
+    //        keyPassword keystoreProperties['keyPassword']
+    //        storeFile file(keystoreProperties['storeFile'])
+    //        storePassword keystoreProperties['storePassword']
+    //    }
+    // }
 
     buildTypes {
-        release {
-            signingConfig signingConfigs.release
+        // release {
+        //     signingConfig signingConfigs.release
 
-            minifyEnabled true
-            useProguard false
+        //     minifyEnabled true
+        //     useProguard false
 
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        //     proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-        }
+        // }
 
         debug {
             //applicationIdSuffix ".debug"
