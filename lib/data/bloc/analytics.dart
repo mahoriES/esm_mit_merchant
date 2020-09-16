@@ -3,7 +3,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/model/login.dart';
 import 'package:foore/environments/environment.dart';
-import 'package:intercom_flutter/intercom_flutter.dart';
 
 class FoAnalytics {
   FirebaseAnalytics _firebaseAnalytics;
@@ -12,50 +11,23 @@ class FoAnalytics {
   bool isUserIdentified = false;
 
   init() async {
-    await intercomInit();
     firebaseAnalyticsInit();
     this.isInitialized = true;
   }
 
   identifyUser(AuthInfo authData) {
-    intercomLogin(authData);
     firebaseAnalyticsLogin(authData);
     isUserIdentified = true;
   }
 
   resetUserIdentity() {
-    this.intercomLogout();
     this.firebaseAnalyticsLogout();
     isUserIdentified = false;
-  }
-
-  intercomInit() async {
-    await Intercom.initialize(
-      Environment.intercomAppId,
-      iosApiKey: Environment.intercomIosApiKey,
-      androidApiKey: Environment.intercomAndroidApiKey,
-    );
   }
 
   firebaseAnalyticsInit() {
     this._firebaseAnalytics = FirebaseAnalytics();
     _firebaseAnalytics.setAnalyticsCollectionEnabled(Environment.isProd);
-  }
-
-  intercomLogin(AuthInfo authData) async {
-    await Intercom.initialize(
-      Environment.intercomAppId,
-      iosApiKey: Environment.intercomIosApiKey,
-      androidApiKey: Environment.intercomAndroidApiKey,
-    );
-    await Intercom.registerIdentifiedUser(
-        userId: authData.userProfile.userUuid);
-    await Intercom.updateUser(
-      email: authData.userProfile.email,
-      name: authData.userProfile.name,
-      company: authData.companyInfo.name,
-      companyId: authData.companyInfo.companyUuid,
-    );
   }
 
   firebaseAnalyticsLogin(AuthInfo authData) {
@@ -73,10 +45,6 @@ class FoAnalytics {
         name: 'companyId', value: authData.companyInfo.companyUuid);
   }
 
-  intercomLogout() async {
-    await Intercom.logout();
-  }
-
   firebaseAnalyticsLogout() {
     this._firebaseAnalytics.resetAnalyticsData();
   }
@@ -84,7 +52,6 @@ class FoAnalytics {
   trackUserEvent({@required String name, Map<String, dynamic> parameters}) {
     try {
       if (isUserIdentified) {
-        Intercom.logEvent(name, parameters);
         this._firebaseAnalytics.logEvent(name: name, parameters: parameters);
       }
     } catch (err, stacktrace) {
@@ -97,7 +64,6 @@ class FoAnalytics {
   setCurrentScreen(String screenName) {
     try {
       this._firebaseAnalytics.setCurrentScreen(screenName: screenName);
-      Intercom.logEvent('Navigate to : $screenName');
     } catch (err, stacktrace) {
       print(stacktrace.toString());
 //TODO: Custom sentry error
@@ -110,7 +76,7 @@ class FoAnalytics {
       if (isUserIdentified) {
         final customAttributes = new Map<String, dynamic>();
         customAttributes[name] = value;
-        Intercom.updateUser(customAttributes: customAttributes);
+
         this
             ._firebaseAnalytics
             .setUserProperty(name: name, value: value.toString());
