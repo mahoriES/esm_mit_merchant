@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/auth_guard/auth_guard.dart';
 import 'package:foore/data/bloc/people.dart';
 import 'package:foore/data/http_service.dart';
@@ -64,7 +65,11 @@ class _EsHomePageState extends State<EsHomePage> {
       drawer: AppDrawer(),
       drawerEnableOpenDragGesture: false,
       appBar: _selectedIndex == 3
-          ? AppBar()
+          ? AppBar(
+              title: Text(
+                AppTranslations.of(context).text("reviews_page_title"),
+              ),
+            )
           : _selectedIndex == 2
               ? AppBar(title: EsSelectBusiness(null, allowChange: false))
               : AppBar(title: EsSelectBusiness(null, allowChange: true)),
