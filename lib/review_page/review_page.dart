@@ -46,17 +46,6 @@ class _ReviewPageState extends State<ReviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.dehaze),
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-        ),
-        title: Text(
-          AppTranslations.of(context).text("reviews_page_title"),
-        ),
-      ),
       body: SafeArea(
         child: Container(
           height: double.infinity,

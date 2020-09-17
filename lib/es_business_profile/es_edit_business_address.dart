@@ -26,16 +26,15 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
 
   getPosition() async {
     try {
-      Position pos = await Geolocator()
-          .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
+      Position pos = await getLastKnownPosition();
       print(pos);
       if (pos != null) {
         widget.esBusinessProfileBloc
             .setCurrentLocationPoint(pos.latitude, pos.longitude);
       } else {
         print(pos);
-        Position posCurrent = await Geolocator()
-            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        Position posCurrent =
+            await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
         if (posCurrent != null) {
           widget.esBusinessProfileBloc.setCurrentLocationPoint(
               posCurrent.latitude, posCurrent.longitude);
