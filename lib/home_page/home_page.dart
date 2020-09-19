@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/people_page/people_page.dart';
 import 'package:foore/review_page/review_page.dart';
-
+import 'package:foore/services/sizeconfig.dart';
 
 import '../app_translations.dart';
 import 'app_drawer.dart';
@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
