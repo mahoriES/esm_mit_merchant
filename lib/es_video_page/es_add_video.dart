@@ -15,20 +15,20 @@ class EsAddVideo extends StatelessWidget {
 
   final TextEditingController videoNameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController thumbnailController = TextEditingController();
+  // final TextEditingController thumbnailController = TextEditingController();
   VideoPlayerController videoPlayerController;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   EsVideoBloc _esVideoBloc;
 
-  bool isThumbNailValid() {
-    try {
-      int seconds = int.parse(thumbnailController.text);
-      return videoPlayerController.value.duration.inSeconds >= seconds;
-    } catch (_) {
-      return false;
-    }
-  }
+  // bool isThumbNailValid() {
+  //   try {
+  //     int seconds = int.parse(thumbnailController.text);
+  //     return videoPlayerController.value.duration.inSeconds >= seconds;
+  //   } catch (_) {
+  //     return false;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -63,15 +63,15 @@ class EsAddVideo extends StatelessWidget {
                   height: 20.toHeight,
                 ),
                 CustomInputField('Description', descriptionController),
-                SizedBox(
-                  height: 20.toHeight,
-                ),
-                CustomInputField(
-                  'Thumbnail in seconds',
-                  thumbnailController,
-                  format: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
-                  inputType: TextInputType.number,
-                ),
+                // SizedBox(
+                //   height: 20.toHeight,
+                // ),
+                // CustomInputField(
+                //   'Thumbnail in seconds',
+                //   thumbnailController,
+                //   format: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
+                //   inputType: TextInputType.number,
+                // ),
                 SizedBox(
                   height: 30.toHeight,
                 ),
@@ -100,8 +100,8 @@ class EsAddVideo extends StatelessWidget {
                                 ?.value?.initialized ??
                             false)) {
                           _errorMessage = 'Please select a video file';
-                        } else if (!isThumbNailValid()) {
-                          _errorMessage = 'Invalid Thumbnail';
+                          // } else if (!isThumbNailValid()) {
+                          //   _errorMessage = 'Invalid Thumbnail';
                         }
 
                         if (_errorMessage != null) {

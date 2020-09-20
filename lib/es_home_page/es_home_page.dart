@@ -55,6 +55,7 @@ class _EsHomePageState extends State<EsHomePage> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: List.generate(
           title.length,
           (index) => BottomNavigationBarItem(
