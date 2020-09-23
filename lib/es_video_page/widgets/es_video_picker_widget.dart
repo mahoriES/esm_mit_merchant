@@ -1,62 +1,73 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/services/sizeconfig.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
-// ignore: must_be_immutable
 class EsVideoPickerWidget extends StatefulWidget {
-  VideoPlayerController videoPlayerController;
-  Function(VideoPlayerController) onUpdate;
-  EsVideoPickerWidget(this.videoPlayerController, this.onUpdate);
+  final Function(VideoPlayerController) onUpdate;
+  EsVideoPickerWidget(this.onUpdate);
   @override
   _EsVideoPickerWidgetState createState() => _EsVideoPickerWidgetState();
 }
 
 class _EsVideoPickerWidgetState extends State<EsVideoPickerWidget> {
+  VideoPlayerController videoPlayerController;
+  bool isLoading;
+
+  @override
+  void initState() {
+    isLoading = false;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    videoPlayerController?.dispose();
+    super.dispose();
+  }
+
   pickVideo() async {
+    setState(() {
+      isLoading = true;
+    });
+    await videoPlayerController?.dispose();
     PickedFile pickedFile =
         await ImagePicker().getVideo(source: ImageSource.gallery);
     File videoFile = File(pickedFile.path);
-    widget.videoPlayerController = VideoPlayerController.file(videoFile)
+    videoPlayerController = VideoPlayerController.file(videoFile)
       ..setLooping(true);
-    widget.videoPlayerController.initialize().then((value) {
-      widget.onUpdate(widget.videoPlayerController);
+    videoPlayerController.initialize().then((value) {
+      widget.onUpdate(videoPlayerController);
       setState(() {});
     });
-    widget.videoPlayerController.play();
+    videoPlayerController.play();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    EsVideoBloc _esVideoBloc = Provider.of<EsVideoBloc>(context);
-    return StreamBuilder<EsVideoState>(
-      stream: _esVideoBloc.esVideoStateObservable,
-      builder: (context, snapshot) {
-        if (!(widget.videoPlayerController?.value?.initialized ?? false)) {
-          return InkWell(
+    return isLoading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : InkWell(
             onTap: pickVideo,
             child: Container(
               height: 100.toHeight,
               width: 100.toWidth,
               color: Colors.grey[300],
-              child: Center(
-                child: Icon(Icons.add_a_photo),
-              ),
+              child: videoPlayerController?.value?.initialized ?? false
+                  ? AspectRatio(
+                      aspectRatio: videoPlayerController.value.aspectRatio,
+                      child: VideoPlayer(videoPlayerController),
+                    )
+                  : Center(
+                      child: Icon(Icons.add_a_photo),
+                    ),
             ),
           );
-        }
-        return Container(
-          height: 100.toHeight,
-          width: 100.toWidth,
-          child: AspectRatio(
-            aspectRatio: widget.videoPlayerController.value.aspectRatio,
-            child: VideoPlayer(widget.videoPlayerController),
-          ),
-        );
-      },
-    );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/es_video_page/widgets/custom_input_field.dart';
@@ -15,20 +14,10 @@ class EsAddVideo extends StatelessWidget {
 
   final TextEditingController videoNameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  // final TextEditingController thumbnailController = TextEditingController();
   VideoPlayerController videoPlayerController;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   EsVideoBloc _esVideoBloc;
-
-  // bool isThumbNailValid() {
-  //   try {
-  //     int seconds = int.parse(thumbnailController.text);
-  //     return videoPlayerController.value.duration.inSeconds >= seconds;
-  //   } catch (_) {
-  //     return false;
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +40,11 @@ class EsAddVideo extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: EsVideoPickerWidget(videoPlayerController, (c) {
-                    videoPlayerController = c;
-                  }),
+                  child: EsVideoPickerWidget(
+                    (c) {
+                      videoPlayerController = c;
+                    },
+                  ),
                 ),
                 SizedBox(
                   height: 30.toHeight,
@@ -63,15 +54,6 @@ class EsAddVideo extends StatelessWidget {
                   height: 20.toHeight,
                 ),
                 CustomInputField('Description', descriptionController),
-                // SizedBox(
-                //   height: 20.toHeight,
-                // ),
-                // CustomInputField(
-                //   'Thumbnail in seconds',
-                //   thumbnailController,
-                //   format: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
-                //   inputType: TextInputType.number,
-                // ),
                 SizedBox(
                   height: 30.toHeight,
                 ),
@@ -92,27 +74,18 @@ class EsAddVideo extends StatelessWidget {
                     return FoSubmitButton(
                       text: 'Save',
                       onPressed: () {
-                        String _errorMessage;
-                        if (!formKey.currentState.validate()) {
-                          _errorMessage =
-                              'Please fill all of the required fields';
-                        } else if (!(videoPlayerController
-                                ?.value?.initialized ??
-                            false)) {
-                          _errorMessage = 'Please select a video file';
-                          // } else if (!isThumbNailValid()) {
-                          //   _errorMessage = 'Invalid Thumbnail';
-                        }
-
-                        if (_errorMessage != null) {
-                          ResponseDialogue(
-                            'Submit Failed',
-                            context,
-                            message: _errorMessage,
-                            buttonText: 'dismiss',
-                          );
-                        } else {
-                          _esVideoBloc.uploadVideo();
+                        if (formKey.currentState.validate()) {
+                          if (!(videoPlayerController?.value?.initialized ??
+                              false)) {
+                            ResponseDialogue(
+                              'Submit Failed',
+                              context,
+                              message: 'Please select a video file',
+                              buttonText: 'dismiss',
+                            );
+                          } else {
+                            _esVideoBloc.uploadVideo();
+                          }
                         }
                       },
                       isLoading: snapshot.data.isUploadingVideo,
