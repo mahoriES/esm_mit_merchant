@@ -8,8 +8,11 @@ import 'package:foore/es_order_page/es_order_page.dart';
 import 'package:foore/home_page/app_drawer.dart';
 import 'package:foore/home_page/home_page.dart';
 import 'package:foore/intro_page/intro_page.dart';
+import 'package:foore/es_video_page/es_video_page.dart';
 import 'package:foore/menu_page/menu_page.dart';
 import 'package:foore/onboarding_guard/onboarding_guard.dart';
+import 'package:foore/router.dart';
+import 'package:foore/services/sizeconfig.dart';
 import 'package:foore/widgets/es_select_business.dart';
 import 'package:provider/provider.dart';
 
@@ -23,19 +26,48 @@ class EsHomePage extends StatefulWidget {
 
 class _EsHomePageState extends State<EsHomePage> {
   int _selectedIndex = 0;
+  // final List<Widget> _widgetOptions = <Widget>[
+  //   Container(),
+  //   EsOrderPage(),
+  //   MenuPage(),
+  //   EsVideoPage(),
+  //   EsBusinessProfile(),
+  // ];
+
+  final List<String> title = [
+    'Profile',
+    'Orders',
+    'Products',
+    'Videos',
+    'Reviews',
+  ];
+
+  final List<IconData> icons = [
+    Icons.store,
+    Icons.shopping_basket,
+    Icons.menu,
+    Icons.play_circle_outline,
+    Icons.feedback,
+  ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index == 0) {
+      Navigator.of(context).pushNamed(Router.homeRoute);
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     final List<Widget> _widgetOptions = <Widget>[
       EsBusinessProfile(),
       EsOrderPage(),
       MenuPage(),
+      EsVideoPage(),
       AuthGuard(
         unauthenticatedPage: IntroPage(),
         child: OnboardingGuard(
@@ -64,7 +96,7 @@ class _EsHomePageState extends State<EsHomePage> {
     return Scaffold(
       drawer: AppDrawer(),
       drawerEnableOpenDragGesture: false,
-      appBar: _selectedIndex == 3
+      appBar: _selectedIndex == 4
           ? AppBar(
               title: Text(
                 AppTranslations.of(context).text("reviews_page_title"),
@@ -77,32 +109,16 @@ class _EsHomePageState extends State<EsHomePage> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.store),
+        type: BottomNavigationBarType.fixed,
+        items: List.generate(
+          title.length,
+          (index) => BottomNavigationBarItem(
+            icon: Icon(icons[index]),
             title: Text(
-              'Profile',
+              title[index],
             ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_basket),
-            title: Text(
-              'Orders',
-            ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu),
-            title: Text(
-              'Products',
-            ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.feedback),
-            title: Text(
-              "Reviews",
-            ),
-          ),
-        ],
+        ),
         currentIndex: _selectedIndex,
         selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Colors.grey[600],
