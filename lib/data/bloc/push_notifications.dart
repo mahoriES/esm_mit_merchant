@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 
 class PushNotifications {
@@ -30,6 +31,11 @@ class PushNotifications {
       var fcmToken = FcmToken(token);
       var payloadString = json.encode(fcmToken.toJson());
       httpService.foPost('fcm/add/foore/', payloadString);
+
+      //ES Token
+      var esFcmToken = EsFcmToken(token);
+      var esPayloadString = json.encode(esFcmToken.toJson());
+      httpService.esPost(EsApiPaths.addFcmToken, esPayloadString);
     }
     return token;
   }
@@ -46,6 +52,15 @@ class FcmToken {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['fcm_token'] = this.fcmToken;
+    return data;
+  }
+}
+
+class EsFcmToken extends FcmToken {
+  EsFcmToken(String fcmToken) : super(fcmToken);
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = super.toJson();
+    data['token_type'] = 'ANDROID';
     return data;
   }
 }

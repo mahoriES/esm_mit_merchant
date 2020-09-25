@@ -52,7 +52,8 @@ class EsApiPaths {
 
   static final postAcceptOrder = (String orderId) => 'orders/$orderId/accept';
   static final postCancelOrder = (String orderId) => 'orders/$orderId/cancel';
-  static final orderPaymentUpdate = (String orderId) => 'orders/$orderId/payment';
+  static final orderPaymentUpdate =
+      (String orderId) => 'orders/$orderId/payment';
   static final postOrderRequestDeliveryAgent =
       (String orderId) => 'orders/$orderId/request_delivery';
   static final postCompleteOrder =
@@ -66,4 +67,6 @@ class EsApiPaths {
 
   static final updateSku = (String businessId, int productId, int skuId) =>
       'businesses/$businessId/catalog/products/$productId/skus/$skuId';
+
+  static final addFcmToken = 'notifications/mobile/tokens';
 }
