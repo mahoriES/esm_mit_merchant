@@ -194,7 +194,8 @@ class Router {
                     dispose: (context, value) => value.dispose(),
                   ),
                   Provider<EsVideoBloc>(
-                    builder: (context) => EsVideoBloc(),
+                    builder: (context) =>
+                        EsVideoBloc(httpServiceBloc, esBusinessesBloc),
                     dispose: (context, value) => value.dispose(),
                   ),
                 ],
@@ -317,7 +318,8 @@ class Router {
             unauthenticatedHandler: esUnauthenticatedHandler,
             noMerchantProfileHandler: esNoMerchantProfileHandler,
             child: Provider<EsVideoBloc>(
-              builder: (context) => EsVideoBloc(),
+              builder: (context) =>
+                  EsVideoBloc(httpServiceBloc, esBusinessesBloc),
               dispose: (context, value) => value.dispose(),
               child: EsAddVideo(),
             ),
@@ -330,9 +332,10 @@ class Router {
             unauthenticatedHandler: esUnauthenticatedHandler,
             noMerchantProfileHandler: esNoMerchantProfileHandler,
             child: Provider<EsVideoBloc>(
-              builder: (context) => EsVideoBloc(),
+              builder: (context) =>
+                  EsVideoBloc(httpServiceBloc, esBusinessesBloc),
               dispose: (context, value) => value.dispose(),
-              child: PlayVideoPage(),
+              child: PlayVideoPage(settings.arguments),
             ),
           ),
         );

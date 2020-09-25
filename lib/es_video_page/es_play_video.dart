@@ -4,8 +4,17 @@ import 'package:foore/services/sizeconfig.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 
+class PlayVideoPageParam {
+  String playUrl;
+  String thumbnailUrl;
+  PlayVideoPageParam(this.playUrl, this.thumbnailUrl);
+}
+
 class PlayVideoPage extends StatefulWidget {
   static const String routeName = '/esPlayVideoPage';
+
+  final PlayVideoPageParam param;
+  PlayVideoPage(this.param);
 
   @override
   _PlayVideoPageState createState() => _PlayVideoPageState();
@@ -18,7 +27,7 @@ class _PlayVideoPageState extends State<PlayVideoPage> {
   @override
   void initState() {
     controller = new VideoPlayerController.network(
-      'https://stream.mux.com/uZG02aAGD022ot25wLAXSO6WUr8RUcVJ8n.m3u8',
+      widget.param.playUrl ?? '',
     );
 
     chewieController = ChewieController(
@@ -34,12 +43,12 @@ class _PlayVideoPageState extends State<PlayVideoPage> {
     super.initState();
   }
 
-  @override
-  void deactivate() {
-    controller?.pause();
-    chewieController?.pause();
-    super.deactivate();
-  }
+  // @override
+  // void deactivate() {
+  //   controller?.pause();
+  //   chewieController?.pause();
+  //   super.deactivate();
+  // }
 
   @override
   void dispose() {
@@ -75,9 +84,11 @@ class _PlayVideoPageState extends State<PlayVideoPage> {
                   child: Opacity(
                     opacity: 0.8,
                     child: CachedNetworkImage(
-                      imageUrl: "http://via.placeholder.com/350x150",
-                      errorWidget: (context, url, error) => Icon(
-                        Icons.error,
+                      imageUrl: widget.param.thumbnailUrl ?? '',
+                      errorWidget: (context, url, error) => Container(
+                        width: SizeConfig().screenWidth,
+                        height: 200.toHeight,
+                        color: Colors.grey,
                       ),
                       fit: BoxFit.cover,
                       width: SizeConfig().screenWidth,

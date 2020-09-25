@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 
 class EsVideoPickerWidget extends StatefulWidget {
-  final Function(VideoPlayerController) onUpdate;
+  final Function(File) onUpdate;
   EsVideoPickerWidget(this.onUpdate);
   @override
   _EsVideoPickerWidgetState createState() => _EsVideoPickerWidgetState();
@@ -34,14 +34,18 @@ class _EsVideoPickerWidgetState extends State<EsVideoPickerWidget> {
     await videoPlayerController?.dispose();
     PickedFile pickedFile =
         await ImagePicker().getVideo(source: ImageSource.gallery);
-    File videoFile = File(pickedFile.path);
-    videoPlayerController = VideoPlayerController.file(videoFile)
-      ..setLooping(true);
-    videoPlayerController.initialize().then((value) {
-      widget.onUpdate(videoPlayerController);
-      setState(() {});
-    });
-    videoPlayerController.play();
+    if (pickedFile != null) {
+      File videoFile = File(pickedFile.path);
+      videoPlayerController = VideoPlayerController.file(videoFile)
+        ..setLooping(true);
+      videoPlayerController.initialize().then((value) {
+        widget.onUpdate(videoFile);
+        setState(() {});
+      });
+      videoPlayerController.play();
+    } else {
+      widget.onUpdate(null);
+    }
     setState(() {
       isLoading = false;
     });
