@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:foore/data/constants/es_api_path.dart';
+import 'package:foore/data/model/es_video_models/es_video_request_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_video_models/es_video_list.dart';
@@ -29,7 +31,7 @@ class EsVideoBloc {
       esVideoState.videoFeedState = VideoFeedState.LOADING;
       _updateState();
 
-      Response httpResponse = await httpService.esGet('post/');
+      Response httpResponse = await httpService.esGet(EsApiPaths.getVideoPath);
 
       if (httpResponse.statusCode == 200) {
         esVideoState.videoList = VideoFeedResponse.fromJson(
@@ -41,7 +43,6 @@ class EsVideoBloc {
         throw ('error :- ' + httpResponse.statusCode.toString());
       }
     } catch (e) {
-      print('exception **************************** ${e?.toString()}');
       esVideoState.videoFeedState = VideoFeedState.FAILED;
       esVideoState.errorMessage = e.toString();
       _updateState();
@@ -56,7 +57,7 @@ class EsVideoBloc {
       esVideoState.addVideoState = AddVideoState.UPLOADING;
       _updateState();
 
-      Response httpResponse = await httpService.esGet('media/video/url');
+      Response httpResponse = await httpService.esGet(EsApiPaths.getSignedUrl);
 
       if (httpResponse.statusCode == 200) {
         VideoUploadUrlResponse _signedUrlResponse =
@@ -69,11 +70,9 @@ class EsVideoBloc {
 
         _updateState();
       } else {
-        throw ('error uploadVideo :- ' + httpResponse.statusCode.toString());
+        throw ('error :- ' + httpResponse.statusCode.toString());
       }
     } catch (e) {
-      print(
-          'uploadVideo exception **************************** ${e?.toString()}');
       esVideoState.addVideoState = AddVideoState.FAILED;
       esVideoState.errorMessage = e.toString();
       _updateState();
@@ -85,27 +84,17 @@ class EsVideoBloc {
     VideoUploadUrlResponse _signedUrlResponse,
     String title,
   ) async {
-    Map<String, String> _feilds = {
-      'acl': _signedUrlResponse.signedUrlInfo.fields.acl,
-      'key': _signedUrlResponse.signedUrlInfo.fields.key,
-      'x-amz-algorithm': _signedUrlResponse.signedUrlInfo.fields.xAmzAlgorithm,
-      'x-amz-credential':
-          _signedUrlResponse.signedUrlInfo.fields.xAmzCredential,
-      'x-amz-date': _signedUrlResponse.signedUrlInfo.fields.xAmzDate,
-      'policy': _signedUrlResponse.signedUrlInfo.fields.policy,
-      'x-amz-signature': _signedUrlResponse.signedUrlInfo.fields.xAmzSignature,
-    };
+    Map<String, String> _fields =
+        CreateVideoUploadPayload(_signedUrlResponse.signedUrlInfo).toJson();
     http.StreamedResponse httpResponse = await httpService.esUploadVideo(
       _signedUrlResponse.signedUrlInfo.url,
-      _feilds,
+      _fields,
       videoFile,
     );
 
     if (httpResponse.statusCode == 204) {
       await _sendVideoDetails(title, _signedUrlResponse);
     } else {
-      print(
-          'error _uploadToSignedUrl :- ' + httpResponse.statusCode.toString());
       throw ('error _uploadToSignedUrl :- ' +
           httpResponse.statusCode.toString());
     }
@@ -113,29 +102,21 @@ class EsVideoBloc {
 
   Future<void> _sendVideoDetails(
       String title, VideoUploadUrlResponse data) async {
-    print(
-        'esBusinessesBloc.getSelectedBusinessId() = > ${esBusinessesBloc.getSelectedBusinessId()}');
     Response httpResponse = await httpService.esPost(
-      'post/',
+      EsApiPaths.getVideoPath,
       jsonEncode(
-        {
-          "post_type": "video",
-          "title": title,
-          "business_id": esBusinessesBloc.getSelectedBusinessId(),
-          "content": {
-            "video": {
-              "video_id": data.videoMeta.videoId,
-              "video_url": data.videoMeta.videoUrl,
-            }
-          }
-        },
+        CreateVideoDetailsPayload(
+          title,
+          data.videoMeta.videoId,
+          data.videoMeta.videoUrl,
+          esBusinessesBloc.getSelectedBusinessId(),
+        ),
       ),
     );
 
     if (httpResponse.statusCode == 201) {
       return;
     } else {
-      print('error sendVideoDetails :- ' + httpResponse.statusCode.toString());
       throw ('error sendVideoDetails :- ' + httpResponse.statusCode.toString());
     }
   }
@@ -153,21 +134,25 @@ class EsVideoBloc {
       switch (action) {
         case UpdateVideoAction.PUBLISH:
           httpResponse = await httpService.esPost(
-            'post/$videoId/publish',
+            EsApiPaths.publishVideo(videoId),
             null,
           );
           break;
         case UpdateVideoAction.UNPUBLISH:
-          httpResponse = await httpService.esDel('post/$videoId/publish');
+          httpResponse = await httpService.esDel(
+            EsApiPaths.publishVideo(videoId),
+          );
           break;
         case UpdateVideoAction.UPDATE_DETAILS:
           httpResponse = await httpService.esPatch(
-            'post/$videoId',
+            EsApiPaths.updateVideo(videoId),
             jsonEncode({"title": newTitle}),
           );
           break;
         case UpdateVideoAction.DELETE:
-          httpResponse = await httpService.esDel('post/$videoId');
+          httpResponse = await httpService.esDel(
+            EsApiPaths.updateVideo(videoId),
+          );
           break;
         default:
           return;
@@ -181,7 +166,6 @@ class EsVideoBloc {
         throw ('error :- ' + httpResponse.statusCode.toString());
       }
     } catch (e) {
-      print('exception **************************** ${e?.toString()}');
       esVideoState.updateVideoState = UpdateVideoState.FAILED;
       esVideoState.errorMessage = e.toString();
       _updateState();

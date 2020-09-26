@@ -114,9 +114,9 @@ class User {
 }
 
 class Photo {
-  Photo();
-
-  Photo.fromJson(Map<String, dynamic> json) {}
+  Photo.fromJson(Map<String, dynamic> json) {
+    // No fields available for now.
+  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -126,7 +126,7 @@ class Photo {
 
 class Business {
   String name;
-  Null photo;
+  Photo photo;
 
   Business({this.name, this.photo});
 
@@ -168,6 +168,8 @@ class Video {
   Original original;
   String playUrl;
   String thumbnail;
+  String aspectRatio;
+  String maxResolution;
 
   Video(
       {this.width,
@@ -175,7 +177,9 @@ class Video {
       this.duration,
       this.original,
       this.playUrl,
-      this.thumbnail});
+      this.thumbnail,
+      this.aspectRatio,
+      this.maxResolution});
 
   Video.fromJson(Map<String, dynamic> json) {
     width = json['width'];
@@ -186,6 +190,8 @@ class Video {
         : null;
     playUrl = json['play_url'];
     thumbnail = json['thumbnail'];
+    aspectRatio = json['aspect_ratio'];
+    maxResolution = json['max_resolution'];
   }
 
   Map<String, dynamic> toJson() {
@@ -198,6 +204,8 @@ class Video {
     }
     data['play_url'] = this.playUrl;
     data['thumbnail'] = this.thumbnail;
+    data['aspect_ratio'] = this.aspectRatio;
+    data['max_resolution'] = this.maxResolution;
     return data;
   }
 }

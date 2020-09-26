@@ -39,7 +39,6 @@ class _EsVideoPageState extends State<EsVideoPage> {
         body: StreamBuilder<EsVideoState>(
           stream: _esVideoBloc.esVideoStateObservable,
           builder: (context, snapshot) {
-            print('***************************** here building');
             if (!snapshot.hasData) {
               return Center(
                 child: CircularProgressIndicator(),

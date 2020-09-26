@@ -141,6 +141,7 @@ class HttpService {
   // eSamudaay
   Future<http.Response> esGet(path) async {
     final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
+    print('*** token => $esJwtToken');
     if (esJwtToken != null) {
       Map<String, String> requestHeaders = {
         'Content-type': 'application/json',
