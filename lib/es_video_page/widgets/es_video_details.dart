@@ -20,7 +20,7 @@ class _EsVideoDetailsWidgetState extends State<EsVideoDetailsWidget> {
   @override
   void initState() {
     _esVideoBloc = Provider.of<EsVideoBloc>(context, listen: false);
-    isPublished = widget.videoData.status == 'PUBLISHED';
+    isPublished = widget.videoData.status == VideoState.PUBLISHED;
     super.initState();
   }
 

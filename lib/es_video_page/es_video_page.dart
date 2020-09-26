@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_video.dart';
+import 'package:foore/data/model/es_video_models/es_video_list.dart';
 import 'package:foore/es_video_page/es_add_video.dart';
 import 'package:foore/es_video_page/es_play_video.dart';
 import 'package:foore/services/sizeconfig.dart';
@@ -92,7 +93,7 @@ class _EsVideoPageState extends State<EsVideoPage> {
                 itemBuilder: (context, index) {
                   if (snapshot.data.videoList.results[index].status
                           .toUpperCase() ==
-                      'PROCESSING') {
+                      VideoState.PROCESSING) {
                     return Container();
                   }
                   return Container(

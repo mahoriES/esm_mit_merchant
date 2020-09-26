@@ -69,7 +69,10 @@ class _EsVideoPickerWidgetState extends State<EsVideoPickerWidget> {
                       child: VideoPlayer(videoPlayerController),
                     )
                   : Center(
-                      child: Icon(Icons.add_a_photo),
+                      child: Icon(
+                        Icons.video_call,
+                        size: 30.toFont,
+                      ),
                     ),
             ),
           );

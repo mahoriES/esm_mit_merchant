@@ -1,3 +1,9 @@
+class VideoState {
+  static const PROCESSING = 'PROCESSING';
+  static const READY = 'READY';
+  static const PUBLISHED = 'PUBLISHED';
+}
+
 class VideoFeedResponse {
   int count;
   String next;
@@ -114,12 +120,21 @@ class User {
 }
 
 class Photo {
+  String photoId;
+  String photoUrl;
+  String contentType;
+
   Photo.fromJson(Map<String, dynamic> json) {
-    // No fields available for now.
+    photoId = json['photo_id'] ?? '';
+    photoUrl = json['photo_url'] ?? '';
+    contentType = json['content_type'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['photo_id'] = this.photoId;
+    data['photo_url'] = this.photoUrl;
+    data['content_type'] = this.contentType;
     return data;
   }
 }
