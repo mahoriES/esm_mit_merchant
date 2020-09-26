@@ -69,4 +69,10 @@ class EsApiPaths {
       'businesses/$businessId/catalog/products/$productId/skus/$skuId';
 
   static final addFcmToken = 'notifications/mobile/tokens';
+
+  // video feature endpoints
+  static final getVideoPath = 'post/';
+  static final getSignedUrl = 'media/video/url';
+  static final publishVideo = (String videoId) => 'post/$videoId/publish';
+  static final updateVideo = (String videoId) => 'post/$videoId';
 }
