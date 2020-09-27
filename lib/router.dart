@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
 import 'package:foore/data/bloc/es_create_merchant_profile.dart';
+import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_business_guard/es_businesses_guard.dart';
 import 'package:foore/es_category_page/es_add_subcategory.dart';
@@ -12,14 +12,14 @@ import 'package:foore/es_category_page/es_subcategory_page.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/es_login_page/es_login_page.dart';
 import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
+import 'package:foore/es_video_page/es_add_video.dart';
+import 'package:foore/es_video_page/es_play_video.dart';
 import 'package:foore/google_login_not_done_page/google_login_not_done_page.dart';
 import 'package:foore/onboarding_page/location_claim.dart';
 import 'package:foore/setting_page/sender_code.dart';
 import 'package:foore/setting_page/settting_page.dart';
-
 import 'package:foore/shopping_page/shopping_page.dart';
 import 'package:provider/provider.dart';
-
 import 'auth_guard/auth_guard.dart';
 import 'data/bloc/es_edit_product.dart';
 import 'data/bloc/onboarding.dart';
@@ -195,6 +195,11 @@ class Router {
                     builder: (context) => PeopleBloc(httpServiceBloc),
                     dispose: (context, value) => value.dispose(),
                   ),
+                  Provider<EsVideoBloc>(
+                    builder: (context) =>
+                        EsVideoBloc(httpServiceBloc, esBusinessesBloc),
+                    dispose: (context, value) => value.dispose(),
+                  ),
                 ],
                 child: EsHomePage(httpServiceBloc),
               ),
@@ -281,6 +286,25 @@ class Router {
           builder: (context) => EsOrderPage(),
         );
         break;
+      case EsAddVideo.routeName:
+        return MaterialPageRoute(
+          builder: (context) => Provider<EsVideoBloc>(
+            builder: (context) =>
+                EsVideoBloc(httpServiceBloc, esBusinessesBloc),
+            dispose: (context, value) => value.dispose(),
+            child: EsAddVideo(),
+          ),
+        );
+        break;
+      case PlayVideoPage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => Provider<EsVideoBloc>(
+            builder: (context) =>
+                EsVideoBloc(httpServiceBloc, esBusinessesBloc),
+            dispose: (context, value) => value.dispose(),
+            child: PlayVideoPage(settings.arguments),
+          ),
+        );
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

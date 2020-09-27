@@ -5,6 +5,8 @@ import 'package:foore/data/bloc/auth.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'dart:io';
+// ignore: implementation_imports
+import 'package:http_parser/src/media_type.dart';
 import 'dart:async';
 import 'package:foore/esdy_print.dart';
 
@@ -466,6 +468,40 @@ class HttpService {
     } else {
       this._authBloc.esLogout();
       throw Exception('Auth Failed');
+    }
+  }
+
+  esUploadVideo(
+    String url,
+    Map<String, String> fields,
+    File videoFile,
+  ) async {
+    var request = new http.MultipartRequest(
+      "POST",
+      Uri.parse(url),
+    );
+
+    fields.forEach((key, value) {
+      request.fields[key] = value;
+    });
+
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'file',
+        videoFile.path,
+        contentType: new MediaType('application', 'x-tar'),
+      ),
+    );
+
+    http.StreamedResponse httpResponse = await request.send();
+
+    if (httpResponse.statusCode == 403 || httpResponse.statusCode == 401) {
+      this._authBloc.esLogout();
+      throw Exception('Auth Failed');
+    } else if (httpResponse.statusCode == 204) {
+      return httpResponse;
+    } else {
+      throw Exception('Failed');
     }
   }
 }
