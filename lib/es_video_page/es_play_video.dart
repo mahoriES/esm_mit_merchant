@@ -27,7 +27,7 @@ class _PlayVideoPageState extends State<PlayVideoPage> {
   @override
   void initState() {
     controller = new VideoPlayerController.network(
-      widget.param.playUrl ?? '',
+      widget.param?.playUrl ?? '',
     );
 
     chewieController = ChewieController(
@@ -37,8 +37,11 @@ class _PlayVideoPageState extends State<PlayVideoPage> {
       allowMuting: true,
     );
 
-    controller.initialize().then((value) => setState(() {}));
-    controller.play();
+    if (!(widget.param?.playUrl == null ||
+        (widget.param?.playUrl?.isEmpty ?? true))) {
+      controller.initialize().then((value) => setState(() {}));
+      controller.play();
+    }
 
     super.initState();
   }
@@ -84,7 +87,7 @@ class _PlayVideoPageState extends State<PlayVideoPage> {
                   child: Opacity(
                     opacity: 0.8,
                     child: CachedNetworkImage(
-                      imageUrl: widget.param.thumbnailUrl ?? '',
+                      imageUrl: widget.param?.thumbnailUrl ?? '',
                       errorWidget: (context, url, error) => Container(
                         width: SizeConfig().screenWidth,
                         height: 200.toHeight,
