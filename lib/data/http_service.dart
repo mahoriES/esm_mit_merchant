@@ -6,6 +6,7 @@ import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'dart:io';
 import 'dart:async';
+import 'package:foore/esdy_print.dart';
 
 class HttpService {
   String apiUrl;
@@ -13,6 +14,10 @@ class HttpService {
   String esApiBaseUrl;
 
   AuthBloc _authBloc;
+  static const String CLASSNAME = 'HttpService';
+  static const String FILENAME = 'http_service.dart';
+  final EsdyPrint esdyPrint =
+      EsdyPrint(classname: CLASSNAME, filename: FILENAME);
 
   HttpService(AuthBloc authBloc) {
     this._authBloc = authBloc;
@@ -138,6 +143,7 @@ class HttpService {
 
   // eSamudaay
   Future<http.Response> esGet(path) async {
+    esdyPrint.debug("esGet: " + path);
     final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
     if (esJwtToken != null) {
       Map<String, String> requestHeaders = {
@@ -173,6 +179,7 @@ class HttpService {
   }
 
   Future<http.Response> esGetWithToken(path, token) async {
+    esdyPrint.debug("esGetWithToken: " + path);
     if (token != null) {
       Map<String, String> requestHeaders = {
         'Content-type': 'application/json',
@@ -207,7 +214,9 @@ class HttpService {
   }
 
   Future<http.Response> esPost(path, body) async {
+    esdyPrint.debug("esPost: " + path);
     final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
+
     if (esJwtToken != null) {
       Map<String, String> requestHeaders = {
         'Content-type': 'application/json',
@@ -223,16 +232,17 @@ class HttpService {
 
       if (httpResponse.statusCode == 403 || httpResponse.statusCode == 401) {
         this._authBloc.esLogout();
-        throw Exception('Auth Failed');
+        throw Exception('ES Auth Failed');
       }
       return httpResponse;
     } else {
       this._authBloc.esLogout();
-      throw Exception('Auth Failed');
+      throw Exception('ES Auth Failed');
     }
   }
 
   Future<http.Response> esPostWithToken(path, body, token) async {
+    esdyPrint.debug("esPostWithToken: " + path);
     if (token != null) {
       Map<String, String> requestHeaders = {
         'Content-type': 'application/json',
@@ -258,6 +268,7 @@ class HttpService {
   }
 
   Future<http.Response> esPatch(path, body) async {
+    esdyPrint.debug("esPatch: " + path);
     final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
     if (esJwtToken != null) {
       Map<String, String> requestHeaders = {
@@ -284,6 +295,7 @@ class HttpService {
   }
 
   Future<http.Response> esPut(path, body) async {
+    esdyPrint.debug("esPut: " + path);
     final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
     if (esJwtToken != null) {
       Map<String, String> requestHeaders = {
@@ -311,6 +323,7 @@ class HttpService {
   }
 
   Future<http.Response> esDel(path) async {
+    esdyPrint.debug("esDel: " + path);
     final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
     if (esJwtToken != null) {
       Map<String, String> requestHeaders = {
@@ -336,6 +349,7 @@ class HttpService {
   }
 
   Future<http.Response> esPostWithoutAuth(path, body) async {
+    esdyPrint.debug("esPostWithoutAuth: " + path);
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
@@ -362,6 +376,7 @@ class HttpService {
   }
 
   Future<http.Response> esPostUrl(url, body) async {
+    esdyPrint.debug("esPostUrl: " + url);
     final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
     if (esJwtToken != null) {
       Map<String, String> requestHeaders = {

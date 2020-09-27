@@ -90,7 +90,6 @@ class AuthBloc {
     this._updateState();
     this.googleSignIn.signOut();
     this.foAnalytics.resetUserIdentity();
-    this._pushNotifications.unsubscribeForCurrentUser();
 
     if (esLogout) {
       this.esLogout();
@@ -166,6 +165,7 @@ class AuthBloc {
   esLogin(EsAuthData esAuthData, EsProfile esMerchantProfile) {
     this.authState.esAuthData = esAuthData;
     this.authState.esMerchantProfile = esMerchantProfile;
+    this._pushNotifications.subscribeForCurrentUser(HttpService(this));
     this.authState.isEsLoading = false;
     this._updateState();
     this._storeEsAuthState();
@@ -183,6 +183,7 @@ class AuthBloc {
     this.authState.esAuthData = null;
     this.authState.isEsLoading = false;
     this.authState.esMerchantProfile = null;
+    this._pushNotifications.unsubscribeForCurrentUser(esUnsubscribe: True);
     this._updateState();
     this._storeEsAuthState();
   }
