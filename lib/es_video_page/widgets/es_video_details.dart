@@ -21,6 +21,7 @@ class _EsVideoDetailsWidgetState extends State<EsVideoDetailsWidget> {
   void initState() {
     _esVideoBloc = Provider.of<EsVideoBloc>(context, listen: false);
     isPublished = widget.videoData.status == VideoState.PUBLISHED;
+    newTitle = widget.videoData.title;
     super.initState();
   }
 

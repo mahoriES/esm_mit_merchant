@@ -25,17 +25,10 @@ class _EsVideoPageState extends State<EsVideoPage> {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FoSubmitButton(
-            text: 'Add Video',
-            onPressed: () =>
-                Navigator.of(context).pushNamed(EsAddVideo.routeName)
-            //     .then(
-            //   (value) {
-            //     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            //       if (value == true) _esVideoBloc.getVideoList();
-            //     });
-            //   },
-            // ),
-            ),
+          text: 'Add Video',
+          onPressed: () =>
+              Navigator.of(context).pushNamed(EsAddVideo.routeName),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: StreamBuilder<EsVideoState>(
           stream: _esVideoBloc.esVideoStateObservable,
@@ -97,7 +90,7 @@ class _EsVideoPageState extends State<EsVideoPage> {
                     return Container();
                   }
                   return Container(
-                    color: index % 2 == 0 ? Colors.grey[300] : Colors.white,
+                    color: index % 2 == 0 ? Colors.grey[200] : Colors.white,
                     height: 100.toHeight,
                     padding: EdgeInsets.symmetric(
                       vertical: 5.toHeight,
@@ -108,44 +101,40 @@ class _EsVideoPageState extends State<EsVideoPage> {
                       children: [
                         Expanded(
                           flex: 2,
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.of(context).pushNamed(
-                                PlayVideoPage.routeName,
-                                arguments: PlayVideoPageParam(
-                                  snapshot.data.videoList.results[index].content
-                                      .video.playUrl,
-                                  snapshot.data.videoList.results[index].content
-                                      .video.thumbnail,
-                                ),
-                              );
-                            },
-                            child: Stack(
-                              children: [
-                                Opacity(
-                                  opacity: 0.8,
-                                  child: CachedNetworkImage(
-                                    imageUrl: snapshot
-                                            .data
-                                            .videoList
-                                            .results[index]
-                                            .content
-                                            .video
-                                            ?.thumbnail ??
-                                        '',
-                                    errorWidget: (context, url, error) =>
-                                        Container(),
-                                    fit: BoxFit.cover,
-                                    height: 100.toHeight,
+                          child: Container(
+                            color: Colors.grey[300],
+                            child: CachedNetworkImage(
+                              imageUrl: snapshot.data.videoList?.results[index]
+                                      ?.content?.video?.thumbnail ??
+                                  '',
+                              imageBuilder: (context, imageProvider) => InkWell(
+                                onTap: () => Navigator.of(context).pushNamed(
+                                  PlayVideoPage.routeName,
+                                  arguments: PlayVideoPageParam(
+                                    snapshot.data.videoList.results[index]
+                                        .content.video.playUrl,
+                                    snapshot.data.videoList.results[index]
+                                        .content.video.thumbnail,
                                   ),
                                 ),
-                                Center(
-                                  child: Icon(
-                                    Icons.play_circle_outline,
-                                    size: 40,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                )
-                              ],
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.play_circle_outline,
+                                      size: 40.toFont,
+                                      color: Colors.black.withOpacity(0.8),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  Center(child: Icon(Icons.error)),
                             ),
                           ),
                         ),

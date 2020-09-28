@@ -7,7 +7,7 @@ class VideoState {
 class VideoFeedResponse {
   int count;
   String next;
-  Null previous;
+  String previous;
   List<VideoFeedResponseResults> results;
 
   VideoFeedResponse({this.count, this.next, this.previous, this.results});

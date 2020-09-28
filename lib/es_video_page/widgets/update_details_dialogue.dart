@@ -44,14 +44,23 @@ class _UpdateVideoDetailsDialogueState
                 child: CustomInputField('Update Title', titleController),
               ),
               SizedBox(height: 100.toHeight),
-              FoSubmitButton(
-                text: 'Update',
-                onPressed: () {
-                  if (formKey.currentState.validate()) {
-                    widget.onUpdate(titleController.text);
-                    Navigator.pop(context);
-                  }
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FoSubmitButton(
+                    text: 'Update',
+                    onPressed: () {
+                      if (formKey.currentState.validate()) {
+                        widget.onUpdate(titleController.text);
+                        Navigator.pop(context);
+                      }
+                    },
+                  ),
+                  FoSubmitButton(
+                    text: 'Cancel',
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
               ),
             ],
           ),

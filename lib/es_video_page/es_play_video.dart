@@ -32,7 +32,6 @@ class _PlayVideoPageState extends State<PlayVideoPage> {
 
     chewieController = ChewieController(
       videoPlayerController: controller,
-      fullScreenByDefault: true,
       looping: true,
       allowMuting: true,
     );
@@ -45,13 +44,6 @@ class _PlayVideoPageState extends State<PlayVideoPage> {
 
     super.initState();
   }
-
-  // @override
-  // void deactivate() {
-  //   controller?.pause();
-  //   chewieController?.pause();
-  //   super.deactivate();
-  // }
 
   @override
   void dispose() {
