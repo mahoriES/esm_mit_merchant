@@ -15,13 +15,14 @@ class PushNotifications {
   PushNotifications() {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
+        //{notification: {title: Hey, body: Body}, data: {a: 1, b: 2}}
+        esdyPrint.debug("onMessage: $message");
       },
       onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
+        esdyPrint.debug("onLaunch: $message");
       },
       onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
+        esdyPrint.debug("onResume: $message");
       },
     );
     _firebaseMessaging.requestNotificationPermissions(

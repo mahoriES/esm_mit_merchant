@@ -183,7 +183,7 @@ class AuthBloc {
     this.authState.esAuthData = null;
     this.authState.isEsLoading = false;
     this.authState.esMerchantProfile = null;
-    this._pushNotifications.unsubscribeForCurrentUser(esUnsubscribe: True);
+    this._pushNotifications.unsubscribeForCurrentUser(esUnsubscribe: true);
     this._updateState();
     this._storeEsAuthState();
   }
