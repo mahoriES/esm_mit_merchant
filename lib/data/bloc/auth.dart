@@ -30,6 +30,7 @@ class AuthBloc {
 
   AuthBloc() {
     this._subjectAuthState = new BehaviorSubject<AuthState>.seeded(authState);
+    _pushNotifications.initialise();
     this._loadAuthState();
     this._loadEsAuthState();
   }
