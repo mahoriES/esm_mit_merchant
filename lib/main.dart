@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/app_translations_delegate.dart';
-//import 'package:foore/data/bloc/push_notifications.dart';
 import 'package:foore/sentry_handler.dart';
 import 'package:foore/theme/light.dart';
 import 'package:provider/provider.dart';
@@ -85,7 +84,6 @@ class _ReviewAppState extends State<ReviewApp>
   @override
   void initState() {
     super.initState();
-    //PushNotifications().initialise();
   }
 
   StreamSubscription<AppTranslationsState> _subscription;
