@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
@@ -5,6 +7,7 @@ import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/es_order_page/es_order_add_item.dart';
 import 'package:foore/es_order_page/widgets/order_item_tile.dart';
 import 'package:foore/services/sizeconfig.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EsOrderDetails extends StatefulWidget {
   static const routeName = '/order_details';
@@ -46,7 +49,30 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
               .subtitle1
               .copyWith(fontWeight: FontWeight.w600),
         ),
-        actions: [],
+        actions: [
+          if (widget.esOrder?.customerPhones?.length != null &&
+              widget.esOrder.customerPhones.length > 0) ...[
+            IconButton(
+              icon: Image.asset('assets/call.png'),
+              onPressed: () {
+                // TODO : which phone number to choose here.
+                launch('tel:${widget.esOrder.customerPhones[0]}');
+              },
+            ),
+            IconButton(
+              icon: Image.asset('assets/whatsapp.png'),
+              onPressed: () {
+                if (Platform.isIOS) {
+                  launch(
+                      "whatsapp://wa.me/${widget.esOrder.customerPhones[0]}/?text=${Uri.parse('Message from eSamudaay.')}");
+                } else {
+                  launch(
+                      "whatsapp://send?phone=${widget.esOrder.customerPhones[0]}&text=${Uri.parse('Message from eSamudaay.')}");
+                }
+              },
+            ),
+          ],
+        ],
       ),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 20.toWidth),
@@ -110,8 +136,6 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                             .pushNamed(EsOrderAddItem.routeName)
                             .then(
                           (value) {
-                            print(
-                                '****************************** popped $value');
                             if (value != null && value is List<EsOrderItem>) {
                               totalItems = [...totalItems, ...value];
                               setState(() {});
