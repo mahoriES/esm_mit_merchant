@@ -3,20 +3,60 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/esdy_print.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class PushNotifications {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  static const String CLASSNAME = 'PushNotifications';
+  static const String FILENAME = 'push_notificaitons.dart';
+  final EsdyPrint esdyPrint =
+      EsdyPrint(classname: CLASSNAME, filename: FILENAME);
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  Future<Null> initialise() async {
+    esdyPrint.debug("initialise >>");
+    //TODO: Icon doesn't show up properly
+    //even though, the ic_launcher is a valid file (foore icon)
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettings =
+        InitializationSettings(initializationSettingsAndroid, null);
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+    );
+  }
+
+  Future<Null> displayLocalNotification(String title, String body) async {
+    esdyPrint.debug("displayLocalNotification >>");
+    //TODO: Android Channel information
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+    var platformChannelSpecifics =
+        NotificationDetails(androidPlatformChannelSpecifics, null);
+    await flutterLocalNotificationsPlugin.show(
+        0, title, body, platformChannelSpecifics);
+  }
 
   PushNotifications() {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
+        //{notification: {title: Hey, body: Body}, data: {a: 1, b: 2}}
+        esdyPrint.debug("onMessage: $message");
+
+        if (message != null && message.containsKey('notification')) {
+          var notification = message['notification'];
+          await displayLocalNotification(
+              notification['title'], notification['body']);
+        }
       },
       onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
+        esdyPrint.debug("onLaunch: $message");
       },
       onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
+        esdyPrint.debug("onResume: $message");
       },
     );
     _firebaseMessaging.requestNotificationPermissions(
@@ -26,23 +66,33 @@ class PushNotifications {
   }
 
   Future<String> subscribeForCurrentUser(HttpService httpService) async {
+    esdyPrint.debug("subscribeForCurrentUser >>");
     var token = await this._firebaseMessaging.getToken();
     if (token != null) {
-      var fcmToken = FcmToken(token);
-      var payloadString = json.encode(fcmToken.toJson());
-      httpService.foPost('fcm/add/foore/', payloadString);
-
+      esdyPrint.debug(token);
       //ES Token
       var esFcmToken = EsFcmToken(token);
       var esPayloadString = json.encode(esFcmToken.toJson());
       httpService.esPost(EsApiPaths.addFcmToken, esPayloadString);
+
+      esdyPrint.debug("Registered with esamudaay");
+
+      var fcmToken = FcmToken(token);
+      var payloadString = json.encode(fcmToken.toJson());
+      httpService.foPost('fcm/add/foore/', payloadString);
+
+      esdyPrint.debug("registered with Foore");
     }
     return token;
   }
 
-  Future<bool> unsubscribeForCurrentUser() async {
-    var val = await this._firebaseMessaging.deleteInstanceID();
-    return val;
+  Future<bool> unsubscribeForCurrentUser({bool esUnsubscribe = false}) async {
+    esdyPrint.debug("unsubscribeForCurrentUser");
+    if (esUnsubscribe) {
+      var val = await this._firebaseMessaging.deleteInstanceID();
+      return val;
+    }
+    return false;
   }
 }
 
@@ -64,3 +114,5 @@ class EsFcmToken extends FcmToken {
     return data;
   }
 }
+
+class LocalNotification {}
