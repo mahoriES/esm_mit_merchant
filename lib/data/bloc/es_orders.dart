@@ -93,7 +93,7 @@ class EsOrdersBloc {
     });
   }
 
-  getOrderItems(String orderId) {
+  getOrderItems(String orderId) async {
     print("getOrderItems");
     if (this._esOrdersState.orderItemsKV.containsKey(orderId)) {
       return;
@@ -110,7 +110,7 @@ class EsOrdersBloc {
     this._esOrdersState.isSubmitFailed = false;
     this._esOrdersState.isSubmitSuccess = false;
     this._updateState();
-    this
+    await this
         .httpService
         .esGet(EsApiPaths.getOrderDetail(orderId))
         .then((httpResponse) {

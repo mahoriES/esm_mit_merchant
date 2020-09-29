@@ -11,6 +11,7 @@ import 'package:foore/es_category_page/es_add_subcategory.dart';
 import 'package:foore/es_category_page/es_subcategory_page.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/es_login_page/es_login_page.dart';
+import 'package:foore/es_order_page/es_order_details.dart';
 import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
 import 'package:foore/es_video_page/es_add_video.dart';
 import 'package:foore/es_video_page/es_play_video.dart';
@@ -33,6 +34,7 @@ import 'es_category_page/es_category_page.dart';
 import 'es_create_business/es_create_business.dart';
 import 'es_create_merchant_profile/es_create_merchant_profile.dart';
 import 'es_order_page/es_order_page.dart';
+import 'es_order_page/es_order_add_item.dart';
 import 'home_page/home_page.dart';
 import 'intro_page/intro_page.dart';
 import 'login_page/login_page.dart';
@@ -286,6 +288,11 @@ class Router {
           builder: (context) => EsOrderPage(),
         );
         break;
+      case EsOrderDetails.routeName:
+        return MaterialPageRoute(
+          builder: (context) => EsOrderDetails(settings.arguments),
+        );
+        break;
       case EsAddVideo.routeName:
         return MaterialPageRoute(
           builder: (context) => Provider<EsVideoBloc>(
@@ -305,6 +312,11 @@ class Router {
             child: PlayVideoPage(settings.arguments),
           ),
         );
+      case EsOrderAddItem.routeName:
+        return MaterialPageRoute(
+          builder: (context) => EsOrderAddItem(),
+        );
+        break;
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(
