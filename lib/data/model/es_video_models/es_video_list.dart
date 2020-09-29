@@ -7,7 +7,7 @@ class VideoState {
 class VideoFeedResponse {
   int count;
   String next;
-  Null previous;
+  String previous;
   List<VideoFeedResponseResults> results;
 
   VideoFeedResponse({this.count, this.next, this.previous, this.results});
@@ -125,6 +125,7 @@ class Photo {
   String contentType;
 
   Photo.fromJson(Map<String, dynamic> json) {
+    if (json == null) json = {};
     photoId = json['photo_id'] ?? '';
     photoUrl = json['photo_url'] ?? '';
     contentType = json['content_type'] ?? '';
@@ -147,13 +148,13 @@ class Business {
 
   Business.fromJson(Map<String, dynamic> json) {
     name = json['name'];
-    photo = json['photo'];
+    photo = json['photo'] != null ? new Photo.fromJson(json['photo']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
-    data['photo'] = this.photo;
+    data['photo'] = this.photo.toJson();
     return data;
   }
 }
