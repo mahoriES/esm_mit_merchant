@@ -3,6 +3,8 @@ import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_orders.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_orders.dart';
+import 'package:foore/es_order_page/widgets/es_order_card.dart';
+import 'package:foore/es_order_page/es_order_details.dart';
 import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
@@ -370,7 +372,11 @@ class _EsOrderListState extends State<EsOrderList> {
     }
 
     getOrderItems(EsOrder order) async {
-      esOrdersBloc.getOrderItems(order.orderId);
+      await esOrdersBloc.getOrderItems(order.orderId);
+      Navigator.of(context).pushNamed(
+        EsOrderDetails.routeName,
+        arguments: order,
+      );
     }
 
     return Container(
@@ -385,7 +391,7 @@ class _EsOrderListState extends State<EsOrderList> {
                   if (!snapshot.hasData) {
                     return Container();
                   }
-                  if (snapshot.data.isLoading) {
+                  if (snapshot.data.isLoading || snapshot.data.isSubmitting) {
                     return Center(
                       child: CircularProgressIndicator(),
                     );
@@ -429,16 +435,23 @@ class _EsOrderListState extends State<EsOrderList> {
                               }
                             }
                             final currentProduct = snapshot.data.items[index];
-                            return EsOrderItemWidget(
-                              esOrder: currentProduct,
-                              onAccept: acceptItem,
-                              onMarkReady: markReady,
-                              onCancel: cancelItem,
-                              onAssign: assignItem,
-                              onGetOrderItems: getOrderItems,
-                              showStatus: this.widget.status ==
-                                  null, //Show only when we are not filtering for specific status
-                              onUpdatePaymentStatus: updatePaymentStatus,
+
+                            // return EsOrderItemWidget(
+                            //   esOrder: currentProduct,
+                            //   onAccept: acceptItem,
+                            //   onMarkReady: markReady,
+                            //   onCancel: cancelItem,
+                            //   onAssign: assignItem,
+                            //   onGetOrderItems: getOrderItems,
+                            //   showStatus: this.widget.status ==
+                            //       null, //Show only when we are not filtering for specific status
+                            //   onUpdatePaymentStatus: updatePaymentStatus,
+                            // );
+                            return EsOrderCard(
+                              EsOrderCardParams(
+                                currentProduct,
+                                () => getOrderItems(currentProduct),
+                              ),
                             );
                           }),
                     );

@@ -6,8 +6,20 @@ class MenuItemWidget extends StatelessWidget {
   final Function(EsProduct) onEdit;
   final Function(EsProduct) onTap;
   final Function(EsProduct) onDelete;
-  const MenuItemWidget(
-      {this.esProduct, this.onEdit, this.onDelete, this.onTap});
+  // use these three values when navigating here from add_item in order flow.
+  final bool isAddOrderItem;
+  final Function() onAdd;
+  final bool isItemAdded;
+  //
+  const MenuItemWidget({
+    this.esProduct,
+    this.onEdit,
+    this.onDelete,
+    this.onTap,
+    this.isAddOrderItem = false,
+    this.isItemAdded = false,
+    this.onAdd,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +30,7 @@ class MenuItemWidget extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          this.onTap(this.esProduct);
+          if (!isAddOrderItem) this.onTap(this.esProduct);
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,8 +130,7 @@ class MenuItemWidget extends StatelessWidget {
                                       .textTheme
                                       .bodyText2
                                       .copyWith(
-                                        color: Theme.of(context)
-                                            .errorColor,
+                                        color: Theme.of(context).errorColor,
                                         // fontWeight: FontWeight.w600
                                       ),
                                 ),
@@ -138,29 +149,37 @@ class MenuItemWidget extends StatelessWidget {
                 ),
               ),
             ),
-            PopupMenuButton<int>(
-              onSelected: (result) {
-                if (result == 1) {
-                  this.onEdit(this.esProduct);
-                } else if (result == 2) {
-                  this.onDelete(this.esProduct);
-                }
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
-                const PopupMenuItem(
-                  value: 1,
-                  child: Text('View'),
-                ),
-                // const PopupMenuItem(
-                //   value: '',
-                //   child: Text('Activate'),
-                // ),
-                // const PopupMenuItem(
-                //   value: 2,
-                //   child: Text('Delete'),
-                // ),
-              ],
-            )
+            isAddOrderItem
+                ? IconButton(
+                    icon: isItemAdded
+                        ? Icon(Icons.check_circle)
+                        : Icon(Icons.add_circle),
+                    onPressed: this.onAdd,
+                  )
+                : PopupMenuButton<int>(
+                    onSelected: (result) {
+                      if (result == 1) {
+                        this.onEdit(this.esProduct);
+                      } else if (result == 2) {
+                        this.onDelete(this.esProduct);
+                      }
+                    },
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<int>>[
+                      const PopupMenuItem(
+                        value: 1,
+                        child: Text('View'),
+                      ),
+                      // const PopupMenuItem(
+                      //   value: '',
+                      //   child: Text('Activate'),
+                      // ),
+                      // const PopupMenuItem(
+                      //   value: 2,
+                      //   child: Text('Delete'),
+                      // ),
+                    ],
+                  )
           ],
         ),
       ),
