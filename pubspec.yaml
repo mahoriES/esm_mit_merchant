@@ -1,7 +1,7 @@
 name: foore
 description: Foore mobile app
 
-version: 0.1.1+85
+version: 0.1.1+83
 
 environment:
   sdk: '>=2.7.0 <3.0.0'
@@ -57,6 +57,7 @@ dependencies:
   uuid: 2.1.0
   fluttertoast: ^7.0.4
   sentry: ">=3.0.0 <4.0.0"
+  flutter_local_notifications: ^1.4.4+4
 
   video_player: ^0.10.12+3
   cached_network_image: 
