@@ -5,7 +5,7 @@ import 'package:foore/services/sizeconfig.dart';
 
 class OrderItemTile extends StatefulWidget {
   final EsOrderItem orderItem;
-  final Function(EsOrderItem) onChanged;
+  final Function(int quantity, double unitPrice) onChanged;
   final Function() onDelete;
   OrderItemTile(
     this.orderItem,
@@ -22,11 +22,11 @@ class _OrderItemTileState extends State<OrderItemTile> {
   @override
   void initState() {
     quantityController = new TextEditingController(
-      text: widget.orderItem.itemQuantity.toString(),
+      text: (widget.orderItem?.itemQuantity ?? 1).toString(),
     );
 
     priceController = new TextEditingController(
-      text: widget?.orderItem?.itemTotal?.substring(1),
+      text: (widget.orderItem?.unitPrice ?? 0).toString(),
     );
     super.initState();
   }
@@ -42,43 +42,62 @@ class _OrderItemTileState extends State<OrderItemTile> {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        Text(widget.orderItem.productName),
-        widget.orderItem.variationOption != null
-            ? Text("(" + widget.orderItem.variationOption + ")")
-            : Container(),
-        Text("  x   "),
-        Container(
-          width: 20.toWidth,
-          child: TextFormField(
-            textAlign: TextAlign.center,
-            controller: quantityController,
-            keyboardType: TextInputType.number,
-            onChanged: (v) {
-              int quantity = int.tryParse(v);
-              widget.orderItem.itemQuantity = quantity ?? 0;
-              widget.onChanged(widget.orderItem);
-            },
+        Expanded(
+          flex: 4,
+          child: Text(
+            widget.orderItem.productName +
+                (widget.orderItem.variationOption != null
+                    ? ("(${widget.orderItem.variationOption})")
+                    : ''),
           ),
         ),
-        Flexible(child: Container()),
-        Text(widget?.orderItem?.itemTotal?.substring(0, 1) ?? ''),
-        Container(
-          width: 70.toWidth,
-          child: TextFormField(
-            textAlign: TextAlign.center,
-            controller: priceController,
-            keyboardType: TextInputType.number,
-            onChanged: (v) {
-              int quantity = int.tryParse(v);
-              widget.orderItem.itemTotal = (quantity ?? 0).toString();
-              widget.onChanged(widget.orderItem);
-            },
+        Text('  x  '),
+        Expanded(
+          flex: 2,
+          child: Container(
+            width: 20.toWidth,
+            child: TextFormField(
+              textAlign: TextAlign.center,
+              controller: quantityController,
+              keyboardType: TextInputType.number,
+              onChanged: (v) {
+                int quantity = int.tryParse(v ?? 1) ?? 1;
+                widget.onChanged(
+                  quantity,
+                  widget.orderItem.unitPrice,
+                );
+              },
+            ),
+          ),
+        ),
+        Flexible(
+          flex: 4,
+          child: Container(),
+        ),
+        Text('\u{20B9}'),
+        Expanded(
+          flex: 3,
+          child: Container(
+            width: 70.toWidth,
+            child: TextFormField(
+              textAlign: TextAlign.center,
+              controller: priceController,
+              keyboardType: TextInputType.number,
+              onChanged: (v) {
+                double price = double.tryParse(v ?? 0) ?? 0;
+                widget.onChanged(widget.orderItem.itemQuantity, price);
+              },
+            ),
           ),
         ),
         SizedBox(width: 6.toWidth),
-        IconButton(
-          icon: Icon(Icons.cancel),
-          onPressed: widget.onDelete,
+        Expanded(
+          flex: 2,
+          child: IconButton(
+            color: Colors.red,
+            icon: Icon(Icons.cancel),
+            onPressed: widget.onDelete,
+          ),
         ),
       ],
     );

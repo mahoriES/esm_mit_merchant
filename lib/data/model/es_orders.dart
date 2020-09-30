@@ -473,18 +473,24 @@ class EsDeliveryAgent {
 class EsOrderItem {
   String productName;
   int itemQuantity;
+  double unitPrice;
   String itemTotal;
   String skuId;
   //We will just use the first key for variation. This will break in future.
   String variationOption;
 
   EsOrderItem(
-      {this.skuId, this.productName, this.itemQuantity, this.itemTotal});
+      {this.skuId,
+      this.productName,
+      this.itemQuantity,
+      this.itemTotal,
+      this.unitPrice});
 
   EsOrderItem.fromJson(Map<String, dynamic> inputJson) {
     productName = inputJson['product_name'];
     itemQuantity = inputJson['quantity'];
-    itemTotal = getPrice(itemQuantity * inputJson['unit_price']);
+    unitPrice = double.tryParse(inputJson['unit_price'].toString()) ?? 0;
+    itemTotal = getPrice(itemQuantity * unitPrice);
     skuId = inputJson['sku_id'].toString();
 
     if (inputJson.containsKey('variation_option') &&
