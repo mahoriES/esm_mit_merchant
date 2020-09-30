@@ -168,7 +168,12 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                           },
                           () {
                             isUpdated = true;
-                            itemStatus[index] = CatalogueItemStatus.notPresent;
+                            if (itemStatus[index] ==
+                                CatalogueItemStatus.createdInCatalogue) {
+                              details.orderItems.removeAt(index);
+                            } else
+                              itemStatus[index] =
+                                  CatalogueItemStatus.notPresent;
                             setState(() {});
                           },
                         );
@@ -295,23 +300,26 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
               SizedBox(height: 30.toHeight),
               Align(
                 alignment: Alignment.center,
-                child: (details.freeFormItems != null &&
-                        details.freeFormItems.length > 0)
-                    ? allItemsUpdates
-                        ? FoSubmitButton(
-                            text: 'Update Order',
-                            onPressed: _updateOrder,
-                          )
-                        : Container()
-                    : isUpdated
-                        ? FoSubmitButton(
-                            text: 'Update Order',
-                            onPressed: _updateOrder,
-                          )
-                        : FoSubmitButton(
-                            text: 'Accept Order',
-                            onPressed: () => widget.params.acceptOrder(context),
-                          ),
+                child: details.orderItems.length == 0
+                    ? Container()
+                    : (details.freeFormItems != null &&
+                            details.freeFormItems.length > 0)
+                        ? allItemsUpdates
+                            ? FoSubmitButton(
+                                text: 'Update Order',
+                                onPressed: _updateOrder,
+                              )
+                            : Container()
+                        : isUpdated
+                            ? FoSubmitButton(
+                                text: 'Update Order',
+                                onPressed: _updateOrder,
+                              )
+                            : FoSubmitButton(
+                                text: 'Accept Order',
+                                onPressed: () =>
+                                    widget.params.acceptOrder(context),
+                              ),
               ),
               SizedBox(height: 30.toHeight),
             ],
