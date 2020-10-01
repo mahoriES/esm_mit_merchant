@@ -88,9 +88,7 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
     for (int i = 0; i < isFreeFormItemUpdated.length; i++) {
       if (!isFreeFormItemUpdated[i]) {
         allItemsUpdates = false;
-      } else if (details.freeFormItems[i].productStatus ==
-          FreeFormItemStatus.added) {
-        totalAmount = totalAmount + (details.freeFormItems[i].price ?? 0);
+        break;
       }
     }
 
@@ -130,102 +128,14 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
           ],
         ],
       ),
-      body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20.toWidth),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 20.toHeight),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  vertical: 20.toHeight,
-                  horizontal: 15.toWidth,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey[300],
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: details.orderItems?.length ?? 0,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        if (itemStatus[index] == CatalogueItemStatus.notPresent)
-                          return Container();
-                        return OrderItemTile(
-                          details.orderItems[index],
-                          (updatedQuantity, updatedUnitPrice) {
-                            details.orderItems[index].itemQuantity =
-                                updatedQuantity;
-                            details.orderItems[index].unitPrice =
-                                updatedUnitPrice;
-                            isUpdated = true;
-                            setState(() {});
-                          },
-                          () {
-                            isUpdated = true;
-                            if (itemStatus[index] ==
-                                CatalogueItemStatus.createdInCatalogue) {
-                              details.orderItems.removeAt(index);
-                            } else
-                              itemStatus[index] =
-                                  CatalogueItemStatus.notPresent;
-                            setState(() {});
-                          },
-                        );
-                      },
-                    ),
-                    SizedBox(height: 20.toHeight),
-                    InkWell(
-                      child: Container(
-                        padding: EdgeInsets.all(8.toFont),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(12.toFont),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.add,
-                              color: Colors.white,
-                            ),
-                            Text(
-                              'Add Item',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(EsOrderAddItem.routeName)
-                            .then(
-                          (value) {
-                            if (value != null && value is List<EsOrderItem>) {
-                              isUpdated = true;
-                              int length = details.orderItems.length;
-                              for (int i = 0; i < value.length; i++) {
-                                details.orderItems.add(value[i]);
-                                itemStatus[i + length] =
-                                    CatalogueItemStatus.createdInCatalogue;
-                              }
-
-                              setState(() {});
-                            }
-                          },
-                        );
-                      },
-                    )
-                  ],
-                ),
-              ),
-              if (details.freeFormItems != null &&
-                  details.freeFormItems.length > 0) ...[
+      body: IgnorePointer(
+        ignoring: details.orderStatus != 'CREATED',
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 20.toWidth),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 SizedBox(height: 20.toHeight),
                 Container(
                   padding: EdgeInsets.symmetric(
@@ -237,92 +147,191 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                       color: Colors.grey[300],
                     ),
                   ),
-                  child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: details.freeFormItems.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) => FreeFormItemTile(
-                      details.freeFormItems[index],
-                      details.orderStatus == 'CREATED'
-                          ? isFreeFormItemUpdated[index]
-                          : true,
-                      (updatedItem) {
-                        isFreeFormItemUpdated[index] = true;
-                        details.freeFormItems[index] = updatedItem;
-                        setState(() {});
-                      },
-                    ),
-                  ),
-                ),
-              ],
-              if (details.customerNote != null) ...[
-                SizedBox(height: 30.toHeight),
-                Container(
                   child: Column(
                     children: [
-                      Text(details.customerNote),
-                      SizedBox(height: 10.toHeight)
+                      ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: details.orderItems?.length ?? 0,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          if (itemStatus[index] ==
+                              CatalogueItemStatus.notPresent)
+                            return Container();
+                          return OrderItemTile(
+                            details.orderItems[index],
+                            (updatedQuantity, updatedUnitPrice) {
+                              details.orderItems[index].itemQuantity =
+                                  updatedQuantity;
+                              details.orderItems[index].unitPrice =
+                                  updatedUnitPrice;
+                              isUpdated = true;
+                              setState(() {});
+                            },
+                            () {
+                              isUpdated = true;
+                              if (itemStatus[index] ==
+                                  CatalogueItemStatus.createdInCatalogue) {
+                                details.orderItems.removeAt(index);
+                              } else
+                                itemStatus[index] =
+                                    CatalogueItemStatus.notPresent;
+                              setState(() {});
+                            },
+                          );
+                        },
+                      ),
+                      SizedBox(height: 20.toHeight),
+                      details.orderStatus != 'CREATED'
+                          ? Container()
+                          : InkWell(
+                              child: Container(
+                                padding: EdgeInsets.all(8.toFont),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius:
+                                      BorderRadius.circular(12.toFont),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                    ),
+                                    Text(
+                                      'Add Item',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.of(context)
+                                    .pushNamed(EsOrderAddItem.routeName)
+                                    .then(
+                                  (value) {
+                                    if (value != null &&
+                                        value is List<EsOrderItem>) {
+                                      isUpdated = true;
+                                      int length = details.orderItems.length;
+                                      for (int i = 0; i < value.length; i++) {
+                                        details.orderItems.add(value[i]);
+                                        itemStatus[i + length] =
+                                            CatalogueItemStatus
+                                                .createdInCatalogue;
+                                      }
+
+                                      setState(() {});
+                                    }
+                                  },
+                                );
+                              },
+                            )
                     ],
                   ),
                 ),
-              ],
-              SizedBox(height: 30.toHeight),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    details.orderItems.length.toString() +
-                        '  Item' +
-                        (details.orderItems.length > 1 ? 's' : ''),
-                  ),
-                  Text('\u{20B9} $totalAmount')
-                ],
-              ),
-              if (details.customerNoteImages != null &&
-                  details.customerNoteImages.isNotEmpty) ...[
-                SizedBox(height: 30.toHeight),
-                Wrap(
-                  spacing: 10.toWidth,
-                  runSpacing: 10.toHeight,
-                  children: List.generate(
-                    details.customerNoteImages.length,
-                    (index) => Container(
-                      width: (SizeConfig().screenWidth / 3) - 20.toWidth,
-                      height: (SizeConfig().screenWidth / 3) - 20.toWidth,
-                      color: Colors.grey[300],
-                      child: Image.network(
-                        details.customerNoteImages[index],
+                if (details.freeFormItems != null &&
+                    details.freeFormItems.length > 0) ...[
+                  SizedBox(height: 20.toHeight),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 20.toHeight,
+                      horizontal: 15.toWidth,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey[300],
+                      ),
+                    ),
+                    child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: details.freeFormItems.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) => FreeFormItemTile(
+                        details.freeFormItems[index],
+                        details.orderStatus == 'CREATED'
+                            ? isFreeFormItemUpdated[index]
+                            : true,
+                        (updatedItem) {
+                          isFreeFormItemUpdated[index] = true;
+                          details.freeFormItems[index] = updatedItem;
+                          setState(() {});
+                        },
                       ),
                     ),
                   ),
+                ],
+                if (details.customerNote != null) ...[
+                  SizedBox(height: 30.toHeight),
+                  Container(
+                    child: Column(
+                      children: [
+                        Text(details.customerNote),
+                        SizedBox(height: 10.toHeight)
+                      ],
+                    ),
+                  ),
+                ],
+                SizedBox(height: 30.toHeight),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      details.orderItems.length.toString() +
+                          '  Item' +
+                          (details.orderItems.length > 1 ? 's' : ''),
+                    ),
+                    Text('\u{20B9} $totalAmount')
+                  ],
                 ),
+                if (details.customerNoteImages != null &&
+                    details.customerNoteImages.isNotEmpty) ...[
+                  SizedBox(height: 30.toHeight),
+                  Wrap(
+                    spacing: 10.toWidth,
+                    runSpacing: 10.toHeight,
+                    children: List.generate(
+                      details.customerNoteImages.length,
+                      (index) => Container(
+                        width: (SizeConfig().screenWidth / 3) - 20.toWidth,
+                        height: (SizeConfig().screenWidth / 3) - 20.toWidth,
+                        color: Colors.grey[300],
+                        child: Image.network(
+                          details.customerNoteImages[index],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+                SizedBox(height: 30.toHeight),
+                Align(
+                  alignment: Alignment.center,
+                  child: details.orderStatus != 'CREATED'
+                      ? Container()
+                      : details.orderItems.length == 0
+                          ? Container()
+                          : (details.freeFormItems != null &&
+                                  details.freeFormItems.length > 0)
+                              ? allItemsUpdates
+                                  ? FoSubmitButton(
+                                      text: 'Update Order',
+                                      onPressed: _updateOrder,
+                                    )
+                                  : Container()
+                              : isUpdated
+                                  ? FoSubmitButton(
+                                      text: 'Update Order',
+                                      onPressed: _updateOrder,
+                                    )
+                                  : FoSubmitButton(
+                                      text: 'Accept Order',
+                                      onPressed: () =>
+                                          widget.params.acceptOrder(context),
+                                    ),
+                ),
+                SizedBox(height: 30.toHeight),
               ],
-              SizedBox(height: 30.toHeight),
-              Align(
-                alignment: Alignment.center,
-                child: details.orderItems.length == 0
-                    ? Container()
-                    : (details.freeFormItems != null &&
-                            details.freeFormItems.length > 0)
-                        ? allItemsUpdates
-                            ? FoSubmitButton(
-                                text: 'Update Order',
-                                onPressed: _updateOrder,
-                              )
-                            : Container()
-                        : isUpdated
-                            ? FoSubmitButton(
-                                text: 'Update Order',
-                                onPressed: _updateOrder,
-                              )
-                            : FoSubmitButton(
-                                text: 'Accept Order',
-                                onPressed: () =>
-                                    widget.params.acceptOrder(context),
-                              ),
-              ),
-              SizedBox(height: 30.toHeight),
-            ],
+            ),
           ),
         ),
       ),

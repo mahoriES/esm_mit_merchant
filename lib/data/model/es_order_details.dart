@@ -374,20 +374,17 @@ class FreeFormItems {
   int quantity;
   String skuName;
   String productStatus;
-  double price;
 
   FreeFormItems({
     this.quantity,
     this.skuName,
     this.productStatus,
-    this.price,
   });
 
   FreeFormItems.fromJson(Map<String, dynamic> json) {
     quantity = json['quantity'];
     skuName = json['sku_name'];
     productStatus = json['product_status'];
-    price = json['price'];
   }
 
   Map<String, dynamic> toJson() {
@@ -395,7 +392,6 @@ class FreeFormItems {
     data['quantity'] = this.quantity;
     data['sku_name'] = this.skuName;
     data['product_status'] = this.productStatus;
-    data['price'] = this.price;
     return data;
   }
 }

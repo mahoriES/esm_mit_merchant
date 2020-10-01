@@ -17,46 +17,14 @@ class FreeFormItemTile extends StatefulWidget {
 }
 
 class _FreeFormItemTileState extends State<FreeFormItemTile> {
-  TextEditingController priceController;
-  @override
-  void initState() {
-    priceController = new TextEditingController(
-      text: (widget.item?.price ?? 0).toString(),
-    );
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    priceController?.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          flex: 3,
-          child: Text(
-              widget.item.skuName + '  x  ' + widget.item.quantity.toString()),
-        ),
+        Text(widget.item.skuName + '  x  ' + widget.item.quantity.toString()),
         SizedBox(width: 10.toWidth),
-        Text('\u{20B9}'),
-        Expanded(
-          flex: 2,
-          child: Container(
-            width: 70.toWidth,
-            child: TextFormField(
-              textAlign: TextAlign.center,
-              controller: priceController,
-              keyboardType: TextInputType.number,
-              onChanged: (v) {
-                widget.item.price = double.tryParse(v ?? '0') ?? 0;
-                widget.onUpdate(widget.item);
-              },
-            ),
-          ),
+        Flexible(
+          child: Container(),
         ),
         SizedBox(width: 10.toWidth),
         IconButton(
