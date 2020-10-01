@@ -496,11 +496,25 @@ class EsOrderItem {
 
     if (inputJson.containsKey('variation_option') &&
         inputJson['variation_option'] != null) {
-      Map<String, dynamic> variationOptions = inputJson['variation_option'];
-      if (variationOptions.isNotEmpty) {
-        variationOption = variationOptions.values.toList()[0];
+      if (inputJson['variation_option'] is String) {
+        variationOption = inputJson['variation_option'];
+      } else {
+        Map<String, dynamic> variationOptions = inputJson['variation_option'];
+        if (variationOptions.isNotEmpty) {
+          variationOption = variationOptions.values.toList()[0];
+        }
       }
     }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['product_name'] = this.productName;
+    data['quantity'] = this.itemQuantity;
+    data['unit_price'] = this.unitPrice;
+    data['sku_id'] = this.skuId;
+    data['variation_option'] = this.variationOption;
+    return data;
   }
 
   String getPrice(price) {

@@ -207,95 +207,6 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 20.toHeight),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 20.toHeight,
-                    horizontal: 15.toWidth,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey[300],
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: details.orderItems?.length ?? 0,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          if (itemStatus[index] ==
-                              CatalogueItemStatus.notPresent)
-                            return Container();
-                          return OrderItemTile(
-                            details.orderItems[index],
-                            (updatedQuantity, updatedUnitPrice) {
-                              details.orderItems[index].itemQuantity =
-                                  updatedQuantity;
-                              details.orderItems[index].unitPrice =
-                                  updatedUnitPrice;
-                              isUpdated = true;
-                              setState(() {});
-                            },
-                            () {
-                              isUpdated = true;
-                              if (itemStatus[index] ==
-                                  CatalogueItemStatus.createdInCatalogue) {
-                                details.orderItems.removeAt(index);
-                              }
-                              //  else if (itemStatus[index] ==
-                              //     CatalogueItemStatus
-                              //         .createdByFreeFormItemList) {
-                              //   details.orderItems.removeAt(index);
-                              //   itemsAddedByFreeFormList.forEach((key, value) {
-                              //     if (value == index) {
-                              //       details.freeFormItems[key].productStatus =
-                              //           FreeFormItemStatus.notAdded;
-                              //     }
-                              //   });
-                              //   details.freeFormItems[index].productStatus =
-                              //       FreeFormItemStatus.notAdded;
-                              // }
-                              else {
-                                itemStatus[index] =
-                                    CatalogueItemStatus.notPresent;
-                              }
-                              setState(() {});
-                            },
-                          );
-                        },
-                      ),
-                      SizedBox(height: 20.toHeight),
-                      details.orderStatus != 'CREATED'
-                          ? Container()
-                          : InkWell(
-                              child: Container(
-                                padding: EdgeInsets.all(8.toFont),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius:
-                                      BorderRadius.circular(12.toFont),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                    ),
-                                    Text(
-                                      'Add Item',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              onTap: () => _addItemsFromCatalogue(),
-                            )
-                    ],
-                  ),
-                ),
                 if (details.freeFormItems != null &&
                     details.freeFormItems.length > 0) ...[
                   SizedBox(height: 20.toHeight),
@@ -340,6 +251,81 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                     ),
                   ),
                 ],
+                SizedBox(height: 20.toHeight),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 20.toHeight,
+                    horizontal: 15.toWidth,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey[300],
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: details.orderItems?.length ?? 0,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          if (itemStatus[index] ==
+                              CatalogueItemStatus.notPresent)
+                            return Container();
+                          return OrderItemTile(
+                            details.orderItems[index],
+                            (updatedQuantity, updatedUnitPrice) {
+                              details.orderItems[index].itemQuantity =
+                                  updatedQuantity;
+                              details.orderItems[index].unitPrice =
+                                  updatedUnitPrice;
+                              isUpdated = true;
+                              setState(() {});
+                            },
+                            () {
+                              isUpdated = true;
+                              if (itemStatus[index] ==
+                                  CatalogueItemStatus.createdInCatalogue) {
+                                details.orderItems.removeAt(index);
+                              } else {
+                                itemStatus[index] =
+                                    CatalogueItemStatus.notPresent;
+                              }
+                              setState(() {});
+                            },
+                          );
+                        },
+                      ),
+                      SizedBox(height: 20.toHeight),
+                      details.orderStatus != 'CREATED'
+                          ? Container()
+                          : InkWell(
+                              child: Container(
+                                padding: EdgeInsets.all(8.toFont),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius:
+                                      BorderRadius.circular(12.toFont),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                    ),
+                                    Text(
+                                      'Add Item',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () => _addItemsFromCatalogue(),
+                            )
+                    ],
+                  ),
+                ),
                 if (details.customerNote != null) ...[
                   SizedBox(height: 30.toHeight),
                   Container(
@@ -376,7 +362,9 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                           '  Item' +
                           (totalNumberOfItems > 1 ? 's' : ''),
                     ),
-                    Text('\u{20B9} $totalAmount')
+                    Text(
+                      '\u{20B9} ${totalAmount.toStringAsFixed(2)}',
+                    )
                   ],
                 ),
                 // SizedBox(height: 10.toHeight),
@@ -388,7 +376,12 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                   children: [
                     Text('Total Amount'),
                     Text(
-                        '\u{20B9} ${totalAmount + deliveryCharges + otherCharges}')
+                      '\u{20B9} ${(totalAmount + deliveryCharges + otherCharges).toStringAsFixed(2)}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline6
+                          .copyWith(fontWeight: FontWeight.bold),
+                    )
                   ],
                 ),
                 if (details.customerNoteImages != null &&
@@ -427,6 +420,7 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                     FoSubmitButton(
                       text: 'Reject Order',
                       onPressed: () => widget.params.cancelOrder(context),
+                      color: Colors.red,
                     ),
                     details.orderStatus != 'CREATED'
                         ? Container()
@@ -441,7 +435,7 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                                         'Please add atleast 1 item in the order',
                                   ),
                                 ),
-                                isDisabled: true,
+                                color: Colors.grey[400],
                               )
                             : (details.freeFormItems != null &&
                                     details.freeFormItems.length > 0)
@@ -461,7 +455,7 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                                                 'Please Accept/Decline the list items first',
                                           ),
                                         ),
-                                        isDisabled: true,
+                                        color: Colors.grey[400],
                                       )
                                 : isUpdated
                                     ? FoSubmitButton(

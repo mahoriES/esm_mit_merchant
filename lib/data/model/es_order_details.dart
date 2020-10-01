@@ -221,9 +221,9 @@ class EsOrderDetailsResponse {
     data['cancellation_note'] = this.cancellationNote;
     data['business_phones'] = this.businessPhones;
     data['customer_phones'] = this.customerPhones;
-    // if (this.orderItems != null) {
-    //   data['order_items'] = this.orderItems.map((v) => v.toJson()).toList();
-    // }
+    if (this.orderItems != null) {
+      data['order_items'] = this.orderItems.map((v) => v.toJson()).toList();
+    }
     if (this.freeFormItems != null) {
       data['free_form_items'] =
           this.freeFormItems.map((v) => v.toJson()).toList();
