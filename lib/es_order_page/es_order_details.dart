@@ -16,11 +16,13 @@ class EsOrderDetailsParam {
   EsOrderDetailsResponse esOrderDetailsResponse;
   Function(BuildContext) acceptOrder;
   Function(BuildContext, UpdateOrderItemsPayload) updateOrder;
+  Function(BuildContext) cancelOrder;
 
   EsOrderDetailsParam({
     @required this.esOrderDetailsResponse,
     @required this.acceptOrder,
     @required this.updateOrder,
+    @required this.cancelOrder,
   });
 }
 
@@ -419,52 +421,59 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                   ),
                 ],
                 SizedBox(height: 30.toHeight),
-                Align(
-                  alignment: Alignment.center,
-                  child: details.orderStatus != 'CREATED'
-                      ? Container()
-                      : details.orderItems.length == 0
-                          ? FoSubmitButton(
-                              text: 'Update Order',
-                              onPressed: () => showDialog(
-                                context: context,
-                                builder: (context) => ResponseDialogue(
-                                  '',
-                                  message:
-                                      'Please add atleast 1 item in the order',
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FoSubmitButton(
+                      text: 'Reject Order',
+                      onPressed: () => widget.params.cancelOrder(context),
+                    ),
+                    details.orderStatus != 'CREATED'
+                        ? Container()
+                        : details.orderItems.length == 0
+                            ? FoSubmitButton(
+                                text: 'Update Order',
+                                onPressed: () => showDialog(
+                                  context: context,
+                                  builder: (context) => ResponseDialogue(
+                                    '',
+                                    message:
+                                        'Please add atleast 1 item in the order',
+                                  ),
                                 ),
-                              ),
-                              isDisabled: true,
-                            )
-                          : (details.freeFormItems != null &&
-                                  details.freeFormItems.length > 0)
-                              ? allItemsUpdated
-                                  ? FoSubmitButton(
-                                      text: 'Update Order',
-                                      onPressed: _updateOrder,
-                                    )
-                                  : FoSubmitButton(
-                                      text: 'Update Order',
-                                      onPressed: () => showDialog(
-                                        context: context,
-                                        builder: (context) => ResponseDialogue(
-                                          '',
-                                          message:
-                                              'Please Accept/Decline the list items first',
+                                isDisabled: true,
+                              )
+                            : (details.freeFormItems != null &&
+                                    details.freeFormItems.length > 0)
+                                ? allItemsUpdated
+                                    ? FoSubmitButton(
+                                        text: 'Update Order',
+                                        onPressed: _updateOrder,
+                                      )
+                                    : FoSubmitButton(
+                                        text: 'Update Order',
+                                        onPressed: () => showDialog(
+                                          context: context,
+                                          builder: (context) =>
+                                              ResponseDialogue(
+                                            '',
+                                            message:
+                                                'Please Accept/Decline the list items first',
+                                          ),
                                         ),
+                                        isDisabled: true,
+                                      )
+                                : isUpdated
+                                    ? FoSubmitButton(
+                                        text: 'Update Order',
+                                        onPressed: _updateOrder,
+                                      )
+                                    : FoSubmitButton(
+                                        text: 'Accept Order',
+                                        onPressed: () =>
+                                            widget.params.acceptOrder(context),
                                       ),
-                                      isDisabled: true,
-                                    )
-                              : isUpdated
-                                  ? FoSubmitButton(
-                                      text: 'Update Order',
-                                      onPressed: _updateOrder,
-                                    )
-                                  : FoSubmitButton(
-                                      text: 'Accept Order',
-                                      onPressed: () =>
-                                          widget.params.acceptOrder(context),
-                                    ),
+                  ],
                 ),
                 SizedBox(height: 30.toHeight),
               ],

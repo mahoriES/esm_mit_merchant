@@ -138,9 +138,13 @@ class _EsOrderListState extends State<EsOrderList> {
     );
   }
 
-  _showCancelAlertDialog(EsOrder order, EsOrdersBloc esOrdersBloc) async {
+  _showCancelAlertDialog(
+    EsOrder order,
+    EsOrdersBloc esOrdersBloc, {
+    BuildContext customContext,
+  }) async {
     return await showDialog<bool>(
-      context: context,
+      context: customContext ?? context,
       barrierDismissible: true,
       useRootNavigator: true, // user must tap button for close dialog!
       builder: (BuildContext context) {
@@ -165,13 +169,23 @@ class _EsOrderListState extends State<EsOrderList> {
                       .map(
                         (e) => ListTile(
                           onTap: () {
-                            esOrdersBloc.cancelOrder(order.orderId, e, (a) {
-                              Navigator.of(context, rootNavigator: true)
-                                  .pop(true);
-                            }, () {
-                              Navigator.of(context, rootNavigator: true)
-                                  .pop(false);
-                            });
+                            esOrdersBloc.cancelOrder(
+                              order.orderId,
+                              e,
+                              (a) {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop(true);
+                              },
+                              (error) {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop(false);
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => ResponseDialogue(
+                                      error ?? 'something went wrong'),
+                                );
+                              },
+                            );
                           },
                           title: Text(e),
                         ),
@@ -433,9 +447,14 @@ class _EsOrderListState extends State<EsOrderList> {
       }
     }
 
-    cancelItem(EsOrder order) async {
-      var isAccepted = await _showCancelAlertDialog(order, this.esOrdersBloc);
+    cancelItem(EsOrder order, {BuildContext context}) async {
+      var isAccepted = await _showCancelAlertDialog(
+        order,
+        this.esOrdersBloc,
+        customContext: context,
+      );
       if (isAccepted == true) {
+        if (context != null) Navigator.pop(context);
         esOrdersBloc.getOrders();
       }
     }
@@ -561,6 +580,12 @@ class _EsOrderListState extends State<EsOrderList> {
                                                   response.toJson()),
                                           acceptOrder: (_context) async {
                                             await acceptItem(
+                                              snapshot.data.items[index],
+                                              context: _context,
+                                            );
+                                          },
+                                          cancelOrder: (_context) async {
+                                            await cancelItem(
                                               snapshot.data.items[index],
                                               context: _context,
                                             );
