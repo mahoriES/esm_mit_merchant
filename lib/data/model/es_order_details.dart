@@ -115,7 +115,10 @@ class EsOrderDetailsResponse {
       this.rating,
       this.paymentInfo});
 
-  EsOrderDetailsResponse.fromJson(Map<String, dynamic> json) {
+  EsOrderDetailsResponse.fromJson(
+    Map<String, dynamic> json, {
+    bool divideUnitPriceBy100 = true,
+  }) {
     orderId = json['order_id'];
     businessId = json['business_id'];
     orderShortNumber = json['order_short_number'];
@@ -154,7 +157,10 @@ class EsOrderDetailsResponse {
     if (json['order_items'] != null) {
       orderItems = new List<EsOrderItem>();
       json['order_items'].forEach((v) {
-        orderItems.add(new EsOrderItem.fromJson(v));
+        orderItems.add(new EsOrderItem.fromJson(
+          v,
+          divideUnitPriceBy100: divideUnitPriceBy100,
+        ));
       });
     } else {
       orderItems = [];

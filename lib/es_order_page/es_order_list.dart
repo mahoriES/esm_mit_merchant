@@ -577,7 +577,9 @@ class _EsOrderListState extends State<EsOrderList> {
                                         arguments: EsOrderDetailsParam(
                                           esOrderDetailsResponse:
                                               EsOrderDetailsResponse.fromJson(
-                                                  response.toJson()),
+                                            response.toJson(),
+                                            divideUnitPriceBy100: false,
+                                          ),
                                           acceptOrder: (_context) async {
                                             await acceptItem(
                                               snapshot.data.items[index],

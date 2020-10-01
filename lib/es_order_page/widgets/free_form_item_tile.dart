@@ -30,7 +30,7 @@ class _FreeFormItemTileState extends State<FreeFormItemTile> {
         SizedBox(width: 10.toWidth),
         IconButton(
           color: widget.item.productStatus == FreeFormItemStatus.added
-              ? Colors.green
+              ? Theme.of(context).primaryColor
               : Colors.grey,
           icon: Icon(Icons.check_circle),
           onPressed: () {

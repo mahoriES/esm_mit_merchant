@@ -486,11 +486,16 @@ class EsOrderItem {
       this.itemTotal,
       this.unitPrice});
 
-  EsOrderItem.fromJson(Map<String, dynamic> inputJson) {
+  EsOrderItem.fromJson(
+    Map<String, dynamic> inputJson, {
+    bool divideUnitPriceBy100 = true,
+  }) {
     productName = inputJson['product_name'];
     itemQuantity = inputJson['quantity'];
-    unitPrice =
-        double.tryParse((inputJson['unit_price'] / 100).toString()) ?? 0;
+    unitPrice = double.tryParse(
+            (inputJson['unit_price'] / (divideUnitPriceBy100 ? 100 : 1))
+                .toString()) ??
+        0;
     itemTotal = getPrice(itemQuantity * unitPrice);
     skuId = inputJson['sku_id'].toString();
 
