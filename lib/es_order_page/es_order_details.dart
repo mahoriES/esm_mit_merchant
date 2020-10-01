@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
@@ -8,6 +9,7 @@ import 'package:foore/es_order_page/es_order_add_item.dart';
 import 'package:foore/es_order_page/widgets/free_form_item_tile.dart';
 import 'package:foore/es_order_page/widgets/order_item_tile.dart';
 import 'package:foore/services/sizeconfig.dart';
+import 'package:foore/widgets/response_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EsOrderDetailsParam {
@@ -35,27 +37,22 @@ class EsOrderDetails extends StatefulWidget {
 class _EsOrderDetailsState extends State<EsOrderDetails> {
   EsOrderDetailsResponse details;
   double totalAmount;
+  int totalNumberOfItems;
   bool isUpdated;
-  List<bool> isFreeFormItemUpdated;
-  bool allItemsUpdates;
+  bool allItemsUpdated;
   Map<int, String> itemStatus;
 
   @override
   void initState() {
     details = widget.params.esOrderDetailsResponse;
     totalAmount = 0;
+    totalNumberOfItems = 0;
     isUpdated = false;
     itemStatus = {};
     for (int i = 0; i < details.orderItems?.length ?? 0; i++) {
       itemStatus[i] = CatalogueItemStatus.addedToOrder;
     }
 
-    isFreeFormItemUpdated = List.generate(
-      details.freeFormItems?.length ?? 0,
-      (i) =>
-          details.freeFormItems[i].productStatus !=
-          FreeFormItemStatus.isAvailable,
-    );
     super.initState();
   }
 
@@ -79,21 +76,89 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
     );
   }
 
+  Future<bool> _addItemsFromCatalogue() async {
+    var value = await Navigator.of(context).pushNamed(EsOrderAddItem.routeName);
+    if (value != null && value is List<EsOrderItem>) {
+      isUpdated = true;
+      int length = details.orderItems.length;
+      for (int i = 0; i < value.length; i++) {
+        details.orderItems.add(value[i]);
+        itemStatus[i + length] = CatalogueItemStatus.createdInCatalogue;
+      }
+      setState(() {});
+      return value.isNotEmpty;
+    }
+    return false;
+  }
+
+  void showImageInFullScreenMode(String imageUrl) {
+    showGeneralDialog(
+      barrierColor: null,
+      barrierDismissible: false,
+      transitionDuration: const Duration(milliseconds: 150),
+      context: context,
+      pageBuilder: (context, _, __) => new Scaffold(
+        body: SafeArea(
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              CachedNetworkImage(
+                height: double.infinity,
+                width: double.infinity,
+                imageUrl: imageUrl,
+                fit: BoxFit.contain,
+                placeholder: (context, url) => Center(
+                  child: SizedBox(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     totalAmount = 0;
-    details.orderItems.forEach((item) {
-      totalAmount = totalAmount +
-          (item?.unitPrice ?? 0) * (item.itemQuantity?.toDouble() ?? 0);
-    });
+    for (int i = 0; i < details.orderItems?.length; i++) {
+      if (itemStatus[i] != CatalogueItemStatus.notPresent)
+        totalAmount = totalAmount +
+            (details.orderItems[i]?.unitPrice ?? 0) *
+                (details.orderItems[i].itemQuantity?.toDouble() ?? 0);
+    }
 
-    totalAmount = totalAmount + (details?.otherCharges ?? 0);
-    allItemsUpdates = true;
-    for (int i = 0; i < isFreeFormItemUpdated.length; i++) {
-      if (!isFreeFormItemUpdated[i]) {
-        allItemsUpdates = false;
+    double deliveryCharges = (details?.deliveryCharges ?? 0) / 100;
+    double otherCharges = (details?.otherCharges ?? 0) / 100;
+
+    allItemsUpdated = true;
+    for (int i = 0; i < details.freeFormItems?.length; i++) {
+      if (details.freeFormItems[i].productStatus ==
+          FreeFormItemStatus.isAvailable) {
+        allItemsUpdated = false;
         break;
       }
+    }
+
+    totalNumberOfItems = 0;
+    for (int i = 0; i < details.orderItems?.length; i++) {
+      if (itemStatus[i] != CatalogueItemStatus.notPresent)
+        totalNumberOfItems =
+            totalNumberOfItems + details.orderItems[i].itemQuantity;
     }
 
     return Scaffold(
@@ -176,9 +241,24 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                               if (itemStatus[index] ==
                                   CatalogueItemStatus.createdInCatalogue) {
                                 details.orderItems.removeAt(index);
-                              } else
+                              }
+                              //  else if (itemStatus[index] ==
+                              //     CatalogueItemStatus
+                              //         .createdByFreeFormItemList) {
+                              //   details.orderItems.removeAt(index);
+                              //   itemsAddedByFreeFormList.forEach((key, value) {
+                              //     if (value == index) {
+                              //       details.freeFormItems[key].productStatus =
+                              //           FreeFormItemStatus.notAdded;
+                              //     }
+                              //   });
+                              //   details.freeFormItems[index].productStatus =
+                              //       FreeFormItemStatus.notAdded;
+                              // }
+                              else {
                                 itemStatus[index] =
                                     CatalogueItemStatus.notPresent;
+                              }
                               setState(() {});
                             },
                           );
@@ -209,26 +289,7 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                                   ],
                                 ),
                               ),
-                              onTap: () {
-                                Navigator.of(context)
-                                    .pushNamed(EsOrderAddItem.routeName)
-                                    .then(
-                                  (value) {
-                                    if (value != null &&
-                                        value is List<EsOrderItem>) {
-                                      isUpdated = true;
-                                      int length = details.orderItems.length;
-                                      for (int i = 0; i < value.length; i++) {
-                                        details.orderItems.add(value[i]);
-                                        itemStatus[i + length] =
-                                            CatalogueItemStatus.addedToOrder;
-                                      }
-
-                                      setState(() {});
-                                    }
-                                  },
-                                );
-                              },
+                              onTap: () => _addItemsFromCatalogue(),
                             )
                     ],
                   ),
@@ -251,11 +312,26 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                       itemCount: details.freeFormItems.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) => FreeFormItemTile(
-                        details.freeFormItems[index],
-                        isFreeFormItemUpdated[index],
-                        (updatedItem) {
-                          isFreeFormItemUpdated[index] = true;
-                          details.freeFormItems[index] = updatedItem;
+                        item: details.freeFormItems[index],
+                        onConfirm: () async {
+                          bool isItemAdded = await _addItemsFromCatalogue();
+                          if (isItemAdded) {
+                            details.freeFormItems[index].productStatus =
+                                FreeFormItemStatus.added;
+                            setState(() {});
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) => ResponseDialogue(
+                                '',
+                                message: 'Add atleast 1 item to confirm this.',
+                              ),
+                            );
+                          }
+                        },
+                        onReject: () {
+                          details.freeFormItems[index].productStatus =
+                              FreeFormItemStatus.notAdded;
                           setState(() {});
                         },
                       ),
@@ -277,20 +353,40 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Additional Charges'),
-                    Text('\u{20B9} ${details?.otherCharges ?? 0}')
+                    Text('Delivery Charges'),
+                    Text('\u{20B9} $deliveryCharges')
                   ],
                 ),
-                SizedBox(height: 20.toHeight),
+                SizedBox(height: 10.toHeight),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Additional Charges'),
+                    Text('\u{20B9} $otherCharges')
+                  ],
+                ),
+                SizedBox(height: 10.toHeight),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      details.orderItems.length.toString() +
+                      totalNumberOfItems.toString() +
                           '  Item' +
-                          (details.orderItems.length > 1 ? 's' : ''),
+                          (totalNumberOfItems > 1 ? 's' : ''),
                     ),
                     Text('\u{20B9} $totalAmount')
+                  ],
+                ),
+                // SizedBox(height: 10.toHeight),
+                Divider(
+                  color: Colors.grey[400],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Total Amount'),
+                    Text(
+                        '\u{20B9} ${totalAmount + deliveryCharges + otherCharges}')
                   ],
                 ),
                 if (details.customerNoteImages != null &&
@@ -301,12 +397,22 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                     runSpacing: 10.toHeight,
                     children: List.generate(
                       details.customerNoteImages.length,
-                      (index) => Container(
-                        width: (SizeConfig().screenWidth / 3) - 20.toWidth,
-                        height: (SizeConfig().screenWidth / 3) - 20.toWidth,
-                        color: Colors.grey[300],
-                        child: Image.network(
-                          details.customerNoteImages[index],
+                      (index) => InkWell(
+                        onTap: () => showImageInFullScreenMode(
+                            details.customerNoteImages[index]),
+                        child: Container(
+                          width: (SizeConfig().screenWidth / 3) - 20.toWidth,
+                          height: (SizeConfig().screenWidth / 3) - 20.toWidth,
+                          color: Colors.grey[300],
+                          child: CachedNetworkImage(
+                            height: double.infinity,
+                            width: double.infinity,
+                            imageUrl: details.customerNoteImages[index],
+                            fit: BoxFit.contain,
+                            placeholder: (context, url) => Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -318,15 +424,37 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                   child: details.orderStatus != 'CREATED'
                       ? Container()
                       : details.orderItems.length == 0
-                          ? Container()
+                          ? FoSubmitButton(
+                              text: 'Update Order',
+                              onPressed: () => showDialog(
+                                context: context,
+                                builder: (context) => ResponseDialogue(
+                                  '',
+                                  message:
+                                      'Please add atleast 1 item in the order',
+                                ),
+                              ),
+                              isDisabled: true,
+                            )
                           : (details.freeFormItems != null &&
                                   details.freeFormItems.length > 0)
-                              ? allItemsUpdates
+                              ? allItemsUpdated
                                   ? FoSubmitButton(
                                       text: 'Update Order',
                                       onPressed: _updateOrder,
                                     )
-                                  : Container()
+                                  : FoSubmitButton(
+                                      text: 'Update Order',
+                                      onPressed: () => showDialog(
+                                        context: context,
+                                        builder: (context) => ResponseDialogue(
+                                          '',
+                                          message:
+                                              'Please Accept/Decline the list items first',
+                                        ),
+                                      ),
+                                      isDisabled: true,
+                                    )
                               : isUpdated
                                   ? FoSubmitButton(
                                       text: 'Update Order',

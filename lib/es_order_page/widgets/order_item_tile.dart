@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/services/sizeconfig.dart';
 
+import 'confirm_dialogue.dart';
+
 class OrderItemTile extends StatefulWidget {
   final EsOrderItem orderItem;
   final Function(int quantity, double unitPrice) onChanged;
@@ -96,7 +98,16 @@ class _OrderItemTileState extends State<OrderItemTile> {
           child: IconButton(
             color: Colors.red,
             icon: Icon(Icons.cancel),
-            onPressed: widget.onDelete,
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AddOrDeleteItemDialogue(
+                  message:
+                      'Are you sure you want to remove ${widget.orderItem.productName} from the order?',
+                  onConfirm: widget.onDelete,
+                ),
+              );
+            },
           ),
         ),
       ],

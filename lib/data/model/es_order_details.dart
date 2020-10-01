@@ -156,24 +156,32 @@ class EsOrderDetailsResponse {
       json['order_items'].forEach((v) {
         orderItems.add(new EsOrderItem.fromJson(v));
       });
+    } else {
+      orderItems = [];
     }
     if (json['free_form_items'] != null) {
       freeFormItems = new List<FreeFormItems>();
       json['free_form_items'].forEach((v) {
         freeFormItems.add(new FreeFormItems.fromJson(v));
       });
+    } else {
+      freeFormItems = [];
     }
     if (json['other_charges_detail'] != null) {
       otherChargesDetail = new List<OtherChargesDetail>();
       json['other_charges_detail'].forEach((v) {
         otherChargesDetail.add(new OtherChargesDetail.fromJson(v));
       });
+    } else {
+      otherChargesDetail = [];
     }
     if (json['order_trail'] != null) {
       orderTrail = new List<OrderTrail>();
       json['order_trail'].forEach((v) {
         orderTrail.add(new OrderTrail.fromJson(v));
       });
+    } else {
+      orderTrail = [];
     }
     created = json['created'];
     modified = json['modified'];

@@ -556,7 +556,9 @@ class _EsOrderListState extends State<EsOrderList> {
                                       Navigator.of(context).pushNamed(
                                         EsOrderDetails.routeName,
                                         arguments: EsOrderDetailsParam(
-                                          esOrderDetailsResponse: response,
+                                          esOrderDetailsResponse:
+                                              EsOrderDetailsResponse.fromJson(
+                                                  response.toJson()),
                                           acceptOrder: (_context) async {
                                             await acceptItem(
                                               snapshot.data.items[index],

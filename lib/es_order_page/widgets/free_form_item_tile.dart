@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:foore/data/model/es_order_details.dart';
+import 'package:foore/es_order_page/widgets/confirm_dialogue.dart';
 import 'package:foore/services/sizeconfig.dart';
-import 'package:foore/widgets/response_dialog.dart';
 
 class FreeFormItemTile extends StatefulWidget {
   final FreeFormItems item;
-  final bool isUpdated;
-  final Function(FreeFormItems) onUpdate;
-  FreeFormItemTile(
-    this.item,
-    this.isUpdated,
-    this.onUpdate,
-  );
+  final Function() onReject;
+  final Function() onConfirm;
+  FreeFormItemTile({
+    @required this.item,
+    @required this.onReject,
+    @required this.onConfirm,
+  });
 
   @override
   _FreeFormItemTileState createState() => _FreeFormItemTileState();
@@ -29,32 +29,39 @@ class _FreeFormItemTileState extends State<FreeFormItemTile> {
         ),
         SizedBox(width: 10.toWidth),
         IconButton(
-          color: widget.isUpdated &&
-                  widget.item.productStatus == FreeFormItemStatus.added
+          color: widget.item.productStatus == FreeFormItemStatus.added
               ? Colors.green
               : Colors.grey,
           icon: Icon(Icons.check_circle),
           onPressed: () {
-            widget.item.productStatus = FreeFormItemStatus.added;
-            widget.onUpdate(widget.item);
-            showDialog(
-              context: context,
-              builder: (context) => ResponseDialogue(
-                "You have accepted this item.",
-                message: "Don't forget to add item from products menu!! ",
-              ),
-            );
+            if (widget.item.productStatus != FreeFormItemStatus.added) {
+              showDialog(
+                context: context,
+                builder: (context) => AddOrDeleteItemDialogue(
+                  message:
+                      'Are you sure you want to add ${widget.item.skuName} to the order?',
+                  onConfirm: widget.onConfirm,
+                ),
+              );
+            }
           },
         ),
         IconButton(
-          color: widget.isUpdated &&
-                  widget.item.productStatus == FreeFormItemStatus.notAdded
+          color: widget.item.productStatus == FreeFormItemStatus.notAdded
               ? Colors.red
               : Colors.grey,
           icon: Icon(Icons.cancel),
           onPressed: () {
-            widget.item.productStatus = FreeFormItemStatus.notAdded;
-            widget.onUpdate(widget.item);
+            if (widget.item.productStatus != FreeFormItemStatus.notAdded) {
+              showDialog(
+                context: context,
+                builder: (context) => AddOrDeleteItemDialogue(
+                  message:
+                      'Are you sure you want to remove ${widget.item.skuName} from the order?',
+                  onConfirm: widget.onReject,
+                ),
+              );
+            }
           },
         ),
       ],
