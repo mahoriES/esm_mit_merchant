@@ -151,10 +151,13 @@ class MenuItemWidget extends StatelessWidget {
             ),
             isAddOrderItem
                 ? IconButton(
+                    color: esProduct.skus.length > 0
+                        ? Colors.black
+                        : Colors.grey[300],
                     icon: isItemAdded
                         ? Icon(Icons.check_circle)
                         : Icon(Icons.add_circle),
-                    onPressed: this.onAdd,
+                    onPressed: esProduct.skus.length > 0 ? this.onAdd : null,
                   )
                 : PopupMenuButton<int>(
                     onSelected: (result) {

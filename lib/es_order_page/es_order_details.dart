@@ -52,7 +52,9 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
 
     isFreeFormItemUpdated = List.generate(
       details.freeFormItems?.length ?? 0,
-      (i) => false,
+      (i) =>
+          details.freeFormItems[i].productStatus !=
+          FreeFormItemStatus.isAvailable,
     );
     super.initState();
   }
@@ -84,6 +86,8 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
       totalAmount = totalAmount +
           (item?.unitPrice ?? 0) * (item.itemQuantity?.toDouble() ?? 0);
     });
+
+    totalAmount = totalAmount + (details?.otherCharges ?? 0);
     allItemsUpdates = true;
     for (int i = 0; i < isFreeFormItemUpdated.length; i++) {
       if (!isFreeFormItemUpdated[i]) {
@@ -217,8 +221,7 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                                       for (int i = 0; i < value.length; i++) {
                                         details.orderItems.add(value[i]);
                                         itemStatus[i + length] =
-                                            CatalogueItemStatus
-                                                .createdInCatalogue;
+                                            CatalogueItemStatus.addedToOrder;
                                       }
 
                                       setState(() {});
@@ -249,9 +252,7 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                       shrinkWrap: true,
                       itemBuilder: (context, index) => FreeFormItemTile(
                         details.freeFormItems[index],
-                        details.orderStatus == 'CREATED'
-                            ? isFreeFormItemUpdated[index]
-                            : true,
+                        isFreeFormItemUpdated[index],
                         (updatedItem) {
                           isFreeFormItemUpdated[index] = true;
                           details.freeFormItems[index] = updatedItem;
@@ -273,6 +274,14 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                   ),
                 ],
                 SizedBox(height: 30.toHeight),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Additional Charges'),
+                    Text('\u{20B9} ${details?.otherCharges ?? 0}')
+                  ],
+                ),
+                SizedBox(height: 20.toHeight),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/services/sizeconfig.dart';
+import 'package:foore/widgets/response_dialog.dart';
 
 class FreeFormItemTile extends StatefulWidget {
   final FreeFormItems item;
@@ -36,6 +37,13 @@ class _FreeFormItemTileState extends State<FreeFormItemTile> {
           onPressed: () {
             widget.item.productStatus = FreeFormItemStatus.added;
             widget.onUpdate(widget.item);
+            showDialog(
+              context: context,
+              builder: (context) => ResponseDialogue(
+                "You have accepted this item.",
+                message: "Don't forget to add item from products menu!! ",
+              ),
+            );
           },
         ),
         IconButton(
@@ -49,34 +57,6 @@ class _FreeFormItemTileState extends State<FreeFormItemTile> {
             widget.onUpdate(widget.item);
           },
         ),
-        // PopupMenuButton(
-        //   icon: Icon(
-        //     Icons.cancel,
-        //     color: widget.isUpdated &&
-        //             !(widget.item.productStatus == FreeFormItemStatus.added)
-        //         ? Colors.red
-        //         : Colors.grey,
-        //   ),
-        //   onSelected: (v) async {
-        //     if (v == 0) {
-        //       widget.item.productStatus = FreeFormItemStatus.notAdded;
-        //     }
-        //     if (v == 1) {
-        //       widget.item.productStatus = FreeFormItemStatus.notAdded;
-        //     }
-        //     widget.onUpdate(widget.item);
-        //   },
-        //   itemBuilder: (context) => <PopupMenuItem>[
-        //     PopupMenuItem(
-        //       value: 0,
-        //       child: Text('Not in Stock'),
-        //     ),
-        //     PopupMenuItem(
-        //       value: 1,
-        //       child: Text('Permanantly Unavailable'),
-        //     ),
-        //   ],
-        // ),
       ],
     );
   }

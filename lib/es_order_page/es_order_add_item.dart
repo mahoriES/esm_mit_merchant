@@ -9,6 +9,7 @@ import 'package:foore/menu_page/add_menu_item_page.dart';
 import 'package:foore/menu_page/menu_item.dart';
 import 'package:foore/menu_page/menu_searchbar.dart';
 import 'package:foore/widgets/empty_list.dart';
+import 'package:foore/es_order_page/widgets/select_variation_dialogue.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 
@@ -39,6 +40,50 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
     super.didChangeDependencies();
   }
 
+  _addItem(
+    int index,
+    EsProduct currentProduct,
+  ) async {
+    if (selectedItems.containsKey(index)) {
+      selectedItems.remove(index);
+    } else {
+      if (currentProduct.skus.length > 1) {
+        await showDialog(
+          context: context,
+          builder: (context) => SelectVariationDialogue(
+            currentProduct,
+            (int skuIndex) {
+              if (skuIndex >= 0) {
+                selectedItems[index] = EsOrderItem(
+                  productName: currentProduct?.productName ?? '',
+                  itemQuantity: 1,
+                  unitPrice:
+                      (currentProduct?.skus[skuIndex].basePrice.toDouble() /
+                              100) ??
+                          0,
+                  skuId: currentProduct.skus[skuIndex].skuId.toString(),
+                );
+              }
+            },
+          ),
+        );
+      } else {
+        selectedItems[index] = EsOrderItem(
+          productName: currentProduct?.productName ?? '',
+          itemQuantity: 1,
+          unitPrice:
+              currentProduct.skus != null && currentProduct.skus.isNotEmpty
+                  ? ((currentProduct?.skus[0].basePrice.toDouble() / 100) ?? 0)
+                  : 0,
+          skuId: currentProduct.skus != null && currentProduct.skus.isNotEmpty
+              ? currentProduct.skus[0].skuId.toString()
+              : '',
+        );
+      }
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     viewItem(EsProduct product, {bool openSkuAddUpfront = false}) async {
@@ -46,8 +91,9 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
           EsProductDetailPageParam(
               currentProduct: product, openSkuAddUpfront: openSkuAddUpfront);
       var result = await Navigator.of(context).pushNamed(
-          EsProductDetailPage.routeName,
-          arguments: esProductDetailPageParam);
+        EsProductDetailPage.routeName,
+        arguments: esProductDetailPageParam,
+      );
       esProductsBloc.getProductsFromSearch();
     }
 
@@ -131,33 +177,7 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
                                     snapshot.data.items[index];
                                 return MenuItemWidget(
                                   esProduct: currentProduct,
-                                  onAdd: () {
-                                    if (selectedItems.containsKey(index)) {
-                                      selectedItems.remove(index);
-                                    } else {
-                                      selectedItems[index] = EsOrderItem(
-                                        productName:
-                                            currentProduct?.productName ?? '',
-                                        itemQuantity: 1,
-                                        unitPrice: currentProduct.skus !=
-                                                    null &&
-                                                currentProduct.skus.isNotEmpty
-                                            ? ((currentProduct
-                                                        ?.skus[0].basePrice
-                                                        .toDouble() /
-                                                    100) ??
-                                                0)
-                                            : 0,
-                                        skuId: currentProduct.skus != null &&
-                                                currentProduct.skus.isNotEmpty
-                                            ? currentProduct.skus[0].skuId
-                                                .toString()
-                                            : '',
-                                      );
-                                    }
-
-                                    setState(() {});
-                                  },
+                                  onAdd: () => _addItem(index, currentProduct),
                                   isAddOrderItem: true,
                                   isItemAdded: selectedItems.containsKey(index),
                                 );

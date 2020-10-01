@@ -1,17 +1,16 @@
 import 'package:foore/data/model/es_orders.dart';
 
 class FreeFormItemStatus {
-  // static String notInStock = 'NOT_IN_STOCK';
-  // static String isAvailable = 'IS_AVAILABLE';
-  // static String permanantlyUnavailable = 'PERMANENTLY_UNAVAILABLE';
+  static String isAvailable = 'IS_AVAILABLE';
   static String added = 'FREE_FORM_ADDED';
   static String notAdded = 'FREE_FORM_NOT_ADDED';
 }
 
 class CatalogueItemStatus {
-  static String addedToOrder = 'ADDED_TO_ORDER';
+  static String addedToOrder = 'IS_AVAILABLE';
   static String notPresent = 'NOT_IN_STOCK';
-  static String createdInCatalogue = 'CREATED_IN_CATALOG';
+  static String createdInCatalogue = 'CREATED_IN_CATALOGUE';
+  // static String permanantlyUnavailable = 'PERMANENTLY_UNAVAILABLE';
 }
 
 class UpdateOrderItemsPayload {
@@ -391,7 +390,7 @@ class FreeFormItems {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['quantity'] = this.quantity;
     data['sku_name'] = this.skuName;
-    data['product_status'] = this.productStatus;
+    if (this.productStatus != null) data['product_status'] = this.productStatus;
     return data;
   }
 }

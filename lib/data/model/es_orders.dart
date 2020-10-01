@@ -489,7 +489,8 @@ class EsOrderItem {
   EsOrderItem.fromJson(Map<String, dynamic> inputJson) {
     productName = inputJson['product_name'];
     itemQuantity = inputJson['quantity'];
-    unitPrice = double.tryParse(inputJson['unit_price'].toString()) ?? 0;
+    unitPrice =
+        double.tryParse((inputJson['unit_price'] / 100).toString()) ?? 0;
     itemTotal = getPrice(itemQuantity * unitPrice);
     skuId = inputJson['sku_id'].toString();
 
@@ -503,7 +504,7 @@ class EsOrderItem {
   }
 
   String getPrice(price) {
-    return NumberFormat.simpleCurrency(locale: 'en_IN').format(price / 100);
+    return NumberFormat.simpleCurrency(locale: 'en_IN').format(price);
   }
 
   @override

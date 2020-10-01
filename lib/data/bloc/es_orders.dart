@@ -140,7 +140,7 @@ class EsOrdersBloc {
     });
   }
 
-  acceptOrder(String orderId, Function onSuccess, Function onFail) {
+  acceptOrder(String orderId, Function onSuccess, Function(String) onFail) {
     this._esOrdersState.isSubmitting = true;
     this._esOrdersState.isSubmitFailed = false;
     this._esOrdersState.isSubmitSuccess = false;
@@ -159,14 +159,14 @@ class EsOrdersBloc {
           onSuccess(createdBusinessInfo);
         }
       } else {
-        onFail();
+        onFail('error :- ${httpResponse.statusCode}');
         this._esOrdersState.isSubmitting = false;
         this._esOrdersState.isSubmitFailed = true;
         this._esOrdersState.isSubmitSuccess = false;
       }
       this._updateState();
     }).catchError((onError) {
-      onFail();
+      onFail(onError?.toString());
       this._esOrdersState.isSubmitting = false;
       this._esOrdersState.isSubmitFailed = true;
       this._esOrdersState.isSubmitSuccess = false;
@@ -370,7 +370,7 @@ class EsOrdersBloc {
   updateOrderItems(
     String orderId,
     Function onSuccess,
-    Function onFail,
+    Function(String) onFail,
     UpdateOrderItemsPayload body,
   ) {
     this._esOrdersState.isSubmitting = true;
@@ -392,14 +392,14 @@ class EsOrdersBloc {
           onSuccess(createdBusinessInfo);
         }
       } else {
-        onFail();
+        onFail('error :- ${httpResponse.statusCode}');
         this._esOrdersState.isSubmitting = false;
         this._esOrdersState.isSubmitFailed = true;
         this._esOrdersState.isSubmitSuccess = false;
       }
       this._updateState();
     }).catchError((onError) {
-      onFail();
+      onFail(onError?.toString());
       this._esOrdersState.isSubmitting = false;
       this._esOrdersState.isSubmitFailed = true;
       this._esOrdersState.isSubmitSuccess = false;

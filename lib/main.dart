@@ -24,7 +24,6 @@ void main() {
   ));
 
   FlutterError.onError = (FlutterErrorDetails details) {
-    return;
     if (!SentryHandler().isInProdMode) {
       // In development mode, simply print to console.
       FlutterError.dumpErrorToConsole(details);
@@ -68,9 +67,12 @@ void main() {
       ),
     );
   }, (Object error, StackTrace stackTrace) {
+    // print('********************************************** ${error.toString()}');
+    // print('********************************************** $stackTrace');
+
     /// Whenever an error occurs, call the `reportError` function. This sends
     /// Dart errors to the dev env or prod env of Sentry based on current status.
-    // SentryHandler().reportError(error, stackTrace);
+    SentryHandler().reportError(error, stackTrace);
   });
 }
 

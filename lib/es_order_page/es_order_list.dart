@@ -65,11 +65,20 @@ class _EsOrderListState extends State<EsOrderList> {
                   FlatButton(
                     child: Text('Accept'),
                     onPressed: () {
-                      esOrdersBloc.acceptOrder(order.orderId, (a) {
-                        Navigator.of(context, rootNavigator: true).pop(true);
-                      }, () {
-                        Navigator.of(context, rootNavigator: true).pop(false);
-                      });
+                      esOrdersBloc.acceptOrder(
+                        order.orderId,
+                        (a) {
+                          Navigator.of(context, rootNavigator: true).pop(true);
+                        },
+                        (error) {
+                          Navigator.of(context, rootNavigator: true).pop(false);
+                          showDialog(
+                            context: context,
+                            builder: (context) => ResponseDialogue(
+                                error ?? 'something went wrong'),
+                          );
+                        },
+                      );
                     },
                   ),
                 ],
@@ -365,8 +374,14 @@ class _EsOrderListState extends State<EsOrderList> {
                         (a) {
                           Navigator.of(context, rootNavigator: true).pop(true);
                         },
-                        () {
+                        (error) {
                           Navigator.of(context, rootNavigator: true).pop(false);
+                          showDialog(
+                            context: context,
+                            builder: (context) => ResponseDialogue(
+                              error ?? 'something went wrong',
+                            ),
+                          );
                         },
                         body,
                       );
