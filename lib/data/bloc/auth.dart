@@ -166,10 +166,11 @@ class AuthBloc {
   esLogin(EsAuthData esAuthData, EsProfile esMerchantProfile) {
     this.authState.esAuthData = esAuthData;
     this.authState.esMerchantProfile = esMerchantProfile;
-    this._pushNotifications.subscribeForCurrentUser(HttpService(this));
+
     this.authState.isEsLoading = false;
     this._updateState();
     this._storeEsAuthState();
+    this._pushNotifications.subscribeForCurrentUser(HttpService(this));
   }
 
   esLogoutSilently() {
