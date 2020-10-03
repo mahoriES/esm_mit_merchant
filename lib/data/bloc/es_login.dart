@@ -7,12 +7,17 @@ import 'package:foore/data/model/es_auth.dart';
 import 'package:foore/data/model/es_profiles.dart';
 import 'package:foore/environments/environment.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
+import 'package:foore/esdy_print.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../router.dart';
 import 'auth.dart';
 
 class EsLoginBloc {
+  static const String CLASSNAME = 'EsLoginBloc';
+  static const String FILENAME = 'es_login.dart';
+  final EsdyPrint esdyPrint =
+      EsdyPrint(classname: CLASSNAME, filename: FILENAME);
   final EsLoginState _loginState = new EsLoginState();
 
   final phoneEditController = TextEditingController();
@@ -33,6 +38,7 @@ class EsLoginBloc {
       _subjectLoginState.stream;
 
   sendCode() {
+    esdyPrint.debug("sendCode >>");
     this._loginState.isLoading = true;
     this._updateState();
     final phoneNumberInput = '+91' + this.phoneEditController.text;
@@ -72,6 +78,7 @@ class EsLoginBloc {
   }
 
   signUp(BuildContext context) {
+    esdyPrint.debug("signUp >>");
     this._loginState.isLoading = true;
     this._updateState();
     final phoneNumberInput = '+91' + this.phoneEditController.text;
@@ -117,6 +124,7 @@ class EsLoginBloc {
   }
 
   useCode(BuildContext context) async {
+    esdyPrint.debug("useCode >>");
     try {
       this._loginState.isSubmitOtp = true;
       this._updateState();
@@ -144,6 +152,12 @@ class EsLoginBloc {
           this._updateState();
           return;
         }
+      } else {
+        esdyPrint.debug("useCode ${authResponse.body}");
+        Fluttertoast.showToast(
+            msg: json.decode(authResponse.body)['message'].toString(),
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM);
       }
       this._loginState.isSubmitOtp = false;
       this._updateState();

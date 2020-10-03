@@ -218,6 +218,7 @@ class HttpService {
   Future<http.Response> esPost(path, body) async {
     esdyPrint.debug("esPost: " + path);
     final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
+    esdyPrint.debug("esPost token  $esJwtToken");
 
     if (esJwtToken != null) {
       Map<String, String> requestHeaders = {
@@ -238,6 +239,7 @@ class HttpService {
       }
       return httpResponse;
     } else {
+      esdyPrint.debug("esPost: Failed");
       this._authBloc.esLogout();
       throw Exception('ES Auth Failed');
     }
