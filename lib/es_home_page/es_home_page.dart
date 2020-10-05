@@ -26,13 +26,6 @@ class EsHomePage extends StatefulWidget {
 
 class _EsHomePageState extends State<EsHomePage> {
   int _selectedIndex = 0;
-  // final List<Widget> _widgetOptions = <Widget>[
-  //   Container(),
-  //   EsOrderPage(),
-  //   MenuPage(),
-  //   EsVideoPage(),
-  //   EsBusinessProfile(),
-  // ];
 
   final List<String> title = [
     'Profile',
