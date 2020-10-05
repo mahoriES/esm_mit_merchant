@@ -71,7 +71,7 @@ class _EsVideoPageState extends State<EsVideoPage> {
               });
             }
 
-            if (snapshot.data.videoList.results.length == 0) {
+            if (snapshot.data.filteredVideosList.length == 0) {
               return EmptyList(
                 titleText: 'No Videos Uploaded Yet !!',
                 subtitleText: "Press 'Add Video' to add new videos",
@@ -80,105 +80,116 @@ class _EsVideoPageState extends State<EsVideoPage> {
 
             return RefreshIndicator(
               onRefresh: _esVideoBloc.getVideoList,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data.videoList.results.length,
-                itemBuilder: (context, index) {
-                  if (snapshot.data.videoList.results[index].status
-                          .toUpperCase() ==
-                      VideoState.PROCESSING) {
-                    return Container();
-                  }
-                  return Container(
-                    color: index % 2 == 0 ? Colors.grey[200] : Colors.white,
-                    height: 100.toHeight,
-                    padding: EdgeInsets.symmetric(
-                      vertical: 5.toHeight,
-                      horizontal: 5.toWidth,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            color: Colors.grey[300],
-                            child: CachedNetworkImage(
-                              imageUrl: snapshot.data.videoList?.results[index]
-                                      ?.content?.video?.thumbnail ??
-                                  '',
-                              imageBuilder: (context, imageProvider) => InkWell(
-                                onTap: () => Navigator.of(context).pushNamed(
-                                  PlayVideoPage.routeName,
-                                  arguments: PlayVideoPageParam(
-                                    snapshot.data.videoList.results[index]
-                                        .content.video.playUrl,
-                                    snapshot.data.videoList.results[index]
-                                        .content.video.thumbnail,
-                                  ),
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: SizeConfig().screenHeight,
+                ),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.filteredVideosList.length,
+                  itemBuilder: (context, index) {
+                    if (snapshot.data.filteredVideosList[index].status
+                            .toUpperCase() ==
+                        VideoState.PROCESSING) {
+                      return Container();
+                    }
+                    return Container(
+                      color: index % 2 == 0 ? Colors.grey[200] : Colors.white,
+                      height: 100.toHeight,
+                      padding: EdgeInsets.symmetric(
+                        vertical: 5.toHeight,
+                        horizontal: 5.toWidth,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Container(
+                              color: Colors.grey[300],
+                              child: CachedNetworkImage(
+                                imageUrl: snapshot
+                                        .data
+                                        .filteredVideosList[index]
+                                        ?.content
+                                        ?.video
+                                        ?.thumbnail ??
+                                    '',
+                                imageBuilder: (context, imageProvider) =>
+                                    InkWell(
+                                  onTap: () => Navigator.of(context).pushNamed(
+                                    PlayVideoPage.routeName,
+                                    arguments: PlayVideoPageParam(
+                                      snapshot.data.filteredVideosList[index]
+                                          .content.video.playUrl,
+                                      snapshot.data.filteredVideosList[index]
+                                          .content.video.thumbnail,
                                     ),
                                   ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.play_circle_outline,
-                                      size: 40.toFont,
-                                      color: Colors.black.withOpacity(0.8),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.play_circle_outline,
+                                        size: 40.toFont,
+                                        color: Colors.black.withOpacity(0.8),
+                                      ),
                                     ),
                                   ),
                                 ),
+                                errorWidget: (context, url, error) =>
+                                    Center(child: Icon(Icons.error)),
                               ),
-                              errorWidget: (context, url, error) =>
-                                  Center(child: Icon(Icons.error)),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 8.toWidth,
-                        ),
-                        Expanded(
-                          flex: 4,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                snapshot.data.videoList.results[index].title ??
-                                    '',
-                                style: TextStyle(
-                                  fontSize: 16.toFont,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 8.toHeight,
-                              ),
-                              Text(
-                                snapshot.data.videoList.results[index].status
-                                        .toUpperCase() ??
-                                    '',
-                                style: TextStyle(
-                                  fontSize: 12.toFont,
-                                ),
-                              ),
-                            ],
+                          SizedBox(
+                            width: 8.toWidth,
                           ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: EsVideoDetailsWidget(
-                            snapshot.data.videoList.results[index],
+                          Expanded(
+                            flex: 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  snapshot.data.filteredVideosList[index]
+                                          .title ??
+                                      '',
+                                  style: TextStyle(
+                                    fontSize: 16.toFont,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 8.toHeight,
+                                ),
+                                Text(
+                                  snapshot.data.filteredVideosList[index].status
+                                          .toUpperCase() ??
+                                      '',
+                                  style: TextStyle(
+                                    fontSize: 12.toFont,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                          Flexible(
+                            flex: 1,
+                            child: EsVideoDetailsWidget(
+                              snapshot.data.filteredVideosList[index],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             );
           },

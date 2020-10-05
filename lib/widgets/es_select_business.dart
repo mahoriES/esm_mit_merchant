@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/es_create_business/es_create_business.dart';
+import 'package:foore/services/sizeconfig.dart';
 import 'package:provider/provider.dart';
 
 class EsSelectBusiness extends PreferredSize {
@@ -22,96 +23,99 @@ class EsSelectBusiness extends PreferredSize {
         builder: (BuildContext context) {
           final esBusinessesBloc = Provider.of<EsBusinessesBloc>(context);
           return StreamBuilder<EsBusinessesState>(
-              stream: esBusinessesBloc.esBusinessesStateObservable,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Container();
-                }
-                return Container(
-                  height: 600,
-                  color: Colors.white,
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.all(20),
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                'Select business',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: Theme.of(context).textTheme.headline5,
-                              ),
-                              Expanded(
-                                  child: Container(
-                                height: 1,
-                              )),
-                              FlatButton.icon(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context).pushNamed(
-                                        EsCreateBusinessPage.routeName);
-                                  },
-                                  icon: Icon(Icons.add),
-                                  label: Text('Add business'))
-                            ],
+            stream: esBusinessesBloc.esBusinessesStateObservable,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container();
+              }
+              return Container(
+                color: Colors.white,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.toWidth,
+                        vertical: 20.toHeight,
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            'Select business',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            style: Theme.of(context).textTheme.headline5,
                           ),
-                        ),
-                        Container(
-                          height: 370,
-                          child: ListView.builder(
-                            itemCount: snapshot.data.businesses.length,
-                            itemBuilder: (context, index) {
-                              final businessInfo =
-                                  snapshot.data.businesses[index];
-                              return ListTile(
-                                onTap: () {
-                                  esBusinessesBloc
-                                      .setSelectedBusiness(businessInfo);
-                                  Navigator.pop(context);
-                                  if (onChangeBusiness != null) {
-                                    onChangeBusiness();
-                                  }
-                                },
-                                title: Text(businessInfo.dBusinessName),
-                                subtitle: businessInfo.dBusinessNotApproved
-                                    ? Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(businessInfo
-                                              .dBusinessPrettyAddress),
-                                          Text(
-                                            "Not Approved",
-                                            style: TextStyle(
-                                                color: Colors.redAccent),
-                                          ),
-                                        ],
-                                      )
-                                    : Text(businessInfo.dBusinessPrettyAddress),
-                                leading: Icon(Icons.store),
-                                isThreeLine: businessInfo.dBusinessNotApproved,
-                                trailing: Chip(
-                                  label: Text(businessInfo.cluster.clusterName),
-                                  backgroundColor: Colors.white10,
-                                  labelStyle: Theme.of(context)
-                                      .textTheme
-                                      .caption
-                                      .copyWith(fontSize: 12.0),
-                                ),
-                              );
+                          Expanded(
+                              child: Container(
+                            height: 1,
+                          )),
+                          FlatButton.icon(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushNamed(
+                                EsCreateBusinessPage.routeName);
                             },
-                          ),
-                        )
-                      ],
+                            icon: Icon(Icons.add),
+                            label: Text('Add business'),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              });
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: snapshot.data.businesses.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          final businessInfo = snapshot.data.businesses[index];
+                          return ListTile(
+                            onTap: () {
+                              esBusinessesBloc
+                                  .setSelectedBusiness(businessInfo);
+                              Navigator.pop(context);
+                              if (onChangeBusiness != null) {
+                                onChangeBusiness();
+                              }
+                            },
+                            title: Text(businessInfo.dBusinessName),
+                            subtitle: businessInfo.dBusinessNotApproved
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(businessInfo
+                                      .dBusinessPrettyAddress),
+                                      Text(
+                                        "Not Approved",
+                                        style: TextStyle(
+                                          color: Colors.redAccent),
+                                      ),
+                                    ],
+                                  )
+                                : Text(businessInfo.dBusinessPrettyAddress),
+                            leading: Icon(Icons.store),
+                            isThreeLine: businessInfo.dBusinessNotApproved,
+                            trailing: Chip(
+                              label: Text(businessInfo.cluster.clusterName),
+                              backgroundColor: Colors.white10,
+                              labelStyle: Theme.of(context)
+                                  .textTheme
+                                  .caption
+                                  .copyWith(fontSize: 12.toFont),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 20.toHeight)
+                  ],
+                ),
+              );
+            },
+          );
         },
       );
     }
@@ -122,7 +126,10 @@ class EsSelectBusiness extends PreferredSize {
         onTap: allowChange ? showStoreSelector : null,
         child: Container(
           height: preferredSize.height,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          padding: EdgeInsets.symmetric(
+            horizontal: 20.toWidth,
+            vertical: 8.toHeight,
+          ),
           color: Colors.white,
           child: StreamBuilder<EsBusinessesState>(
               stream: esBusinessesBloc.esBusinessesStateObservable,
@@ -136,7 +143,7 @@ class EsSelectBusiness extends PreferredSize {
                     SafeArea(
                       child: Container(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
