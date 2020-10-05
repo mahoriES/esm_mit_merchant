@@ -3,6 +3,8 @@ import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/services/sizeconfig.dart';
 
+import 'additional_charges_dialogue.dart';
+
 class EsOrderDetailsChargesComponent extends StatefulWidget {
   final EsOrderDetailsResponse orderDetails;
   EsOrderDetailsChargesComponent(this.orderDetails);
@@ -50,6 +52,43 @@ class _EsOrderDetailsChargesComponentState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        InkWell(
+          child: InkWell(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.edit,
+                  color: Theme.of(context).primaryColor,
+                ),
+                SizedBox(width: 2.toWidth),
+                Text(
+                  'Additional Charges',
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+              ],
+            ),
+            onTap: () async {
+              var selectedCharge = await showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => AdditionalChargeDialogue(
+                  alreadySelectedCharges: additionalChargesList,
+                ),
+              );
+              if (selectedCharge != null &&
+                  selectedCharge is Map<String, double>) {
+                setState(() {
+                  additionalChargesList..addAll(selectedCharge);
+                });
+              }
+            },
+          ),
+        ),
+        SizedBox(height: 20.toHeight),
+
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
