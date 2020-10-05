@@ -1,6 +1,19 @@
 import 'package:foore/data/model/es_business.dart';
 import 'package:intl/intl.dart';
 
+class FreeFormItemStatus {
+  static String isAvailable = 'IS_AVAILABLE';
+  static String added = 'FREE_FORM_ADDED';
+  static String notAdded = 'FREE_FORM_NOT_ADDED';
+}
+
+class CatalogueItemStatus {
+  static String isAvailable = 'IS_AVAILABLE';
+  static String notPresent = 'NOT_IN_STOCK';
+  static String createdByMerchant = 'CREATED_IN_CATALOGUE';
+  // static String permanantlyUnavailable = 'PERMANENTLY_UNAVAILABLE';
+}
+
 class EsOrderStatus {
   static const CREATED = 'CREATED';
   static const MERCHANT_ACCEPTED = 'MERCHANT_ACCEPTED';
@@ -478,18 +491,24 @@ class EsOrderItem {
   String skuId;
   //We will just use the first key for variation. This will break in future.
   String variationOption;
+  // used to track the availability status of item.
+  String itemStatus;
 
-  EsOrderItem(
-      {this.skuId,
-      this.productName,
-      this.itemQuantity,
-      this.itemTotal,
-      this.unitPrice});
+  EsOrderItem({
+    this.skuId,
+    this.productName,
+    this.itemQuantity,
+    this.itemTotal,
+    this.unitPrice,
+    this.itemStatus,
+  });
 
   EsOrderItem.fromJson(
     Map<String, dynamic> inputJson, {
     bool divideUnitPriceBy100 = true,
   }) {
+    // All the items available initially are added by customer, so by default it's status would be IS_AVAILABLE.
+    itemStatus = CatalogueItemStatus.isAvailable;
     productName = inputJson['product_name'];
     itemQuantity = inputJson['quantity'];
     unitPrice = double.tryParse(

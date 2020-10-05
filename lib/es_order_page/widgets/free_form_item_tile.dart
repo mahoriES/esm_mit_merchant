@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foore/data/model/es_order_details.dart';
+import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/es_order_page/widgets/confirm_dialogue.dart';
 import 'package:foore/services/sizeconfig.dart';
 
