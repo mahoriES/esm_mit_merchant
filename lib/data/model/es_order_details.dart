@@ -40,17 +40,20 @@ class UpdateOrderItems {
   int skuId;
   int quantity;
   String productStatus;
-  double unitPrice;
+  double unitPriceInRupee;
 
-  UpdateOrderItems(
-      {this.skuId, this.quantity, this.productStatus, this.unitPrice});
-
+  UpdateOrderItems({
+    this.skuId,
+    this.quantity,
+    this.productStatus,
+    this.unitPriceInRupee,
+  });
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['sku_id'] = this.skuId;
     data['quantity'] = this.quantity;
     if (this.productStatus != null) data['product_status'] = this.productStatus;
-    // data['unit_price'] = this.unitPrice;
+    data['unit_price'] = this.unitPriceInRupee * 100;
     return data;
   }
 }
@@ -133,7 +136,8 @@ class EsOrderDetailsResponse {
       json['business_images'].forEach((v) {
         businessImages.add(new BusinessImages.fromJson(v));
       });
-    }
+    } else
+      businessImages = [];
     businessName = json['business_name'];
     clusterName = json['cluster_name'];
     customerName = json['customer_name'];
@@ -455,8 +459,8 @@ class OrderTrail {
 }
 
 class Rating {
-  Null ratingValue;
-  Null ratingComment;
+  int ratingValue;
+  String ratingComment;
 
   Rating({this.ratingValue, this.ratingComment});
 

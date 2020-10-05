@@ -70,7 +70,7 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                 : null,
             skuId: int.tryParse(details.orderItems[index].skuId),
             quantity: details.orderItems[index].itemQuantity,
-            unitPrice: details.orderItems[index].unitPrice,
+            unitPriceInRupee: details.orderItems[index].unitPrice,
           ),
         ),
         freeFormItems: details.freeFormItems,

@@ -4,7 +4,7 @@ import 'package:sentry/sentry.dart';
 class SentryHandler {
   bool get isInProdMode {
     /// Assuming in production mode.
-    bool isInProdMode = false;
+    bool isInProdMode = true;
 
     ///This code only sets [isInProdMode] to false in a development environment.
     assert(isInProdMode = false);
