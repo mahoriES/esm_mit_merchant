@@ -2,7 +2,7 @@ import 'package:package_info/package_info.dart';
 
 class Environment {
   //Set False for Staging build
-  static get isProd => false;
+  static get isProd => true;
 
   static get apiUrl =>
       isProd ? EnvironmentProd._apiUrl : EnvironmentPreprod._apiUrl;
@@ -24,12 +24,10 @@ class EnvironmentPreprod {
   static const _apiUrl = 'https://www.api.foore.io/api/v1/';
 
   static const _esApiUrl = 'https://api.test.esamudaay.com/api/v1/';
-
 }
 
 class EnvironmentProd {
   static const _apiUrl = 'https://www.api.foore.io/api/v1/';
 
   static const _esApiUrl = 'https://api.esamudaay.com/api/v1/';
-
 }
