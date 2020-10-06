@@ -1,6 +1,19 @@
 import 'package:foore/data/model/es_business.dart';
 import 'package:intl/intl.dart';
 
+class FreeFormItemStatus {
+  static String isAvailable = 'IS_AVAILABLE';
+  static String added = 'FREE_FORM_ADDED';
+  static String notAdded = 'FREE_FORM_NOT_ADDED';
+}
+
+class CatalogueItemStatus {
+  static String isAvailable = 'IS_AVAILABLE';
+  static String notPresent = 'NOT_IN_STOCK';
+  static String createdByMerchant = 'CREATED_IN_CATALOGUE';
+  // static String permanantlyUnavailable = 'PERMANENTLY_UNAVAILABLE';
+}
+
 class EsOrderStatus {
   static const CREATED = 'CREATED';
   static const MERCHANT_ACCEPTED = 'MERCHANT_ACCEPTED';
@@ -473,31 +486,63 @@ class EsDeliveryAgent {
 class EsOrderItem {
   String productName;
   int itemQuantity;
+  double unitPrice;
   String itemTotal;
   String skuId;
   //We will just use the first key for variation. This will break in future.
   String variationOption;
+  // used to track the availability status of item.
+  String itemStatus;
 
-  EsOrderItem(
-      {this.skuId, this.productName, this.itemQuantity, this.itemTotal});
+  EsOrderItem({
+    this.skuId,
+    this.productName,
+    this.itemQuantity,
+    this.itemTotal,
+    this.unitPrice,
+    this.itemStatus,
+  });
 
-  EsOrderItem.fromJson(Map<String, dynamic> inputJson) {
+  EsOrderItem.fromJson(
+    Map<String, dynamic> inputJson, {
+    bool divideUnitPriceBy100 = true,
+  }) {
+    // All the items available initially are added by customer, so by default it's status would be IS_AVAILABLE.
+    itemStatus = CatalogueItemStatus.isAvailable;
     productName = inputJson['product_name'];
     itemQuantity = inputJson['quantity'];
-    itemTotal = getPrice(itemQuantity * inputJson['unit_price']);
+    unitPrice = double.tryParse(
+            (inputJson['unit_price'] / (divideUnitPriceBy100 ? 100 : 1))
+                .toString()) ??
+        0;
+    itemTotal = getPrice(itemQuantity * unitPrice);
     skuId = inputJson['sku_id'].toString();
 
     if (inputJson.containsKey('variation_option') &&
         inputJson['variation_option'] != null) {
-      Map<String, dynamic> variationOptions = inputJson['variation_option'];
-      if (variationOptions.isNotEmpty) {
-        variationOption = variationOptions.values.toList()[0];
+      if (inputJson['variation_option'] is String) {
+        variationOption = inputJson['variation_option'];
+      } else {
+        Map<String, dynamic> variationOptions = inputJson['variation_option'];
+        if (variationOptions.isNotEmpty) {
+          variationOption = variationOptions.values.toList()[0];
+        }
       }
     }
   }
 
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['product_name'] = this.productName;
+    data['quantity'] = this.itemQuantity;
+    data['unit_price'] = this.unitPrice;
+    data['sku_id'] = this.skuId;
+    data['variation_option'] = this.variationOption;
+    return data;
+  }
+
   String getPrice(price) {
-    return NumberFormat.simpleCurrency(locale: 'en_IN').format(price / 100);
+    return NumberFormat.simpleCurrency(locale: 'en_IN').format(price);
   }
 
   @override

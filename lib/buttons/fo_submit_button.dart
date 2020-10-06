@@ -5,8 +5,14 @@ class FoSubmitButton extends StatelessWidget {
   final bool isLoading;
   final bool isSuccess;
   final Function onPressed;
-  const FoSubmitButton(
-      {this.text, this.isLoading, this.isSuccess, this.onPressed});
+  final Color color;
+  const FoSubmitButton({
+    this.text,
+    this.isLoading,
+    this.isSuccess,
+    this.onPressed,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +76,7 @@ class FoSubmitButton extends StatelessWidget {
         horizontal: 45,
       ),
       onPressed: onPressed,
+      color: color ?? Theme.of(context).primaryColor,
       child: Container(
         child: Text(text),
       ),

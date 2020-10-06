@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_orders.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
+import 'package:foore/es_order_page/widgets/es_order_card.dart';
+import 'package:foore/es_order_page/es_order_details.dart';
 import 'package:foore/widgets/empty_list.dart';
+import 'package:foore/widgets/response_dialog.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 
@@ -22,9 +26,13 @@ class EsOrderList extends StatefulWidget {
 class _EsOrderListState extends State<EsOrderList> {
   EsOrdersBloc esOrdersBloc;
 
-  _showAcceptAlertDialog(EsOrder order, EsOrdersBloc esOrdersBloc) async {
+  _showAcceptAlertDialog(
+    EsOrder order,
+    EsOrdersBloc esOrdersBloc, {
+    BuildContext customContext,
+  }) async {
     return await showDialog<bool>(
-      context: context,
+      context: customContext ?? context,
       barrierDismissible: true,
       useRootNavigator: true, // user must tap button for close dialog!
       builder: (BuildContext context) {
@@ -57,11 +65,20 @@ class _EsOrderListState extends State<EsOrderList> {
                   FlatButton(
                     child: Text('Accept'),
                     onPressed: () {
-                      esOrdersBloc.acceptOrder(order.orderId, (a) {
-                        Navigator.of(context, rootNavigator: true).pop(true);
-                      }, () {
-                        Navigator.of(context, rootNavigator: true).pop(false);
-                      });
+                      esOrdersBloc.acceptOrder(
+                        order.orderId,
+                        (a) {
+                          Navigator.of(context, rootNavigator: true).pop(true);
+                        },
+                        (error) {
+                          Navigator.of(context, rootNavigator: true).pop(false);
+                          showDialog(
+                            context: context,
+                            builder: (context) => ResponseDialogue(
+                                error ?? 'something went wrong'),
+                          );
+                        },
+                      );
                     },
                   ),
                 ],
@@ -121,9 +138,13 @@ class _EsOrderListState extends State<EsOrderList> {
     );
   }
 
-  _showCancelAlertDialog(EsOrder order, EsOrdersBloc esOrdersBloc) async {
+  _showCancelAlertDialog(
+    EsOrder order,
+    EsOrdersBloc esOrdersBloc, {
+    BuildContext customContext,
+  }) async {
     return await showDialog<bool>(
-      context: context,
+      context: customContext ?? context,
       barrierDismissible: true,
       useRootNavigator: true, // user must tap button for close dialog!
       builder: (BuildContext context) {
@@ -148,13 +169,23 @@ class _EsOrderListState extends State<EsOrderList> {
                       .map(
                         (e) => ListTile(
                           onTap: () {
-                            esOrdersBloc.cancelOrder(order.orderId, e, (a) {
-                              Navigator.of(context, rootNavigator: true)
-                                  .pop(true);
-                            }, () {
-                              Navigator.of(context, rootNavigator: true)
-                                  .pop(false);
-                            });
+                            esOrdersBloc.cancelOrder(
+                              order.orderId,
+                              e,
+                              (a) {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop(true);
+                              },
+                              (error) {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop(false);
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => ResponseDialogue(
+                                      error ?? 'something went wrong'),
+                                );
+                              },
+                            );
                           },
                           title: Text(e),
                         ),
@@ -312,6 +343,71 @@ class _EsOrderListState extends State<EsOrderList> {
     );
   }
 
+  _showUpdateOrderAlertDialog(
+    EsOrder order,
+    EsOrdersBloc esOrdersBloc,
+    UpdateOrderItemsPayload body, {
+    BuildContext customContext,
+  }) async {
+    return await showDialog<bool>(
+      context: customContext ?? context,
+      barrierDismissible: true,
+      useRootNavigator: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return StreamBuilder<EsOrdersState>(
+            stream: esOrdersBloc.esProductStateObservable,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container();
+              }
+              if (snapshot.data.isSubmitting) {
+                return AlertDialog(
+                  content: Container(
+                      height: 100,
+                      child: Center(child: CircularProgressIndicator())),
+                );
+              }
+              return AlertDialog(
+                title: Container(),
+                content: Text('Do you want to update this order ?'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text(
+                      'Cancel',
+                      style: Theme.of(context).textTheme.button,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop(false);
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('Update'),
+                    onPressed: () {
+                      esOrdersBloc.updateOrderItems(
+                        order.orderId,
+                        (a) {
+                          Navigator.of(context, rootNavigator: true).pop(true);
+                        },
+                        (error) {
+                          Navigator.of(context, rootNavigator: true).pop(false);
+                          showDialog(
+                            context: context,
+                            builder: (context) => ResponseDialogue(
+                              error ?? 'something went wrong',
+                            ),
+                          );
+                        },
+                        body,
+                      );
+                    },
+                  ),
+                ],
+              );
+            });
+      },
+    );
+  }
+
   @override
   void didChangeDependencies() {
     final httpService = Provider.of<HttpService>(context);
@@ -326,16 +422,20 @@ class _EsOrderListState extends State<EsOrderList> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     this.esOrdersBloc.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    acceptItem(EsOrder order) async {
-      var isAccepted = await _showAcceptAlertDialog(order, this.esOrdersBloc);
+    acceptItem(EsOrder order, {BuildContext context}) async {
+      var isAccepted = await _showAcceptAlertDialog(
+        order,
+        this.esOrdersBloc,
+        customContext: context,
+      );
       if (isAccepted == true) {
+        if (context != null) Navigator.pop(context);
         esOrdersBloc.getOrders();
       }
     }
@@ -347,9 +447,14 @@ class _EsOrderListState extends State<EsOrderList> {
       }
     }
 
-    cancelItem(EsOrder order) async {
-      var isAccepted = await _showCancelAlertDialog(order, this.esOrdersBloc);
+    cancelItem(EsOrder order, {BuildContext context}) async {
+      var isAccepted = await _showCancelAlertDialog(
+        order,
+        this.esOrdersBloc,
+        customContext: context,
+      );
       if (isAccepted == true) {
+        if (context != null) Navigator.pop(context);
         esOrdersBloc.getOrders();
       }
     }
@@ -369,8 +474,22 @@ class _EsOrderListState extends State<EsOrderList> {
       }
     }
 
-    getOrderItems(EsOrder order) async {
-      esOrdersBloc.getOrderItems(order.orderId);
+    updateOrderItems(EsOrder order, UpdateOrderItemsPayload body,
+        {BuildContext context}) async {
+      var isAccepted = await _showUpdateOrderAlertDialog(
+        order,
+        this.esOrdersBloc,
+        body,
+        customContext: context,
+      );
+      if (isAccepted == true) {
+        if (context != null) Navigator.pop(context);
+        esOrdersBloc.getOrders();
+      }
+    }
+
+    Future getOrderItems(EsOrder order) async {
+      await esOrdersBloc.getOrderItems(order.orderId);
     }
 
     return Container(
@@ -380,70 +499,124 @@ class _EsOrderListState extends State<EsOrderList> {
         children: <Widget>[
           Expanded(
             child: StreamBuilder<EsOrdersState>(
-                stream: this.esOrdersBloc.esProductStateObservable,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Container();
-                  }
-                  if (snapshot.data.isLoading) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapshot.data.isLoadingFailed) {
-                    return SomethingWentWrong(
-                      onRetry: this.esOrdersBloc.getOrders,
-                    );
-                  } else if (snapshot.data.items.length == 0) {
-                    return EmptyList(
-                      titleText: 'No orders found',
-                      subtitleText: "",
-                    );
-                  } else {
-                    return NotificationListener<ScrollNotification>(
-                      onNotification: (ScrollNotification scrollInfo) {
-                        if (scrollInfo.metrics.pixels ==
-                            scrollInfo.metrics.maxScrollExtent) {
-                          this.esOrdersBloc.loadMore();
-                        }
-                        return false;
-                      },
-                      child: ListView.builder(
-                          padding: EdgeInsets.only(
-                            bottom: 72,
-                            // top: 30,
-                          ),
-                          itemCount: snapshot.data.items.length,
-                          itemBuilder: (context, index) {
-                            if (snapshot.data.items.length == index) {
-                              if (snapshot.data.isLoadingMore) {
-                                return Container(
-                                  margin: EdgeInsets.all(4.0),
-                                  height: 36,
-                                  width: 36,
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              } else {
-                                return Container();
-                              }
-                            }
-                            final currentProduct = snapshot.data.items[index];
-                            return EsOrderItemWidget(
-                              esOrder: currentProduct,
-                              onAccept: acceptItem,
-                              onMarkReady: markReady,
-                              onCancel: cancelItem,
-                              onAssign: assignItem,
-                              onGetOrderItems: getOrderItems,
-                              showStatus: this.widget.status ==
-                                  null, //Show only when we are not filtering for specific status
-                              onUpdatePaymentStatus: updatePaymentStatus,
+              stream: this.esOrdersBloc.esProductStateObservable,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container();
+                }
+                if (snapshot.data.isLoading) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.data.isLoadingFailed) {
+                  return SomethingWentWrong(
+                    onRetry: this.esOrdersBloc.getOrders,
+                  );
+                } else if (snapshot.data.items.length == 0) {
+                  return EmptyList(
+                    titleText: 'No orders found',
+                    subtitleText: "",
+                  );
+                } else {
+                  return NotificationListener<ScrollNotification>(
+                    onNotification: (ScrollNotification scrollInfo) {
+                      if (scrollInfo.metrics.pixels ==
+                          scrollInfo.metrics.maxScrollExtent) {
+                        this.esOrdersBloc.loadMore();
+                      }
+                      return false;
+                    },
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(
+                        bottom: 72,
+                        // top: 30,
+                      ),
+                      itemCount: snapshot.data.items.length,
+                      itemBuilder: (context, index) {
+                        if (snapshot.data.items.length == index) {
+                          if (snapshot.data.isLoadingMore) {
+                            return Container(
+                              margin: EdgeInsets.all(4.0),
+                              height: 36,
+                              width: 36,
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
                             );
-                          }),
-                    );
-                  }
-                }),
+                          } else {
+                            return Container();
+                          }
+                        }
+                        final currentProduct = snapshot.data.items[index];
+
+                        return !currentProduct.dIsStatusNew
+                            ? EsOrderItemWidget(
+                                esOrder: currentProduct,
+                                onAccept: acceptItem,
+                                onMarkReady: markReady,
+                                onCancel: cancelItem,
+                                onAssign: assignItem,
+                                onGetOrderItems: getOrderItems,
+                                showStatus: this.widget.status ==
+                                    null, //Show only when we are not filtering for specific status
+                                onUpdatePaymentStatus: updatePaymentStatus,
+                              )
+                            : EsOrderCard(
+                                EsOrderCardParams(
+                                  currentProduct,
+                                  () async {
+                                    await getOrderItems(currentProduct);
+
+                                    EsOrderDetailsResponse response = snapshot
+                                        .data
+                                        .orderItemsKV[currentProduct.orderId];
+
+                                    if (response != null) {
+                                      Navigator.of(context).pushNamed(
+                                        EsOrderDetails.routeName,
+                                        arguments: EsOrderDetailsParam(
+                                          esOrderDetailsResponse:
+                                              EsOrderDetailsResponse.fromJson(
+                                            response.toJson(),
+                                            divideUnitPriceBy100: false,
+                                          ),
+                                          acceptOrder: (_context) async {
+                                            await acceptItem(
+                                              snapshot.data.items[index],
+                                              context: _context,
+                                            );
+                                          },
+                                          cancelOrder: (_context) async {
+                                            await cancelItem(
+                                              snapshot.data.items[index],
+                                              context: _context,
+                                            );
+                                          },
+                                          updateOrder: (_context, body) async {
+                                            await updateOrderItems(
+                                              snapshot.data.items[index],
+                                              body,
+                                              context: _context,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => ResponseDialogue(
+                                            'Something Went Wrong'),
+                                      );
+                                    }
+                                  },
+                                ),
+                              );
+                      },
+                    ),
+                  );
+                }
+              },
+            ),
           )
         ],
       ),
