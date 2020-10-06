@@ -472,8 +472,10 @@ class EsEditProductBloc {
   }
 
   Future<File> _pickImageFromGallery() async {
-    final pickedFile =
-        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+      imageQuality: 25,
+    );
     final file = new File(pickedFile.path);
     return file;
   }
