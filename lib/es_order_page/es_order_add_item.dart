@@ -62,6 +62,7 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
                               100) ??
                           0,
                   skuId: currentProduct.skus[skuIndex].skuId.toString(),
+                  itemStatus: CatalogueItemStatus.createdByMerchant,
                 );
               }
             },
@@ -78,6 +79,7 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
           skuId: currentProduct.skus != null && currentProduct.skus.isNotEmpty
               ? currentProduct.skus[0].skuId.toString()
               : '',
+          itemStatus: CatalogueItemStatus.createdByMerchant,
         );
       }
     }

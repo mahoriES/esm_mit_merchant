@@ -147,6 +147,7 @@ class HttpService {
   Future<http.Response> esGet(path) async {
     esdyPrint.debug("esGet: " + path);
     final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
+    esdyPrint.debug("esGet: " + esJwtToken);
     if (esJwtToken != null) {
       Map<String, String> requestHeaders = {
         'Content-type': 'application/json',

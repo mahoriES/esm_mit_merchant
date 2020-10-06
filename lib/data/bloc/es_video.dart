@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:foore/data/constants/es_api_path.dart';
@@ -21,6 +22,13 @@ class EsVideoBloc {
   EsVideoBloc(this.httpService, this.esBusinessesBloc) {
     _subjectEsVideoState =
         new BehaviorSubject<EsVideoState>.seeded(esVideoState);
+    this.esBusinessesBloc.esBusinessesStateObservable.listen((event) {
+      if (esVideoState.videoFeedState == VideoFeedState.SUCCESS) {
+        filterVideosByBuisness(esBusinessesBloc.getSelectedBusinessId());
+      } else {
+        getVideoList();
+      }
+    });
   }
 
   Observable<EsVideoState> get esVideoStateObservable =>
@@ -34,11 +42,12 @@ class EsVideoBloc {
       Response httpResponse = await httpService.esGet(EsApiPaths.getVideoPath);
 
       if (httpResponse.statusCode == 200) {
-        esVideoState.videoList = VideoFeedResponse.fromJson(
+        esVideoState.totalVideosList = VideoFeedResponse.fromJson(
           jsonDecode(httpResponse.body),
         );
-        esVideoState.videoFeedState = VideoFeedState.SUCCESS;
-        _updateState();
+        filterVideosByBuisness(esBusinessesBloc.getSelectedBusinessId());
+        // esVideoState.videoFeedState = VideoFeedState.SUCCESS;
+        // _updateState();
       } else {
         throw ('error :- ' + httpResponse.statusCode.toString());
       }
@@ -47,6 +56,16 @@ class EsVideoBloc {
       esVideoState.errorMessage = e.toString();
       _updateState();
     }
+  }
+
+  filterVideosByBuisness(String buisnessID) {
+    esVideoState.filteredVideosList = [];
+    esVideoState?.totalVideosList?.results?.forEach((video) {
+      if (video.businessId == buisnessID)
+        esVideoState.filteredVideosList.add(video);
+    });
+    esVideoState.videoFeedState = VideoFeedState.SUCCESS;
+    _updateState();
   }
 
   Future<void> uploadVideo(
@@ -187,11 +206,13 @@ class EsVideoState {
   VideoFeedState videoFeedState;
   AddVideoState addVideoState;
   UpdateVideoState updateVideoState;
-  VideoFeedResponse videoList;
+  VideoFeedResponse totalVideosList;
+  List<VideoFeedResponseResults> filteredVideosList;
   String errorMessage;
   EsVideoState() {
     this.videoFeedState = VideoFeedState.IDEAL;
     this.addVideoState = AddVideoState.IDEAL;
+    this.filteredVideosList = [];
   }
 }
 
