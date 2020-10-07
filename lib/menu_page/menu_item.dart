@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/es_link_sharing.dart';
 import 'package:foore/data/model/es_product.dart';
 
 class MenuItemWidget extends StatelessWidget {
@@ -164,14 +165,23 @@ class MenuItemWidget extends StatelessWidget {
                       if (result == 1) {
                         this.onEdit(this.esProduct);
                       } else if (result == 2) {
-                        this.onDelete(this.esProduct);
+                        EsDynamicLinkSharing(context)
+                            .shareProductLink(esProduct.productId);
                       }
+
+                      // else if (result == 2) {
+                      //   this.onDelete(this.esProduct);
+                      // }
                     },
                     itemBuilder: (BuildContext context) =>
                         <PopupMenuEntry<int>>[
                       const PopupMenuItem(
                         value: 1,
                         child: Text('View'),
+                      ),
+                      const PopupMenuItem(
+                        value: 2,
+                        child: Text('Share'),
                       ),
                       // const PopupMenuItem(
                       //   value: '',
