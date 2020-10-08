@@ -47,7 +47,7 @@ import 'onboarding_page/onboarding_page.dart';
 import 'review_page/reply_gmb.dart';
 import 'unirson_check_in_page/unirson_check_in_page.dart';
 
-class Router {
+class AppRouter {
   static const homeRoute = '/';
   static const testRoute = MenuPage.routeName;
   final unauthenticatedHandler = (BuildContext context) => Navigator.of(context)
@@ -71,7 +71,7 @@ class Router {
   final AuthBloc authBloc;
   final EsBusinessesBloc esBusinessesBloc;
 
-  Router(
+  AppRouter(
       {@required this.httpServiceBloc,
       @required this.authBloc,
       @required this.esBusinessesBloc});
