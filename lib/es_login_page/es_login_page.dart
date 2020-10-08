@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:foore/app_colors.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_login.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/http_service.dart';
+import 'dart:async';
 
 class EsLoginPage extends StatefulWidget {
   static const routeName = '/esLogin';
@@ -233,11 +237,107 @@ class _EsLoginPageState extends State<EsLoginPage> {
                       ),
               ),
             ),
+            ResendOtpComponent(onCodeRequest: () => _esLoginBloc.sendCode()),
             Expanded(
               flex: 2,
               child: Container(),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class ResendOtpComponent extends StatefulWidget {
+
+  ///The [onCodeRequest] function is received from the caller module and executed
+  ///when the Resend OTP action is performed alongwith assigning of new values to
+  ///the timer, and showing a toast to user that message has been sent.
+  final Function onCodeRequest;
+
+  ResendOtpComponent({@required this.onCodeRequest});
+
+  @override
+  _ResendOtpComponentState createState() => _ResendOtpComponentState();
+}
+
+class _ResendOtpComponentState extends State<ResendOtpComponent> {
+  Timer _timer;
+
+  ///The _start value holds the time (in seconds) which should pass until the
+  ///Resend OTP option is again available. For the initial attempt this is set
+  ///to 30 seconds, however for every subsequent attempt the value of [_start]
+  ///is bumped up by 30 seconds, so that is there is any underlying issue in the
+  ///SMS service, it gets sufficient time to recover, and there are no repeated
+  ///attempts which may be futile.
+  int _start = 30;
+
+  ///The [repeatCount] holds the number of times the Resend OTP function has
+  ///been invoked. This is used to calculate the interval to be given between
+  ///all the following resend OTP attempts.
+  int repeatCount = 0;
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+      (Timer timer) => setState(
+        () {
+          if (_start < 1) {
+            timer.cancel();
+          } else {
+            _start = _start - 1;
+          }
+        },
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    startTimer();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      child: Padding(
+        padding: EdgeInsets.only(top: 20),
+        child: Center(
+          child: _start == 0
+              ? GestureDetector(
+                  onTap: () {
+                    _start = 30 + ++repeatCount * 30;
+
+                    ///The below line fires the action to resend the OTP.
+                    widget.onCodeRequest();
+                    Fluttertoast.showToast(
+                        msg: AppTranslations.of(context)
+                            .text('otp_sent_to_device'));
+                    setState(() {
+                      startTimer();
+                    });
+                  },
+                  child: Text(
+                    AppTranslations.of(context).text('resend_otp'),
+                    style: TextStyle(color: AppColors.lightBlue),
+                  ),
+                )
+              : Text(
+                  'Resend OTP in $_start seconds',
+                  style: TextStyle(
+                    color: AppColors.greyishText,
+                  ),
+                ),
         ),
       ),
     );
