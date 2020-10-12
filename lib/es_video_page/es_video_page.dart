@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
+import 'package:foore/data/bloc/es_link_sharing.dart';
 import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/data/model/es_video_models/es_video_list.dart';
 import 'package:foore/es_video_page/es_add_video.dart';
@@ -10,6 +12,7 @@ import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/widgets/response_dialog.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
+import '../app_translations.dart';
 import 'widgets/es_video_details.dart';
 
 class EsVideoPage extends StatefulWidget {
@@ -177,6 +180,28 @@ class _EsVideoPageState extends State<EsVideoPage> {
                                   ),
                                 ),
                               ],
+                            ),
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.share,
+                                size: 20.toFont,
+                              ),
+                              onPressed: () async {
+                                EsDynamicLinkSharing esDynamicLinkSharing =
+                                    EsDynamicLinkSharing(context);
+                                DynamicLinkParameters linkParameters =
+                                    esDynamicLinkSharing.createVideoLink(
+                                        snapshot.data.filteredVideosList[index]
+                                            .postId);
+                                await esDynamicLinkSharing.shareLink(
+                                  linkParameters,
+                                  AppTranslations.of(context)
+                                      .text('Share Link For this Video'),
+                                );
+                              },
                             ),
                           ),
                           Flexible(

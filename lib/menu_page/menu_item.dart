@@ -164,9 +164,6 @@ class MenuItemWidget extends StatelessWidget {
                     onSelected: (result) {
                       if (result == 1) {
                         this.onEdit(this.esProduct);
-                      } else if (result == 2) {
-                        EsDynamicLinkSharing(context)
-                            .shareProductLink(esProduct.productId);
                       }
 
                       // else if (result == 2) {
@@ -178,10 +175,6 @@ class MenuItemWidget extends StatelessWidget {
                       const PopupMenuItem(
                         value: 1,
                         child: Text('View'),
-                      ),
-                      const PopupMenuItem(
-                        value: 2,
-                        child: Text('Share'),
                       ),
                       // const PopupMenuItem(
                       //   value: '',

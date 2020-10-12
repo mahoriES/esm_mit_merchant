@@ -64,6 +64,7 @@ dependencies:
   chewie: ^0.9.10
   firebase_dynamic_links: ^0.6.0+1
   esys_flutter_share: ^1.0.2
+  clipboard_manager: ^0.0.4
   
 
 

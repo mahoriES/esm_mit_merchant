@@ -101,13 +101,6 @@ class _EsHomePageState extends State<EsHomePage> {
                 null,
                 allowChange: _selectedIndex == 2 ? false : true,
               ),
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.share),
-                  onPressed: () async =>
-                      await EsDynamicLinkSharing(context).shareShopLink(),
-                ),
-              ],
             ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),

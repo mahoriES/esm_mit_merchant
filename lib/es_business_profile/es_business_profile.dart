@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_business_profile.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
-
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:foore/es_business_profile/es_business_image_list.dart';
-
 import 'package:foore/es_business_profile/es_edit_text_generic.dart';
-import 'package:foore/widgets/es_select_business.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-
 import 'es_edit_business_address.dart';
+import 'widgets/share_link_widget.dart';
 
 class EsBusinessProfile extends StatefulWidget {
   static const routeName = '/es_business_profile';
@@ -469,6 +465,8 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                     getDescriptionWidget(businessInfo),
                     getBaseHeaderWidget('Address'),
                     getAddressWidget(businessInfo),
+                    Divider(thickness: 2),
+                    EsShareLink(),
                     Divider(thickness: 2),
                     getHeaderWithSwitchWidget(
                         'UPI Payment',
