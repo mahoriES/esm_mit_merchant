@@ -103,7 +103,7 @@ class LoginBloc {
       var responseBody = httpResponse.body ?? '';
       //TODO: Custom sentry error
       this._authBloc.googleSignIn.signOut();
-      throw "Err";
+      throw "Err -> ${httpResponse.body}";
     }
   }
 
