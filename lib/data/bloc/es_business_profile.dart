@@ -6,15 +6,16 @@ import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:foore/data/model/es_media.dart';
-
+import 'package:foore/widgets/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
-
+import 'package:image_cropper/image_cropper.dart';
 import 'es_businesses.dart';
 
 class EsBusinessProfileBloc {
   static const FILENAME = 'es_business_profile.dart';
   static const CLASSNAME = 'EsBusinessProfileBloc';
+
   static void esdyPrint(String message) {
     debugPrint(FILENAME + " : " + CLASSNAME + " : " + message);
   }
@@ -426,15 +427,19 @@ class EsBusinessProfileBloc {
     try {
       var file = await _pickImageFromGallery();
       if (file != null) {
-        final uploadableFile = EsUploadableFile(file);
+        final croppedImageFile =
+            await ImageCropperView.getSquareCroppedImage(file);
+        if (croppedImageFile == null) return;
+        final uploadableFile = EsUploadableFile(croppedImageFile);
         this
             ._esBusinessProfileState
             .uploadingImages
-            .add(EsUploadableFile(file));
+            .add(EsUploadableFile(croppedImageFile));
         this._updateState();
         try {
-          var respnose =
-              await this.httpService.esUpload(EsApiPaths.uploadPhoto, file);
+          var respnose = await this
+              .httpService
+              .esUpload(EsApiPaths.uploadPhoto, croppedImageFile);
           var uploadImageResponse =
               EsUploadImageResponse.fromJson(json.decode(respnose));
 
