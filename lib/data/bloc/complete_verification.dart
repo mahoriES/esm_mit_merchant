@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/data/http_service.dart';
@@ -74,7 +72,7 @@ class CompleteVerificationBloc {
       }
     } else {
       //TODO: Custom sentry error
-      
+
     }
     if (verification != null) {
       this._completeVerificationState.verification = verification;
@@ -116,11 +114,11 @@ class CompleteVerificationBloc {
               .google_location_verification_done_from_app,
           value: true);
       //////////navigate away
-      Navigator.pushReplacementNamed(context, Router.homeRoute);
+      Navigator.pushReplacementNamed(context, AppRouter.homeRoute);
     } else {
       this._completeVerificationState.isSubmitFailed = true;
       //TODO: Custom sentry error
-      
+
     }
     this._completeVerificationState.isSubmitting = false;
     this._updateState();

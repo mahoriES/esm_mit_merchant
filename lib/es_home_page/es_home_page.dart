@@ -46,7 +46,7 @@ class _EsHomePageState extends State<EsHomePage> {
 
   void _onItemTapped(int index) {
     if (index == 0) {
-      Navigator.of(context).pushNamed(Router.homeRoute);
+      Navigator.of(context).pushNamed(AppRouter.homeRoute);
     } else {
       setState(() {
         _selectedIndex = index;

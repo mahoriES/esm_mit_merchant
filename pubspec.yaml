@@ -4,7 +4,7 @@ description: Foore mobile app
 version: 0.1.1+94
 
 environment:
-  sdk: '>=2.7.0 <3.0.0'
+  sdk: '>=2.8.0 <3.0.0'
 
 dependencies:
   flutter:
