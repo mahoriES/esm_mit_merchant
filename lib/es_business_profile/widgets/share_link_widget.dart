@@ -1,40 +1,27 @@
 import 'package:clipboard_manager/clipboard_manager.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/app_translations.dart';
+import 'package:foore/data/bloc/es_business_profile.dart';
 import 'package:foore/data/bloc/es_link_sharing.dart';
 import 'package:foore/services/sizeconfig.dart';
 
-class EsShareLink extends StatefulWidget {
-  @override
-  _EsShareLinkState createState() => _EsShareLinkState();
-}
-
-class _EsShareLinkState extends State<EsShareLink> {
-  EsDynamicLinkSharing esDynamicLinkSharing;
-  DynamicLinkParameters linkParameters;
-  String linkUrl;
-  bool isLoading;
-
-  @override
-  void initState() {
-    isLoading = true;
-    esDynamicLinkSharing = EsDynamicLinkSharing(context);
-    linkParameters = esDynamicLinkSharing.createShopLink();
-    linkParameters.buildUrl().then((Uri link) {
-      linkUrl = link.toString();
-      isLoading = false;
-      setState(() {});
-    });
-    super.initState();
-  }
-
+class EsShareLink extends StatelessWidget {
+  final EsBusinessProfileBloc bloc;
+  EsShareLink(this.bloc);
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? Container()
-        : Container(
+    return StreamBuilder<EsBusinessProfileState>(
+      stream: bloc.createBusinessObservable,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return Container();
+        if (snapshot.data.isCreatingLink) return CircularProgressIndicator();
+        if (snapshot.data.linkParameters == null ||
+            snapshot.data.linkUrl == null) return Container();
+        return Card(
+          elevation: 2,
+          color: Colors.grey[300],
+          child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
             child: Column(
               children: [
@@ -57,8 +44,8 @@ class _EsShareLinkState extends State<EsShareLink> {
                         child: IconButton(
                           icon: Icon(Icons.share),
                           onPressed: () {
-                            esDynamicLinkSharing.shareLink(
-                              linkParameters,
+                            EsDynamicLinkSharing().shareLink(
+                              snapshot.data.linkParameters,
                               AppTranslations.of(context)
                                   .text('Share Your Store Link'),
                             );
@@ -90,7 +77,7 @@ class _EsShareLinkState extends State<EsShareLink> {
                     Expanded(
                       flex: 5,
                       child: Text(
-                        linkUrl ?? '',
+                        snapshot.data.linkUrl ?? '',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context)
@@ -107,7 +94,7 @@ class _EsShareLinkState extends State<EsShareLink> {
                           icon: Icon(Icons.content_copy),
                           onPressed: () {
                             ClipboardManager.copyToClipBoard(
-                              linkUrl ?? '',
+                              snapshot.data.linkUrl ?? '',
                             ).then((result) {
                               Fluttertoast.showToast(
                                 msg: AppTranslations.of(context)
@@ -123,6 +110,9 @@ class _EsShareLinkState extends State<EsShareLink> {
                 SizedBox(height: 8.toHeight),
               ],
             ),
-          );
+          ),
+        );
+      },
+    );
   }
 }

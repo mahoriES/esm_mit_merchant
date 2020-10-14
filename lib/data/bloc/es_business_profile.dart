@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
@@ -11,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'es_businesses.dart';
+import 'es_link_sharing.dart';
 
 class EsBusinessProfileBloc {
   static const FILENAME = 'es_business_profile.dart';
@@ -46,6 +48,7 @@ class EsBusinessProfileBloc {
       this._esBusinessProfileState.selectedBusinessInfo =
           state.selectedBusiness;
       if (state.selectedBusiness != null) {
+        this.createShareLink();
         this._esBusinessProfileState.hasDelivery =
             state.selectedBusiness.hasDelivery;
         this._esBusinessProfileState.isOpen = state.selectedBusiness.isOpen;
@@ -71,6 +74,20 @@ class EsBusinessProfileBloc {
 
   Observable<EsBusinessProfileState> get createBusinessObservable =>
       _subjectEsBusinessProfileState.stream;
+
+  createShareLink() async {
+    _esBusinessProfileState.isCreatingLink = true;
+    _updateState();
+    _esBusinessProfileState.linkParameters =
+        EsDynamicLinkSharing().createShopLink(
+      this.esBusinessesBloc.getSelectedBusinessId(),
+      this.esBusinessesBloc.getSelectedBusinessClusterId(),
+    );
+    Uri link = await _esBusinessProfileState.linkParameters.buildUrl();
+    _esBusinessProfileState.linkUrl = link.toString();
+    _esBusinessProfileState.isCreatingLink = false;
+    _updateState();
+  }
 
   updateBusiness(EsUpdateBusinessPayload payload,
       Function onUpdateBusinessSuccess, Function onUpdateError) async {
@@ -492,6 +509,9 @@ class EsBusinessProfileBloc {
 }
 
 class EsBusinessProfileState {
+  bool isCreatingLink;
+  DynamicLinkParameters linkParameters;
+  String linkUrl;
   bool isSubmitting;
   bool isSubmitSuccess;
   bool isSubmitFailed;
@@ -505,5 +525,6 @@ class EsBusinessProfileState {
     this.isSubmitting = false;
     this.isSubmitFailed = false;
     this.isSubmitSuccess = false;
+    this.isCreatingLink = false;
   }
 }
