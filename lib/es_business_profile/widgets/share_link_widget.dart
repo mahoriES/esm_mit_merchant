@@ -1,5 +1,5 @@
-import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_business_profile.dart';
@@ -93,14 +93,16 @@ class EsShareLink extends StatelessWidget {
                         child: IconButton(
                           icon: Icon(Icons.content_copy),
                           onPressed: () {
-                            ClipboardManager.copyToClipBoard(
-                              snapshot.data.linkUrl ?? '',
-                            ).then((result) {
-                              Fluttertoast.showToast(
-                                msg: AppTranslations.of(context)
-                                    .text('Copied to Clipboard'),
-                              );
-                            });
+                            Clipboard.setData(
+                              ClipboardData(text: snapshot.data.linkUrl ?? ''),
+                            ).then(
+                              (result) {
+                                Fluttertoast.showToast(
+                                  msg: AppTranslations.of(context)
+                                      .text('Copied to Clipboard'),
+                                );
+                              },
+                            );
                           },
                         ),
                       ),
