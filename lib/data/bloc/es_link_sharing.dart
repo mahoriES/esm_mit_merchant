@@ -10,6 +10,8 @@ class EsDynamicLinkSharing {
   IosParameters _iosParameters = IosParameters(
     bundleId: 'com.esamudaay.consumer',
     appStoreId: '1532727652',
+    // We will need to update the version number as per release status.
+    // For now I have set it to 1.0.9 considerimg this feature would be included in next release.
     minimumVersion: "1.0.9",
   );
   String _uriPrefix = 'https://esamudaay.page.link';
