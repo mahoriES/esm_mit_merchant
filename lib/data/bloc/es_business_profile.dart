@@ -80,8 +80,7 @@ class EsBusinessProfileBloc {
     _updateState();
     _esBusinessProfileState.linkParameters =
         EsDynamicLinkSharing().createShopLink(
-      this.esBusinessesBloc.getSelectedBusinessId(),
-      this.esBusinessesBloc.getSelectedBusinessClusterId(),
+      businessId: this.esBusinessesBloc.getSelectedBusinessId(),
     );
     Uri link = await _esBusinessProfileState.linkParameters.buildUrl();
     _esBusinessProfileState.linkUrl = link.toString();

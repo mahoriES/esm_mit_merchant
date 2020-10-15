@@ -10,28 +10,29 @@ class EsDynamicLinkSharing {
   IosParameters _iosParameters = IosParameters(
     bundleId: 'com.esamudaay.consumer',
     appStoreId: '1532727652',
+    minimumVersion: "1.0.9",
   );
   String _uriPrefix = 'https://esamudaay.page.link';
   String _link = 'https://esamudaay.com';
 
-  DynamicLinkParameters createShopLink(String _businessId, String _clusterId) {
-    debugPrint('bId => $_businessId cid=> $_clusterId');
+  DynamicLinkParameters createShopLink({@required String businessId}) {
+    debugPrint('bId => $businessId');
 
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: _uriPrefix,
-      link: Uri.parse('$_link?businessId=$_businessId&&clusterId=$_clusterId'),
+      link: Uri.parse('$_link?businessId=$businessId'),
       androidParameters: _androidParameters,
       iosParameters: _iosParameters,
     );
     return parameters;
   }
 
-  DynamicLinkParameters createVideoLink(String videoId, String _clusterId) {
-    debugPrint('vId => $videoId cid=> $_clusterId');
+  DynamicLinkParameters createVideoLink({@required String videoId}) {
+    debugPrint('vId => $videoId');
 
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: _uriPrefix,
-      link: Uri.parse('$_link?clusterId=$_clusterId&&videoId=$videoId'),
+      link: Uri.parse('$_link?videoId=$videoId'),
       androidParameters: _androidParameters,
       iosParameters: _iosParameters,
     );
