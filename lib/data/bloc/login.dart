@@ -58,7 +58,8 @@ class LoginBloc {
         this._loginState.isSubmitFailed = false;
         this._updateState();
       } catch (error, s) {
-        print("signInWithGoogle Error"+s.toString());
+        debugPrint('SignInWithGoogleErrorCaught -> ${error.toString()}');
+        debugPrint("signInWithGoogle Error StackTrace \n"+s.toString());
         this._loginState.isSubmitFailed = true;
         this._loginState.isLoading = false;
         this._updateState();
@@ -102,7 +103,7 @@ class LoginBloc {
       var responseBody = httpResponse.body ?? '';
       //TODO: Custom sentry error
       this._authBloc.googleSignIn.signOut();
-      throw "Err";
+      throw "Err -> ${httpResponse.body}";
     }
   }
 

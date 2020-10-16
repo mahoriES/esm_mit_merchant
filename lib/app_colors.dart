@@ -18,5 +18,6 @@ class AppColors {
   static const lightBlue = const Color(0xff5091cd);
   static const offGreyish = const Color(0xff515c6f);
   static const hotPink = const Color(0xffe1517d);
+  static const appBarColor =  Colors.blue;
 
 }
