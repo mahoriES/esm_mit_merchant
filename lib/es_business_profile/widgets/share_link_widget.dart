@@ -45,9 +45,11 @@ class EsShareLink extends StatelessWidget {
                           icon: Icon(Icons.share),
                           onPressed: () {
                             EsDynamicLinkSharing().shareLink(
-                              snapshot.data.linkParameters,
-                              AppTranslations.of(context)
+                              parameters: snapshot.data.linkParameters,
+                              text: AppTranslations.of(context)
                                   .text('Share Your Store Link'),
+                              storeName: snapshot
+                                  .data.selectedBusinessInfo.businessName,
                             );
                           },
                         ),

@@ -89,6 +89,10 @@ class EsBusinessesBloc {
     return this._esBusinessesState.selectedBusinessId;
   }
 
+  getSelectedBusinessName() {
+    return this._esBusinessesState.selectedBusiness.businessName;
+  }
+
   _updateState() {
     if (!this._subjectEsBusinessesState.isClosed) {
       this._subjectEsBusinessesState.sink.add(this._esBusinessesState);

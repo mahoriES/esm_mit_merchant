@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
+import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_link_sharing.dart';
 import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/data/model/es_video_models/es_video_list.dart';
@@ -190,15 +191,21 @@ class _EsVideoPageState extends State<EsVideoPage> {
                                 size: 20.toFont,
                               ),
                               onPressed: () async {
+                                EsBusinessesBloc _esBusinessesBloc =
+                                    Provider.of<EsBusinessesBloc>(
+                                  context,
+                                  listen: false,
+                                );
                                 DynamicLinkParameters linkParameters =
                                     EsDynamicLinkSharing().createVideoLink(
-                                  videoId: snapshot
-                                      .data.filteredVideosList[index].postId,
-                                );
+                                        videoId: snapshot.data
+                                            .filteredVideosList[index].postId);
                                 await EsDynamicLinkSharing().shareLink(
-                                  linkParameters,
-                                  AppTranslations.of(context)
+                                  parameters: linkParameters,
+                                  text: AppTranslations.of(context)
                                       .text('Share Link For this Video'),
+                                  storeName: _esBusinessesBloc
+                                      .getSelectedBusinessName(),
                                 );
                               },
                             ),
