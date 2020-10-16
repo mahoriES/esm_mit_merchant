@@ -1,7 +1,7 @@
 name: foore
 description: Foore mobile app
 
-version: 0.1.1+96
+version: 0.1.1+97
 
 environment:
   sdk: '>=2.8.0 <3.0.0'
