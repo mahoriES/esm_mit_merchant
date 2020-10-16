@@ -12,6 +12,8 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>mobile</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Foore needs access to contacts to send invites</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
