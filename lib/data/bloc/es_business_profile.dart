@@ -7,7 +7,6 @@ import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:foore/data/model/es_media.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -31,6 +30,8 @@ class EsBusinessProfileBloc {
   final phoneNumberEditingControllers = TextEditingController();
   final notificationPhoneEditingControllers = TextEditingController();
   final notificationEmailEditingControllers = TextEditingController();
+  final noticeEditController = TextEditingController();
+  
 
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
@@ -63,6 +64,7 @@ class EsBusinessProfileBloc {
             state.selectedBusiness.dBusinessPrettyAddress;
         this.descriptionEditController.text =
             state.selectedBusiness.dBusinessDescription;
+        this.noticeEditController.text = state.selectedBusiness.dBusinessNotice;
         this._esBusinessProfileState.currentLocationPoint =
             state.selectedBusiness.address != null
                 ? state.selectedBusiness.address.locationPoint
@@ -309,6 +311,12 @@ class EsBusinessProfileBloc {
     this.updateBusiness(payload, onSuccess, onFail);
   }
 
+  updateNotice(onSuccess, onFail) {
+    var payload =
+        EsUpdateBusinessPayload(notice: this.noticeEditController.text);
+    this.updateBusiness(payload, onSuccess, onFail);
+  }
+
   updateUpiAddress(onSuccess, onFail) {
     var payload =
         EsUpdateBusinessPayload(upiAddress: this.upiAddressEditController.text);
@@ -408,8 +416,10 @@ class EsBusinessProfileBloc {
   }
 
   Future<File> _pickImageFromGallery() async {
-    final pickedFile =
-        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+      imageQuality: 25,
+    );
     var file = new File(pickedFile.path);
     return file;
   }
