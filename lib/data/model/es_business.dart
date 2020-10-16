@@ -56,6 +56,7 @@ class EsBusinessInfo {
   String businessId;
   String businessName;
   String description;
+  String notice;
   int status;
   bool isOpen;
   EsAddress address;
@@ -70,6 +71,13 @@ class EsBusinessInfo {
   get dBusinessName {
     if (businessName != null) {
       return businessName;
+    }
+    return '';
+  }
+
+  get dBusinessNotice {
+    if (notice != null) {
+      return notice;
     }
     return '';
   }
@@ -191,6 +199,7 @@ class EsBusinessInfo {
   EsBusinessInfo(
       {this.businessId,
       this.businessName,
+      this.notice,
       this.status,
       this.isOpen,
       this.address,
@@ -207,6 +216,7 @@ class EsBusinessInfo {
     businessId = json['business_id'];
     businessName = json['business_name'];
     description = json['description'];
+    notice = json['notice'];
     status = json['status'];
     isOpen = json['is_open'];
     address = json['address'] != null
@@ -231,8 +241,6 @@ class EsBusinessInfo {
         ? new EsBusinessPaymentInfo.fromJson(json['payment_info'])
         : null;
 
-    //"notification_info":{"notification_emails":null,"notification_phones":null,"notify_via_email":false,"notify_via_phone":false}
-
     notificationInfo = json['notification_info'] != null
         ? new EsBusinessNotificationInfo.fromJson(json['notification_info'])
         : null;
@@ -243,6 +251,7 @@ class EsBusinessInfo {
     data['business_id'] = this.businessId;
     data['business_name'] = this.businessName;
     data['description'] = this.description;
+    data['notice'] = this.notice;
     data['status'] = this.status;
     data['is_open'] = this.isOpen;
     if (this.address != null) {
@@ -373,6 +382,7 @@ class EsUpdateBusinessPayload {
   bool hasDelivery;
   EsCluster cluster;
   String description;
+  String notice;
   String upiAddress;
   bool upiStatus;
   List<String> notificationEmails;
@@ -392,6 +402,7 @@ class EsUpdateBusinessPayload {
       this.hasDelivery,
       this.cluster,
       this.description,
+      this.notice,
       this.upiAddress,
       this.upiStatus,
       this.notificationEmails,
@@ -421,6 +432,7 @@ class EsUpdateBusinessPayload {
         ? new EsCluster.fromJson(json['cluster'])
         : null;
     description = json['description'];
+    notice = json['notice'];
   }
 
   Map<String, dynamic> toJson() {
@@ -465,6 +477,10 @@ class EsUpdateBusinessPayload {
 
     if (this.description != null) {
       data['description'] = this.description;
+    }
+
+    if (this.notice != null) {
+      data['notice'] = this.notice;
     }
 
     if (this.upiAddress != null) {
