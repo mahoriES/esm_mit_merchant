@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foore/app_translations.dart';
 import 'package:foore/auth_guard/auth_guard.dart';
+import 'package:foore/data/bloc/es_link_sharing.dart';
 import 'package:foore/data/bloc/people.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/es_business_profile/es_business_profile.dart';
@@ -95,9 +96,12 @@ class _EsHomePageState extends State<EsHomePage> {
                 AppTranslations.of(context).text("reviews_page_title"),
               ),
             )
-          : _selectedIndex == 2
-              ? AppBar(title: EsSelectBusiness(null, allowChange: false))
-              : AppBar(title: EsSelectBusiness(null, allowChange: true)),
+          : AppBar(
+              title: EsSelectBusiness(
+                null,
+                allowChange: _selectedIndex == 2 ? false : true,
+              ),
+            ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
