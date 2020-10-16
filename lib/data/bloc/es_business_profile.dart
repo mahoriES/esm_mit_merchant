@@ -29,6 +29,8 @@ class EsBusinessProfileBloc {
   final phoneNumberEditingControllers = TextEditingController();
   final notificationPhoneEditingControllers = TextEditingController();
   final notificationEmailEditingControllers = TextEditingController();
+  final noticeEditController = TextEditingController();
+  
 
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
@@ -60,6 +62,7 @@ class EsBusinessProfileBloc {
             state.selectedBusiness.dBusinessPrettyAddress;
         this.descriptionEditController.text =
             state.selectedBusiness.dBusinessDescription;
+        this.noticeEditController.text = state.selectedBusiness.dBusinessNotice;
         this._esBusinessProfileState.currentLocationPoint =
             state.selectedBusiness.address != null
                 ? state.selectedBusiness.address.locationPoint
@@ -290,6 +293,12 @@ class EsBusinessProfileBloc {
   updateDescription(onSuccess, onFail) {
     var payload = EsUpdateBusinessPayload(
         description: this.descriptionEditController.text);
+    this.updateBusiness(payload, onSuccess, onFail);
+  }
+
+  updateNotice(onSuccess, onFail) {
+    var payload =
+        EsUpdateBusinessPayload(notice: this.noticeEditController.text);
     this.updateBusiness(payload, onSuccess, onFail);
   }
 

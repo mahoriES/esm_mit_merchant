@@ -10,9 +10,10 @@ class EsEditBaseTextPage extends StatefulWidget {
   final String labelText;
   final Function onSave;
   final TextEditingController textEditingController;
+  final int maxLength;
 
   EsEditBaseTextPage(this.esBusinessProfileBloc, this.title, this.labelText,
-      this.textEditingController, this.onSave);
+      this.textEditingController, this.onSave, this.maxLength);
 
   @override
   EsEditBaseTextPageState createState() => EsEditBaseTextPageState();
@@ -98,6 +99,7 @@ class EsEditBaseTextPageState extends State<EsEditBaseTextPage>
                         right: 20,
                       ),
                       child: TextFormField(
+                        maxLength: widget.maxLength,
                         controller: widget.textEditingController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
