@@ -116,7 +116,7 @@ class CompleteVerificationBloc {
               .google_location_verification_done_from_app,
           value: true);
       //////////navigate away
-      Navigator.pushReplacementNamed(context, Router.homeRoute);
+      Navigator.pushReplacementNamed(context, AppRouter.homeRoute);
     } else {
       this._completeVerificationState.isSubmitFailed = true;
       //TODO: Custom sentry error
