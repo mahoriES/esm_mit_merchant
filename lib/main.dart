@@ -12,7 +12,7 @@ import 'data/bloc/analytics.dart';
 import 'data/bloc/es_businesses.dart';
 import 'data/bloc/login.dart';
 import 'data/bloc/onboarding_guard.dart';
-import 'router.dart';
+import 'package:foore/router.dart';
 import 'data/bloc/app_translations_bloc.dart';
 import 'data/bloc/auth.dart';
 import 'data/http_service.dart';
@@ -117,7 +117,7 @@ class _ReviewAppState extends State<ReviewApp>
   @override
   Widget build(BuildContext context) {
     final appTranslationsBloc = Provider.of<AppTranslationsBloc>(context);
-    final router = Router(
+    final router = AppRouter(
         httpServiceBloc: Provider.of<HttpService>(context),
         authBloc: Provider.of<AuthBloc>(context),
         esBusinessesBloc: Provider.of<EsBusinessesBloc>(context));
@@ -130,7 +130,8 @@ class _ReviewAppState extends State<ReviewApp>
           }
           return MaterialApp(
             title: 'Foore',
-            initialRoute: Router.homeRoute,
+            debugShowCheckedModeBanner: false,
+            initialRoute: AppRouter.homeRoute,
             onGenerateRoute: router.routeGenerator,
             localizationsDelegates: [
               snapshot.data.localeDelegate,

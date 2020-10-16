@@ -4,6 +4,7 @@ import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_auth.dart';
 import 'package:foore/data/model/es_profiles.dart';
 import 'package:foore/data/model/login.dart';
+import 'package:foore/esdy_print.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -13,6 +14,11 @@ import 'analytics.dart';
 enum AuthType { Google, Foore }
 
 class AuthBloc {
+  static const String CLASSNAME = 'AuthBloc';
+  static const String FILENAME = 'auth.dart';
+  final EsdyPrint esdyPrint =
+      EsdyPrint(classname: CLASSNAME, filename: FILENAME);
+
   GoogleSignIn googleSignIn = GoogleSignIn(
     scopes: <String>[
       'https://www.googleapis.com/auth/userinfo.email',
@@ -86,16 +92,20 @@ class AuthBloc {
   }
 
   logout({bool esLogout = false}) {
+    if (esLogout) {
+      this.esLogout();
+      //clearSharedPreferences();
+    }
     this.authState.authData = null;
     this.authState.isLoading = false;
     this._updateState();
     this.googleSignIn.signOut();
     this.foAnalytics.resetUserIdentity();
 
-    if (esLogout) {
-      this.esLogout();
-      clearSharedPreferences();
-    }
+    //if (esLogout) {
+    //  this.esLogout();
+    //  clearSharedPreferences();
+    //}
   }
 
   clearSharedPreferences() async {
@@ -164,32 +174,48 @@ class AuthBloc {
       'eSamudaayMerchantProfileInformation';
 
   esLogin(EsAuthData esAuthData, EsProfile esMerchantProfile) {
+    esdyPrint.debug("esLogin >>");
     this.authState.esAuthData = esAuthData;
+    esdyPrint.debug("Token ${this.authState.esMerchantJwtToken}");
+
     this.authState.esMerchantProfile = esMerchantProfile;
-    this._pushNotifications.subscribeForCurrentUser(HttpService(this));
+
     this.authState.isEsLoading = false;
+    esdyPrint.debug("Token2 ${this.authState.esMerchantJwtToken}");
     this._updateState();
+    esdyPrint.debug("Token3 ${this.authState.esMerchantJwtToken}");
     this._storeEsAuthState();
+    esdyPrint.debug("Token4 ${this.authState.esMerchantJwtToken}");
+    if (this.authState.esMerchantJwtToken != null) {
+      //For new users who do not have profile yet,
+      //this was causing trouble
+      this._pushNotifications.subscribeForCurrentUser(HttpService(this));
+    }
   }
 
   esLogoutSilently() {
+    esdyPrint.debug("esLogoutSilently >>");
     this.authState.esAuthData = null;
     this.authState.esMerchantProfile = null;
     this.authState.isEsLoading = false;
+    clearSharedPreferences();
     this._updateState();
-    this._storeEsAuthState();
+    //this._storeEsAuthState();
   }
 
   esLogout() {
+    esdyPrint.debug("esLogout >>");
     this.authState.esAuthData = null;
     this.authState.isEsLoading = false;
     this.authState.esMerchantProfile = null;
     this._pushNotifications.unsubscribeForCurrentUser(esUnsubscribe: true);
+    clearSharedPreferences();
     this._updateState();
-    this._storeEsAuthState();
+    //this._storeEsAuthState();
   }
 
   _storeEsAuthState() async {
+    esdyPrint.debug("_storeEsAuthState >>");
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (this.authState.esAuthData != null) {
       await sharedPreferences.setString(
@@ -210,6 +236,7 @@ class AuthBloc {
   }
 
   _loadEsAuthState() async {
+    esdyPrint.debug("_loadEsAuthState >>");
     this.authState.isEsLoading = true;
     this._updateState();
     SharedPreferences prefs = await SharedPreferences.getInstance();

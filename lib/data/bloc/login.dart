@@ -53,7 +53,7 @@ class LoginBloc {
         this._authBloc.login(loginInfo, authType: AuthType.Google);
         print("signInWithGoogle Refreshing backend");
         refreshBackend();
-        Navigator.of(context).pushNamedAndRemoveUntil(Router.homeRoute,(Route<dynamic> route) => false);
+        Navigator.of(context).pushNamedAndRemoveUntil(AppRouter.homeRoute,(Route<dynamic> route) => false);
         this._loginState.isLoading = false;
         this._loginState.isSubmitFailed = false;
         this._updateState();
@@ -141,7 +141,7 @@ class LoginBloc {
         print(httpResponse.body);
         this._authBloc.login(AuthInfo.fromJson(json.decode(httpResponse.body)));
         refreshBackend();
-        Navigator.of(context).pushNamedAndRemoveUntil(Router.homeRoute,(Route<dynamic> route) => false);
+        Navigator.of(context).pushNamedAndRemoveUntil(AppRouter.homeRoute,(Route<dynamic> route) => false);
       } else {
         this._loginState.isSubmitOtp = false;
       }

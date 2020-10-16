@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/login.dart';
 import 'package:foore/data/http_service.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../app_translations.dart';
 
