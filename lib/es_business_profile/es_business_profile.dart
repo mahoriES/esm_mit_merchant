@@ -519,6 +519,9 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                     getDescriptionWidget(businessInfo),
                     getBaseHeaderWidget('Address'),
                     getAddressWidget(businessInfo),
+                    getBaseHeaderWidget('Notice'),
+                    getNoticeWidget(businessInfo),
+                    Divider(thickness: 2),
                     EsShareLink(esBusinessProfileBloc),
                     getHeaderWithSwitchWidget(
                         'UPI Payment',
