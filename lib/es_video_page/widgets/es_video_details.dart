@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/data/model/es_video_models/es_video_list.dart';
 import 'package:foore/es_video_page/widgets/update_details_dialogue.dart';
+import 'package:foore/services/sizeconfig.dart';
 import 'package:provider/provider.dart';
 
 class EsVideoDetailsWidget extends StatefulWidget {
@@ -30,6 +31,7 @@ class _EsVideoDetailsWidgetState extends State<EsVideoDetailsWidget> {
     return PopupMenuButton(
       icon: Icon(
         Icons.more_vert,
+        size: 25.toFont,
       ),
       onSelected: (v) async {
         if (v == UpdateVideoAction.UPDATE_DETAILS) {

@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_business_profile.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
-
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:foore/es_business_profile/es_business_image_list.dart';
-
 import 'package:foore/es_business_profile/es_edit_text_generic.dart';
-import 'package:foore/widgets/es_select_business.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-
 import 'es_edit_business_address.dart';
+import 'widgets/share_link_widget.dart';
 
 class EsBusinessProfile extends StatefulWidget {
   static const routeName = '/es_business_profile';
@@ -38,57 +34,57 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
   editName() async {
     await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => EsEditBaseTextPage(
-              this.esBusinessProfileBloc,
-              'Update business name',
-              'Business name',
-              this.esBusinessProfileBloc.nameEditController,
-              this.esBusinessProfileBloc.updateName,
-            )));
+            this.esBusinessProfileBloc,
+            'Update business name',
+            'Business name',
+            this.esBusinessProfileBloc.nameEditController,
+            this.esBusinessProfileBloc.updateName,
+            64)));
   }
 
   addNotificationPhone() async {
     await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => new EsEditBaseTextPage(
-              this.esBusinessProfileBloc,
-              'Add Notification Phone',
-              'Phone number',
-              this.esBusinessProfileBloc.notificationPhoneEditingControllers,
-              this.esBusinessProfileBloc.addNotificationPhone,
-            )));
+            this.esBusinessProfileBloc,
+            'Add Notification Phone',
+            '10 digit Mobile number',
+            this.esBusinessProfileBloc.notificationPhoneEditingControllers,
+            this.esBusinessProfileBloc.addNotificationPhone,
+            10)));
   }
 
   addNotificationEmail() async {
     await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => new EsEditBaseTextPage(
-              this.esBusinessProfileBloc,
-              'Add Notification Email',
-              'Email ID',
-              this.esBusinessProfileBloc.notificationEmailEditingControllers,
-              this.esBusinessProfileBloc.addNotificationEmail,
-            )));
+            this.esBusinessProfileBloc,
+            'Add Notification Email',
+            'Email ID',
+            this.esBusinessProfileBloc.notificationEmailEditingControllers,
+            this.esBusinessProfileBloc.addNotificationEmail,
+            127)));
   }
 
   editUpiAddress() async {
     await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => EsEditBaseTextPage(
-              this.esBusinessProfileBloc,
-              'Update UPI ID',
-              'UPI ID',
-              this.esBusinessProfileBloc.upiAddressEditController,
-              this.esBusinessProfileBloc.updateUpiAddress,
-            )));
+            this.esBusinessProfileBloc,
+            'Update UPI ID',
+            'UPI ID',
+            this.esBusinessProfileBloc.upiAddressEditController,
+            this.esBusinessProfileBloc.updateUpiAddress,
+            127)));
   }
 
   addPhone() async {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EsEditBaseTextPage(
-          this.esBusinessProfileBloc,
-          'Add phone number',
-          'Phone number',
-          this.esBusinessProfileBloc.phoneNumberEditingControllers,
-          this.esBusinessProfileBloc.addPhone,
-        ),
+            this.esBusinessProfileBloc,
+            'Add Mobile number',
+            '10 digit Mobile number',
+            this.esBusinessProfileBloc.phoneNumberEditingControllers,
+            this.esBusinessProfileBloc.addPhone,
+            10),
       ),
     );
   }
@@ -103,12 +99,26 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EsEditBaseTextPage(
-          this.esBusinessProfileBloc,
-          'Update business description',
-          'Business description',
-          this.esBusinessProfileBloc.descriptionEditController,
-          this.esBusinessProfileBloc.updateDescription,
-        ),
+            this.esBusinessProfileBloc,
+            'Update business description',
+            'Business description',
+            this.esBusinessProfileBloc.descriptionEditController,
+            this.esBusinessProfileBloc.updateDescription,
+            512),
+      ),
+    );
+  }
+
+  addNotice() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EsEditBaseTextPage(
+            this.esBusinessProfileBloc,
+            'Update business notice',
+            'Delivery will be delayed due to rain..',
+            this.esBusinessProfileBloc.noticeEditController,
+            this.esBusinessProfileBloc.updateNotice,
+            127),
       ),
     );
   }
@@ -302,7 +312,7 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
     );
   }
 
-  Widget getAddressWidget(businessInfo) {
+  Widget getAddressWidget(EsBusinessInfo businessInfo) {
     return Container(
       child: businessInfo.dBusinessPrettyAddress == ''
           ? Row(
@@ -342,7 +352,7 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
     );
   }
 
-  Widget getDescriptionWidget(businessInfo) {
+  Widget getDescriptionWidget(EsBusinessInfo businessInfo) {
     return Container(
       child: businessInfo.dBusinessDescription == ''
           ? Row(
@@ -371,6 +381,46 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                   ),
                   IconButton(
                     onPressed: addDescription,
+                    icon: Icon(
+                      Icons.edit,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  )
+                ],
+              ),
+            ),
+    );
+  }
+
+  Widget getNoticeWidget(EsBusinessInfo businessInfo) {
+    return Container(
+      child: businessInfo.dBusinessNotice == ''
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: addNotice,
+                  child: Text(
+                    "+ Add notice",
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            )
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      businessInfo.dBusinessNotice,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: addNotice,
                     icon: Icon(
                       Icons.edit,
                       color: Theme.of(context).primaryColor,
@@ -469,7 +519,10 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                     getDescriptionWidget(businessInfo),
                     getBaseHeaderWidget('Address'),
                     getAddressWidget(businessInfo),
+                    getBaseHeaderWidget('Notice'),
+                    getNoticeWidget(businessInfo),
                     Divider(thickness: 2),
+                    EsShareLink(esBusinessProfileBloc),
                     getHeaderWithSwitchWidget(
                         'UPI Payment',
                         businessInfo.dBusinessPaymentStatus,

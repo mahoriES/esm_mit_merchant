@@ -58,10 +58,10 @@ class EsVideoBloc {
     }
   }
 
-  filterVideosByBuisness(String buisnessID) {
+  filterVideosByBuisness(String businessID) {
     esVideoState.filteredVideosList = [];
     esVideoState?.totalVideosList?.results?.forEach((video) {
-      if (video.businessId == buisnessID)
+      if (video.businessId == businessID)
         esVideoState.filteredVideosList.add(video);
     });
     esVideoState.videoFeedState = VideoFeedState.SUCCESS;

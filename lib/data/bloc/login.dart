@@ -1,11 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/login.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 import '../../router.dart';
 import 'auth.dart';
 
@@ -29,7 +27,6 @@ class LoginBloc {
   Observable<LoginState> get loginStateObservable => _subjectLoginState.stream;
 
   Future<void> signInWithGoogle(BuildContext context) async {
-    
     if (this._loginState.isLoading == false) {
       this._loginState.isLoading = true;
       this._loginState.isSubmitFailed = false;
@@ -53,17 +50,19 @@ class LoginBloc {
         this._authBloc.login(loginInfo, authType: AuthType.Google);
         print("signInWithGoogle Refreshing backend");
         refreshBackend();
-        Navigator.of(context).pushNamedAndRemoveUntil(AppRouter.homeRoute,(Route<dynamic> route) => false);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.homeRoute, (Route<dynamic> route) => false);
         this._loginState.isLoading = false;
         this._loginState.isSubmitFailed = false;
         this._updateState();
       } catch (error, s) {
-        print("signInWithGoogle Error"+s.toString());
+        debugPrint('SignInWithGoogleErrorCaught -> ${error.toString()}');
+        debugPrint("signInWithGoogle Error StackTrace \n" + s.toString());
         this._loginState.isSubmitFailed = true;
         this._loginState.isLoading = false;
         this._updateState();
         //TODO: Custom sentry error
-        
+
       }
     }
   }
@@ -102,7 +101,7 @@ class LoginBloc {
       var responseBody = httpResponse.body ?? '';
       //TODO: Custom sentry error
       this._authBloc.googleSignIn.signOut();
-      throw "Err";
+      throw "Err -> ${httpResponse.body}";
     }
   }
 
@@ -141,7 +140,8 @@ class LoginBloc {
         print(httpResponse.body);
         this._authBloc.login(AuthInfo.fromJson(json.decode(httpResponse.body)));
         refreshBackend();
-        Navigator.of(context).pushNamedAndRemoveUntil(AppRouter.homeRoute,(Route<dynamic> route) => false);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.homeRoute, (Route<dynamic> route) => false);
       } else {
         this._loginState.isSubmitOtp = false;
       }

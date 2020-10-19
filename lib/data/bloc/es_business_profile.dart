@@ -1,20 +1,23 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:foore/data/model/es_media.dart';
-
+import 'package:foore/widgets/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
-
+import 'package:image_cropper/image_cropper.dart';
 import 'es_businesses.dart';
+import 'es_link_sharing.dart';
 
 class EsBusinessProfileBloc {
   static const FILENAME = 'es_business_profile.dart';
   static const CLASSNAME = 'EsBusinessProfileBloc';
+
   static void esdyPrint(String message) {
     debugPrint(FILENAME + " : " + CLASSNAME + " : " + message);
   }
@@ -29,6 +32,8 @@ class EsBusinessProfileBloc {
   final phoneNumberEditingControllers = TextEditingController();
   final notificationPhoneEditingControllers = TextEditingController();
   final notificationEmailEditingControllers = TextEditingController();
+  final noticeEditController = TextEditingController();
+  
 
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
@@ -46,6 +51,7 @@ class EsBusinessProfileBloc {
       this._esBusinessProfileState.selectedBusinessInfo =
           state.selectedBusiness;
       if (state.selectedBusiness != null) {
+        this.createShareLink();
         this._esBusinessProfileState.hasDelivery =
             state.selectedBusiness.hasDelivery;
         this._esBusinessProfileState.isOpen = state.selectedBusiness.isOpen;
@@ -60,6 +66,7 @@ class EsBusinessProfileBloc {
             state.selectedBusiness.dBusinessPrettyAddress;
         this.descriptionEditController.text =
             state.selectedBusiness.dBusinessDescription;
+        this.noticeEditController.text = state.selectedBusiness.dBusinessNotice;
         this._esBusinessProfileState.currentLocationPoint =
             state.selectedBusiness.address != null
                 ? state.selectedBusiness.address.locationPoint
@@ -71,6 +78,19 @@ class EsBusinessProfileBloc {
 
   Observable<EsBusinessProfileState> get createBusinessObservable =>
       _subjectEsBusinessProfileState.stream;
+
+  createShareLink() async {
+    _esBusinessProfileState.isCreatingLink = true;
+    _updateState();
+    _esBusinessProfileState.linkParameters =
+        EsDynamicLinkSharing().createShopLink(
+      businessId: this.esBusinessesBloc.getSelectedBusinessId(),
+    );
+    Uri link = await _esBusinessProfileState.linkParameters.buildUrl();
+    _esBusinessProfileState.linkUrl = link.toString();
+    _esBusinessProfileState.isCreatingLink = false;
+    _updateState();
+  }
 
   updateBusiness(EsUpdateBusinessPayload payload,
       Function onUpdateBusinessSuccess, Function onUpdateError) async {
@@ -293,6 +313,12 @@ class EsBusinessProfileBloc {
     this.updateBusiness(payload, onSuccess, onFail);
   }
 
+  updateNotice(onSuccess, onFail) {
+    var payload =
+        EsUpdateBusinessPayload(notice: this.noticeEditController.text);
+    this.updateBusiness(payload, onSuccess, onFail);
+  }
+
   updateUpiAddress(onSuccess, onFail) {
     var payload =
         EsUpdateBusinessPayload(upiAddress: this.upiAddressEditController.text);
@@ -392,8 +418,10 @@ class EsBusinessProfileBloc {
   }
 
   Future<File> _pickImageFromGallery() async {
-    final pickedFile =
-        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+      imageQuality: 25,
+    );
     var file = new File(pickedFile.path);
     return file;
   }
@@ -426,15 +454,19 @@ class EsBusinessProfileBloc {
     try {
       var file = await _pickImageFromGallery();
       if (file != null) {
-        final uploadableFile = EsUploadableFile(file);
+        final croppedImageFile =
+            await ImageCropperView.getSquareCroppedImage(file);
+        if (croppedImageFile == null) return;
+        final uploadableFile = EsUploadableFile(croppedImageFile);
         this
             ._esBusinessProfileState
             .uploadingImages
-            .add(EsUploadableFile(file));
+            .add(EsUploadableFile(croppedImageFile));
         this._updateState();
         try {
-          var respnose =
-              await this.httpService.esUpload(EsApiPaths.uploadPhoto, file);
+          var respnose = await this
+              .httpService
+              .esUpload(EsApiPaths.uploadPhoto, croppedImageFile);
           var uploadImageResponse =
               EsUploadImageResponse.fromJson(json.decode(respnose));
 
@@ -492,6 +524,9 @@ class EsBusinessProfileBloc {
 }
 
 class EsBusinessProfileState {
+  bool isCreatingLink;
+  DynamicLinkParameters linkParameters;
+  String linkUrl;
   bool isSubmitting;
   bool isSubmitSuccess;
   bool isSubmitFailed;
@@ -505,5 +540,6 @@ class EsBusinessProfileState {
     this.isSubmitting = false;
     this.isSubmitFailed = false;
     this.isSubmitSuccess = false;
+    this.isCreatingLink = false;
   }
 }

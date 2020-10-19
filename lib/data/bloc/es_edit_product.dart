@@ -7,6 +7,7 @@ import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/data/model/es_media.dart';
 import 'package:foore/data/model/es_product.dart';
+import 'package:foore/widgets/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -472,8 +473,10 @@ class EsEditProductBloc {
   }
 
   Future<File> _pickImageFromGallery() async {
-    final pickedFile =
-        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+      imageQuality: 25,
+    );
     final file = new File(pickedFile.path);
     return file;
   }
@@ -482,12 +485,19 @@ class EsEditProductBloc {
     try {
       var file = await _pickImageFromGallery();
       if (file != null) {
-        final uploadableFile = EsUploadableFile(file);
-        this._esEditProductState.uploadingImages.add(EsUploadableFile(file));
+        final croppedImageFile =
+            await ImageCropperView.getSquareCroppedImage(file);
+        if (croppedImageFile == null) return;
+        final uploadableFile = EsUploadableFile(croppedImageFile);
+        this
+            ._esEditProductState
+            .uploadingImages
+            .add(EsUploadableFile(croppedImageFile));
         this._updateState();
         try {
-          var respnose =
-              await this.httpService.esUpload(EsApiPaths.uploadPhoto, file);
+          var respnose = await this
+              .httpService
+              .esUpload(EsApiPaths.uploadPhoto, croppedImageFile);
           var uploadImageResponse =
               EsUploadImageResponse.fromJson(json.decode(respnose));
 
@@ -573,12 +583,19 @@ class EsEditProductBloc {
     try {
       var file = await _pickImageFromGallery();
       if (file != null) {
-        final uploadableFile = EsUploadableFile(file);
-        this._esEditProductState.uploadingImages.add(EsUploadableFile(file));
+        final croppedImageFile =
+            await ImageCropperView.getSquareCroppedImage(file);
+        if (croppedImageFile == null) return;
+        final uploadableFile = EsUploadableFile(croppedImageFile);
+        this
+            ._esEditProductState
+            .uploadingImages
+            .add(EsUploadableFile(croppedImageFile));
         this._updateState();
         try {
-          var respnose =
-              await this.httpService.esUpload(EsApiPaths.uploadPhoto, file);
+          var respnose = await this
+              .httpService
+              .esUpload(EsApiPaths.uploadPhoto, croppedImageFile);
           var uploadImageResponse =
               EsUploadImageResponse.fromJson(json.decode(respnose));
 
@@ -626,9 +643,11 @@ class EsEditProductState {
   EsSku currentSku;
 
   int get currentProductId => currentProduct?.productId;
+
   int get currentSkuId => currentSku?.skuId;
 
   bool get isNewProduct => currentProduct == null;
+
   bool get isNewSku => currentSku == null;
 
   EsEditProductState();

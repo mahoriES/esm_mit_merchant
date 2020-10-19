@@ -21,20 +21,20 @@ class CreateVideoDetailsPayload {
   String title;
   String videoId;
   String videoUrl;
-  String buisnessId;
+  String businessId;
 
   CreateVideoDetailsPayload(
     this.title,
     this.videoId,
     this.videoUrl,
-    this.buisnessId,
+    this.businessId,
   );
 
   Map<String, dynamic> toJson() {
     return {
       "post_type": "video",
       "title": this.title,
-      "business_id": this.buisnessId,
+      "business_id": this.businessId,
       "content": {
         "video": {
           "video_id": this.videoId,
