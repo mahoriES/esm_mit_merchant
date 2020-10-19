@@ -73,8 +73,9 @@ class _EsOrderDetailsChargesComponentState
             onTap: () async {
               var selectedCharge = await showDialog(
                 context: context,
-                barrierDismissible: false,
+                barrierDismissible: true,
                 builder: (context) => AdditionalChargeDialogue(
+                  dialogActionType: 0,
                   alreadySelectedCharges: additionalChargesList,
                 ),
               );

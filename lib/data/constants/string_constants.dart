@@ -1,8 +1,9 @@
 class StringConstants {
   static const List<String> additionalChargesStrings = [
-    'Packaging Charge',
-    'Service Charge',
-    'Late Night Charge'
+    'Delivery Charges',
+    'Packing Charges',
+    'Services Charges',
+    'Extra Charges'
   ];
 
   static final callUrlLauncher = (String number) => 'tel:$number';
