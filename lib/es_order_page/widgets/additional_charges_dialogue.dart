@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:foore/app_colors.dart';
-import 'package:foore/buttons/fo_submit_button.dart';
-import 'package:foore/data/constants/string_constants.dart';
+import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/services/sizeconfig.dart';
-import 'package:foore/services/validation.dart';
+import 'order_details_charges_component.dart';
 
 class AdditionalChargeDialogue extends StatefulWidget {
-  final Map<String, double> alreadySelectedCharges;
+  final List<String> availableChargesOptions;
   final int dialogActionType;
   final String toBeEditedChargeName;
 
   AdditionalChargeDialogue({
-    @required this.alreadySelectedCharges,
     @required this.dialogActionType,
+    this.availableChargesOptions,
     this.toBeEditedChargeName,
   });
 
@@ -24,14 +23,13 @@ class AdditionalChargeDialogue extends StatefulWidget {
 class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
   FocusNode focusNode = new FocusNode();
   int dropdownValue;
-  Map<String, double> selectedCharges;
   TextEditingController priceController = new TextEditingController();
   GlobalKey<FormState> formKey = new GlobalKey();
 
   @override
   void initState() {
     dropdownValue = 0;
-    selectedCharges = widget.alreadySelectedCharges ?? {};
+    //selectedCharges = widget.alreadySelectedCharges ?? {};
     super.initState();
   }
 
@@ -46,7 +44,7 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
   Widget build(BuildContext context) {
     String titleText = widget.dialogActionType == 0
         ? 'Add a Charge'
-        : 'Add ${widget.toBeEditedChargeName}';
+        : 'Edit ${AdditionChargesMetaDataGenerator.friendlyChargeNameFromKeyValue(widget.toBeEditedChargeName)}';
     return GestureDetector(
       onTap: () {
         focusNode?.unfocus();
@@ -72,7 +70,8 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
                 children: [
                   Text(
                     titleText,
-                    style: TextStyle(color: AppColors.blackTextColor,fontSize: 20.toFont),
+                    style: TextStyle(
+                        color: AppColors.blackTextColor, fontSize: 20.toFont),
                   ),
                   fineSeparator,
                   Row(
@@ -82,7 +81,7 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
                           child: widget.dialogActionType == 0
                               ? buildDropdownMenu()
                               : editChargeNameLabel),
-                      Expanded(flex: 10,child: SizedBox.shrink()),
+                      Expanded(flex: 10, child: SizedBox.shrink()),
                       Expanded(
                           flex: 30,
                           child: TextField(
@@ -93,16 +92,32 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
                               decoration: InputDecoration(
                                 hintText: 'Amount',
                                 contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 8.toWidth, vertical: 8.toHeight),
+                                    horizontal: 8.toWidth,
+                                    vertical: 8.toHeight),
                               ),
                               textAlign: TextAlign.center)),
                     ],
                   ),
                   Row(
                     children: [
-                      Expanded(child: buildDialogActionButton(0, (){})),
-                      SizedBox(width: 20.toWidth,),
-                      Expanded(child: buildDialogActionButton(1, (){Navigator.pop(context);})),
+                      Expanded(
+                          child: buildDialogActionButton(0, () {
+                        Navigator.pop(
+                            context,
+                            AdditionalChargesDetails(
+                                chargeName: widget.dialogActionType == 0
+                                    ? widget
+                                        .availableChargesOptions[dropdownValue]
+                                    : widget.toBeEditedChargeName,
+                                value: int.tryParse(priceController.text)*100));
+                      })),
+                      SizedBox(
+                        width: 20.toWidth,
+                      ),
+                      Expanded(
+                          child: buildDialogActionButton(1, () {
+                        Navigator.pop(context);
+                      })),
                     ],
                   ),
                 ],
@@ -115,7 +130,8 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
   }
 
   Widget get fineSeparator {
-    return Padding(padding: EdgeInsets.symmetric(vertical: 15.toHeight),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 15.toHeight),
       child: Container(
         height: 0.3.toHeight,
         color: AppColors.offGreyish,
@@ -129,12 +145,13 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
       isExpanded: true,
       value: dropdownValue,
       items: List.generate(
-        StringConstants.additionalChargesStrings.length,
+        widget.availableChargesOptions.length,
         (index) => DropdownMenuItem(
           value: index,
           child: FittedBox(
             child: Text(
-              StringConstants.additionalChargesStrings[index],
+              AdditionChargesMetaDataGenerator.friendlyChargeNameFromKeyValue(
+                  widget.availableChargesOptions[index]),
             ),
           ),
         ),
@@ -147,7 +164,9 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
 
   Widget get editChargeNameLabel {
     return Text(
-      widget.toBeEditedChargeName??'Unknown Charge',
+      AdditionChargesMetaDataGenerator.friendlyChargeNameFromKeyValue(
+              widget.toBeEditedChargeName) ??
+          'Unknown Charge',
       style: TextStyle(
         color: AppColors.greyishText,
       ),
@@ -156,20 +175,24 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
 
   Widget buildDialogActionButton(int type, Function onPressed) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 10.toHeight,top: 20.toHeight),
+      padding: EdgeInsets.only(bottom: 10.toHeight, top: 20.toHeight),
       child: GestureDetector(
         onTap: onPressed,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10.toHeight,
-              horizontal: 10.toWidth),
+          padding: EdgeInsets.symmetric(
+              vertical: 10.toHeight, horizontal: 10.toWidth),
           decoration: BoxDecoration(
               color: AppColors.pureWhite,
               borderRadius: BorderRadius.all(Radius.circular(20.toWidth)),
-              border: Border.all(width: 2.0,
+              border: Border.all(
+                  width: 2.0,
                   color: type == 0 ? AppColors.lightBlue : Colors.red)),
-          child: Text(type == 0 ? 'Confirm' : 'Cancel', textAlign: TextAlign.center,style: TextStyle(
-            color: type == 0 ? AppColors.lightBlue : Colors.red
-          ),),
+          child: Text(
+            type == 0 ? 'Confirm' : 'Cancel',
+            textAlign: TextAlign.center,
+            style:
+                TextStyle(color: type == 0 ? AppColors.lightBlue : Colors.red),
+          ),
         ),
       ),
     );
