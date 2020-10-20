@@ -7,7 +7,9 @@ import 'additional_charges_dialogue.dart';
 
 class EsOrderDetailsChargesComponent extends StatefulWidget {
   final EsOrderDetailsResponse orderDetails;
+
   EsOrderDetailsChargesComponent(this.orderDetails);
+
   @override
   _EsOrderDetailsChargesComponentState createState() =>
       _EsOrderDetailsChargesComponentState();
@@ -21,6 +23,19 @@ class _EsOrderDetailsChargesComponentState
   void initState() {
     additionalChargesList = {};
     super.initState();
+  }
+
+  Widget getEditIconWidget(BuildContext context) {
+    return Expanded(
+      flex: 10,
+      child: IconButton(
+        padding: const EdgeInsets.all(0.0),
+        icon: Icon(
+          Icons.edit,
+          color: Theme.of(context).primaryColor,
+        ),
+        onPressed: () {},
+      ),);
   }
 
   @override
@@ -52,70 +67,56 @@ class _EsOrderDetailsChargesComponentState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        InkWell(
-          child: InkWell(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.edit,
-                  color: Theme.of(context).primaryColor,
-                ),
-                SizedBox(width: 2.toWidth),
-                Text(
-                  'Additional Charges',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-              ],
-            ),
-            onTap: () async {
-              var selectedCharge = await showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (context) => AdditionalChargeDialogue(
-                  dialogActionType: 0,
-                  alreadySelectedCharges: additionalChargesList,
-                ),
-              );
-              if (selectedCharge != null &&
-                  selectedCharge is Map<String, double>) {
-                setState(() {
-                  additionalChargesList..addAll(selectedCharge);
-                });
-              }
-            },
-          ),
-        ),
-        SizedBox(height: 20.toHeight),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Delivery Charges'),
-            Text('\u{20B9} $_deliveryCharges')
+            Expanded(
+              flex: 70,
+              child: Text(
+                _totalNumberOfItems.toString() +
+                    '  Item' +
+                    (_totalNumberOfItems > 1 ? 's' : ''),
+              ),
+            ),
+            Expanded(
+              flex: 20,
+              child: Text(
+                '\u{20B9} ${_itemCharges.toStringAsFixed(2)}',
+              ),
+            ),
+            Expanded(
+              flex: 10,
+              child: SizedBox.shrink(),
+            ),
           ],
         ),
         SizedBox(height: 10.toHeight),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Other Charges'),
-            Text('\u{20B9} $_otherCharges'),
+            Expanded(flex: 70, child: Text('Delivery Charges')),
+            Expanded(flex: 20, child: Text('\u{20B9} $_deliveryCharges')),
+            getEditIconWidget(context),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(flex: 70, child: Text('Other Charges')),
+            Expanded(flex: 20, child: Text('\u{20B9} $_otherCharges')),
+            getEditIconWidget(context),
           ],
         ),
         if (additionalChargesList.isEmpty) ...[
-          SizedBox(height: 10.toHeight),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Additional Charges'),
-              Text('\u{20B9} 0'),
+              Expanded(flex: 70, child: Text('Additional Charges')),
+              Expanded(flex: 20, child: Text('\u{20B9} 0')),
+              getEditIconWidget(context),
             ],
           ),
         ] else ...[
-          SizedBox(height: 10.toHeight),
           ListView.separated(
             shrinkWrap: true,
             itemCount: additionalChargesList.length,
@@ -131,20 +132,44 @@ class _EsOrderDetailsChargesComponentState
           ),
         ],
         SizedBox(height: 10.toHeight),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              _totalNumberOfItems.toString() +
-                  '  Item' +
-                  (_totalNumberOfItems > 1 ? 's' : ''),
+        Center(
+          child: InkWell(
+            child: InkWell(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.add_circle_outline,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  SizedBox(width: 5.toWidth),
+                  Text(
+                    'Additional Charges',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+              onTap: () async {
+                var selectedCharge = await showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (context) => AdditionalChargeDialogue(
+                    dialogActionType: 0,
+                    alreadySelectedCharges: additionalChargesList,
+                  ),
+                );
+                if (selectedCharge != null &&
+                    selectedCharge is Map<String, double>) {
+                  setState(() {
+                    additionalChargesList..addAll(selectedCharge);
+                  });
+                }
+              },
             ),
-            Text(
-              '\u{20B9} ${_itemCharges.toStringAsFixed(2)}',
-            )
-          ],
+          ),
         ),
-        // SizedBox(height: 10.toHeight),
         Divider(
           color: Colors.grey[400],
         ),
@@ -158,10 +183,71 @@ class _EsOrderDetailsChargesComponentState
                   .textTheme
                   .headline6
                   .copyWith(fontWeight: FontWeight.bold),
-            )
+            ),
           ],
         ),
       ],
     );
   }
+}
+
+enum AdditionalChargeType {
+  deliveryCharge,
+  extraCharge,
+  packingCharge,
+  serviceCharge,
+}
+
+class AdditionChargesMetaDataGenerator {
+
+  static AdditionChargesMetaDataGenerator _instance;
+
+  AdditionChargesMetaDataGenerator._internal();
+
+  static AdditionChargesMetaDataGenerator getInstance() {
+    if (_instance == null) {
+      _instance = AdditionChargesMetaDataGenerator._internal();
+    }
+    return _instance;
+  }
+
+  static String backendKeyFromEnumValue(AdditionalChargeType chargeType) {
+
+    switch(chargeType) {
+      case AdditionalChargeType.deliveryCharge:
+        return 'DELIVERY';
+        break;
+      case AdditionalChargeType.extraCharge:
+        return 'EXTRA';
+        break;
+      case AdditionalChargeType.packingCharge:
+        return 'PACKING';
+        break;
+      case AdditionalChargeType.serviceCharge:
+        return 'SERVICE';
+        break;
+      default:
+        return 'UNKNOWN';
+    }
+  }
+
+  static String friendlyChargeNameFromEnumValue(AdditionalChargeType chargeType) {
+    switch(chargeType) {
+      case AdditionalChargeType.deliveryCharge:
+        return 'Delivery Charges';
+        break;
+      case AdditionalChargeType.extraCharge:
+        return 'Extra Charges';
+        break;
+      case AdditionalChargeType.packingCharge:
+        return 'Packing Charges';
+        break;
+      case AdditionalChargeType.serviceCharge:
+        return 'Service Charges';
+        break;
+      default:
+        return 'Unknown Charge';
+    }
+  }
+
 }
