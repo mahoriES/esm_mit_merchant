@@ -29,7 +29,6 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
   @override
   void initState() {
     dropdownValue = 0;
-    //selectedCharges = widget.alreadySelectedCharges ?? {};
     super.initState();
   }
 
