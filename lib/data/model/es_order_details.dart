@@ -143,12 +143,10 @@ class EsOrderDetailsResponse {
         json['customer_note_images'].isNotEmpty) {
 
       ///To check the type of the elements in list, since it is a homogeneous list
-      ///We can simply check type of first element(which will definitely exsit since
+      ///We can simply check type of first element(which will definitely exist since
       ///this block won't execute for empty lists)
 
-      Type responseElementType = json['customer_note_images'].first.runtimeType;
-
-      if (responseElementType == String)
+      if (json['customer_note_images'].first is String)
         ///The customer note images is a list of Strings(image links)
         customerNoteImages = json['customer_note_images'].cast<String>();
 
