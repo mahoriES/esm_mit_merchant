@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/app_colors.dart';
 import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/services/sizeconfig.dart';
@@ -85,7 +86,7 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
                           flex: 30,
                           child: TextField(
                               maxLengthEnforced: true,
-                              maxLength: 3,
+                              maxLength: 4,
                               keyboardType: TextInputType.number,
                               controller: priceController,
                               decoration: InputDecoration(
@@ -101,6 +102,12 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
                     children: [
                       Expanded(
                           child: buildDialogActionButton(0, () {
+                        if (priceController.text == '' ||
+                            double.tryParse(priceController.text) == null) {
+                          Fluttertoast.showToast(
+                              msg: 'Enter valid charge value!');
+                          return;
+                        }
                         Navigator.pop(
                             context,
                             AdditionalChargesDetails(
@@ -108,7 +115,9 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
                                     ? widget
                                         .availableChargesOptions[dropdownValue]
                                     : widget.toBeEditedChargeName,
-                                value: int.tryParse(priceController.text)*100));
+                                value:
+                                    (double.parse(priceController.text) * 100)
+                                        .toInt()));
                       })),
                       SizedBox(
                         width: 20.toWidth,
@@ -140,6 +149,7 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
 
   Widget buildDropdownMenu() {
     return DropdownButton(
+      underline: SizedBox.shrink(),
       isDense: true,
       isExpanded: true,
       value: dropdownValue,

@@ -65,7 +65,6 @@ class _EsOrderListState extends State<EsOrderList> {
                   FlatButton(
                     child: Text('Accept'),
                     onPressed: () {
-
                       esOrdersBloc.acceptOrder(
                         order.orderId,
                         (a) {
@@ -88,7 +87,6 @@ class _EsOrderListState extends State<EsOrderList> {
       },
     );
   }
-
 
   _showReadyAlertDialog(EsOrder order, EsOrdersBloc esOrdersBloc) async {
     return await showDialog<bool>(
@@ -345,6 +343,71 @@ class _EsOrderListState extends State<EsOrderList> {
     );
   }
 
+  _showUpdateOrderChargesAlertDialog(
+    EsOrder order,
+    EsOrdersBloc esOrdersBloc,
+    UpdateOrderChargesPayload body, {
+    BuildContext customContext,
+  }) async {
+    return await showDialog<bool>(
+      context: customContext ?? context,
+      barrierDismissible: true,
+      useRootNavigator: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return StreamBuilder<EsOrdersState>(
+            stream: esOrdersBloc.esProductStateObservable,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container();
+              }
+              if (snapshot.data.isSubmitting) {
+                return AlertDialog(
+                  content: Container(
+                      height: 100,
+                      child: Center(child: CircularProgressIndicator())),
+                );
+              }
+              return AlertDialog(
+                title: Container(),
+                content: Text('Do you want to update this order and charges?'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text(
+                      'Cancel',
+                      style: Theme.of(context).textTheme.button,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop(false);
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('Update'),
+                    onPressed: () {
+                      esOrdersBloc.updateOrderCharges(
+                        order.orderId,
+                        (a) {
+                          Navigator.of(context, rootNavigator: true).pop(true);
+                        },
+                        (error) {
+                          Navigator.of(context, rootNavigator: true).pop(false);
+                          showDialog(
+                            context: context,
+                            builder: (context) => ResponseDialogue(
+                              error ?? 'something went wrong',
+                            ),
+                          );
+                        },
+                        body,
+                      );
+                    },
+                  ),
+                ],
+              );
+            });
+      },
+    );
+  }
+
   _showUpdateOrderAlertDialog(
     EsOrder order,
     EsOrdersBloc esOrdersBloc,
@@ -490,6 +553,20 @@ class _EsOrderListState extends State<EsOrderList> {
       }
     }
 
+    updateOrderCharges(EsOrder order, UpdateOrderChargesPayload body,
+        {BuildContext context}) async {
+      var isAccepted = await _showUpdateOrderChargesAlertDialog(
+        order,
+        this.esOrdersBloc,
+        body,
+        customContext: context,
+      );
+      if (isAccepted == true) {
+        if (context != null) Navigator.pop(context);
+        esOrdersBloc.getOrders();
+      }
+    }
+
     Future getOrderItems(EsOrder order) async {
       await esOrdersBloc.getOrderItems(order.orderId);
     }
@@ -584,13 +661,17 @@ class _EsOrderListState extends State<EsOrderList> {
                                           ),
                                           updateOrderCharges:
                                               (_context, body) async {
-                                            await esOrdersBloc
-                                                .updateOrderCharges(
-                                                    snapshot.data.items[index]
-                                                        .orderId,
-                                                    () {},
-                                                    (_) {},
-                                                    body);
+                                            await updateOrderCharges(
+                                                snapshot.data.items[index],
+                                                body,
+                                                context: _context);
+//                                            await esOrdersBloc
+//                                                .updateOrderCharges(
+//                                                    snapshot.data.items[index]
+//                                                        .orderId,
+//                                                    () {},
+//                                                    (_) {},
+//                                                    body);
                                           },
                                           acceptOrder: (_context) async {
                                             await acceptItem(

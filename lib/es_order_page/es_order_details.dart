@@ -58,7 +58,10 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
   }
 
   _updateOrder() {
-    if (EsOrderDetails.chargesUpdated.value) _updateAdditionalCharges();
+    if (EsOrderDetails.chargesUpdated.value) {
+      _updateAdditionalCharges();
+      return;
+    }
     widget.params.updateOrder(
       context,
       UpdateOrderItemsPayload(
