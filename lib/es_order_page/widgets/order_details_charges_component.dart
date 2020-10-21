@@ -3,6 +3,7 @@ import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/services/sizeconfig.dart';
 
+import '../es_order_details.dart';
 import 'additional_charges_dialogue.dart';
 
 class EsOrderDetailsChargesComponent extends StatefulWidget {
@@ -26,6 +27,12 @@ class _EsOrderDetailsChargesComponentState
     super.initState();
   }
 
+  @override
+  void dispose() {
+    EsOrderDetails.chargesUpdated.value = false;
+    super.dispose();
+  }
+
   void buildAdditionalChargesStructure(EsOrderDetailsResponse orderDetails) {
     if (orderDetails.additionalChargesDetails == null ||
         orderDetails.additionalChargesDetails.isEmpty) return;
@@ -35,15 +42,18 @@ class _EsOrderDetailsChargesComponentState
   }
 
   void deleteChargeLocally(String chargeKey) {
-
+    EsOrderDetails.chargesUpdated.value = true;
     additionalChargesList.removeWhere((element) =>
         element.chargeName ==
         chargeKey);
+    widget.orderDetails.additionalChargesDetails = additionalChargesList;
   }
 
   void addOrUpdateChargeLocally(AdditionalChargesDetails chargesDetails) {
+    EsOrderDetails.chargesUpdated.value = true;
     deleteChargeLocally(chargesDetails.chargeName);
     additionalChargesList.add(chargesDetails);
+    widget.orderDetails.additionalChargesDetails = additionalChargesList;
   }
 
   Widget getEditIconWidget(BuildContext context, String chargeKey) {
@@ -142,8 +152,8 @@ class _EsOrderDetailsChargesComponentState
       }
     }
 
-    double _deliveryCharges = (widget.orderDetails?.deliveryCharges ?? 0) / 100;
-    double _otherCharges = (widget.orderDetails?.otherCharges ?? 0) / 100;
+//    double _deliveryCharges = (widget.orderDetails?.deliveryCharges ?? 0) / 100;
+//    double _otherCharges = (widget.orderDetails?.otherCharges ?? 0) / 100;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,11 +241,13 @@ class _EsOrderDetailsChargesComponentState
           children: [
             Text('Total Amount'),
             Text(
-              '\u{20B9} ${(_itemCharges + _deliveryCharges + _otherCharges).toStringAsFixed(2)}',
+              '\u{20B9} ${(_itemCharges+additionalChargesList.fold(0,
+                      (prev, next) => prev+next.value)/100).toStringAsFixed(2)}',
               style: Theme.of(context)
                   .textTheme
                   .headline6
                   .copyWith(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.right,
             ),
           ],
         ),

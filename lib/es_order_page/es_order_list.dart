@@ -65,6 +65,7 @@ class _EsOrderListState extends State<EsOrderList> {
                   FlatButton(
                     child: Text('Accept'),
                     onPressed: () {
+
                       esOrdersBloc.acceptOrder(
                         order.orderId,
                         (a) {
@@ -87,6 +88,7 @@ class _EsOrderListState extends State<EsOrderList> {
       },
     );
   }
+
 
   _showReadyAlertDialog(EsOrder order, EsOrdersBloc esOrdersBloc) async {
     return await showDialog<bool>(
@@ -557,8 +559,8 @@ class _EsOrderListState extends State<EsOrderList> {
                                 onCancel: cancelItem,
                                 onAssign: assignItem,
                                 onGetOrderItems: getOrderItems,
-                                showStatus: this.widget.status ==
-                                    null, //Show only when we are not filtering for specific status
+                                showStatus: this.widget.status == null,
+                                //Show only when we are not filtering for specific status
                                 onUpdatePaymentStatus: updatePaymentStatus,
                               )
                             : EsOrderCard(
@@ -580,6 +582,16 @@ class _EsOrderListState extends State<EsOrderList> {
                                             response.toJson(),
                                             divideUnitPriceBy100: false,
                                           ),
+                                          updateOrderCharges:
+                                              (_context, body) async {
+                                            await esOrdersBloc
+                                                .updateOrderCharges(
+                                                    snapshot.data.items[index]
+                                                        .orderId,
+                                                    () {},
+                                                    (_) {},
+                                                    body);
+                                          },
                                           acceptOrder: (_context) async {
                                             await acceptItem(
                                               snapshot.data.items[index],

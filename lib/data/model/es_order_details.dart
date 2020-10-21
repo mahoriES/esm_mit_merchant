@@ -26,6 +26,36 @@ class UpdateOrderItemsPayload {
   }
 }
 
+class UpdateOrderChargesPayload {
+  List<AdditionalChargesDetails> additionalChargesUpdatedList;
+  List<UpdateOrderItems> orderItems;
+  List<FreeFormItems> freeFormItems;
+
+  UpdateOrderChargesPayload({
+    @required this.additionalChargesUpdatedList,
+    this.orderItems,
+    this.freeFormItems,
+  });
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.additionalChargesUpdatedList != null) {
+      data['other_charges_detail'] =
+          this.additionalChargesUpdatedList.map((v) => v.toJson()).toList();
+    }
+    if (this.orderItems != null) {
+      data['order_items'] = this.orderItems.map((v) => v.toJson()).toList();
+    }
+    if (this.freeFormItems != null) {
+      data['free_form_items'] = [
+        ...this.freeFormItems.map((v) => v.toJson()).toList()
+      ];
+    }
+    return data;
+  }
+
+}
+
 class AdditionalChargesDetails {
   int value;
   String chargeName;

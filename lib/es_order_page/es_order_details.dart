@@ -20,12 +20,14 @@ class EsOrderDetailsParam {
   Function(BuildContext) acceptOrder;
   Function(BuildContext, UpdateOrderItemsPayload) updateOrder;
   Function(BuildContext) cancelOrder;
+  Function(BuildContext, UpdateOrderChargesPayload) updateOrderCharges;
 
   EsOrderDetailsParam({
     @required this.esOrderDetailsResponse,
     @required this.acceptOrder,
     @required this.updateOrder,
     @required this.cancelOrder,
+    @required this.updateOrderCharges,
   });
 }
 
@@ -33,6 +35,9 @@ class EsOrderDetails extends StatefulWidget {
   static const routeName = '/order_details';
 
   final EsOrderDetailsParam params;
+
+  static var chargesUpdated = ValueNotifier(false);
+
   EsOrderDetails(this.params);
 
   @override
@@ -53,6 +58,7 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
   }
 
   _updateOrder() {
+    if (EsOrderDetails.chargesUpdated.value) _updateAdditionalCharges();
     widget.params.updateOrder(
       context,
       UpdateOrderItemsPayload(
@@ -73,6 +79,27 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
     );
   }
 
+  _updateAdditionalCharges() {
+    widget.params.updateOrderCharges(
+        context,
+        UpdateOrderChargesPayload(
+          additionalChargesUpdatedList: details.additionalChargesDetails,
+          orderItems: List.generate(
+            details.orderItems.length,
+            (index) => UpdateOrderItems(
+              productStatus: details.orderItems[index].itemStatus ==
+                      CatalogueItemStatus.notPresent
+                  ? details.orderItems[index].itemStatus
+                  : null,
+              skuId: int.tryParse(details.orderItems[index].skuId),
+              quantity: details.orderItems[index].itemQuantity,
+              unitPriceInRupee: details.orderItems[index].unitPrice,
+            ),
+          ),
+          freeFormItems: details.freeFormItems,
+        ));
+  }
+
   Future<bool> _addItemsFromCatalogue() async {
     var value = await Navigator.of(context).pushNamed(EsOrderAddItem.routeName);
     if (value != null && value is List<EsOrderItem>) {
@@ -86,6 +113,7 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('Rebuild order details page called');
     bool allItemsUpdated = true;
     for (int i = 0; i < details.freeFormItems?.length; i++) {
       if (details.freeFormItems[i].productStatus ==
@@ -317,59 +345,70 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                 SizedBox(height: 30.toHeight),
                 !isOrderStatusCreated
                     ? Container()
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          FoSubmitButton(
-                            text: 'Reject Order',
-                            onPressed: () => widget.params.cancelOrder(context),
-                            color: Colors.red,
-                          ),
-                          details.orderItems.length == 0
-                              ? FoSubmitButton(
-                                  text: 'Update Order',
-                                  onPressed: () => showDialog(
-                                    context: context,
-                                    builder: (context) => ResponseDialogue(
-                                      '',
-                                      message:
-                                          'Please add atleast 1 item in the order',
-                                    ),
-                                  ),
-                                  color: Colors.grey[400],
-                                )
-                              : (details.freeFormItems != null &&
-                                      details.freeFormItems.length > 0)
-                                  ? allItemsUpdated
-                                      ? FoSubmitButton(
-                                          text: 'Update Order',
-                                          onPressed: _updateOrder,
-                                        )
-                                      : FoSubmitButton(
-                                          text: 'Update Order',
-                                          onPressed: () => showDialog(
-                                            context: context,
-                                            builder: (context) =>
-                                                ResponseDialogue(
-                                              '',
-                                              message:
-                                                  'Please Accept/Decline the list items first',
-                                            ),
-                                          ),
-                                          color: Colors.grey[400],
-                                        )
-                                  : isOrderUpdated
-                                      ? FoSubmitButton(
-                                          text: 'Update Order',
-                                          onPressed: _updateOrder,
-                                        )
-                                      : FoSubmitButton(
-                                          text: 'Accept Order',
-                                          onPressed: () => widget.params
-                                              .acceptOrder(context),
+                    : ValueListenableBuilder(
+                        valueListenable: EsOrderDetails.chargesUpdated,
+                        builder: (context, value, _) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FoSubmitButton(
+                                text: 'Reject Order',
+                                onPressed: () =>
+                                    widget.params.cancelOrder(context),
+                                color: Colors.red,
+                              ),
+                              details.orderItems.length == 0
+                                  ? FoSubmitButton(
+                                      text: 'Update Order',
+                                      onPressed: () => showDialog(
+                                        context: context,
+                                        builder: (context) => ResponseDialogue(
+                                          '',
+                                          message:
+                                              'Please add at least 1 item in the order',
                                         ),
-                        ],
-                      ),
+                                      ),
+                                      color: Colors.grey[400],
+                                    )
+                                  : (details.freeFormItems != null &&
+                                          details.freeFormItems.length > 0)
+                                      ? allItemsUpdated
+                                          ? FoSubmitButton(
+                                              text: 'Update Order',
+                                              onPressed: _updateOrder,
+                                            )
+                                          : FoSubmitButton(
+                                              text: 'Update Order',
+                                              onPressed: () => showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    ResponseDialogue(
+                                                  '',
+                                                  message:
+                                                      'Please Accept/Decline the list items first',
+                                                ),
+                                              ),
+                                              color: Colors.grey[400],
+                                            )
+                                      : (isOrderUpdated || value)
+                                          ? FoSubmitButton(
+                                              text: 'Update Order',
+                                              onPressed: _updateOrder,
+                                            )
+                                          : FoSubmitButton(
+                                              text: 'Accept Order',
+                                              onPressed: () {
+                                                debugPrint('Accept tapped');
+                                                debugPrint(details
+                                                    .additionalChargesDetails
+                                                    .toString());
+                                                widget.params
+                                                    .acceptOrder(context);
+                                              },
+                                            ),
+                            ],
+                          );
+                        }),
                 SizedBox(height: 30.toHeight),
               ],
             ),
