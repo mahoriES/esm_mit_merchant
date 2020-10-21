@@ -5,9 +5,20 @@ import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/services/sizeconfig.dart';
 import 'order_details_charges_component.dart';
 
+///This is a configurable dialog box shown to add/edit additional charge(s).
+///For charges not added yet, user may choose the charge type from dropdown &
+///for already added charges, user can simply change the value for the charge.
+
 class AdditionalChargeDialogue extends StatefulWidget {
+  ///The list [availableChargesOptions] holds those charges which have not been
+  ///added yet, and skips the ones which have been added, as they can only be either
+  ///deleted or edited.
   final List<String> availableChargesOptions;
+  ///The value [dialogActionType] can have 2 values - i) 0 when the action is meant to add new charges
+  ///ii) 1 when an existing charge's value needs to be modified. Passed only when [dialogActionType] is 0.
   final int dialogActionType;
+  ///[toBeEditedChargeName] holds the name of the charge whose value has to be changed. This value is passed
+  ///only when [dialogActionType] is 1.
   final String toBeEditedChargeName;
 
   AdditionalChargeDialogue({
@@ -25,7 +36,6 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
   FocusNode focusNode = new FocusNode();
   int dropdownValue;
   TextEditingController priceController = new TextEditingController();
-  GlobalKey<FormState> formKey = new GlobalKey();
 
   @override
   void initState() {
@@ -86,6 +96,7 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
                           flex: 30,
                           child: TextField(
                               maxLengthEnforced: true,
+                              //The charge string cannot be longer than 4 characters hence e.g. - 43.6,2.25,20.6,20,20.0,2.22 etc.
                               maxLength: 4,
                               keyboardType: TextInputType.number,
                               controller: priceController,
@@ -102,6 +113,7 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
                     children: [
                       Expanded(
                           child: buildDialogActionButton(0, () {
+                            //Show error when entered charge value is invalid and further execution is halted.
                         if (priceController.text == '' ||
                             double.tryParse(priceController.text) == null) {
                           Fluttertoast.showToast(

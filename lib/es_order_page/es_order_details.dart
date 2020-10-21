@@ -36,6 +36,11 @@ class EsOrderDetails extends StatefulWidget {
 
   final EsOrderDetailsParam params;
 
+  ///The [chargesUpdated] is static variable of the class [EsOrderDetails] and
+  ///is assigned to a [ValueNotifier] of the type boolean. This flag variable, is set
+  ///whenever the additional charges are added/updated by the user, and this value is used
+  ///to show the button title for the CTA button, which changes to Update Order when the above
+  ///mentioned scenario occurs.
   static var chargesUpdated = ValueNotifier(false);
 
   EsOrderDetails(this.params);
@@ -82,6 +87,8 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
     );
   }
 
+  //Since it is a requirement to have the catalog and/or free form items when
+  //updating the charges, they too are sent in the Order Update(PATCH) request.
   _updateAdditionalCharges() {
     widget.params.updateOrderCharges(
         context,
@@ -116,7 +123,6 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('Rebuild order details page called');
     bool allItemsUpdated = true;
     for (int i = 0; i < details.freeFormItems?.length; i++) {
       if (details.freeFormItems[i].productStatus ==
@@ -393,6 +399,7 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                                               ),
                                               color: Colors.grey[400],
                                             )
+                              ///The [ValueNotifier] flag is used here to update the button title
                                       : (isOrderUpdated || value)
                                           ? FoSubmitButton(
                                               text: 'Update Order',

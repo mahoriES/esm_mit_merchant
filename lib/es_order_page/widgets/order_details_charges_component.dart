@@ -33,6 +33,8 @@ class _EsOrderDetailsChargesComponentState
     super.dispose();
   }
 
+  //This function is called at the initialisation phase and used to build
+  // the UI for charges which are received from the backend.
   void buildAdditionalChargesStructure(EsOrderDetailsResponse orderDetails) {
     if (orderDetails.additionalChargesDetails == null ||
         orderDetails.additionalChargesDetails.isEmpty) return;
@@ -106,6 +108,7 @@ class _EsOrderDetailsChargesComponentState
     );
   }
 
+
   void showAdditionalChargeDialog(int type, {String chargeName}) async {
     List<String> availableCharges = [];
     if (type == 0) {
@@ -152,9 +155,6 @@ class _EsOrderDetailsChargesComponentState
       }
     }
 
-//    double _deliveryCharges = (widget.orderDetails?.deliveryCharges ?? 0) / 100;
-//    double _otherCharges = (widget.orderDetails?.otherCharges ?? 0) / 100;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -162,7 +162,7 @@ class _EsOrderDetailsChargesComponentState
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              flex: 70,
+              flex: 65,
               child: Text(
                 _totalNumberOfItems.toString() +
                     '  Item' +
@@ -177,7 +177,7 @@ class _EsOrderDetailsChargesComponentState
               ),
             ),
             Expanded(
-              flex: 10,
+              flex: 15,
               child: SizedBox.shrink(),
             ),
           ],
@@ -186,6 +186,7 @@ class _EsOrderDetailsChargesComponentState
           SizedBox(height: 10.toHeight),
           ListView.separated(
             shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             itemCount: additionalChargesList.length,
             separatorBuilder: (context, index) => SizedBox(height: 10.toHeight),
             itemBuilder: (context, index) => Row(
@@ -199,7 +200,7 @@ class _EsOrderDetailsChargesComponentState
                 Expanded(
                   flex: 20,
                   child: Text(
-                      '\u{20B9} ${(additionalChargesList[index].value / 100).toStringAsFixed(2)}'),
+                      '\u{20B9} ${(additionalChargesList[index].value / 100).toStringAsFixed(2)}',),
                 ),
                 getEditIconWidget(
                     context, additionalChargesList[index].chargeName),
@@ -239,15 +240,17 @@ class _EsOrderDetailsChargesComponentState
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Total Amount'),
-            Text(
-              '\u{20B9} ${(_itemCharges+additionalChargesList.fold(0,
-                      (prev, next) => prev+next.value)/100).toStringAsFixed(2)}',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline6
-                  .copyWith(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.right,
+            Expanded(flex: 65,child: Text('Total Amount')),
+            Expanded(flex: 35,
+              child: Text(
+                '\u{20B9} ${(_itemCharges+additionalChargesList.fold(0,
+                        (prev, next) => prev+next.value)/100).toStringAsFixed(2)}',
+                style: Theme.of(context)
+                    .textTheme
+                    .headline6
+                    .copyWith(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.left,
+              ),
             ),
           ],
         ),
