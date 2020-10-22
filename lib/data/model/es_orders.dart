@@ -25,6 +25,7 @@ class EsOrderStatus {
   static const ASSIGNED_TO_DA = 'ASSIGNED_TO_DA';
   static const PICKED_UP_BY_DA = 'PICKED_UP_BY_DA';
   static const CUSTOMER_CANCELLED = 'CUSTOMER_CANCELLED';
+  static const ALL_ORDERS = 'ALL_ORDERS';
 }
 
 class EsOrderPaymentStatus {
@@ -158,6 +159,35 @@ class EsOrder {
     var formatter = new DateFormat('hh:mm a, dd MMM, yyyy');
     String timeText = formatter.format(lastInteractionDate);
     return timeText;
+  }
+
+  String getTimeDiffrence() {
+    DateTime createdAt = DateTime.parse(this.created).toLocal();
+    DateTime currentTime = DateTime.now();
+    Duration diffrence = currentTime.difference(createdAt);
+
+    String displayText;
+
+    if (diffrence.inSeconds < 60)
+      displayText =
+          '${diffrence.inSeconds} second${diffrence.inSeconds > 1 ? 's' : ''} ago';
+    else if (diffrence.inMinutes < 60)
+      displayText =
+          '${diffrence.inMinutes} minute${diffrence.inMinutes > 1 ? 's' : ''} ago';
+    else if (diffrence.inHours < 24)
+      displayText =
+          '${diffrence.inHours} hour${diffrence.inHours > 1 ? 's' : ''} ago';
+    else if (diffrence.inDays < 7)
+      displayText =
+          '${diffrence.inDays} day${diffrence.inDays > 1 ? 's' : ''} ago';
+    else if (diffrence.inDays < 31)
+      displayText =
+          '${diffrence.inDays ~/ 7} week${diffrence.inDays ~/ 7 > 1 ? 's' : ''} ago';
+    else
+      displayText =
+          '${diffrence.inDays ~/ 31} month${diffrence.inDays ~/ 31 > 1 ? 's' : ''} ago';
+
+    return displayText;
   }
 
   get dStatusString {

@@ -48,7 +48,9 @@ class EsApiPaths {
   static final postAddSkuToProduct = (String businessId, int productId) =>
       'businesses/$businessId/catalog/products/$productId/skus';
 
-  static final getOrders = 'orders';
+  static final getOrders = (String businessId, {String orderStatus}) =>
+      'orders/?business_id=$businessId' +
+      (orderStatus == null ? '' : '&order_status=$orderStatus');
 
   static final postAcceptOrder = (String orderId) => 'orders/$orderId/accept';
   static final postCancelOrder = (String orderId) => 'orders/$orderId/cancel';

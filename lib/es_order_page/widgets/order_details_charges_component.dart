@@ -5,7 +5,11 @@ import 'package:foore/services/sizeconfig.dart';
 
 class EsOrderDetailsChargesComponent extends StatefulWidget {
   final EsOrderDetailsResponse orderDetails;
-  EsOrderDetailsChargesComponent(this.orderDetails);
+  final double spaceBetweenItems;
+  EsOrderDetailsChargesComponent(
+    this.orderDetails, {
+    this.spaceBetweenItems = 10,
+  });
   @override
   _EsOrderDetailsChargesComponentState createState() =>
       _EsOrderDetailsChargesComponentState();
@@ -57,7 +61,7 @@ class _EsOrderDetailsChargesComponentState
             Text('\u{20B9} $_deliveryCharges')
           ],
         ),
-        SizedBox(height: 10.toHeight),
+        SizedBox(height: widget.spaceBetweenItems.toHeight),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -66,7 +70,7 @@ class _EsOrderDetailsChargesComponentState
           ],
         ),
         if (additionalChargesList.isEmpty) ...[
-          SizedBox(height: 10.toHeight),
+          SizedBox(height: widget.spaceBetweenItems.toHeight),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -75,7 +79,7 @@ class _EsOrderDetailsChargesComponentState
             ],
           ),
         ] else ...[
-          SizedBox(height: 10.toHeight),
+          SizedBox(height: widget.spaceBetweenItems.toHeight),
           ListView.separated(
             shrinkWrap: true,
             itemCount: additionalChargesList.length,
@@ -90,7 +94,7 @@ class _EsOrderDetailsChargesComponentState
             ),
           ),
         ],
-        SizedBox(height: 10.toHeight),
+        SizedBox(height: widget.spaceBetweenItems.toHeight),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -104,7 +108,6 @@ class _EsOrderDetailsChargesComponentState
             )
           ],
         ),
-        // SizedBox(height: 10.toHeight),
         Divider(
           color: Colors.grey[400],
         ),

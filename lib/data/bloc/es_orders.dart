@@ -8,11 +8,9 @@ import 'package:foore/data/model/es_orders.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EsOrdersBloc {
-  final EsOrdersState _esOrdersState = new EsOrdersState();
+  EsOrdersState _esOrdersState;
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
-
-  String orderStatus;
 
   String searchText = '';
 
@@ -20,139 +18,139 @@ class EsOrdersBloc {
 
   BehaviorSubject<EsOrdersState> _subjectEsOrdersState;
 
-  EsOrdersBloc(this.orderStatus, this.httpService, this.esBusinessesBloc) {
+  EsOrdersBloc(this.httpService, this.esBusinessesBloc) {
+    _esOrdersState = new EsOrdersState();
     this._subjectEsOrdersState =
         new BehaviorSubject<EsOrdersState>.seeded(_esOrdersState);
-    this._subscription =
+
+    _subscription =
         this.esBusinessesBloc.esBusinessesStateObservable.listen((event) {
-      this.getOrders();
+      resetDataState();
     });
   }
 
-  Observable<EsOrdersState> get esProductStateObservable =>
+  Observable<EsOrdersState> get esOrdersStateObservable =>
       _subjectEsOrdersState.stream;
 
-  getOrders() {
-    getDeliveryAgents();
-    this._esOrdersState.isLoading = true;
-    this._esOrdersState.response = null;
+  resetDataState() {
+    _esOrdersState = new EsOrdersState();
     this._updateState();
-    String apiPath = this.orderStatus == null
-        ? EsApiPaths.getOrders +
-            '?business_id=${this.esBusinessesBloc.getSelectedBusinessId()}'
-        : EsApiPaths.getOrders +
-            '?order_status=${this.orderStatus}' +
-            '&business_id=${this.esBusinessesBloc.getSelectedBusinessId()}';
-    httpService.esGet(apiPath).then((httpResponse) {
-      if (httpResponse.statusCode == 200) {
-        this._esOrdersState.isLoadingFailed = false;
-        this._esOrdersState.isLoading = false;
-        this._esOrdersState.response =
-            EsGetOrdersResponse.fromJson(json.decode(httpResponse.body));
-        this._esOrdersState.items = this._esOrdersState.response.results;
-      } else {
-        this._esOrdersState.isLoadingFailed = true;
-        this._esOrdersState.isLoading = false;
-      }
-      this._updateState();
-    }).catchError((onError) {
-      this._esOrdersState.isLoadingFailed = true;
-      this._esOrdersState.isLoading = false;
-      this._updateState();
-    });
   }
 
-  loadMore() {
-    if (this._esOrdersState.response == null ||
-        this._esOrdersState.isLoadingMore) {
+  getOrders(String orderStatus) {
+    getDeliveryAgents();
+    this._esOrdersState.ordersListStatus[orderStatus].fetchingStatus =
+        DataState.LOADING;
+    this._updateState();
+
+    String apiPath = EsApiPaths.getOrders(
+      this.esBusinessesBloc.getSelectedBusinessId(),
+      orderStatus: orderStatus == EsOrderStatus.ALL_ORDERS ? null : orderStatus,
+    );
+    httpService.esGet(apiPath).then((httpResponse) {
+      if (httpResponse.statusCode == 200) {
+        this._esOrdersState.ordersListStatus[orderStatus].fetchingStatus =
+            DataState.SUCCESS;
+        this._esOrdersState.ordersListStatus[orderStatus].ordersList =
+            EsGetOrdersResponse.fromJson(json.decode(httpResponse.body));
+      } else {
+        this._esOrdersState.ordersListStatus[orderStatus].fetchingStatus =
+            DataState.FAILED;
+      }
+      this._updateState();
+    }).catchError(
+      (onError) {
+        this._esOrdersState.ordersListStatus[orderStatus].fetchingStatus =
+            DataState.FAILED;
+        this._updateState();
+      },
+    );
+  }
+
+  loadMore(String orderStatus) {
+    if (this._esOrdersState.ordersListStatus[orderStatus].ordersList == null ||
+        this._esOrdersState.loadMoreStatus == DataState.LOADING) {
       return;
     }
-    if (this._esOrdersState.response.next == null) {
+    if (this._esOrdersState.ordersListStatus[orderStatus].ordersList.next ==
+        null) {
       return;
     }
-    this._esOrdersState.isLoadingMore = true;
-    this._esOrdersState.isLoadingMoreFailed = false;
+    this._esOrdersState.loadMoreStatus = DataState.LOADING;
     this._updateState();
     httpService
-        .esGetUrl(this._esOrdersState.response.next)
+        .esGetUrl(
+            this._esOrdersState.ordersListStatus[orderStatus].ordersList.next)
         .then((httpResponse) {
       if (httpResponse.statusCode == 200) {
-        this._esOrdersState.response =
-            EsGetOrdersResponse.fromJson(json.decode(httpResponse.body));
-        this._esOrdersState.items.addAll(this._esOrdersState.response.results);
-        this._esOrdersState.isLoadingMoreFailed = false;
-        this._esOrdersState.isLoadingMore = false;
+        List<EsOrder> previousItems =
+            _esOrdersState.ordersListStatus[orderStatus].ordersList.results;
+        this._esOrdersState.ordersListStatus[orderStatus].ordersList =
+            EsGetOrdersResponse.fromJson(
+          json.decode(httpResponse.body),
+        );
+        this._esOrdersState.ordersListStatus[orderStatus].ordersList.results = [
+          ...previousItems,
+          ...this
+              ._esOrdersState
+              .ordersListStatus[orderStatus]
+              .ordersList
+              .results
+        ];
+        this._esOrdersState.loadMoreStatus = DataState.SUCCESS;
       } else {
-        this._esOrdersState.isLoadingMoreFailed = true;
-        this._esOrdersState.isLoadingMore = false;
+        this._esOrdersState.loadMoreStatus = DataState.FAILED;
       }
       this._updateState();
     }).catchError((err) {
-      this._esOrdersState.isLoadingMoreFailed = true;
-      this._esOrdersState.isLoadingMore = false;
+      this._esOrdersState.loadMoreStatus = DataState.FAILED;
       this._updateState();
     });
   }
 
-  getOrderItems(String orderId) async {
-    print("getOrderItems");
-    if (this._esOrdersState.orderItemsKV.containsKey(orderId)) {
+  getOrderDetails(String orderId) async {
+    if (this._esOrdersState.orderDetails.containsKey(orderId)) {
+      this._esOrdersState.orderDetailsFetchingStatus[orderId] =
+          DataState.SUCCESS;
+      this._updateState();
       return;
     }
-    this._esOrdersState.isSubmitting = true;
-    this._esOrdersState.isSubmitFailed = false;
-    this._esOrdersState.isSubmitSuccess = false;
+    this._esOrdersState.orderDetailsFetchingStatus[orderId] = DataState.LOADING;
     this._updateState();
-    await this
+    this
         .httpService
         .esGet(EsApiPaths.getOrderDetail(orderId))
         .then((httpResponse) async {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = false;
-        this._esOrdersState.isSubmitSuccess = true;
-        this._esOrdersState.orderItemsKV.putIfAbsent(
+        this._esOrdersState.orderDetailsFetchingStatus[orderId] =
+            DataState.SUCCESS;
+        this._esOrdersState.orderDetails.putIfAbsent(
               orderId,
               () => EsOrderDetailsResponse.fromJson(
                 json.decode(httpResponse.body),
               ),
             );
-
-        for (var order in this._esOrdersState.items) {
-          if (order.orderId == orderId) {
-            order.orderItems =
-                this._esOrdersState.orderItemsKV[orderId].orderItems;
-            break;
-          }
-        }
       } else {
-        //print("Errorr...");
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = true;
-        this._esOrdersState.isSubmitSuccess = false;
+        this._esOrdersState.orderDetailsFetchingStatus[orderId] =
+            DataState.FAILED;
       }
       this._updateState();
     }).catchError((onError) {
-      this._esOrdersState.isSubmitting = false;
-      this._esOrdersState.isSubmitFailed = true;
-      this._esOrdersState.isSubmitSuccess = false;
+      this._esOrdersState.orderDetailsFetchingStatus[orderId] =
+          DataState.FAILED;
       this._updateState();
     });
   }
 
   acceptOrder(String orderId, Function onSuccess, Function(String) onFail) {
-    this._esOrdersState.isSubmitting = true;
-    this._esOrdersState.isSubmitFailed = false;
-    this._esOrdersState.isSubmitSuccess = false;
+    this._esOrdersState.submittingStatus = DataState.LOADING;
     this._updateState();
     this
         .httpService
         .esPost(EsApiPaths.postAcceptOrder(orderId), '')
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = false;
-        this._esOrdersState.isSubmitSuccess = true;
+        this._esOrdersState.submittingStatus = DataState.SUCCESS;
         var createdBusinessInfo =
             EsOrder.fromJson(json.decode(httpResponse.body));
         if (onSuccess != null) {
@@ -160,25 +158,23 @@ class EsOrdersBloc {
         }
       } else {
         onFail('error :- ${httpResponse.statusCode}');
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = true;
-        this._esOrdersState.isSubmitSuccess = false;
+        this._esOrdersState.submittingStatus = DataState.FAILED;
       }
       this._updateState();
     }).catchError((onError) {
       onFail(onError?.toString());
-      this._esOrdersState.isSubmitting = false;
-      this._esOrdersState.isSubmitFailed = true;
-      this._esOrdersState.isSubmitSuccess = false;
+      this._esOrdersState.submittingStatus = DataState.FAILED;
       this._updateState();
     });
   }
 
-  cancelOrder(String orderId, String cancellationReason, Function onSuccess,
-      Function onFail) {
-    this._esOrdersState.isSubmitting = true;
-    this._esOrdersState.isSubmitFailed = false;
-    this._esOrdersState.isSubmitSuccess = false;
+  cancelOrder(
+    String orderId,
+    String cancellationReason,
+    Function onSuccess,
+    Function(String) onFail,
+  ) {
+    this._esOrdersState.submittingStatus = DataState.LOADING;
     this._updateState();
     var payload = new EsCancelOrderPayload(
       cancellationNote: cancellationReason,
@@ -189,35 +185,31 @@ class EsOrdersBloc {
         .esPost(EsApiPaths.postCancelOrder(orderId), payloadString)
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = false;
-        this._esOrdersState.isSubmitSuccess = true;
+        this._esOrdersState.submittingStatus = DataState.SUCCESS;
         var createdBusinessInfo =
             EsOrder.fromJson(json.decode(httpResponse.body));
         if (onSuccess != null) {
           onSuccess(createdBusinessInfo);
         }
       } else {
-        onFail();
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = true;
-        this._esOrdersState.isSubmitSuccess = false;
+        onFail('error :- ${httpResponse.statusCode}');
+        this._esOrdersState.submittingStatus = DataState.FAILED;
       }
       this._updateState();
     }).catchError((onError) {
-      onFail();
-      this._esOrdersState.isSubmitting = false;
-      this._esOrdersState.isSubmitFailed = true;
-      this._esOrdersState.isSubmitSuccess = false;
+      onFail(onError?.toString());
+      this._esOrdersState.submittingStatus = DataState.FAILED;
       this._updateState();
     });
   }
 
   updateOrderPaymentStatus(
-      String orderId, String newStatus, Function onSuccess, Function onFail) {
-    this._esOrdersState.isSubmitting = true;
-    this._esOrdersState.isSubmitFailed = false;
-    this._esOrdersState.isSubmitSuccess = false;
+    String orderId,
+    String newStatus,
+    Function onSuccess,
+    Function(String) onFail,
+  ) {
+    this._esOrdersState.submittingStatus = DataState.LOADING;
     this._updateState();
 
     var apiCall = (newStatus == EsOrderPaymentStatus.APPROVED)
@@ -226,34 +218,30 @@ class EsOrdersBloc {
 
     apiCall.then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = false;
-        this._esOrdersState.isSubmitSuccess = true;
+        this._esOrdersState.submittingStatus = DataState.SUCCESS;
         var createdBusinessInfo =
             EsOrder.fromJson(json.decode(httpResponse.body));
         if (onSuccess != null) {
           onSuccess(createdBusinessInfo);
         }
       } else {
-        onFail();
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = true;
-        this._esOrdersState.isSubmitSuccess = false;
+        onFail('error :- ${httpResponse.statusCode}');
+        this._esOrdersState.submittingStatus = DataState.FAILED;
       }
       this._updateState();
     }).catchError((onError) {
-      onFail();
-      this._esOrdersState.isSubmitting = false;
-      this._esOrdersState.isSubmitFailed = true;
-      this._esOrdersState.isSubmitSuccess = false;
+      onFail(onError?.toString());
+      this._esOrdersState.submittingStatus = DataState.FAILED;
       this._updateState();
     });
   }
 
-  assignOrder(String orderId, Function onSuccess, Function onFail) {
-    this._esOrdersState.isSubmitting = true;
-    this._esOrdersState.isSubmitFailed = false;
-    this._esOrdersState.isSubmitSuccess = false;
+  assignOrder(
+    String orderId,
+    Function onSuccess,
+    Function(String) onFail,
+  ) {
+    this._esOrdersState.submittingStatus = DataState.LOADING;
     this._updateState();
     var payload = new EsRequestDeliveryPayload(
         deliveryagentIds: this._esOrdersState.selectedDeliveryAgentIds);
@@ -264,60 +252,50 @@ class EsOrdersBloc {
             EsApiPaths.postOrderRequestDeliveryAgent(orderId), payloadString)
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = false;
-        this._esOrdersState.isSubmitSuccess = true;
+        this._esOrdersState.submittingStatus = DataState.SUCCESS;
         var createdBusinessInfo =
             EsOrder.fromJson(json.decode(httpResponse.body));
         if (onSuccess != null) {
           onSuccess(createdBusinessInfo);
         }
       } else {
-        onFail();
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = true;
-        this._esOrdersState.isSubmitSuccess = false;
+        onFail('error :- ${httpResponse.statusCode}');
+        this._esOrdersState.submittingStatus = DataState.FAILED;
       }
       this._updateState();
     }).catchError((onError) {
-      onFail();
-      this._esOrdersState.isSubmitting = false;
-      this._esOrdersState.isSubmitFailed = true;
-      this._esOrdersState.isSubmitSuccess = false;
+      onFail(onError?.toString());
+      this._esOrdersState.submittingStatus = DataState.FAILED;
       this._updateState();
     });
   }
 
-  markReady(String orderId, Function onSuccess, Function onFail) {
-    this._esOrdersState.isSubmitting = true;
-    this._esOrdersState.isSubmitFailed = false;
-    this._esOrdersState.isSubmitSuccess = false;
+  markReady(
+    String orderId,
+    Function onSuccess,
+    Function(String) onFail,
+  ) {
+    this._esOrdersState.submittingStatus = DataState.LOADING;
     this._updateState();
     this
         .httpService
         .esPost(EsApiPaths.postReadyOrder(orderId), '')
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = false;
-        this._esOrdersState.isSubmitSuccess = true;
+        this._esOrdersState.submittingStatus = DataState.SUCCESS;
         var createdBusinessInfo =
             EsOrder.fromJson(json.decode(httpResponse.body));
         if (onSuccess != null) {
           onSuccess(createdBusinessInfo);
         }
       } else {
-        onFail();
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = true;
-        this._esOrdersState.isSubmitSuccess = false;
+        onFail('error :- ${httpResponse.statusCode}');
+        this._esOrdersState.submittingStatus = DataState.FAILED;
       }
       this._updateState();
     }).catchError((onError) {
-      onFail();
-      this._esOrdersState.isSubmitting = false;
-      this._esOrdersState.isSubmitFailed = true;
-      this._esOrdersState.isSubmitSuccess = false;
+      onFail(onError?.toString());
+      this._esOrdersState.submittingStatus = DataState.FAILED;
       this._updateState();
     });
   }
@@ -326,33 +304,31 @@ class EsOrdersBloc {
     if (this._esOrdersState.agents != null) {
       return;
     }
-    this._esOrdersState.isLoadingAgents = true;
+    this._esOrdersState.agentsFetchingStatus = DataState.LOADING;
     this._esOrdersState.agents = [];
     this._updateState();
     httpService
         .esGet(
       EsApiPaths.getDeliveryAgents(
-        this.esBusinessesBloc.getSelectedBusinessId(),
-      ),
+          this.esBusinessesBloc.getSelectedBusinessId()),
     )
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 ||
           httpResponse.statusCode == 201 ||
           httpResponse.statusCode == 202) {
-        this._esOrdersState.isLoadingAgentsFailed = false;
-        this._esOrdersState.isLoadingAgents = false;
+        this._esOrdersState.agentsFetchingStatus = DataState.SUCCESS;
         this._esOrdersState.agents = new List<EsDeliveryAgent>();
-        json.decode(httpResponse.body).forEach((v) {
-          this._esOrdersState.agents.add(new EsDeliveryAgent.fromJson(v));
-        });
+        json.decode(httpResponse.body).forEach(
+          (v) {
+            this._esOrdersState.agents.add(new EsDeliveryAgent.fromJson(v));
+          },
+        );
       } else {
-        this._esOrdersState.isLoadingAgentsFailed = true;
-        this._esOrdersState.isLoadingAgents = false;
+        this._esOrdersState.agentsFetchingStatus = DataState.FAILED;
       }
       this._updateState();
     }).catchError((onError) {
-      this._esOrdersState.isLoadingAgentsFailed = true;
-      this._esOrdersState.isLoadingAgents = false;
+      this._esOrdersState.agentsFetchingStatus = DataState.SUCCESS;
       this._updateState();
     });
   }
@@ -373,9 +349,7 @@ class EsOrdersBloc {
     Function(String) onFail,
     UpdateOrderItemsPayload body,
   ) {
-    this._esOrdersState.isSubmitting = true;
-    this._esOrdersState.isSubmitFailed = false;
-    this._esOrdersState.isSubmitSuccess = false;
+    this._esOrdersState.submittingStatus = DataState.LOADING;
     this._updateState();
     this
         .httpService
@@ -383,9 +357,7 @@ class EsOrdersBloc {
             EsApiPaths.postUpdateOrderItems(orderId), jsonEncode(body.toJson()))
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = false;
-        this._esOrdersState.isSubmitSuccess = true;
+        this._esOrdersState.submittingStatus = DataState.SUCCESS;
         var createdBusinessInfo =
             EsOrder.fromJson(json.decode(httpResponse.body));
         if (onSuccess != null) {
@@ -393,16 +365,12 @@ class EsOrdersBloc {
         }
       } else {
         onFail('error :- ${httpResponse.statusCode}');
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = true;
-        this._esOrdersState.isSubmitSuccess = false;
+        this._esOrdersState.submittingStatus = DataState.FAILED;
       }
       this._updateState();
     }).catchError((onError) {
       onFail(onError?.toString());
-      this._esOrdersState.isSubmitting = false;
-      this._esOrdersState.isSubmitFailed = true;
-      this._esOrdersState.isSubmitSuccess = false;
+      this._esOrdersState.submittingStatus = DataState.FAILED;
       this._updateState();
     });
   }
@@ -420,39 +388,55 @@ class EsOrdersBloc {
 }
 
 class EsOrdersState {
-  bool isLoading = false;
-  bool isLoadingAgents = false;
-  EsGetOrdersResponse response;
-  List<EsOrder> items = new List<EsOrder>();
-  bool isLoadingFailed = false;
-  bool isLoadingAgentsFailed = false;
-  bool isLoadingMore;
-  bool isLoadingMoreFailed;
-  bool isSubmitting;
-  bool isSubmitSuccess;
-  bool isSubmitFailed;
-  List<EsDeliveryAgent> agents;
-  Map<String, EsOrderDetailsResponse> orderItemsKV =
-      new Map<String, EsOrderDetailsResponse>();
+  Map<String, OrderListStatus> ordersListStatus;
 
-  List<String> cancellationReasons = [
-    'Kitchen full',
-    'Item out of stock',
-    'No delivery person',
-    'Closing time',
-    'Other'
-  ];
+  Map<String, EsOrderDetailsResponse> orderDetails;
+  Map<String, DataState> orderDetailsFetchingStatus;
+
+  List<EsDeliveryAgent> agents;
+  DataState agentsFetchingStatus;
+
+  DataState loadMoreStatus;
+  DataState submittingStatus;
+
+  String errorMessage;
 
   List<String> get selectedDeliveryAgentIds =>
       agents.map((e) => e.deliveryagentId).toList();
 
   EsOrdersState() {
-    this.isLoading = false;
-    this.isLoadingFailed = false;
-    this.isLoadingMore = false;
-    this.isLoadingMoreFailed = false;
-    this.isSubmitting = false;
-    this.isSubmitFailed = false;
-    this.isSubmitSuccess = false;
+    ordersListStatus = {
+      EsOrderStatus.CREATED: OrderListStatus(),
+      EsOrderStatus.MERCHANT_ACCEPTED: OrderListStatus(),
+      EsOrderStatus.READY_FOR_PICKUP: OrderListStatus(),
+      EsOrderStatus.REQUESTING_TO_DA: OrderListStatus(),
+      EsOrderStatus.ALL_ORDERS: OrderListStatus(),
+    };
+
+    this.orderDetails = {};
+    this.orderDetailsFetchingStatus = {};
+
+    this.agentsFetchingStatus = DataState.IDLE;
+    this.loadMoreStatus = DataState.IDLE;
+    this.submittingStatus = DataState.IDLE;
+
+    this.errorMessage = '';
   }
+}
+
+class OrderListStatus {
+  EsGetOrdersResponse ordersList;
+  DataState fetchingStatus;
+
+  OrderListStatus({
+    this.ordersList,
+    this.fetchingStatus = DataState.IDLE,
+  });
+}
+
+enum DataState {
+  IDLE,
+  LOADING,
+  SUCCESS,
+  FAILED,
 }
