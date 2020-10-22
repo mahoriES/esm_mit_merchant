@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_orders.dart';
+import 'package:foore/data/constants/string_constants.dart';
 import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/es_order_page/es_order_details.dart';
@@ -356,19 +358,53 @@ class _CardExpandedView extends StatelessWidget {
                 ),
                 if ((esOrderDetails.customerPhones != null) &&
                     (esOrderDetails.customerPhones.length > 0)) ...[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        launch(('tel://${esOrderDetails.customerPhones[0]}'));
-                      },
-                      child: Text(
+                  Row(
+                    children: [
+                      Text(
                         esOrderDetails.customerPhones[0],
-                        style: Theme.of(context).textTheme.subtitle2.copyWith(
-                            color: Colors.lightBlue,
-                            decoration: TextDecoration.underline),
+                        style: Theme.of(context).textTheme.subtitle2.copyWith(),
                       ),
-                    ),
+                      Expanded(
+                        child: SizedBox(),
+                      ),
+                      Material(
+                        type: MaterialType.transparency,
+                        child: InkWell(
+                          child: Icon(
+                            Icons.call_rounded,
+                            size: 25.toHeight,
+                            color: Colors.lightBlue,
+                          ),
+                          onTap: () => launch(
+                            StringConstants.callUrlLauncher(
+                              esOrderDetails.customerPhones[0],
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12.toWidth),
+                      Material(
+                        type: MaterialType.transparency,
+                        child: InkWell(
+                          child: Image.asset(
+                            'assets/whatsapp.png',
+                            height: 20.toHeight,
+                            fit: BoxFit.cover,
+                          ),
+                          onTap: () => launch(
+                            Platform.isIOS
+                                ? StringConstants.whatsAppIosLauncher(
+                                    esOrderDetails.customerPhones[0],
+                                    '', // 'Message from eSamudaay.',
+                                  )
+                                : StringConstants.whatsAppAndroidLauncher(
+                                    esOrderDetails.customerPhones[0],
+                                    '', //'Message from eSamudaay.',
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
 

@@ -11,7 +11,7 @@ class EsOrderPage extends StatelessWidget {
   EsOrderPage({this.title});
   final List<String> tabTitles = [
     'New',
-    'Preparing',
+    'Accepted',
     'Ready',
     'Delivery',
     'All'
