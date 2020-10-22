@@ -49,7 +49,7 @@ class _EsOrderDetailsChargesComponentState
     EsOrderDetails.chargesUpdated.value = true;
     additionalChargesList
         .removeWhere((element) => element.chargeName == chargeKey);
-    widget.orderDetails.additionalChargesDetails = additionalChargesList;
+    //widget.orderDetails.additionalChargesDetails = additionalChargesList;
   }
 
   void addOrUpdateChargeLocally(AdditionalChargesDetails chargesDetails) {
@@ -129,29 +129,39 @@ class _EsOrderDetailsChargesComponentState
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              flex: 65,
+              flex: 60,
               child: Text(
                 _totalNumberOfItems.toString() +
                     '  Item' +
                     (_totalNumberOfItems > 1 ? 's' : ''),
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    .copyWith(fontWeight: FontWeight.w400),
               ),
             ),
             Expanded(
-              flex: 20,
+              flex: 30,
               child: Text(
                 '\u{20B9} ${_itemCharges.toStringAsFixed(2)}',
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    .copyWith(fontWeight: FontWeight.w400),
                 textAlign: TextAlign.left,
               ),
             ),
             Expanded(
-              flex: 15,
+              flex: 10,
               child: SizedBox.shrink(),
             ),
           ],
         ),
-        //\u{20B9}
+        SizedBox(height: 10.toHeight),
+        Divider(
+          color: AppColors.greyishText,
+        ),
         if (additionalChargesList.isNotEmpty) ...[
-          SizedBox(height: 10.toHeight),
           ListView.separated(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
@@ -164,12 +174,19 @@ class _EsOrderDetailsChargesComponentState
                 children: [
                   Expanded(
                       flex: 63,
-                      child: Text(AdditionChargesMetaDataGenerator
-                          .friendlyChargeNameFromKeyValue(
-                              additionalChargesList[index].chargeName))),
+                      child: Text(
+                        AdditionChargesMetaDataGenerator
+                            .friendlyChargeNameFromKeyValue(
+                                additionalChargesList[index].chargeName),
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle2
+                            .copyWith(fontWeight: FontWeight.w400),
+                      )),
                   Expanded(
                     flex: 20,
                     child: TextFormField(
+                      key: Key(additionalChargesList.length.toString()),
                       onChanged: (value) {
                         var valid = validateChargeValueInput(value);
                         if (valid == null) {
@@ -183,10 +200,7 @@ class _EsOrderDetailsChargesComponentState
                             additionalChargesList[index].value = 0;
                             Fluttertoast.showToast(
                                 msg:
-                                    'Invalid ${AdditionChargesMetaDataGenerator.
-                                    friendlyChargeNameFromKeyValue(
-                                        additionalChargesList[index]
-                                            .chargeName)} value!');
+                                    'Invalid ${AdditionChargesMetaDataGenerator.friendlyChargeNameFromKeyValue(additionalChargesList[index].chargeName)} value!');
                           });
                         }
                       },
@@ -194,11 +208,14 @@ class _EsOrderDetailsChargesComponentState
                       initialValue: (additionalChargesList[index].value / 100)
                           .toStringAsFixed(2),
                       keyboardType: TextInputType.number,
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2
+                          .copyWith(fontWeight: FontWeight.w400),
                       decoration: InputDecoration(
                         prefix: Padding(
                             padding: EdgeInsets.only(right: 3.toWidth),
                             child: Text('\u{20B9}')),
-                        labelText: 'Value',
                       ),
                     ),
                   ),
@@ -223,7 +240,7 @@ class _EsOrderDetailsChargesComponentState
                   ),
                   SizedBox(width: 5.toWidth),
                   Text(
-                    'Additional Charges',
+                    'Add Charges',
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                     ),
@@ -242,7 +259,15 @@ class _EsOrderDetailsChargesComponentState
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(flex: 65, child: Text('Total Amount')),
+            Expanded(
+                flex: 65,
+                child: Text(
+                  'Total Amount',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      .copyWith(fontWeight: FontWeight.bold),
+                )),
             Expanded(
               flex: 35,
               child: Text(
