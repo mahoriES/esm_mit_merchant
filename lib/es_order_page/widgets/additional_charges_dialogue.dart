@@ -130,7 +130,7 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
                                 value:
                                     (double.parse(priceController.text) * 100)
                                         .toInt()));
-                      })),
+                      },),),
                       SizedBox(
                         width: 20.toWidth,
                       ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:foore/app_colors.dart';
 import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/services/sizeconfig.dart';
@@ -45,9 +47,8 @@ class _EsOrderDetailsChargesComponentState
 
   void deleteChargeLocally(String chargeKey) {
     EsOrderDetails.chargesUpdated.value = true;
-    additionalChargesList.removeWhere((element) =>
-        element.chargeName ==
-        chargeKey);
+    additionalChargesList
+        .removeWhere((element) => element.chargeName == chargeKey);
     widget.orderDetails.additionalChargesDetails = additionalChargesList;
   }
 
@@ -58,56 +59,23 @@ class _EsOrderDetailsChargesComponentState
     widget.orderDetails.additionalChargesDetails = additionalChargesList;
   }
 
-  Widget getEditIconWidget(BuildContext context, String chargeKey) {
+  Widget getDeleteIconWidget(BuildContext context, String chargeKey) {
     return Expanded(
-      flex: 10,
+      flex: 5,
       child: IconButton(
-        padding: const EdgeInsets.all(0.0),
+        padding: const EdgeInsets.only(right: 0),
         icon: Icon(
-          Icons.edit,
-          color: Theme.of(context).primaryColor,
+          Icons.remove_circle,
+          color: AppColors.iconColors,
         ),
         onPressed: () {
-          showEditChargeActionSheet(chargeKey);
+          setState(() {
+            deleteChargeLocally(chargeKey);
+          });
         },
       ),
     );
   }
-
-  void showEditChargeActionSheet(String chargeKey) {
-    String chargeName =
-        AdditionChargesMetaDataGenerator.friendlyChargeNameFromKeyValue(
-            chargeKey);
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext bc) {
-        return Container(
-          child: new Wrap(
-            children: <Widget>[
-              new ListTile(
-                  leading: new Icon(Icons.edit),
-                  title: new Text('Edit $chargeName'),
-                  onTap: () {
-                    Navigator.pop(bc);
-                    showAdditionalChargeDialog(1, chargeName: chargeKey);
-                  }),
-              new ListTile(
-                leading: new Icon(Icons.cancel_outlined),
-                title: new Text('Delete $chargeName'),
-                onTap: () {
-                  Navigator.pop(bc);
-                  setState(() {
-                    deleteChargeLocally(chargeKey);
-                  });
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
 
   void showAdditionalChargeDialog(int type, {String chargeName}) async {
     List<String> availableCharges = [];
@@ -129,8 +97,7 @@ class _EsOrderDetailsChargesComponentState
         availableChargesOptions: availableCharges,
       ),
     );
-    if (selectedCharge != null &&
-        selectedCharge is AdditionalChargesDetails) {
+    if (selectedCharge != null && selectedCharge is AdditionalChargesDetails) {
       setState(() {
         addOrUpdateChargeLocally(selectedCharge);
       });
@@ -182,6 +149,7 @@ class _EsOrderDetailsChargesComponentState
             ),
           ],
         ),
+        //\u{20B9}
         if (additionalChargesList.isNotEmpty) ...[
           SizedBox(height: 10.toHeight),
           ListView.separated(
@@ -189,22 +157,56 @@ class _EsOrderDetailsChargesComponentState
             physics: NeverScrollableScrollPhysics(),
             itemCount: additionalChargesList.length,
             separatorBuilder: (context, index) => SizedBox(height: 10.toHeight),
-            itemBuilder: (context, index) => Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                    flex: 70,
-                    child: Text(AdditionChargesMetaDataGenerator
-                        .friendlyChargeNameFromKeyValue(
-                            additionalChargesList[index].chargeName))),
-                Expanded(
-                  flex: 20,
-                  child: Text(
-                      '\u{20B9} ${(additionalChargesList[index].value / 100).toStringAsFixed(2)}',),
-                ),
-                getEditIconWidget(
-                    context, additionalChargesList[index].chargeName),
-              ],
+            itemBuilder: (context, index) => Padding(
+              padding: EdgeInsets.only(right: 8.toWidth),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                      flex: 63,
+                      child: Text(AdditionChargesMetaDataGenerator
+                          .friendlyChargeNameFromKeyValue(
+                              additionalChargesList[index].chargeName))),
+                  Expanded(
+                    flex: 20,
+                    child: TextFormField(
+                      onChanged: (value) {
+                        var valid = validateChargeValueInput(value);
+                        if (valid == null) {
+                          EsOrderDetails.chargesUpdated.value = true;
+                          setState(() {
+                            additionalChargesList[index].value =
+                                (double.parse(value) * 100).toInt();
+                          });
+                        } else {
+                          setState(() {
+                            additionalChargesList[index].value = 0;
+                            Fluttertoast.showToast(
+                                msg:
+                                    'Invalid ${AdditionChargesMetaDataGenerator.
+                                    friendlyChargeNameFromKeyValue(
+                                        additionalChargesList[index]
+                                            .chargeName)} value!');
+                          });
+                        }
+                      },
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      initialValue: (additionalChargesList[index].value / 100)
+                          .toStringAsFixed(2),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        prefix: Padding(
+                            padding: EdgeInsets.only(right: 3.toWidth),
+                            child: Text('\u{20B9}')),
+                        labelText: 'Value',
+                      ),
+                    ),
+                  ),
+                  Expanded(flex: 12, child: SizedBox.shrink()),
+                  getDeleteIconWidget(
+                      context, additionalChargesList[index].chargeName),
+                ],
+              ),
             ),
           ),
         ],
@@ -240,11 +242,11 @@ class _EsOrderDetailsChargesComponentState
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(flex: 65,child: Text('Total Amount')),
-            Expanded(flex: 35,
+            Expanded(flex: 65, child: Text('Total Amount')),
+            Expanded(
+              flex: 35,
               child: Text(
-                '\u{20B9} ${(_itemCharges+additionalChargesList.fold(0,
-                        (prev, next) => prev+next.value)/100).toStringAsFixed(2)}',
+                '\u{20B9} ${(_itemCharges + additionalChargesList.fold(0, (prev, next) => prev + next.value) / 100).toStringAsFixed(2)}',
                 style: Theme.of(context)
                     .textTheme
                     .headline6
@@ -256,6 +258,13 @@ class _EsOrderDetailsChargesComponentState
         ),
       ],
     );
+  }
+
+  dynamic validateChargeValueInput(String input) {
+    if (input == '' || double.tryParse(input) == null) {
+      return 'Invalid value';
+    }
+    return null;
   }
 }
 
