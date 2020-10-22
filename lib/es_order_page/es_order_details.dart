@@ -288,7 +288,7 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                           context: context,
                           pageBuilder: (context, _, __) =>
                               EsOrderDetailsImageView(
-                            details.customerNoteImages[index],
+                            details.customerNoteImages[index].photoUrl,
                           ),
                         ),
                         child: Container(
@@ -298,7 +298,9 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                           child: CachedNetworkImage(
                             height: double.infinity,
                             width: double.infinity,
-                            imageUrl: details.customerNoteImages[index] ?? '',
+                            imageUrl:
+                                details.customerNoteImages[index]?.photoUrl ??
+                                    '',
                             fit: BoxFit.contain,
                             placeholder: (context, url) => Center(
                               child: CircularProgressIndicator(),

@@ -60,7 +60,7 @@ class EsOrderDetailsResponse {
   String clusterName;
   String customerName;
   String customerNote;
-  List<String> customerNoteImages;
+  List<BusinessImages> customerNoteImages;
   PickupAddress pickupAddress;
   PickupAddress deliveryAddress;
   String cancellationNote;
@@ -129,9 +129,13 @@ class EsOrderDetailsResponse {
     clusterName = json['cluster_name'];
     customerName = json['customer_name'];
     customerNote = json['customer_note'];
-    customerNoteImages = json['customer_note_images'] != null
-        ? json['customer_note_images'].cast<String>()
-        : [];
+    if (json['customer_note_images'] != null) {
+      customerNoteImages = List<BusinessImages>();
+      json['customer_note_images'].forEach((v) {
+        customerNoteImages.add(new BusinessImages.fromJson(v));
+      });
+    } else
+      customerNoteImages = [];
     pickupAddress = json['pickup_address'] != null
         ? new PickupAddress.fromJson(json['pickup_address'])
         : null;
@@ -252,9 +256,9 @@ class BusinessImages {
   BusinessImages({this.photoId, this.photoUrl, this.contentType});
 
   BusinessImages.fromJson(Map<String, dynamic> json) {
-    photoId = json['photo_id'];
-    photoUrl = json['photo_url'];
-    contentType = json['content_type'];
+    photoId = json['photo_id'] ?? '';
+    photoUrl = json['photo_url'] ?? '';
+    contentType = json['content_type'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
