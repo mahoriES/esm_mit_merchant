@@ -1,3 +1,6 @@
+import 'dart:collection';
+
+import 'package:flutter/material.dart';
 import 'package:foore/data/model/es_orders.dart';
 
 class UpdateOrderItemsPayload {
@@ -35,6 +38,7 @@ class UpdateOrderItems {
     this.productStatus,
     this.unitPriceInRupee,
   });
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['sku_id'] = this.skuId;
@@ -60,7 +64,7 @@ class EsOrderDetailsResponse {
   String clusterName;
   String customerName;
   String customerNote;
-  List<BusinessImages> customerNoteImages;
+  List<dynamic> customerNoteImages;
   PickupAddress pickupAddress;
   PickupAddress deliveryAddress;
   String cancellationNote;
@@ -129,13 +133,44 @@ class EsOrderDetailsResponse {
     clusterName = json['cluster_name'];
     customerName = json['customer_name'];
     customerNote = json['customer_note'];
-    if (json['customer_note_images'] != null) {
-      customerNoteImages = List<BusinessImages>();
-      json['customer_note_images'].forEach((v) {
-        customerNoteImages.add(new BusinessImages.fromJson(v));
-      });
-    } else
-      customerNoteImages = [];
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    ///Logic to handle both cases - When the customer note images is i) a list
+    ///of strings ii) a list of HashMap
+    if (json['customer_note_images'] != null &&
+        json['customer_note_images'] is List &&
+        json['customer_note_images'].isNotEmpty) {
+      ///To check the type of the elements in list, since it is a homogeneous list
+      ///We can simply check type of first element(which will definitely exist since
+      ///this block won't execute for empty lists)
+
+      if (json['customer_note_images'].first is String)
+
+        ///The customer note images is a list of Strings(image links)
+        customerNoteImages = json['customer_note_images'].cast<String>();
+      else if (Map<String, dynamic>.from(json['customer_note_images'].first) !=
+              null &&
+          Map<String, dynamic>.from(json['customer_note_images'].first)
+              .isNotEmpty) {
+        ///The customer note images is a list of HashMap(image objects)
+
+        //Initialisation necessary as variable hasn't been allocated runtime memory
+        customerNoteImages = [];
+
+        json['customer_note_images'].forEach((element) {
+          if (element['photo_url'] != null && element['photo_url'] is String) {
+            customerNoteImages.add(element['photo_url'].toString());
+          }
+        });
+      } else {
+        customerNoteImages = [];
+      }
+      debugPrint('Customer note images $customerNoteImages');
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     pickupAddress = json['pickup_address'] != null
         ? new PickupAddress.fromJson(json['pickup_address'])
         : null;

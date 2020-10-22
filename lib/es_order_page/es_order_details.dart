@@ -288,7 +288,11 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                           context: context,
                           pageBuilder: (context, _, __) =>
                               EsOrderDetailsImageView(
-                            details.customerNoteImages[index].photoUrl,
+                            details.customerNoteImages[index] is String
+                                ? details.customerNoteImages[index]
+                                : (details
+                                        .customerNoteImages[index]?.photoUrl ??
+                                    ''),
                           ),
                         ),
                         child: Container(
@@ -299,8 +303,11 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                             height: double.infinity,
                             width: double.infinity,
                             imageUrl:
-                                details.customerNoteImages[index]?.photoUrl ??
-                                    '',
+                                details.customerNoteImages[index] is String
+                                    ? details.customerNoteImages[index]
+                                    : (details.customerNoteImages[index]
+                                            ?.photoUrl ??
+                                        ''),
                             fit: BoxFit.contain,
                             placeholder: (context, url) => Center(
                               child: CircularProgressIndicator(),
