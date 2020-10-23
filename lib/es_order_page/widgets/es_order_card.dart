@@ -314,7 +314,9 @@ class _EsOrderCardState extends State<EsOrderCard> {
                         child: Text('Check'),
                       ),
                     ],
-                    if (widget.esOrder.dIsReady) ...[
+                    if ((widget.esOrder.dIsReady ||
+                            widget.esOrder.dIsShowInDelivry) &&
+                        !widget.esOrder.dIsStatusCancelled) ...[
                       RaisedButton(
                         onPressed: widget.onMarkCompleted,
                         child: Text('Mark Completed'),

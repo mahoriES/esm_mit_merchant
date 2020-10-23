@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_orders.dart';
 import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
+import 'package:foore/es_order_page/widgets/es_order_card.dart';
 import 'package:foore/widgets/response_dialog.dart';
 
 class OrdersAlertDialogs {
@@ -129,47 +130,59 @@ class OrdersAlertDialogs {
     @required EsOrder order,
     @required EsOrdersBloc esOrdersBloc,
     @required BuildContext context,
+    @required Function(String) updatePaymentStatus,
   }) async {
     return _showDialogCommon(
       esOrdersBloc: esOrdersBloc,
       context: context,
-      alertDialog: AlertDialog(
-        title: Text('Do you want to mark this order as completed?'),
-        content: Column(
-          children: [
-            RadioListTile(
-              value: null,
-              groupValue: null,
-              onChanged: null,
-            )
+      alertDialog: Center(
+        child: AlertDialog(
+          scrollable: true,
+          title: Text(
+            order.dPaymentStatus == EsOrderPaymentStatus.PENDING
+                ? 'The payment for this order is still pending, please update status to approved to mark this as completed.'
+                : order.dPaymentStatus == EsOrderPaymentStatus.INITIATED
+                    ? 'The payment for this order is not processed yet, please update status to approved to mark this as completed.'
+                    : order.dPaymentStatus == EsOrderPaymentStatus.APPROVED
+                        ? 'Do you want to mark this order as completed?'
+                        : 'The payment for this order is rejected, please update status to approved to mark this as completed.',
+          ),
+          content: order.dPaymentStatus != EsOrderPaymentStatus.APPROVED
+              ? UpiPaymentRow(
+                  esOrder: order,
+                  buildContext: context,
+                  onClick: (esorder, status) => updatePaymentStatus(status),
+                )
+              : SizedBox.shrink(),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: Theme.of(context).textTheme.button,
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop(false);
+              },
+            ),
+            if (order.dPaymentStatus == EsOrderPaymentStatus.APPROVED) ...[
+              FlatButton(
+                child: Text('Mark as Completed'),
+                onPressed: () {
+                  esOrdersBloc.markComplete(order.orderId, () {
+                    Navigator.of(context, rootNavigator: true).pop(true);
+                  }, (error) {
+                    Navigator.of(context, rootNavigator: true).pop(false);
+                    showDialog(
+                      context: context,
+                      builder: (context) =>
+                          ResponseDialogue(error ?? 'something went wrong'),
+                    );
+                  });
+                },
+              ),
+            ],
           ],
         ),
-        actions: <Widget>[
-          FlatButton(
-            child: Text(
-              'Cancel',
-              style: Theme.of(context).textTheme.button,
-            ),
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop(false);
-            },
-          ),
-          FlatButton(
-            child: Text('Mark as Completed'),
-            onPressed: () {
-              esOrdersBloc.markComplete(order.orderId, () {
-                Navigator.of(context, rootNavigator: true).pop(true);
-              }, (error) {
-                Navigator.of(context, rootNavigator: true).pop(false);
-                showDialog(
-                  context: context,
-                  builder: (context) =>
-                      ResponseDialogue(error ?? 'something went wrong'),
-                );
-              });
-            },
-          ),
-        ],
       ),
     );
   }
@@ -257,7 +270,8 @@ class OrdersAlertDialogs {
                 );
               }
 
-              if (snapshot.data.agents.length == 0) {
+              if (snapshot.data.agents == null ||
+                  snapshot.data.agents.isEmpty) {
                 return AlertDialog(
                   content: Text(
                       'You do not have any delivery partners. Please contact us if you need help onboarding delivery partners'),

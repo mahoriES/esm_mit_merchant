@@ -251,6 +251,12 @@ class EsOrder {
     return this.orderStatus == EsOrderStatus.READY_FOR_PICKUP && !dIsDelivery;
   }
 
+  get dIsShowInDelivry {
+    return this.orderStatus == EsOrderStatus.PICKED_UP_BY_DA ||
+        this.orderStatus == EsOrderStatus.READY_FOR_PICKUP ||
+        this.orderStatus == EsOrderStatus.REQUESTING_TO_DA;
+  }
+
   String get dOrderTotal {
     return orderTotal != null ? '${getPrice(orderTotal)}' : '₹ 0.00';
   }
