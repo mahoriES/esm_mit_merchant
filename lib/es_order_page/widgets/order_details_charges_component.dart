@@ -49,7 +49,6 @@ class _EsOrderDetailsChargesComponentState
     EsOrderDetails.chargesUpdated.value = true;
     additionalChargesList
         .removeWhere((element) => element.chargeName == chargeKey);
-    //widget.orderDetails.additionalChargesDetails = additionalChargesList;
   }
 
   void addOrUpdateChargeLocally(AdditionalChargesDetails chargesDetails) {
@@ -186,9 +185,11 @@ class _EsOrderDetailsChargesComponentState
                   Expanded(
                     flex: 20,
                     child: TextFormField(
+                      //This key is very important to refresh the values for the fields when charges are added/removed.
                       key: Key(additionalChargesList.length.toString()),
                       onChanged: (value) {
                         var valid = validateChargeValueInput(value);
+                        //We make sure that the correct values is saved under the hood, so we don't accidentally, send invalid values to backend.
                         if (valid == null) {
                           EsOrderDetails.chargesUpdated.value = true;
                           setState(() {
@@ -196,6 +197,8 @@ class _EsOrderDetailsChargesComponentState
                                 (double.parse(value) * 100).toInt();
                           });
                         } else {
+                          //This case would handle all invalid inputs and would initialise explicitly the value for those charges as 0.
+                          //This would guard us from anomalies which would creep in due to invalid inputs.
                           setState(() {
                             additionalChargesList[index].value = 0;
                             Fluttertoast.showToast(
@@ -299,6 +302,9 @@ enum AdditionalChargeType {
   packingCharge,
   serviceCharge,
 }
+
+///This class acts as an interface between the backend keys for charges and user-friendly charges string
+///by a 1 on 1 mapping between the both.
 
 class AdditionChargesMetaDataGenerator {
   static AdditionChargesMetaDataGenerator _instance;
