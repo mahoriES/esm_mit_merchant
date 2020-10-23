@@ -18,16 +18,14 @@ import 'widgets/order_details_charges_component.dart';
 class EsOrderDetailsParam {
   EsOrderDetailsResponse esOrderDetailsResponse;
   Function(BuildContext) acceptOrder;
-  Function(BuildContext, UpdateOrderItemsPayload) updateOrder;
+  Function(BuildContext, UpdateOrderPayload) updateOrder;
   Function(BuildContext) cancelOrder;
-  Function(BuildContext, UpdateOrderChargesPayload) updateOrderCharges;
 
   EsOrderDetailsParam({
     @required this.esOrderDetailsResponse,
     @required this.acceptOrder,
     @required this.updateOrder,
     @required this.cancelOrder,
-    @required this.updateOrderCharges,
   });
 }
 
@@ -62,38 +60,14 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
     super.initState();
   }
 
-  _updateOrder() {
-    if (EsOrderDetails.chargesUpdated.value) {
-      _updateAdditionalCharges();
-      return;
-    }
-    widget.params.updateOrder(
-      context,
-      UpdateOrderItemsPayload(
-        orderItems: List.generate(
-          details.orderItems.length,
-          (index) => UpdateOrderItems(
-            productStatus: details.orderItems[index].itemStatus ==
-                    CatalogueItemStatus.notPresent
-                ? details.orderItems[index].itemStatus
-                : null,
-            skuId: int.tryParse(details.orderItems[index].skuId),
-            quantity: details.orderItems[index].itemQuantity,
-            unitPriceInRupee: details.orderItems[index].unitPrice,
-          ),
-        ),
-        freeFormItems: details.freeFormItems,
-      ),
-    );
-  }
 
-  //Since it is a requirement to have the catalog and/or free form items when
-  //updating the charges, they too are sent in the Order Update(PATCH) request.
-  _updateAdditionalCharges() {
-    widget.params.updateOrderCharges(
+  //This function works for these cases - i) When only order charges are updated  ii) When only order items are updated
+  //iii) When both are updated
+  _updateOrder() {
+    widget.params.updateOrder(
         context,
-        UpdateOrderChargesPayload(
-          additionalChargesUpdatedList: details.additionalChargesDetails,
+        UpdateOrderPayload(
+          additionalChargesUpdatedList: EsOrderDetails.chargesUpdated.value ? details.additionalChargesDetails : null,
           orderItems: List.generate(
             details.orderItems.length,
             (index) => UpdateOrderItems(

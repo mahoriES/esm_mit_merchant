@@ -49,6 +49,7 @@ class _EsOrderDetailsChargesComponentState
     EsOrderDetails.chargesUpdated.value = true;
     additionalChargesList
         .removeWhere((element) => element.chargeName == chargeKey);
+    widget.orderDetails.additionalChargesDetails = additionalChargesList;
   }
 
   void addOrUpdateChargeLocally(AdditionalChargesDetails chargesDetails) {

@@ -1,37 +1,13 @@
-import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:foore/data/model/es_orders.dart';
 
-class UpdateOrderItemsPayload {
-  List<UpdateOrderItems> orderItems;
-  List<FreeFormItems> freeFormItems;
-
-  UpdateOrderItemsPayload({
-    this.orderItems,
-    this.freeFormItems,
-  });
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.orderItems != null) {
-      data['order_items'] = this.orderItems.map((v) => v.toJson()).toList();
-    }
-    if (this.freeFormItems != null) {
-      data['free_form_items'] = [
-        ...this.freeFormItems.map((v) => v.toJson()).toList()
-      ];
-    }
-    return data;
-  }
-}
-
-class UpdateOrderChargesPayload {
+class UpdateOrderPayload {
   List<AdditionalChargesDetails> additionalChargesUpdatedList;
   List<UpdateOrderItems> orderItems;
   List<FreeFormItems> freeFormItems;
 
-  UpdateOrderChargesPayload({
+  UpdateOrderPayload({
     @required this.additionalChargesUpdatedList,
     this.orderItems,
     this.freeFormItems,

@@ -343,77 +343,16 @@ class _EsOrderListState extends State<EsOrderList> {
     );
   }
 
-  _showUpdateOrderChargesAlertDialog(
-    EsOrder order,
-    EsOrdersBloc esOrdersBloc,
-    UpdateOrderChargesPayload body, {
-    BuildContext customContext,
-  }) async {
-    return await showDialog<bool>(
-      context: customContext ?? context,
-      barrierDismissible: true,
-      useRootNavigator: true, // user must tap button for close dialog!
-      builder: (BuildContext context) {
-        return StreamBuilder<EsOrdersState>(
-            stream: esOrdersBloc.esProductStateObservable,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Container();
-              }
-              if (snapshot.data.isSubmitting) {
-                return AlertDialog(
-                  content: Container(
-                      height: 100,
-                      child: Center(child: CircularProgressIndicator())),
-                );
-              }
-              return AlertDialog(
-                title: Container(),
-                content: Text('Do you want to update this order and charges?'),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text(
-                      'Cancel',
-                      style: Theme.of(context).textTheme.button,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context, rootNavigator: true).pop(false);
-                    },
-                  ),
-                  FlatButton(
-                    child: Text('Update'),
-                    onPressed: () {
-                      esOrdersBloc.updateOrderCharges(
-                        order.orderId,
-                        (a) {
-                          Navigator.of(context, rootNavigator: true).pop(true);
-                        },
-                        (error) {
-                          Navigator.of(context, rootNavigator: true).pop(false);
-                          showDialog(
-                            context: context,
-                            builder: (context) => ResponseDialogue(
-                              error ?? 'something went wrong',
-                            ),
-                          );
-                        },
-                        body,
-                      );
-                    },
-                  ),
-                ],
-              );
-            });
-      },
-    );
-  }
-
   _showUpdateOrderAlertDialog(
     EsOrder order,
     EsOrdersBloc esOrdersBloc,
-    UpdateOrderItemsPayload body, {
+    UpdateOrderPayload body, {
     BuildContext customContext,
   }) async {
+    String suffixMessage = (body.additionalChargesUpdatedList == null ||
+            body.additionalChargesUpdatedList.isEmpty)
+        ? ''
+        : 'and charges';
     return await showDialog<bool>(
       context: customContext ?? context,
       barrierDismissible: true,
@@ -434,7 +373,7 @@ class _EsOrderListState extends State<EsOrderList> {
               }
               return AlertDialog(
                 title: Container(),
-                content: Text('Do you want to update this order ?'),
+                content: Text('Do you want to update this order '+suffixMessage+' ?'),
                 actions: <Widget>[
                   FlatButton(
                     child: Text(
@@ -448,7 +387,7 @@ class _EsOrderListState extends State<EsOrderList> {
                   FlatButton(
                     child: Text('Update'),
                     onPressed: () {
-                      esOrdersBloc.updateOrderItems(
+                      esOrdersBloc.updateOrder(
                         order.orderId,
                         (a) {
                           Navigator.of(context, rootNavigator: true).pop(true);
@@ -481,7 +420,6 @@ class _EsOrderListState extends State<EsOrderList> {
       this.esOrdersBloc =
           EsOrdersBloc(widget.status, httpService, businessBloc);
     }
-    // this.esOrdersBloc.getOrders();
     super.didChangeDependencies();
   }
 
@@ -539,23 +477,9 @@ class _EsOrderListState extends State<EsOrderList> {
       }
     }
 
-    updateOrderItems(EsOrder order, UpdateOrderItemsPayload body,
+    updateOrder(EsOrder order, UpdateOrderPayload body,
         {BuildContext context}) async {
       var isAccepted = await _showUpdateOrderAlertDialog(
-        order,
-        this.esOrdersBloc,
-        body,
-        customContext: context,
-      );
-      if (isAccepted == true) {
-        if (context != null) Navigator.pop(context);
-        esOrdersBloc.getOrders();
-      }
-    }
-
-    updateOrderCharges(EsOrder order, UpdateOrderChargesPayload body,
-        {BuildContext context}) async {
-      var isAccepted = await _showUpdateOrderChargesAlertDialog(
         order,
         this.esOrdersBloc,
         body,
@@ -659,19 +583,11 @@ class _EsOrderListState extends State<EsOrderList> {
                                             response.toJson(),
                                             divideUnitPriceBy100: false,
                                           ),
-                                          updateOrderCharges:
-                                              (_context, body) async {
-                                            await updateOrderCharges(
+                                          updateOrder: (_context, body) async {
+                                            await updateOrder(
                                                 snapshot.data.items[index],
                                                 body,
                                                 context: _context);
-//                                            await esOrdersBloc
-//                                                .updateOrderCharges(
-//                                                    snapshot.data.items[index]
-//                                                        .orderId,
-//                                                    () {},
-//                                                    (_) {},
-//                                                    body);
                                           },
                                           acceptOrder: (_context) async {
                                             await acceptItem(
@@ -682,13 +598,6 @@ class _EsOrderListState extends State<EsOrderList> {
                                           cancelOrder: (_context) async {
                                             await cancelItem(
                                               snapshot.data.items[index],
-                                              context: _context,
-                                            );
-                                          },
-                                          updateOrder: (_context, body) async {
-                                            await updateOrderItems(
-                                              snapshot.data.items[index],
-                                              body,
                                               context: _context,
                                             );
                                           },

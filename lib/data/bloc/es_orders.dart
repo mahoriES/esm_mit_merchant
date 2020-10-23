@@ -367,8 +367,8 @@ class EsOrdersBloc {
     this._updateState();
   }
 
-  updateOrderCharges(String orderId, Function onSuccess,
-      Function(String) onFail, UpdateOrderChargesPayload body, ) {
+  updateOrder(String orderId, Function onSuccess,
+      Function(String) onFail, UpdateOrderPayload body, ) {
     this._esOrdersState.isSubmitting = true;
     this._esOrdersState.isSubmitFailed = false;
     this._esOrdersState.isSubmitSuccess = false;
@@ -402,46 +402,6 @@ class EsOrdersBloc {
       this._updateState();
     });
 
-  }
-
-  updateOrderItems(
-    String orderId,
-    Function onSuccess,
-    Function(String) onFail,
-    UpdateOrderItemsPayload body,
-  ) {
-    this._esOrdersState.isSubmitting = true;
-    this._esOrdersState.isSubmitFailed = false;
-    this._esOrdersState.isSubmitSuccess = false;
-    this._updateState();
-    this
-        .httpService
-        .esPatch(
-            EsApiPaths.postUpdateOrderItems(orderId), jsonEncode(body.toJson()))
-        .then((httpResponse) {
-      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = false;
-        this._esOrdersState.isSubmitSuccess = true;
-        var createdBusinessInfo =
-            EsOrder.fromJson(json.decode(httpResponse.body));
-        if (onSuccess != null) {
-          onSuccess(createdBusinessInfo);
-        }
-      } else {
-        onFail('error :- ${httpResponse.statusCode}');
-        this._esOrdersState.isSubmitting = false;
-        this._esOrdersState.isSubmitFailed = true;
-        this._esOrdersState.isSubmitSuccess = false;
-      }
-      this._updateState();
-    }).catchError((onError) {
-      onFail(onError?.toString());
-      this._esOrdersState.isSubmitting = false;
-      this._esOrdersState.isSubmitFailed = true;
-      this._esOrdersState.isSubmitSuccess = false;
-      this._updateState();
-    });
   }
 
   _updateState() {
