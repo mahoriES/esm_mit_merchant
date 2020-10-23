@@ -2,6 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:foore/data/model/es_orders.dart';
 
+///This in a single payload for updating both the charges and order items.
+///Depending upon the changes made, this would send the updated values to backend
+///accordingly.
+
 class UpdateOrderPayload {
   List<AdditionalChargesDetails> additionalChargesUpdatedList;
   List<UpdateOrderItems> orderItems;

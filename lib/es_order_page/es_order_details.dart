@@ -18,6 +18,7 @@ import 'widgets/order_details_charges_component.dart';
 class EsOrderDetailsParam {
   EsOrderDetailsResponse esOrderDetailsResponse;
   Function(BuildContext) acceptOrder;
+  //This is a single function which would work universally for order items and charge updation
   Function(BuildContext, UpdateOrderPayload) updateOrder;
   Function(BuildContext) cancelOrder;
 
