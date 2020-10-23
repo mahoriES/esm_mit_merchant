@@ -346,9 +346,13 @@ class _EsOrderListState extends State<EsOrderList> {
   _showUpdateOrderAlertDialog(
     EsOrder order,
     EsOrdersBloc esOrdersBloc,
-    UpdateOrderItemsPayload body, {
+    UpdateOrderPayload body, {
     BuildContext customContext,
   }) async {
+    String suffixMessage = (body.additionalChargesUpdatedList == null ||
+            body.additionalChargesUpdatedList.isEmpty)
+        ? ''
+        : 'and charges';
     return await showDialog<bool>(
       context: customContext ?? context,
       barrierDismissible: true,
@@ -369,7 +373,7 @@ class _EsOrderListState extends State<EsOrderList> {
               }
               return AlertDialog(
                 title: Container(),
-                content: Text('Do you want to update this order ?'),
+                content: Text('Do you want to update this order '+suffixMessage+' ?'),
                 actions: <Widget>[
                   FlatButton(
                     child: Text(
@@ -383,7 +387,7 @@ class _EsOrderListState extends State<EsOrderList> {
                   FlatButton(
                     child: Text('Update'),
                     onPressed: () {
-                      esOrdersBloc.updateOrderItems(
+                      esOrdersBloc.updateOrder(
                         order.orderId,
                         (a) {
                           Navigator.of(context, rootNavigator: true).pop(true);
@@ -416,7 +420,6 @@ class _EsOrderListState extends State<EsOrderList> {
       this.esOrdersBloc =
           EsOrdersBloc(widget.status, httpService, businessBloc);
     }
-    // this.esOrdersBloc.getOrders();
     super.didChangeDependencies();
   }
 
@@ -474,7 +477,7 @@ class _EsOrderListState extends State<EsOrderList> {
       }
     }
 
-    updateOrderItems(EsOrder order, UpdateOrderItemsPayload body,
+    updateOrder(EsOrder order, UpdateOrderPayload body,
         {BuildContext context}) async {
       var isAccepted = await _showUpdateOrderAlertDialog(
         order,
@@ -557,8 +560,8 @@ class _EsOrderListState extends State<EsOrderList> {
                                 onCancel: cancelItem,
                                 onAssign: assignItem,
                                 onGetOrderItems: getOrderItems,
-                                showStatus: this.widget.status ==
-                                    null, //Show only when we are not filtering for specific status
+                                showStatus: this.widget.status == null,
+                                //Show only when we are not filtering for specific status
                                 onUpdatePaymentStatus: updatePaymentStatus,
                               )
                             : EsOrderCard(
@@ -580,6 +583,12 @@ class _EsOrderListState extends State<EsOrderList> {
                                             response.toJson(),
                                             divideUnitPriceBy100: false,
                                           ),
+                                          updateOrder: (_context, body) async {
+                                            await updateOrder(
+                                                snapshot.data.items[index],
+                                                body,
+                                                context: _context);
+                                          },
                                           acceptOrder: (_context) async {
                                             await acceptItem(
                                               snapshot.data.items[index],
@@ -589,13 +598,6 @@ class _EsOrderListState extends State<EsOrderList> {
                                           cancelOrder: (_context) async {
                                             await cancelItem(
                                               snapshot.data.items[index],
-                                              context: _context,
-                                            );
-                                          },
-                                          updateOrder: (_context, body) async {
-                                            await updateOrderItems(
-                                              snapshot.data.items[index],
-                                              body,
                                               context: _context,
                                             );
                                           },

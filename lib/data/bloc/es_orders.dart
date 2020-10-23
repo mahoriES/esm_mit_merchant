@@ -367,12 +367,8 @@ class EsOrdersBloc {
     this._updateState();
   }
 
-  updateOrderItems(
-    String orderId,
-    Function onSuccess,
-    Function(String) onFail,
-    UpdateOrderItemsPayload body,
-  ) {
+  updateOrder(String orderId, Function onSuccess,
+      Function(String) onFail, UpdateOrderPayload body, ) {
     this._esOrdersState.isSubmitting = true;
     this._esOrdersState.isSubmitFailed = false;
     this._esOrdersState.isSubmitSuccess = false;
@@ -380,14 +376,14 @@ class EsOrdersBloc {
     this
         .httpService
         .esPatch(
-            EsApiPaths.postUpdateOrderItems(orderId), jsonEncode(body.toJson()))
+        EsApiPaths.postUpdateOrder(orderId), jsonEncode(body.toJson()))
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
         this._esOrdersState.isSubmitting = false;
         this._esOrdersState.isSubmitFailed = false;
         this._esOrdersState.isSubmitSuccess = true;
         var createdBusinessInfo =
-            EsOrder.fromJson(json.decode(httpResponse.body));
+        EsOrder.fromJson(json.decode(httpResponse.body));
         if (onSuccess != null) {
           onSuccess(createdBusinessInfo);
         }
@@ -405,6 +401,7 @@ class EsOrdersBloc {
       this._esOrdersState.isSubmitSuccess = false;
       this._updateState();
     });
+
   }
 
   _updateState() {

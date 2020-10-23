@@ -1,19 +1,28 @@
-import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:foore/data/model/es_orders.dart';
 
-class UpdateOrderItemsPayload {
+///This in a single payload for updating both the charges and order items.
+///Depending upon the changes made, this would send the updated values to backend
+///accordingly.
+
+class UpdateOrderPayload {
+  List<AdditionalChargesDetails> additionalChargesUpdatedList;
   List<UpdateOrderItems> orderItems;
   List<FreeFormItems> freeFormItems;
 
-  UpdateOrderItemsPayload({
+  UpdateOrderPayload({
+    @required this.additionalChargesUpdatedList,
     this.orderItems,
     this.freeFormItems,
   });
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.additionalChargesUpdatedList != null) {
+      data['other_charges_detail'] =
+          this.additionalChargesUpdatedList.map((v) => v.toJson()).toList();
+    }
     if (this.orderItems != null) {
       data['order_items'] = this.orderItems.map((v) => v.toJson()).toList();
     }
@@ -24,6 +33,27 @@ class UpdateOrderItemsPayload {
     }
     return data;
   }
+
+}
+
+class AdditionalChargesDetails {
+  int value;
+  String chargeName;
+
+  AdditionalChargesDetails({@required this.value, @required this.chargeName});
+
+  AdditionalChargesDetails.fromJson(Map<String, dynamic> json) {
+    this.value = json['value'];
+    this.chargeName = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['value'] = this.value;
+    data['name'] = this.chargeName;
+    return data;
+  }
+
 }
 
 class UpdateOrderItems {
@@ -72,7 +102,7 @@ class EsOrderDetailsResponse {
   List<String> customerPhones;
   List<EsOrderItem> orderItems;
   List<FreeFormItems> freeFormItems;
-  List<OtherChargesDetail> otherChargesDetail;
+  List<AdditionalChargesDetails> additionalChargesDetails;
   List<OrderTrail> orderTrail;
   String created;
   String modified;
@@ -102,7 +132,7 @@ class EsOrderDetailsResponse {
       this.customerPhones,
       this.orderItems,
       this.freeFormItems,
-      this.otherChargesDetail,
+      this.additionalChargesDetails,
       this.orderTrail,
       this.created,
       this.modified,
@@ -205,12 +235,12 @@ class EsOrderDetailsResponse {
       freeFormItems = [];
     }
     if (json['other_charges_detail'] != null) {
-      otherChargesDetail = new List<OtherChargesDetail>();
+      additionalChargesDetails = new List<AdditionalChargesDetails>();
       json['other_charges_detail'].forEach((v) {
-        otherChargesDetail.add(new OtherChargesDetail.fromJson(v));
+        additionalChargesDetails.add(new AdditionalChargesDetails.fromJson(v));
       });
     } else {
-      otherChargesDetail = [];
+      additionalChargesDetails = [];
     }
     if (json['order_trail'] != null) {
       orderTrail = new List<OrderTrail>();
@@ -265,9 +295,9 @@ class EsOrderDetailsResponse {
       data['free_form_items'] =
           this.freeFormItems.map((v) => v.toJson()).toList();
     }
-    if (this.otherChargesDetail != null) {
+    if (this.additionalChargesDetails != null) {
       data['other_charges_detail'] =
-          this.otherChargesDetail.map((v) => v.toJson()).toList();
+          this.additionalChargesDetails.map((v) => v.toJson()).toList();
     }
     if (this.orderTrail != null) {
       data['order_trail'] = this.orderTrail.map((v) => v.toJson()).toList();
@@ -440,24 +470,6 @@ class FreeFormItems {
   }
 }
 
-class OtherChargesDetail {
-  String name;
-  int value;
-
-  OtherChargesDetail({this.name, this.value});
-
-  OtherChargesDetail.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    value = json['value'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['value'] = this.value;
-    return data;
-  }
-}
 
 class OrderTrail {
   String eventName;
