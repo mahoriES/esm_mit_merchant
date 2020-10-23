@@ -16,6 +16,7 @@ class EsOrderCard extends StatefulWidget {
   final EsOrder esOrder;
   final Function({bool popOnCompletion}) onAccept;
   final Function() onMarkReady;
+  final Function() onMarkCompleted;
   final Function({bool popOnCompletion}) onCancel;
   final Function() onAssign;
   final Function(String) onUpdatePaymentStatus;
@@ -24,6 +25,7 @@ class EsOrderCard extends StatefulWidget {
     this.esOrder, {
     @required this.onAccept,
     @required this.onMarkReady,
+    @required this.onMarkCompleted,
     @required this.onCancel,
     @required this.onAssign,
     @required this.onUpdatePaymentStatus,
@@ -288,41 +290,53 @@ class _EsOrderCardState extends State<EsOrderCard> {
               ////////////////////////////////////
               Container(
                 margin: EdgeInsets.only(right: 10.toWidth),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: widget.esOrder.dIsNew
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            RaisedButton(
-                              onPressed: widget.onCancel,
-                              color: Theme.of(context).errorColor,
-                              child: Text('Reject'),
-                            ),
-                            SizedBox(width: 20.toWidth),
-                            RaisedButton(
-                              onPressed: () {
-                                expansionTileKey.currentState.expand();
-                                shouldGoToOrderDetails = true;
-                                setState(() {
-                                  isExpanded = true;
-                                });
-                              },
-                              child: Text('Check'),
-                            )
-                          ],
-                        )
-                      : widget.esOrder.dIsShowAssign
-                          ? RaisedButton(
-                              onPressed: widget.onAssign,
-                              child: Text('Assign'),
-                            )
-                          : widget.esOrder.dIsPreparing
-                              ? RaisedButton(
-                                  onPressed: widget.onMarkReady,
-                                  child: Text('Ready'),
-                                )
-                              : null,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Container(),
+                    ),
+                    if (widget.esOrder.dIsNew) ...[
+                      RaisedButton(
+                        onPressed: widget.onCancel,
+                        color: Theme.of(context).errorColor,
+                        child: Text('Reject'),
+                      ),
+                      SizedBox(width: 20.toWidth),
+                      RaisedButton(
+                        onPressed: () {
+                          expansionTileKey.currentState.expand();
+                          shouldGoToOrderDetails = true;
+                          setState(() {
+                            isExpanded = true;
+                          });
+                        },
+                        child: Text('Check'),
+                      ),
+                    ],
+                    if (widget.esOrder.dIsReady) ...[
+                      RaisedButton(
+                        onPressed: widget.onMarkCompleted,
+                        child: Text('Mark Completed'),
+                      ),
+                    ],
+                    widget.esOrder.dIsShowAssign
+                        ? Row(
+                            children: [
+                              SizedBox(width: 20.toWidth),
+                              RaisedButton(
+                                onPressed: widget.onAssign,
+                                child: Text('Assign'),
+                              ),
+                            ],
+                          )
+                        : widget.esOrder.dIsPreparing
+                            ? RaisedButton(
+                                onPressed: widget.onMarkReady,
+                                child: Text('Ready'),
+                              )
+                            : SizedBox.shrink(),
+                  ],
                 ),
               )
             ],

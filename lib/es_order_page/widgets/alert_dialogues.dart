@@ -94,7 +94,7 @@ class OrdersAlertDialogs {
       context: context,
       alertDialog: AlertDialog(
         title: Container(),
-        content: Text('Do you want to mark is order as Ready for pickup?'),
+        content: Text('Do you want to mark this order as Ready for pickup?'),
         actions: <Widget>[
           FlatButton(
             child: Text(
@@ -109,6 +109,55 @@ class OrdersAlertDialogs {
             child: Text('Mark as Ready'),
             onPressed: () {
               esOrdersBloc.markReady(order.orderId, (a) {
+                Navigator.of(context, rootNavigator: true).pop(true);
+              }, (error) {
+                Navigator.of(context, rootNavigator: true).pop(false);
+                showDialog(
+                  context: context,
+                  builder: (context) =>
+                      ResponseDialogue(error ?? 'something went wrong'),
+                );
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  static showCompleteAlertDialog({
+    @required EsOrder order,
+    @required EsOrdersBloc esOrdersBloc,
+    @required BuildContext context,
+  }) async {
+    return _showDialogCommon(
+      esOrdersBloc: esOrdersBloc,
+      context: context,
+      alertDialog: AlertDialog(
+        title: Text('Do you want to mark this order as completed?'),
+        content: Column(
+          children: [
+            RadioListTile(
+              value: null,
+              groupValue: null,
+              onChanged: null,
+            )
+          ],
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              'Cancel',
+              style: Theme.of(context).textTheme.button,
+            ),
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pop(false);
+            },
+          ),
+          FlatButton(
+            child: Text('Mark as Completed'),
+            onPressed: () {
+              esOrdersBloc.markComplete(order.orderId, () {
                 Navigator.of(context, rootNavigator: true).pop(true);
               }, (error) {
                 Navigator.of(context, rootNavigator: true).pop(false);

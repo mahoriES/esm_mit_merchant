@@ -104,6 +104,17 @@ class _EsOrdersListState extends State<EsOrdersList> {
       }
     }
 
+    markCompleted(EsOrder order) async {
+      var isAccepted = await OrdersAlertDialogs.showCompleteAlertDialog(
+        order: order,
+        esOrdersBloc: esOrdersBloc,
+        context: context,
+      );
+      if (isAccepted == true) {
+        esOrdersBloc.resetDataState();
+      }
+    }
+
     return StreamBuilder<EsOrdersState>(
       stream: esOrdersBloc.esOrdersStateObservable,
       builder: (context, snapshot) {
@@ -168,6 +179,8 @@ class _EsOrdersListState extends State<EsOrdersList> {
                             popScreenAfterCompletion: popOnCompletion ?? false,
                           ),
                           onMarkReady: () => markReady(ordersList[index]),
+                          onMarkCompleted: () =>
+                              markCompleted(ordersList[index]),
                           onCancel: ({bool popOnCompletion}) => cancelItem(
                             ordersList[index],
                             popScreenAfterCompletion: popOnCompletion ?? false,

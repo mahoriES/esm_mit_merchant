@@ -300,6 +300,34 @@ class EsOrdersBloc {
     });
   }
 
+  markComplete(
+    String orderId,
+    Function onSuccess,
+    Function(String) onFail,
+  ) {
+    this._esOrdersState.submittingStatus = DataState.LOADING;
+    this._updateState();
+    this
+        .httpService
+        .esPost(EsApiPaths.postCompleteOrder(orderId), '')
+        .then((httpResponse) {
+      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
+        this._esOrdersState.submittingStatus = DataState.SUCCESS;
+        if (onSuccess != null) {
+          onSuccess();
+        }
+      } else {
+        onFail('error :- ${httpResponse.statusCode}');
+        this._esOrdersState.submittingStatus = DataState.FAILED;
+      }
+      this._updateState();
+    }).catchError((onError) {
+      onFail(onError?.toString());
+      this._esOrdersState.submittingStatus = DataState.FAILED;
+      this._updateState();
+    });
+  }
+
   getDeliveryAgents() {
     if (this._esOrdersState.agents != null) {
       return;
