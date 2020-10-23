@@ -20,6 +20,7 @@ class EsCreateBusinessPage extends StatefulWidget {
 class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
     with AfterLayoutMixin<EsCreateBusinessPage> {
   final _formKey = GlobalKey<FormState>();
+  EsCreateBusinessBloc createBusinessBloc;
 
   _showFailedAlertDialog() async {
     await showDialog(
@@ -42,9 +43,39 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
     );
   }
 
+  confirmBusinessAlert(String businessName) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Do you want to create a new business named '$businessName' ?",
+            textAlign: TextAlign.center,
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Confirm'),
+              onPressed: () {
+                createBusinessBloc.createBusiness(
+                  onCreateBusinessSuccess,
+                  () => this._showFailedAlertDialog(),
+                );
+              },
+            ),
+            FlatButton(
+              child: const Text('Cancel'),
+              onPressed: () => Navigator.pop(context),
+            )
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void afterFirstLayout(BuildContext context) {
-    final createBusinessBloc = Provider.of<EsCreateBusinessBloc>(context);
+    // final createBusinessBloc = Provider.of<EsCreateBusinessBloc>(context);
     // createBusinessBloc.getData();
   }
 
@@ -55,27 +86,21 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
 
   @override
   void initState() {
+    createBusinessBloc =
+        Provider.of<EsCreateBusinessBloc>(context, listen: false);
     super.initState();
+  }
+
+  onCreateBusinessSuccess(EsBusinessInfo businessInfo) {
+    var esBusinessesBloc = Provider.of<EsBusinessesBloc>(context);
+    esBusinessesBloc.addCreatedBusiness(businessInfo);
+    esBusinessesBloc.setSelectedBusiness(businessInfo);
+    Navigator.of(context).pushNamed(EsHomePage.routeName);
   }
 
   @override
   Widget build(BuildContext context) {
-    final createBusinessBloc = Provider.of<EsCreateBusinessBloc>(context);
-
-    onCreateBusinessSuccess(EsBusinessInfo businessInfo) {
-      var esBusinessesBloc = Provider.of<EsBusinessesBloc>(context);
-      esBusinessesBloc.addCreatedBusiness(businessInfo);
-      esBusinessesBloc.setSelectedBusiness(businessInfo);
-      Navigator.of(context).pushNamed(EsHomePage.routeName);
-    }
-
-    submit() {
-      if (this._formKey.currentState.validate()) {
-        createBusinessBloc.createBusiness(onCreateBusinessSuccess, () {
-          this._showFailedAlertDialog();
-        });
-      }
-    }
+    // final createBusinessBloc = Provider.of<EsCreateBusinessBloc>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -180,7 +205,12 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
             }
             return FoSubmitButton(
               text: 'Save',
-              onPressed: submit,
+              onPressed: () {
+                if (this._formKey.currentState.validate()) {
+                  confirmBusinessAlert(
+                      createBusinessBloc.nameEditController.text);
+                }
+              },
               isLoading: snapshot.data.isSubmitting,
             );
           }),
