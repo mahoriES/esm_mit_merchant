@@ -231,7 +231,8 @@ class _EsOrderDetailsChargesComponentState
             ),
           ),
         ],
-        if (additionalChargesList.length < 4) ...[
+        if (additionalChargesList.length <
+            AdditionChargesMetaDataGenerator.allKeyOptions.length) ...[
           SizedBox(height: 10.toHeight),
           Center(
             child: InkWell(
@@ -310,14 +311,12 @@ enum AdditionalChargeType {
 class AdditionChargesMetaDataGenerator {
   static AdditionChargesMetaDataGenerator _instance;
 
-  AdditionChargesMetaDataGenerator._internal();
-
-  static AdditionChargesMetaDataGenerator getInstance() {
-    if (_instance == null) {
-      _instance = AdditionChargesMetaDataGenerator._internal();
-    }
-    return _instance;
+  AdditionChargesMetaDataGenerator._internal() {
+    _instance = this;
   }
+
+  factory AdditionChargesMetaDataGenerator() =>
+      _instance ?? AdditionChargesMetaDataGenerator._internal();
 
   static String keyFromEnumValue(AdditionalChargeType chargeType) {
     switch (chargeType) {
