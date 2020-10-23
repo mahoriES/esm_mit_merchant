@@ -67,8 +67,8 @@ void main() {
       ),
     );
   }, (Object error, StackTrace stackTrace) {
-    print('********************************************** ${error.toString()}');
-    print('********************************************** $stackTrace');
+    debugPrint('********************************************** ${error.toString()}');
+    debugPrint('********************************************** $stackTrace');
 
     /// Whenever an error occurs, call the `reportError` function. This sends
     /// Dart errors to the dev env or prod env of Sentry based on current status.

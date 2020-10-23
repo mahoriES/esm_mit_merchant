@@ -52,7 +52,7 @@ class EsApiPaths {
 
   static final postAcceptOrder = (String orderId) => 'orders/$orderId/accept';
   static final postCancelOrder = (String orderId) => 'orders/$orderId/cancel';
-  static final postUpdateOrderItems = (String orderId) => 'orders/$orderId';
+  static final postUpdateOrder = (String orderId) => 'orders/$orderId';
   static final orderPaymentUpdate =
       (String orderId) => 'orders/$orderId/payment';
   static final postOrderRequestDeliveryAgent =

@@ -334,7 +334,7 @@ class AdditionChargesMetaDataGenerator {
         return 'SERVICE';
         break;
       default:
-        return 'UNKNOWN';
+        return 'OTHER';
     }
   }
 
@@ -357,7 +357,7 @@ class AdditionChargesMetaDataGenerator {
         return 'Service Charges';
         break;
       default:
-        return 'Unknown Charge';
+        return 'Other Charge';
     }
   }
 
@@ -376,7 +376,7 @@ class AdditionChargesMetaDataGenerator {
         return 'Service Charges';
         break;
       default:
-        return 'Unknown Charge';
+        return 'Other Charge';
     }
   }
 }

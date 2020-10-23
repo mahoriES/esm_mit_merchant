@@ -376,7 +376,7 @@ class EsOrdersBloc {
     this
         .httpService
         .esPatch(
-        EsApiPaths.postUpdateOrderItems(orderId), jsonEncode(body.toJson()))
+        EsApiPaths.postUpdateOrder(orderId), jsonEncode(body.toJson()))
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
         this._esOrdersState.isSubmitting = false;

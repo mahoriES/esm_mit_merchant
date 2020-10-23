@@ -89,7 +89,7 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
                       Expanded(
                           flex: 60,
                           child: widget.dialogActionType == 0
-                              ? buildDropdownMenu()
+                              ? buildDropdownMenu
                               : editChargeNameLabel),
                       Expanded(flex: 10, child: SizedBox.shrink()),
                       Expanded(
@@ -159,7 +159,7 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
     );
   }
 
-  Widget buildDropdownMenu() {
+  Widget get buildDropdownMenu {
     return DropdownButton(
       underline: SizedBox.shrink(),
       isDense: true,
