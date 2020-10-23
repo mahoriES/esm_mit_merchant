@@ -25,7 +25,7 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
   _showFailedAlertDialog() async {
     await showDialog(
       context: context,
-      barrierDismissible: true, // user must tap button for close dialog!
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Submit failed'),
