@@ -10,7 +10,6 @@ import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'custom_expansion_tile.dart';
-import 'order_details_charges_component.dart';
 
 class EsOrderCard extends StatefulWidget {
   final EsOrder esOrder;
@@ -20,7 +19,7 @@ class EsOrderCard extends StatefulWidget {
   final Function({bool popOnCompletion}) onCancel;
   final Function() onAssign;
   final Function(String) onUpdatePaymentStatus;
-  final Function(UpdateOrderItemsPayload, {bool popOnCompletion}) onUpdateOrder;
+  final Function(UpdateOrderPayload, {bool popOnCompletion}) onUpdateOrder;
   EsOrderCard(
     this.esOrder, {
     @required this.onAccept,
@@ -456,8 +455,8 @@ class _CardExpandedView extends StatelessWidget {
                       Text(esOrderDetails.orderItems[index].itemQuantity
                           .toString()),
                       Flexible(child: Container()),
-                      Text(
-                          esOrderDetails.orderItems[index].itemTotal.toString())
+                      Text((esOrderDetails.orderItems[index].itemTotal ?? 'NA')
+                          .toString())
                     ],
                   ),
                 ),
@@ -481,10 +480,7 @@ class _CardExpandedView extends StatelessWidget {
                       fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 4.toHeight),
-                EsOrderDetailsChargesComponent(
-                  esOrderDetails,
-                  spaceBetweenItems: 0,
-                ),
+                _ChargesComponent(esOrderDetails),
               ],
             ),
           ),
@@ -616,5 +612,80 @@ class UpiPaymentRow extends StatelessWidget {
                         ? getForStatusApproved()
                         : getForStatusRejected(),
           );
+  }
+}
+
+class _ChargesComponent extends StatelessWidget {
+  final EsOrderDetailsResponse orderDetails;
+  const _ChargesComponent(this.orderDetails, {Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    double _itemCharges = 0;
+
+    if (orderDetails.orderItems == null || orderDetails.orderItems.isEmpty) {
+      orderDetails.orderItems = [];
+    }
+
+    for (int i = 0; i < orderDetails.orderItems?.length; i++) {
+      if (orderDetails.orderItems[i].itemStatus !=
+          CatalogueItemStatus.notPresent) {
+        _itemCharges = _itemCharges +
+            (orderDetails.orderItems[i]?.unitPrice ?? 0) *
+                (orderDetails.orderItems[i].itemQuantity?.toDouble() ?? 0);
+      }
+    }
+
+    double _deliveryCharges = (orderDetails?.deliveryCharges ?? 0) / 100;
+    double _otherCharges = (orderDetails?.otherCharges ?? 0) / 100;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Delivery Charges'),
+            Text('\u{20B9} $_deliveryCharges')
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Other Charges'),
+            Text('\u{20B9} $_otherCharges'),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              orderDetails.orderItems?.length.toString() +
+                  '  Item' +
+                  (orderDetails.orderItems.length > 1 ? 's' : ''),
+            ),
+            Text(
+              '\u{20B9} ${_itemCharges.toStringAsFixed(2)}',
+            )
+          ],
+        ),
+        Divider(
+          color: Colors.grey[400],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Total Amount'),
+            Text(
+              '\u{20B9} ${(_itemCharges + _deliveryCharges + _otherCharges).toStringAsFixed(2)}',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline6
+                  .copyWith(fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+      ],
+    );
   }
 }

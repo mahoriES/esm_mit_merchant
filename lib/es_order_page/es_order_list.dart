@@ -93,9 +93,9 @@ class _EsOrdersListState extends State<EsOrdersList> {
       }
     }
 
-    updateOrderItems(
+    updateOrder(
       EsOrder order,
-      UpdateOrderItemsPayload body, {
+      UpdateOrderPayload body, {
       bool popScreenAfterCompletion = false,
     }) async {
       var isAccepted = await OrdersAlertDialogs.showUpdateOrderAlertDialog(
@@ -212,7 +212,7 @@ class _EsOrdersListState extends State<EsOrdersList> {
                             newStatus,
                           ),
                           onUpdateOrder: (body, {bool popOnCompletion}) =>
-                              updateOrderItems(
+                              updateOrder(
                             ordersList[index],
                             body,
                             popScreenAfterCompletion: popOnCompletion ?? false,

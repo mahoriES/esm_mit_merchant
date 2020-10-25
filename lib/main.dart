@@ -23,16 +23,16 @@ void main() {
     statusBarIconBrightness: Brightness.dark, //top bar icons
   ));
 
-  FlutterError.onError = (FlutterErrorDetails details) {
-    if (!SentryHandler().isInProdMode) {
-      // In development mode, simply print to console.
-      FlutterError.dumpErrorToConsole(details);
-    } else {
-      // In production mode, report to the application zone to report to
-      // Sentry.
-      Zone.current.handleUncaughtError(details.exception, details.stack);
-    }
-  };
+  // FlutterError.onError = (FlutterErrorDetails details) {
+  //   if (!SentryHandler().isInProdMode) {
+  //     // In development mode, simply print to console.
+  //     FlutterError.dumpErrorToConsole(details);
+  //   } else {
+  //     // In production mode, report to the application zone to report to
+  //     // Sentry.
+  //     Zone.current.handleUncaughtError(details.exception, details.stack);
+  //   }
+  // };
 
   runZonedGuarded(() async {
     runApp(
@@ -67,12 +67,12 @@ void main() {
       ),
     );
   }, (Object error, StackTrace stackTrace) {
-    // print('********************************************** ${error.toString()}');
-    // print('********************************************** $stackTrace');
+    debugPrint('********************************************** ${error.toString()}');
+    debugPrint('********************************************** $stackTrace');
 
     /// Whenever an error occurs, call the `reportError` function. This sends
     /// Dart errors to the dev env or prod env of Sentry based on current status.
-    SentryHandler().reportError(error, stackTrace);
+    // SentryHandler().reportError(error, stackTrace);
   });
 }
 

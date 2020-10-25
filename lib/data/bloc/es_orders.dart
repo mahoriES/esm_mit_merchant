@@ -371,18 +371,17 @@ class EsOrdersBloc {
     this._updateState();
   }
 
-  updateOrderItems(
+  updateOrder(
     String orderId,
     Function onSuccess,
     Function(String) onFail,
-    UpdateOrderItemsPayload body,
+    UpdateOrderPayload body,
   ) {
     this._esOrdersState.submittingStatus = DataState.LOADING;
     this._updateState();
     this
         .httpService
-        .esPatch(
-            EsApiPaths.postUpdateOrderItems(orderId), jsonEncode(body.toJson()))
+        .esPatch(EsApiPaths.postUpdateOrder(orderId), jsonEncode(body.toJson()))
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
         this._esOrdersState.submittingStatus = DataState.SUCCESS;

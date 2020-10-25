@@ -385,7 +385,7 @@ class OrdersAlertDialogs {
   static showUpdateOrderAlertDialog({
     @required EsOrder order,
     @required EsOrdersBloc esOrdersBloc,
-    @required UpdateOrderItemsPayload body,
+    @required UpdateOrderPayload body,
     @required BuildContext context,
   }) async {
     return await _showDialogCommon(
@@ -407,7 +407,7 @@ class OrdersAlertDialogs {
           FlatButton(
             child: Text('Update'),
             onPressed: () {
-              esOrdersBloc.updateOrderItems(
+              esOrdersBloc.updateOrder(
                 order.orderId,
                 (a) {
                   Navigator.of(context, rootNavigator: true).pop(true);
