@@ -21,19 +21,6 @@ class AddMenuItemPage extends StatefulWidget {
 class AddMenuItemPageState extends State<AddMenuItemPage>
     with AfterLayoutMixin<AddMenuItemPage> {
   final _formKey = GlobalKey<FormState>();
-  final List<String> unitsList = [
-    "Piece",
-    "Kg",
-    "Gm",
-    "Litre",
-    "Ml",
-    "Dozen",
-    "ft",
-    "meter",
-    "sq. ft."
-  ];
-
-  String selectedUnit;
 
   Future<bool> _onWillPop() async {
     Navigator.pop(context);
@@ -81,7 +68,6 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
   Widget build(BuildContext context) {
     final esEditProductBloc = Provider.of<EsEditProductBloc>(context);
     submit() {
-      esEditProductBloc.unitEditController.text = selectedUnit;
       if (this._formKey.currentState.validate()) {
         esEditProductBloc.addProduct((EsProduct product) {
           Navigator.of(context).pop(product);
@@ -125,39 +111,19 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
                       ),
                     ),
                     Padding(
-                        padding: const EdgeInsets.only(
-                          top: 24.0,
-                          left: 20,
-                          right: 20,
+                      padding: const EdgeInsets.only(
+                        top: 24.0,
+                        left: 20,
+                        right: 20,
+                      ),
+                      child: TextFormField(
+                        controller: esEditProductBloc.unitEditController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Unit',
                         ),
-                        child: DropdownButtonFormField(
-                          value: selectedUnit,
-                          autovalidate: true,
-                          validator: (value) => ValidationService()
-                              .validateString(value.toString()),
-                          items: List.generate(
-                            unitsList.length,
-                            (index) => DropdownMenuItem(
-                              value: unitsList[index],
-                              child: Text(unitsList[index]),
-                            ),
-                          ),
-                          onChanged: (v) {
-                            setState(() {
-                              selectedUnit = v;
-                            });
-                          },
-                        )
-
-                        //  TextFormField(
-                        //   controller: esEditProductBloc.unitEditController,
-                        //   validator: ValidationService().validateString,
-                        //   decoration: InputDecoration(
-                        //     border: OutlineInputBorder(),
-                        //     labelText: 'Unit',
-                        //   ),
-                        // ),
-                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

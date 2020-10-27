@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
-import 'package:foore/services/validation.dart';
 
 class EsEditProductVariationPage extends StatefulWidget {
   final EsEditProductBloc esEditProductBloc;
@@ -132,7 +131,6 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                         keyboardType: TextInputType.number,
                         controller:
                             widget.esEditProductBloc.skuPriceEditController,
-                        validator: ValidationService().validateString,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Price (eg. 120.0)',
@@ -148,7 +146,6 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                       child: TextFormField(
                         controller: widget
                             .esEditProductBloc.skuVariationValueEditController,
-                        validator: ValidationService().validateString,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Variation (eg. 500gm)',
