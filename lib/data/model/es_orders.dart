@@ -218,7 +218,7 @@ class EsOrder {
         statusString = "Customer cancelled";
         break;
       case EsOrderStatus.MERCHANT_UPDATED:
-        statusString = "Merchant updated";
+        statusString = "Awaiting customer\nconfirmation";
         break;
       case EsOrderStatus.PICKED_UP_BY_DA:
         statusString = "Delivering";

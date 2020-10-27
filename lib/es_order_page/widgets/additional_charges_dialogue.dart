@@ -115,6 +115,17 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
                     children: [
                       Expanded(
                         child: buildDialogActionButton(
+                          1,
+                          () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20.toWidth,
+                      ),
+                      Expanded(
+                        child: buildDialogActionButton(
                           0,
                           () {
                             //Show error when entered charge value is invalid and further execution is halted.
@@ -137,13 +148,6 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
                           },
                         ),
                       ),
-                      SizedBox(
-                        width: 20.toWidth,
-                      ),
-                      Expanded(
-                          child: buildDialogActionButton(1, () {
-                        Navigator.pop(context);
-                      })),
                     ],
                   ),
                 ],

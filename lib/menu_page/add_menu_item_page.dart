@@ -5,6 +5,7 @@ import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/menu_page/add_menu_image_list.dart';
+import 'package:foore/services/validation.dart';
 import 'package:provider/provider.dart';
 
 class AddMenuItemPage extends StatefulWidget {
@@ -20,6 +21,19 @@ class AddMenuItemPage extends StatefulWidget {
 class AddMenuItemPageState extends State<AddMenuItemPage>
     with AfterLayoutMixin<AddMenuItemPage> {
   final _formKey = GlobalKey<FormState>();
+  final List<String> unitsList = [
+    "Piece",
+    "Kg",
+    "Gm",
+    "Litre",
+    "Ml",
+    "Dozen",
+    "ft",
+    "meter",
+    "sq. ft."
+  ];
+
+  String selectedUnit;
 
   Future<bool> _onWillPop() async {
     Navigator.pop(context);
@@ -67,6 +81,7 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
   Widget build(BuildContext context) {
     final esEditProductBloc = Provider.of<EsEditProductBloc>(context);
     submit() {
+      esEditProductBloc.unitEditController.text = selectedUnit;
       if (this._formKey.currentState.validate()) {
         esEditProductBloc.addProduct((EsProduct product) {
           Navigator.of(context).pop(product);
@@ -102,6 +117,7 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
                       ),
                       child: TextFormField(
                         controller: esEditProductBloc.nameEditController,
+                        validator: ValidationService().validateString,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Product name',
@@ -109,19 +125,39 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: TextFormField(
-                        controller: esEditProductBloc.unitEditController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Unit',
+                        padding: const EdgeInsets.only(
+                          top: 24.0,
+                          left: 20,
+                          right: 20,
                         ),
-                      ),
-                    ),
+                        child: DropdownButtonFormField(
+                          value: selectedUnit,
+                          autovalidate: true,
+                          validator: (value) => ValidationService()
+                              .validateString(value.toString()),
+                          items: List.generate(
+                            unitsList.length,
+                            (index) => DropdownMenuItem(
+                              value: unitsList[index],
+                              child: Text(unitsList[index]),
+                            ),
+                          ),
+                          onChanged: (v) {
+                            setState(() {
+                              selectedUnit = v;
+                            });
+                          },
+                        )
+
+                        //  TextFormField(
+                        //   controller: esEditProductBloc.unitEditController,
+                        //   validator: ValidationService().validateString,
+                        //   decoration: InputDecoration(
+                        //     border: OutlineInputBorder(),
+                        //     labelText: 'Unit',
+                        //   ),
+                        // ),
+                        ),
                   ],
                 ),
               ),

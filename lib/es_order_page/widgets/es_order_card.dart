@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/data/bloc/es_orders.dart';
 import 'package:foore/data/constants/string_constants.dart';
 import 'package:foore/data/model/es_order_details.dart';
@@ -67,6 +68,15 @@ class _EsOrderCardState extends State<EsOrderCard> {
         ),
       ),
     );
+  }
+
+  void _launchMapsUrl(double lat, double lon) async {
+    final url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lon';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      Fluttertoast.showToast(msg: 'Could not open maps');
+    }
   }
 
   @override
@@ -252,23 +262,70 @@ class _EsOrderCardState extends State<EsOrderCard> {
                     ////////////////////////////////////
                     ///// Order Delivery Info.
                     ////////////////////////////////////
-                    Text(
-                      widget.esOrder.dDeliveryType,
-                      style: Theme.of(context).textTheme.subtitle2.copyWith(
-                            color: ListTileTheme.of(context).textColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
                     if (widget.esOrder.deliveryAddress != null) ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Material(
+                            type: MaterialType.transparency,
+                            child: InkWell(
+                              child: Icon(
+                                Icons.directions,
+                                color: Theme.of(context).primaryColor,
+                                size: 25.toHeight,
+                              ),
+                              onTap: () => _launchMapsUrl(
+                                widget
+                                    .esOrder.deliveryAddress.locationPoint.lat,
+                                widget
+                                    .esOrder.deliveryAddress.locationPoint.lon,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10.toWidth),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.esOrder.dDeliveryType,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2
+                                    .copyWith(
+                                      color:
+                                          ListTileTheme.of(context).textColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                              Text(
+                                widget.esOrder.deliveryAddress.prettyAddress !=
+                                        null
+                                    ? widget
+                                        .esOrder.deliveryAddress.prettyAddress
+                                    : '',
+                                maxLines: 4,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2
+                                    .copyWith(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .caption
+                                          .color,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ] else ...[
                       Text(
-                        widget.esOrder.deliveryAddress.prettyAddress != null
-                            ? widget.esOrder.deliveryAddress.prettyAddress
-                            : '',
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: true,
+                        widget.esOrder.dDeliveryType,
                         style: Theme.of(context).textTheme.subtitle2.copyWith(
-                              color: Theme.of(context).textTheme.caption.color,
+                              color: ListTileTheme.of(context).textColor,
+                              fontWeight: FontWeight.bold,
                             ),
                       ),
                     ],

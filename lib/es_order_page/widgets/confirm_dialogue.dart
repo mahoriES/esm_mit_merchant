@@ -46,11 +46,11 @@ class AddOrDeleteItemDialogue extends StatelessWidget {
                 RaisedButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    onConfirm();
+                    if (onCancel != null) onCancel();
                   },
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).errorColor,
                   child: Text(
-                    'Confirm',
+                    'Cancel',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.white,
@@ -62,11 +62,11 @@ class AddOrDeleteItemDialogue extends StatelessWidget {
                 RaisedButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    if (onCancel != null) onCancel();
+                    onConfirm();
                   },
-                  color: Theme.of(context).errorColor,
+                  color: Theme.of(context).primaryColor,
                   child: Text(
-                    'Cancel',
+                    'Confirm',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.white,

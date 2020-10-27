@@ -29,12 +29,14 @@ class _FreeFormItemTileState extends State<FreeFormItemTile> {
           child: Container(),
         ),
         SizedBox(width: 10.toWidth),
-        IconButton(
-          color: widget.item.productStatus == FreeFormItemStatus.added
-              ? Theme.of(context).primaryColor
-              : Colors.grey,
-          icon: Icon(Icons.check_circle),
-          onPressed: () {
+        InkWell(
+          child: Icon(
+            Icons.check_circle,
+            color: widget.item.productStatus == FreeFormItemStatus.added
+                ? Theme.of(context).primaryColor
+                : Colors.grey,
+          ),
+          onTap: () {
             if (widget.item.productStatus != FreeFormItemStatus.added) {
               showDialog(
                 context: context,
@@ -47,12 +49,15 @@ class _FreeFormItemTileState extends State<FreeFormItemTile> {
             }
           },
         ),
-        IconButton(
-          color: widget.item.productStatus == FreeFormItemStatus.notAdded
-              ? Colors.red
-              : Colors.grey,
-          icon: Icon(Icons.cancel),
-          onPressed: () {
+        SizedBox(width: 15.toWidth),
+        InkWell(
+          child: Icon(
+            Icons.cancel,
+            color: widget.item.productStatus == FreeFormItemStatus.notAdded
+                ? Colors.red
+                : Colors.grey,
+          ),
+          onTap: () {
             if (widget.item.productStatus != FreeFormItemStatus.notAdded) {
               showDialog(
                 context: context,

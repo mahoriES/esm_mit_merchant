@@ -173,122 +173,150 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                 if (details.freeFormItems != null &&
                     details.freeFormItems.length > 0) ...[
                   SizedBox(height: 20.toHeight),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 20.toHeight,
-                      horizontal: 15.toWidth,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey[300],
-                      ),
-                    ),
-                    child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: details.freeFormItems.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) => FreeFormItemTile(
-                        item: details.freeFormItems[index],
-                        onConfirm: () async {
-                          bool isItemAdded = await _addItemsFromCatalogue();
-                          if (isItemAdded) {
-                            details.freeFormItems[index].productStatus =
-                                FreeFormItemStatus.added;
-                            setState(() {});
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (context) => ResponseDialogue(
-                                '',
-                                message: 'Add atleast 1 item to confirm this.',
-                              ),
-                            );
-                          }
-                        },
-                        onReject: () {
+                  Text(
+                    'Customer Item List',
+                    style: Theme.of(context).textTheme.subtitle1.copyWith(
+                          fontSize: 15.toFont,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  SizedBox(height: 5.toHeight),
+                  Text(
+                    'Accept or Remove items from this list before updating the order.',
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .copyWith(fontSize: 12.toFont),
+                  ),
+                  SizedBox(height: 8.toHeight),
+                  ListView.separated(
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: details.freeFormItems.length,
+                    shrinkWrap: true,
+                    separatorBuilder: (context, index) =>
+                        SizedBox(height: 8.toHeight),
+                    itemBuilder: (context, index) => FreeFormItemTile(
+                      item: details.freeFormItems[index],
+                      onConfirm: () async {
+                        bool isItemAdded = await _addItemsFromCatalogue();
+                        if (isItemAdded) {
                           details.freeFormItems[index].productStatus =
-                              FreeFormItemStatus.notAdded;
+                              FreeFormItemStatus.added;
                           setState(() {});
-                        },
-                      ),
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) => ResponseDialogue(
+                              '',
+                              message: 'Add atleast 1 item to confirm this.',
+                            ),
+                          );
+                        }
+                      },
+                      onReject: () {
+                        details.freeFormItems[index].productStatus =
+                            FreeFormItemStatus.notAdded;
+                        setState(() {});
+                      },
                     ),
                   ),
                 ],
-                SizedBox(height: 20.toHeight),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 20.toHeight,
-                    horizontal: 15.toWidth,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey[300],
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: details.orderItems?.length ?? 0,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          if (details.orderItems[index].itemStatus ==
-                              CatalogueItemStatus.notPresent)
-                            return Container();
-                          return OrderItemTile(
-                            details.orderItems[index],
-                            (updatedQuantity, updatedUnitPrice) {
-                              details.orderItems[index].itemQuantity =
-                                  updatedQuantity;
-                              details.orderItems[index].unitPrice =
-                                  updatedUnitPrice;
-                              isOrderUpdated = true;
-                              setState(() {});
-                            },
-                            () {
-                              isOrderUpdated = true;
-                              if (details.orderItems[index].itemStatus ==
-                                  CatalogueItemStatus.createdByMerchant) {
-                                details.orderItems.removeAt(index);
-                              } else {
-                                details.orderItems[index].itemStatus =
-                                    CatalogueItemStatus.notPresent;
-                              }
-                              setState(() {});
-                            },
-                          );
-                        },
+                Divider(
+                  color: Colors.grey[400],
+                  height: 20.toHeight,
+                ),
+                Text(
+                  'Catalogue Items',
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        fontSize: 15.toFont,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(height: 20.toHeight),
-                      !isOrderStatusCreated
-                          ? Container()
-                          : RaisedButton(
-                              color: Theme.of(context).primaryColor,
-                              padding: EdgeInsets.all(8.toFont),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                  ),
-                                  Text(
-                                    'Add Item',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                              onPressed: () => _addItemsFromCatalogue(),
-                            )
-                    ],
+                ),
+                SizedBox(height: 8.toHeight),
+                ListView.separated(
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: details.orderItems?.length ?? 0,
+                  shrinkWrap: true,
+                  separatorBuilder: (context, index) =>
+                      SizedBox(height: 8.toHeight),
+                  itemBuilder: (context, index) {
+                    if (details.orderItems[index].itemStatus ==
+                        CatalogueItemStatus.notPresent) return Container();
+                    return OrderItemTile(
+                      details.orderItems[index],
+                      (updatedQuantity, updatedUnitPrice) {
+                        details.orderItems[index].itemQuantity =
+                            updatedQuantity;
+                        details.orderItems[index].unitPrice = updatedUnitPrice;
+                        isOrderUpdated = true;
+                        setState(() {});
+                      },
+                      () {
+                        isOrderUpdated = true;
+                        if (details.orderItems[index].itemStatus ==
+                            CatalogueItemStatus.createdByMerchant) {
+                          details.orderItems.removeAt(index);
+                        } else {
+                          details.orderItems[index].itemStatus =
+                              CatalogueItemStatus.notPresent;
+                        }
+                        setState(() {});
+                      },
+                    );
+                  },
+                ),
+                SizedBox(height: 15.toHeight),
+                Align(
+                  alignment: Alignment.center,
+                  child: InkWell(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.add_circle_outline,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        SizedBox(width: 5.toWidth),
+                        Text(
+                          'Add Item',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                        ),
+                      ],
+                    ),
+                    onTap: () => _addItemsFromCatalogue(),
                   ),
                 ),
+                if (details.customerNote != null ||
+                    (details.customerNoteImages != null &&
+                        details.customerNoteImages.isNotEmpty)) ...[
+                  Divider(
+                    color: Colors.grey[400],
+                    height: 20.toHeight,
+                  ),
+                ],
                 if (details.customerNote != null) ...[
-                  SizedBox(height: 30.toHeight),
+                  SizedBox(height: 10.toHeight),
                   Container(
                     child: Column(
                       children: [
-                        Text(details.customerNote),
+                        RichText(
+                          text: TextSpan(
+                            text: "Note: ",
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(fontWeight: FontWeight.bold),
+                            children: [
+                              TextSpan(
+                                text: details.customerNote,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         SizedBox(height: 10.toHeight)
                       ],
                     ),
@@ -341,7 +369,10 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                     ),
                   ),
                 ],
-                SizedBox(height: 30.toHeight),
+                Divider(
+                  color: Colors.grey[400],
+                  height: 30.toHeight,
+                ),
                 EsOrderDetailsChargesComponent(details),
                 SizedBox(height: 30.toHeight),
                 !isOrderStatusCreated

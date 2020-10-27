@@ -43,9 +43,9 @@ class _OrderItemTileState extends State<OrderItemTile> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         Expanded(
-          flex: 4,
           child: Text(
             widget.orderItem.productName +
                 (widget.orderItem.variationOption != null
@@ -54,61 +54,53 @@ class _OrderItemTileState extends State<OrderItemTile> {
           ),
         ),
         Text('  x  '),
-        Expanded(
-          flex: 2,
-          child: Container(
-            width: 20.toWidth,
-            child: TextFormField(
-              textAlign: TextAlign.center,
-              controller: quantityController,
-              keyboardType: TextInputType.number,
-              onChanged: (v) {
-                int quantity = int.tryParse(v ?? 1) ?? 1;
-                widget.onChanged(
-                  quantity,
-                  widget.orderItem.unitPrice,
-                );
-              },
-            ),
-          ),
-        ),
-        Flexible(
-          flex: 4,
-          child: Container(),
-        ),
-        Text('\u{20B9}'),
-        Expanded(
-          flex: 3,
-          child: Container(
-            width: 70.toWidth,
-            child: TextFormField(
-              textAlign: TextAlign.center,
-              controller: priceController,
-              keyboardType: TextInputType.number,
-              onChanged: (v) {
-                double price = double.tryParse(v ?? 0) ?? 0;
-                widget.onChanged(widget.orderItem.itemQuantity, price);
-              },
-            ),
-          ),
-        ),
-        SizedBox(width: 6.toWidth),
-        Expanded(
-          flex: 2,
-          child: IconButton(
-            color: Colors.red,
-            icon: Icon(Icons.cancel),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AddOrDeleteItemDialogue(
-                  message:
-                      'Are you sure you want to remove ${widget.orderItem.productName} from the order?',
-                  onConfirm: widget.onDelete,
-                ),
+        Container(
+          width: 20.toWidth,
+          child: TextFormField(
+            textAlign: TextAlign.center,
+            controller: quantityController,
+            keyboardType: TextInputType.number,
+            onChanged: (v) {
+              int quantity = int.tryParse(v ?? 1) ?? 1;
+              widget.onChanged(
+                quantity,
+                widget.orderItem.unitPrice,
               );
             },
           ),
+        ),
+        Expanded(
+          child: Container(),
+        ),
+        Text('\u{20B9}'),
+        Container(
+          width: 70.toWidth,
+          child: TextFormField(
+            textAlign: TextAlign.center,
+            controller: priceController,
+            keyboardType: TextInputType.number,
+            onChanged: (v) {
+              double price = double.tryParse(v ?? 0) ?? 0;
+              widget.onChanged(widget.orderItem.itemQuantity, price);
+            },
+          ),
+        ),
+        SizedBox(width: 6.toWidth),
+        InkWell(
+          child: Icon(
+            Icons.cancel,
+            color: Colors.red,
+          ),
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) => AddOrDeleteItemDialogue(
+                message:
+                    'Are you sure you want to remove ${widget.orderItem.productName} from the order?',
+                onConfirm: widget.onDelete,
+              ),
+            );
+          },
         ),
       ],
     );
