@@ -29,6 +29,8 @@ class _EsOrderListState extends State<EsOrderList> {
 
   @override
   Widget build(BuildContext context) {
+    // popScreenAfterCompletion should be true when the callback is triggered from details screen
+    // the details screen should be popped in case of succes.
     acceptItem(EsOrder order, {bool popScreenAfterCompletion = false}) async {
       var isAccepted = await OrdersAlertDialogs.showAcceptAlertDialog(
         order: order,
