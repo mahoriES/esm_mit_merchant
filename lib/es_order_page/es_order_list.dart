@@ -11,15 +11,15 @@ import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 import 'widgets/es_order_card.dart';
 
-class EsOrdersList extends StatefulWidget {
+class EsOrderList extends StatefulWidget {
   final String orderStatus;
-  const EsOrdersList(this.orderStatus, {Key key}) : super(key: key);
+  const EsOrderList(this.orderStatus, {Key key}) : super(key: key);
 
   @override
-  _EsOrdersListState createState() => _EsOrdersListState();
+  _EsOrderListState createState() => _EsOrderListState();
 }
 
-class _EsOrdersListState extends State<EsOrdersList> {
+class _EsOrderListState extends State<EsOrderList> {
   EsOrdersBloc esOrdersBloc;
 
   @override

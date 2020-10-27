@@ -48,11 +48,11 @@ class EsOrderPage extends StatelessWidget {
               Expanded(
                 child: TabBarView(
                   children: [
-                    EsOrdersList(EsOrderStatus.CREATED),
-                    EsOrdersList(EsOrderStatus.MERCHANT_ACCEPTED),
-                    EsOrdersList(EsOrderStatus.READY_FOR_PICKUP),
-                    EsOrdersList(EsOrderStatus.REQUESTING_TO_DA),
-                    EsOrdersList(EsOrderStatus.ALL_ORDERS),
+                    EsOrderList(EsOrderStatus.CREATED),
+                    EsOrderList(EsOrderStatus.MERCHANT_ACCEPTED),
+                    EsOrderList(EsOrderStatus.READY_FOR_PICKUP),
+                    EsOrderList(EsOrderStatus.REQUESTING_TO_DA),
+                    EsOrderList(EsOrderStatus.ALL_ORDERS),
                   ],
                 ),
               ),
