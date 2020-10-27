@@ -55,7 +55,10 @@ class _EsOrderCardState extends State<EsOrderCard> {
     Navigator.of(context).pushNamed(
       EsOrderDetails.routeName,
       arguments: EsOrderDetailsParam(
-        esOrderDetailsResponse: orderDetailsResponse,
+        esOrderDetailsResponse: new EsOrderDetailsResponse.fromJson(
+          orderDetailsResponse.toJson(),
+          divideUnitPriceBy100: false,
+        ),
         acceptOrder: (_context) async => widget.onAccept(popOnCompletion: true),
         cancelOrder: (_context) async => widget.onCancel(popOnCompletion: true),
         updateOrder: (_context, body) async => widget.onUpdateOrder(
