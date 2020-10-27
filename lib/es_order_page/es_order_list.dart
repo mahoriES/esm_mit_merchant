@@ -6,7 +6,6 @@ import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/es_order_page/widgets/alert_dialogues.dart';
 import 'package:foore/services/sizeconfig.dart';
 import 'package:foore/widgets/empty_list.dart';
-import 'package:foore/widgets/response_dialog.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 import 'widgets/es_order_card.dart';
@@ -78,9 +77,8 @@ class _EsOrderListState extends State<EsOrderList> {
 
     updatePaymentStatus(
       EsOrder order,
-      String newStatus, {
-      Function onSuccesTask,
-    }) async {
+      String newStatus,
+    ) async {
       var isAccepted = await OrdersAlertDialogs.showUpdateStatusAlertDialog(
         order: order,
         esOrdersBloc: esOrdersBloc,
@@ -88,7 +86,6 @@ class _EsOrderListState extends State<EsOrderList> {
         newStatus: newStatus,
       );
       if (isAccepted == true) {
-        if (onSuccesTask != null) onSuccesTask();
         esOrdersBloc.resetDataState();
       }
     }
@@ -115,20 +112,6 @@ class _EsOrderListState extends State<EsOrderList> {
         order: order,
         esOrdersBloc: esOrdersBloc,
         context: context,
-        updatePaymentStatus: (newStatus) => updatePaymentStatus(
-          order,
-          newStatus,
-          onSuccesTask: () {
-            Navigator.of(context, rootNavigator: true).pop(true);
-            esOrdersBloc.markComplete(order.orderId, () {}, (error) {
-              showDialog(
-                context: context,
-                builder: (context) =>
-                    ResponseDialogue(error ?? 'something went wrong'),
-              );
-            });
-          },
-        ),
       );
       if (isAccepted == true) {
         esOrdersBloc.resetDataState();

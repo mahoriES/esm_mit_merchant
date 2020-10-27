@@ -127,14 +127,12 @@ class OrdersAlertDialogs {
     @required EsOrder order,
     @required EsOrdersBloc esOrdersBloc,
     @required BuildContext context,
-    @required Function(String) updatePaymentStatus,
   }) async {
     return _showDialogCommon(
       esOrdersBloc: esOrdersBloc,
       context: context,
       alertDialog: Center(
-        child: _CompleteOrderDialog(
-            order, esOrdersBloc, updatePaymentStatus, context),
+        child: _CompleteOrderDialog(order, esOrdersBloc, context),
       ),
     );
   }
@@ -379,12 +377,10 @@ class OrdersAlertDialogs {
 class _CompleteOrderDialog extends StatefulWidget {
   final EsOrder order;
   final EsOrdersBloc esOrdersBloc;
-  final Function(String) updatePaymentStatus;
   final BuildContext dialogContext;
   _CompleteOrderDialog(
     this.order,
     this.esOrdersBloc,
-    this.updatePaymentStatus,
     this.dialogContext,
   );
 
