@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_orders.dart';
 import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
-import 'package:foore/es_order_page/widgets/es_order_card.dart';
 import 'package:foore/widgets/response_dialog.dart';
 
 class OrdersAlertDialogs {
@@ -16,10 +15,10 @@ class OrdersAlertDialogs {
       context: context,
       barrierDismissible: false,
       useRootNavigator: true, // user must tap button for close dialog!
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return StreamBuilder<EsOrdersState>(
           stream: esOrdersBloc.esOrdersStateObservable,
-          builder: (context, snapshot) {
+          builder: (dialogContext, snapshot) {
             if (!snapshot.hasData) {
               return Container();
             }
@@ -52,17 +51,16 @@ class OrdersAlertDialogs {
         title: Container(),
         content: Text('Do you want to accept this order ?'),
         actions: <Widget>[
-          FlatButton(
-            child: Text(
-              'Cancel',
-              style: Theme.of(context).textTheme.button,
-            ),
+          RaisedButton(
+            color: Theme.of(context).errorColor,
+            child: Text('Cancel'),
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop(false);
             },
           ),
-          FlatButton(
+          RaisedButton(
             child: Text('Accept'),
+            color: Theme.of(context).primaryColor,
             onPressed: () {
               esOrdersBloc.acceptOrder(
                 order.orderId,
@@ -97,16 +95,15 @@ class OrdersAlertDialogs {
         title: Container(),
         content: Text('Do you want to mark this order as Ready for pickup?'),
         actions: <Widget>[
-          FlatButton(
-            child: Text(
-              'Cancel',
-              style: Theme.of(context).textTheme.button,
-            ),
+          RaisedButton(
+            color: Theme.of(context).errorColor,
+            child: Text('Cancel'),
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop(false);
             },
           ),
-          FlatButton(
+          RaisedButton(
+            color: Theme.of(context).primaryColor,
             child: Text('Mark as Ready'),
             onPressed: () {
               esOrdersBloc.markReady(order.orderId, (a) {
@@ -136,53 +133,8 @@ class OrdersAlertDialogs {
       esOrdersBloc: esOrdersBloc,
       context: context,
       alertDialog: Center(
-        child: AlertDialog(
-          scrollable: true,
-          title: Text(
-            order.dPaymentStatus == EsOrderPaymentStatus.PENDING
-                ? 'The payment for this order is still pending, please update status to approved to mark this as completed.'
-                : order.dPaymentStatus == EsOrderPaymentStatus.INITIATED
-                    ? 'The payment for this order is not processed yet, please update status to approved to mark this as completed.'
-                    : order.dPaymentStatus == EsOrderPaymentStatus.APPROVED
-                        ? 'Do you want to mark this order as completed?'
-                        : 'The payment for this order is rejected, please update status to approved to mark this as completed.',
-          ),
-          content: order.dPaymentStatus != EsOrderPaymentStatus.APPROVED
-              ? UpiPaymentRow(
-                  esOrder: order,
-                  buildContext: context,
-                  onClick: (esorder, status) => updatePaymentStatus(status),
-                )
-              : SizedBox.shrink(),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                'Cancel',
-                style: Theme.of(context).textTheme.button,
-              ),
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true).pop(false);
-              },
-            ),
-            if (order.dPaymentStatus == EsOrderPaymentStatus.APPROVED) ...[
-              FlatButton(
-                child: Text('Mark as Completed'),
-                onPressed: () {
-                  esOrdersBloc.markComplete(order.orderId, () {
-                    Navigator.of(context, rootNavigator: true).pop(true);
-                  }, (error) {
-                    Navigator.of(context, rootNavigator: true).pop(false);
-                    showDialog(
-                      context: context,
-                      builder: (context) =>
-                          ResponseDialogue(error ?? 'something went wrong'),
-                    );
-                  });
-                },
-              ),
-            ],
-          ],
-        ),
+        child: _CompleteOrderDialog(
+            order, esOrdersBloc, updatePaymentStatus, context),
       ),
     );
   }
@@ -232,11 +184,9 @@ class OrdersAlertDialogs {
               .toList(),
         ),
         actions: <Widget>[
-          FlatButton(
-            child: Text(
-              'Close',
-              style: Theme.of(context).textTheme.button,
-            ),
+          RaisedButton(
+            color: Theme.of(context).errorColor,
+            child: Text('Close'),
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop(false);
             },
@@ -276,11 +226,9 @@ class OrdersAlertDialogs {
                   content: Text(
                       'You do not have any delivery partners. Please contact us if you need help onboarding delivery partners'),
                   actions: <Widget>[
-                    FlatButton(
-                      child: Text(
-                        'Close',
-                        style: Theme.of(context).textTheme.button,
-                      ),
+                    RaisedButton(
+                      color: Theme.of(context).errorColor,
+                      child: Text('Close'),
                       onPressed: () {
                         Navigator.of(context, rootNavigator: true).pop(false);
                       },
@@ -307,17 +255,16 @@ class OrdersAlertDialogs {
                       .toList(),
                 ),
                 actions: <Widget>[
-                  FlatButton(
-                    child: Text(
-                      'Close',
-                      style: Theme.of(context).textTheme.button,
-                    ),
+                  RaisedButton(
+                    color: Theme.of(context).errorColor,
+                    child: Text('Close'),
                     onPressed: () {
                       Navigator.of(context, rootNavigator: true).pop(false);
                     },
                   ),
-                  FlatButton(
+                  RaisedButton(
                     child: Text('Assign'),
+                    color: Theme.of(context).primaryColor,
                     onPressed: () {
                       esOrdersBloc.assignOrder(order.orderId, (a) {
                         Navigator.of(context, rootNavigator: true).pop(true);
@@ -352,17 +299,16 @@ class OrdersAlertDialogs {
         content: Text(
             'Do you want to update payment status of order to $newStatus?'),
         actions: <Widget>[
-          FlatButton(
-            child: Text(
-              'Cancel',
-              style: Theme.of(context).textTheme.button,
-            ),
+          RaisedButton(
+            color: Theme.of(context).errorColor,
+            child: Text('Cancel'),
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop(false);
             },
           ),
-          FlatButton(
+          RaisedButton(
             child: Text(newStatus),
+            color: Theme.of(context).primaryColor,
             onPressed: () {
               esOrdersBloc.updateOrderPaymentStatus(order.orderId, newStatus,
                   (a) {
@@ -395,17 +341,16 @@ class OrdersAlertDialogs {
         title: Container(),
         content: Text('Do you want to update this order ?'),
         actions: <Widget>[
-          FlatButton(
-            child: Text(
-              'Cancel',
-              style: Theme.of(context).textTheme.button,
-            ),
+          RaisedButton(
+            color: Theme.of(context).errorColor,
+            child: Text('Cancel'),
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop(false);
             },
           ),
-          FlatButton(
+          RaisedButton(
             child: Text('Update'),
+            color: Theme.of(context).primaryColor,
             onPressed: () {
               esOrdersBloc.updateOrder(
                 order.orderId,
@@ -427,6 +372,167 @@ class OrdersAlertDialogs {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _CompleteOrderDialog extends StatefulWidget {
+  final EsOrder order;
+  final EsOrdersBloc esOrdersBloc;
+  final Function(String) updatePaymentStatus;
+  final BuildContext dialogContext;
+  _CompleteOrderDialog(
+    this.order,
+    this.esOrdersBloc,
+    this.updatePaymentStatus,
+    this.dialogContext,
+  );
+
+  @override
+  __CompleteOrderDialogState createState() => __CompleteOrderDialogState();
+}
+
+class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
+  String radioValue;
+  @override
+  void initState() {
+    print('initially ${widget.order.dPaymentStatus}');
+    if (widget.order.dPaymentStatus == EsOrderPaymentStatus.APPROVED ||
+        widget.order.dPaymentStatus == EsOrderPaymentStatus.REJECTED) {
+      radioValue = widget.order.dPaymentStatus;
+    } else
+      radioValue = "NA";
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  _markAsCompleted() {
+    widget.esOrdersBloc.markComplete(widget.order.orderId, () {
+      Navigator.of(widget.dialogContext, rootNavigator: true).pop(true);
+    }, (error) {
+      Navigator.of(widget.dialogContext, rootNavigator: true).pop(false);
+      showDialog(
+        context: widget.dialogContext,
+        builder: (context) => ResponseDialogue(error ?? 'something went wrong'),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      scrollable: true,
+      title: Text('Complete Order'),
+      content: Column(
+        children: [
+          RichText(
+            text: TextSpan(
+              text: 'Did you receive the payment of ',
+              style: Theme.of(context).textTheme.subtitle1,
+              children: <TextSpan>[
+                TextSpan(
+                  text: '${widget.order.dOrderTotal} ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                TextSpan(
+                  text: 'for order ',
+                ),
+                TextSpan(
+                  text: ' #${widget.order.orderShortNumber}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            leading: Radio(
+              value: EsOrderPaymentStatus.APPROVED,
+              visualDensity: VisualDensity.compact,
+              groupValue: radioValue,
+              onChanged: (v) {
+                setState(() {
+                  radioValue = v;
+                });
+              },
+            ),
+            title: Text('Yes'),
+            contentPadding: EdgeInsets.zero,
+          ),
+          ListTile(
+            leading: Radio(
+              value: EsOrderPaymentStatus.REJECTED,
+              visualDensity: VisualDensity.compact,
+              groupValue: radioValue,
+              onChanged: (v) {
+                setState(() {
+                  radioValue = v;
+                });
+              },
+            ),
+            title: Text('No'),
+            contentPadding: EdgeInsets.zero,
+          ),
+          ListTile(
+            leading: Radio(
+              value: "NA",
+              visualDensity: VisualDensity.compact,
+              groupValue: radioValue,
+              onChanged: (v) {
+                setState(() {
+                  radioValue = v;
+                });
+              },
+            ),
+            title: Text("Don't Know"),
+            contentPadding: EdgeInsets.zero,
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        RaisedButton(
+          color: Theme.of(context).errorColor,
+          child: Text(
+            'Cancel',
+            style: Theme.of(context)
+                .textTheme
+                .button
+                .copyWith(color: Colors.white),
+          ),
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true).pop(false);
+          },
+        ),
+        RaisedButton(
+          child: Text('Mark Completed'),
+          color: Theme.of(context).primaryColor,
+          onPressed: () async {
+            if (radioValue != widget.order.dPaymentStatus &&
+                radioValue != "NA") {
+              widget.esOrdersBloc.updateOrderPaymentStatus(
+                widget.order.orderId,
+                radioValue,
+                (a) {
+                  _markAsCompleted();
+                },
+                (error) {
+                  Navigator.of(widget.dialogContext, rootNavigator: true)
+                      .pop(false);
+                  showDialog(
+                    context: widget.dialogContext,
+                    builder: (context) =>
+                        ResponseDialogue(error ?? 'something went wrong'),
+                  );
+                },
+              );
+            } else
+              _markAsCompleted();
+          },
+        ),
+      ],
     );
   }
 }

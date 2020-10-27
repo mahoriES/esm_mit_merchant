@@ -61,14 +61,15 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
     super.initState();
   }
 
-
   //This function works for these cases - i) When only order charges are updated  ii) When only order items are updated
   //iii) When both are updated
   _updateOrder() {
     widget.params.updateOrder(
         context,
         UpdateOrderPayload(
-          additionalChargesUpdatedList: EsOrderDetails.chargesUpdated.value ? details.additionalChargesDetails : null,
+          additionalChargesUpdatedList: EsOrderDetails.chargesUpdated.value
+              ? details.additionalChargesDetails
+              : null,
           orderItems: List.generate(
             details.orderItems.length,
             (index) => UpdateOrderItems(
@@ -121,30 +122,44 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
         actions: [
           if (details?.customerPhones?.length != null &&
               details.customerPhones.length > 0) ...[
-            IconButton(
-              icon: Image.asset(
-                'assets/call.png',
-                height: 20.toHeight,
-                fit: BoxFit.cover,
-              ),
-              onPressed: () => launch(
-                StringConstants.callUrlLauncher(details.customerPhones[0]),
-              ),
-            ),
-            IconButton(
-              icon: Image.asset(
-                'assets/whatsapp.png',
-                height: 20.toHeight,
-                fit: BoxFit.cover,
-              ),
-              onPressed: () => launch(
-                Platform.isIOS
-                    ? StringConstants.whatsAppIosLauncher(
-                        details.customerPhones[0], 'Message from eSamudaay.')
-                    : StringConstants.whatsAppAndroidLauncher(
-                        details.customerPhones[0], 'Message from eSamudaay.'),
+            Material(
+              type: MaterialType.transparency,
+              child: InkWell(
+                child: Icon(
+                  Icons.call_rounded,
+                  size: 25.toHeight,
+                  color: Colors.lightBlue,
+                ),
+                onTap: () => launch(
+                  StringConstants.callUrlLauncher(
+                    details.customerPhones[0],
+                  ),
+                ),
               ),
             ),
+            SizedBox(width: 12.toWidth),
+            Material(
+              type: MaterialType.transparency,
+              child: InkWell(
+                child: Image.asset(
+                  'assets/whatsapp.png',
+                  width: 25.toWidth,
+                  // fit: BoxFit.fill,
+                ),
+                onTap: () => launch(
+                  Platform.isIOS
+                      ? StringConstants.whatsAppIosLauncher(
+                          details.customerPhones[0],
+                          '', // 'Message from eSamudaay.',
+                        )
+                      : StringConstants.whatsAppAndroidLauncher(
+                          details.customerPhones[0],
+                          '', //'Message from eSamudaay.',
+                        ),
+                ),
+              ),
+            ),
+            SizedBox(width: 12.toWidth),
           ],
         ],
       ),
@@ -248,29 +263,23 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                       SizedBox(height: 20.toHeight),
                       !isOrderStatusCreated
                           ? Container()
-                          : InkWell(
-                              child: Container(
-                                padding: EdgeInsets.all(8.toFont),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius:
-                                      BorderRadius.circular(12.toFont),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                    ),
-                                    Text(
-                                      'Add Item',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
+                          : RaisedButton(
+                              color: Theme.of(context).primaryColor,
+                              padding: EdgeInsets.all(8.toFont),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ),
+                                  Text(
+                                    'Add Item',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
                               ),
-                              onTap: () => _addItemsFromCatalogue(),
+                              onPressed: () => _addItemsFromCatalogue(),
                             )
                     ],
                   ),
@@ -344,62 +353,87 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              FoSubmitButton(
-                                text: 'Reject Order',
-                                onPressed: () =>
-                                    widget.params.cancelOrder(context),
-                                color: Colors.red,
+                              Expanded(
+                                flex: 1,
+                                child: RaisedButton(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10.toHeight),
+                                  child: Text('Reject Order'),
+                                  onPressed: () =>
+                                      widget.params.cancelOrder(context),
+                                  color: Theme.of(context).errorColor,
+                                ),
                               ),
-                              details.orderItems.length == 0
-                                  ? FoSubmitButton(
-                                      text: 'Update Order',
-                                      onPressed: () => showDialog(
-                                        context: context,
-                                        builder: (context) => ResponseDialogue(
-                                          '',
-                                          message:
-                                              'Please add at least 1 item in the order',
+                              SizedBox(width: 20.toWidth),
+                              Expanded(
+                                flex: 1,
+                                child: details.orderItems.length == 0
+                                    ? RaisedButton(
+                                        child: Text('Update Order'),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 10.toHeight),
+                                        onPressed: () => showDialog(
+                                          context: context,
+                                          builder: (context) =>
+                                              ResponseDialogue(
+                                            '',
+                                            message:
+                                                'Please add at least 1 item in the order',
+                                          ),
                                         ),
-                                      ),
-                                      color: Colors.grey[400],
-                                    )
-                                  : (details.freeFormItems != null &&
-                                          details.freeFormItems.length > 0)
-                                      ? allItemsUpdated
-                                          ? FoSubmitButton(
-                                              text: 'Update Order',
-                                              onPressed: _updateOrder,
-                                            )
-                                          : FoSubmitButton(
-                                              text: 'Update Order',
-                                              onPressed: () => showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    ResponseDialogue(
-                                                  '',
-                                                  message:
-                                                      'Please Accept/Decline the list items first',
+                                        color: Colors.grey[400],
+                                      )
+                                    : (details.freeFormItems != null &&
+                                            details.freeFormItems.length > 0)
+                                        ? allItemsUpdated
+                                            ? RaisedButton(
+                                                child: Text('Update Order'),
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 10.toHeight),
+                                                onPressed: _updateOrder,
+                                              )
+                                            : RaisedButton(
+                                                child: Text('Update Order'),
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 10.toHeight),
+                                                onPressed: () => showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      ResponseDialogue(
+                                                    '',
+                                                    message:
+                                                        'Please Accept/Decline the list items first',
+                                                  ),
                                                 ),
+                                                color: Colors.grey[400],
+                                              )
+
+                                        ///The [ValueNotifier] flag is used here to update the button title
+                                        : (isOrderUpdated || value)
+                                            ? RaisedButton(
+                                                child: Text('Update Order'),
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 10.toHeight),
+                                                onPressed: _updateOrder,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                              )
+                                            : RaisedButton(
+                                                child: Text('Accept Order'),
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 10.toHeight),
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                onPressed: () {
+                                                  debugPrint('Accept tapped');
+                                                  debugPrint(details
+                                                      .additionalChargesDetails
+                                                      .toString());
+                                                  widget.params
+                                                      .acceptOrder(context);
+                                                },
                                               ),
-                                              color: Colors.grey[400],
-                                            )
-                              ///The [ValueNotifier] flag is used here to update the button title
-                                      : (isOrderUpdated || value)
-                                          ? FoSubmitButton(
-                                              text: 'Update Order',
-                                              onPressed: _updateOrder,
-                                            )
-                                          : FoSubmitButton(
-                                              text: 'Accept Order',
-                                              onPressed: () {
-                                                debugPrint('Accept tapped');
-                                                debugPrint(details
-                                                    .additionalChargesDetails
-                                                    .toString());
-                                                widget.params
-                                                    .acceptOrder(context);
-                                              },
-                                            ),
+                              ),
                             ],
                           );
                         }),

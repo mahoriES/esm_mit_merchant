@@ -516,7 +516,9 @@ class UpiPaymentRow extends StatelessWidget {
             child: Text(
               "Mark Paid",
               style: TextStyle(
-                  decoration: TextDecoration.underline, color: Colors.green),
+                decoration: TextDecoration.underline,
+                color: Theme.of(buildContext).primaryColor,
+              ),
             )),
       ],
     );
@@ -541,7 +543,9 @@ class UpiPaymentRow extends StatelessWidget {
             child: Text(
               "Approve Payment",
               style: TextStyle(
-                  decoration: TextDecoration.underline, color: Colors.green),
+                decoration: TextDecoration.underline,
+                color: Theme.of(buildContext).primaryColor,
+              ),
             )),
       ],
     );
@@ -550,7 +554,7 @@ class UpiPaymentRow extends StatelessWidget {
   Widget getForStatusApproved() {
     return Row(
       children: <Widget>[
-        Icon(Icons.done, size: 16, color: Colors.green),
+        Icon(Icons.done, size: 16, color: Theme.of(buildContext).primaryColor),
         SizedBox(width: 4),
         Text(
           EsOrderPaymentStatus.paymentString(esOrder.dPaymentStatus),
@@ -566,7 +570,9 @@ class UpiPaymentRow extends StatelessWidget {
             child: Text(
               "Reject Payment",
               style: TextStyle(
-                  decoration: TextDecoration.underline, color: Colors.red),
+                decoration: TextDecoration.underline,
+                color: Theme.of(buildContext).errorColor,
+              ),
             )),
       ],
     );
@@ -575,7 +581,7 @@ class UpiPaymentRow extends StatelessWidget {
   Widget getForStatusRejected() {
     return Row(
       children: <Widget>[
-        Icon(Icons.cancel, size: 16, color: Colors.red),
+        Icon(Icons.cancel, size: 16, color: Theme.of(buildContext).errorColor),
         SizedBox(width: 4),
         Text(
           EsOrderPaymentStatus.paymentString(esOrder.dPaymentStatus),
@@ -591,7 +597,9 @@ class UpiPaymentRow extends StatelessWidget {
             child: Text(
               "Approve Payment",
               style: TextStyle(
-                  decoration: TextDecoration.underline, color: Colors.green),
+                decoration: TextDecoration.underline,
+                color: Theme.of(buildContext).primaryColor,
+              ),
             )),
       ],
     );

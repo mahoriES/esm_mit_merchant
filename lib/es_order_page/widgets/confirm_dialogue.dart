@@ -48,6 +48,7 @@ class AddOrDeleteItemDialogue extends StatelessWidget {
                     Navigator.pop(context);
                     onConfirm();
                   },
+                  color: Theme.of(context).primaryColor,
                   child: Text(
                     'Confirm',
                     style: TextStyle(
@@ -63,6 +64,7 @@ class AddOrDeleteItemDialogue extends StatelessWidget {
                     Navigator.pop(context);
                     if (onCancel != null) onCancel();
                   },
+                  color: Theme.of(context).errorColor,
                   child: Text(
                     'Cancel',
                     style: TextStyle(
