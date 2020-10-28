@@ -122,10 +122,12 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
                       ),
                       child: TextFormField(
                         controller: esEditProductBloc.nameEditController,
+                        validator: ValidationService().validateProductName,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Product name',
                         ),
+                        maxLength: 128,
                       ),
                     ),
                     Padding(

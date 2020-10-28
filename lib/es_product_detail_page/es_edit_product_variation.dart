@@ -106,22 +106,22 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                 child: ListView(
                   children: <Widget>[
                     const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: TextFormField(
-                        enabled: widget.currentSku == null,
-                        controller:
-                            widget.esEditProductBloc.skuCodeEditController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Sku code',
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(
+                    //     top: 24.0,
+                    //     left: 20,
+                    //     right: 20,
+                    //   ),
+                    //   child: TextFormField(
+                    //     enabled: widget.currentSku == null,
+                    //     controller:
+                    //         widget.esEditProductBloc.skuCodeEditController,
+                    //     decoration: InputDecoration(
+                    //       border: OutlineInputBorder(),
+                    //       labelText: 'Sku code',
+                    //     ),
+                    //   ),
+                    // ),
                     Padding(
                       padding: const EdgeInsets.only(
                         top: 24.0,
