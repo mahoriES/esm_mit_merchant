@@ -149,11 +149,13 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                   Platform.isIOS
                       ? StringConstants.whatsAppIosLauncher(
                           details.customerPhones[0],
-                          '', // 'Message from eSamudaay.',
+                          StringConstants.whatsAppMessage(
+                              details.orderShortNumber, details.businessName),
                         )
                       : StringConstants.whatsAppAndroidLauncher(
                           details.customerPhones[0],
-                          '', //'Message from eSamudaay.',
+                          StringConstants.whatsAppMessage(
+                              details.orderShortNumber, details.businessName),
                         ),
                 ),
               ),
@@ -241,7 +243,8 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                       SizedBox(height: 8.toHeight),
                   itemBuilder: (context, index) {
                     if (details.orderItems[index].itemStatus ==
-                        CatalogueItemStatus.notPresent) return Container();
+                        CatalogueItemStatus.notPresent)
+                      return SizedBox.shrink();
                     return OrderItemTile(
                       details.orderItems[index],
                       (updatedQuantity, updatedUnitPrice) {

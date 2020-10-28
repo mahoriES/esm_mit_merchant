@@ -7,6 +7,7 @@ import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/es_order_page/es_order_details.dart';
 import 'package:foore/services/sizeconfig.dart';
+import 'package:foore/utils/utils.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -187,7 +188,7 @@ class _EsOrderCardState extends State<EsOrderCard> {
                     ///// Order Time.
                     ////////////////////////////////////
                     Text(
-                      "${widget.esOrder.getCreatedTimeText()}  (${widget.esOrder.getTimeDiffrence()})",
+                      "${widget.esOrder.getCreatedTimeText()}  (${Utils.getTimeDiffrence(widget.esOrder.created)})",
                       style: Theme.of(context).textTheme.caption,
                     ),
                     SizedBox(height: 15.toHeight),
@@ -470,11 +471,15 @@ class _CardExpandedView extends StatelessWidget {
                             Platform.isIOS
                                 ? StringConstants.whatsAppIosLauncher(
                                     esOrderDetails.customerPhones[0],
-                                    '', // 'Message from eSamudaay.',
+                                    StringConstants.whatsAppMessage(
+                                        esOrderDetails.orderShortNumber,
+                                        esOrderDetails.businessName),
                                   )
                                 : StringConstants.whatsAppAndroidLauncher(
                                     esOrderDetails.customerPhones[0],
-                                    '', //'Message from eSamudaay.',
+                                    StringConstants.whatsAppMessage(
+                                        esOrderDetails.orderShortNumber,
+                                        esOrderDetails.businessName),
                                   ),
                           ),
                         ),
