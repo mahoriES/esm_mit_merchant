@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
+import 'package:foore/services/validation.dart';
 
 class EsEditProductVariationPage extends StatefulWidget {
   final EsEditProductBloc esEditProductBloc;
@@ -105,22 +106,22 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                 child: ListView(
                   children: <Widget>[
                     const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: TextFormField(
-                        enabled: widget.currentSku == null,
-                        controller:
-                            widget.esEditProductBloc.skuCodeEditController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Sku code',
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(
+                    //     top: 24.0,
+                    //     left: 20,
+                    //     right: 20,
+                    //   ),
+                    //   child: TextFormField(
+                    //     enabled: widget.currentSku == null,
+                    //     controller:
+                    //         widget.esEditProductBloc.skuCodeEditController,
+                    //     decoration: InputDecoration(
+                    //       border: OutlineInputBorder(),
+                    //       labelText: 'Sku code',
+                    //     ),
+                    //   ),
+                    // ),
                     Padding(
                       padding: const EdgeInsets.only(
                         top: 24.0,
@@ -131,6 +132,7 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                         keyboardType: TextInputType.number,
                         controller:
                             widget.esEditProductBloc.skuPriceEditController,
+                        validator: ValidationService().validateDouble,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Price (eg. 120.0)',
@@ -146,9 +148,17 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                       child: TextFormField(
                         controller: widget
                             .esEditProductBloc.skuVariationValueEditController,
+                        validator:
+                            // widget.esEditProductBloc.unitEditController.text ==
+                            //         "Piece"
+                            //     ? ValidationService().validateInt
+                            //     :
+                            ValidationService().validateDouble,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Variation (eg. 500gm)',
+                          suffix: Text(
+                              widget.esEditProductBloc.unitEditController.text),
                         ),
                       ),
                     ),
@@ -159,13 +169,14 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                         right: 20,
                       ),
                       child: SwitchListTile(
-                          value: this.isActive,
-                          onChanged: (updatedVal) {
-                            setState(() {
-                              this.isActive = updatedVal;
-                            });
-                          },
-                          title: Text("Active")),
+                        value: this.isActive,
+                        onChanged: (updatedVal) {
+                          setState(() {
+                            this.isActive = updatedVal;
+                          });
+                        },
+                        title: Text("Active"),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
@@ -174,13 +185,14 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                         right: 20,
                       ),
                       child: SwitchListTile(
-                          value: this.inStock,
-                          onChanged: (updatedVal) {
-                            setState(() {
-                              this.inStock = updatedVal;
-                            });
-                          },
-                          title: Text("Stock")),
+                        value: this.inStock,
+                        onChanged: (updatedVal) {
+                          setState(() {
+                            this.inStock = updatedVal;
+                          });
+                        },
+                        title: Text("Stock"),
+                      ),
                     ),
                   ],
                 ),

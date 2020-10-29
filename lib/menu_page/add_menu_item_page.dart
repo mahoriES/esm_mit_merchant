@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/menu_page/add_menu_image_list.dart';
+import 'package:foore/services/validation.dart';
 import 'package:provider/provider.dart';
 
 class AddMenuItemPage extends StatefulWidget {
@@ -20,6 +22,19 @@ class AddMenuItemPage extends StatefulWidget {
 class AddMenuItemPageState extends State<AddMenuItemPage>
     with AfterLayoutMixin<AddMenuItemPage> {
   final _formKey = GlobalKey<FormState>();
+  final List<String> unitsList = [
+    "Piece",
+    "Kg",
+    "Gm",
+    "Litre",
+    "Ml",
+    "Dozen",
+    "ft",
+    "meter",
+    "sq. ft."
+  ];
+
+  String selectedUnit;
 
   Future<bool> _onWillPop() async {
     Navigator.pop(context);
@@ -68,9 +83,14 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
     final esEditProductBloc = Provider.of<EsEditProductBloc>(context);
     submit() {
       if (this._formKey.currentState.validate()) {
-        esEditProductBloc.addProduct((EsProduct product) {
-          Navigator.of(context).pop(product);
-        });
+        if (selectedUnit == null) {
+          Fluttertoast.showToast(msg: 'Please Select Unit First');
+        } else {
+          esEditProductBloc.unitEditController.text = selectedUnit;
+          esEditProductBloc.addProduct((EsProduct product) {
+            Navigator.of(context).pop(product);
+          });
+        }
       }
     }
 
@@ -102,10 +122,12 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
                       ),
                       child: TextFormField(
                         controller: esEditProductBloc.nameEditController,
+                        validator: ValidationService().validateProductName,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Product name',
                         ),
+                        maxLength: 128,
                       ),
                     ),
                     Padding(
@@ -114,12 +136,23 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
                         left: 20,
                         right: 20,
                       ),
-                      child: TextFormField(
-                        controller: esEditProductBloc.unitEditController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Unit',
+                      child: DropdownButtonFormField(
+                        value: selectedUnit,
+                        hint: Text('Select a unit'),
+                        validator: (value) => ValidationService()
+                            .validateString(value.toString()),
+                        items: List.generate(
+                          unitsList.length,
+                          (index) => DropdownMenuItem(
+                            value: unitsList[index],
+                            child: Text(unitsList[index]),
+                          ),
                         ),
+                        onChanged: (v) {
+                          setState(() {
+                            selectedUnit = v;
+                          });
+                        },
                       ),
                     ),
                   ],

@@ -191,7 +191,8 @@ class EsEditProductBloc {
     var payload = AddSkuPayload(
         basePrice: (double.parse(skuPriceEditController.text) * 100).toInt(),
         skuCode: skuCodeEditController.text,
-        variationValue: skuVariationValueEditController.text,
+        variationValue:
+            "${skuVariationValueEditController.text} ${unitEditController.text}",
         inStock: inStock,
         isActive: isActive);
     this._esEditProductState.isSubmitting = true;
@@ -237,7 +238,8 @@ class EsEditProductBloc {
   editCurrentSku(int skuId, bool inStock, bool isActive, onSuccess, onFail) {
     var payload = AddSkuPayload(
         basePrice: (double.parse(skuPriceEditController.text) * 100).toInt(),
-        variationValue: skuVariationValueEditController.text,
+        variationValue:
+            "${skuVariationValueEditController.text} ${unitEditController.text}",
         inStock: inStock,
         isActive: isActive);
     this._esEditProductState.isSubmitting = true;
