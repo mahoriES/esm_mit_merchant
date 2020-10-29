@@ -390,7 +390,7 @@ class EsSku {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['sku_id'] = this.skuId;
-    data['sku_code'] = this.skuCode;
+    // data['sku_code'] = this.skuCode;
     data['is_active'] = this.isActive;
     data['in_stock'] = this.inStock;
     data['charges'] = this.charges;
@@ -428,21 +428,21 @@ class EsImage {
 
 class AddSkuPayload {
   int basePrice;
-  String skuCode;
+  // String skuCode;
   String variationValue;
   bool isActive;
   bool inStock;
 
   AddSkuPayload(
       {this.basePrice,
-      this.skuCode,
+      // this.skuCode,
       this.variationValue,
       this.isActive,
       this.inStock});
 
   AddSkuPayload.fromJson(Map<String, dynamic> inputJson) {
     basePrice = inputJson['base_price'];
-    skuCode = inputJson['sku_code'];
+    // skuCode = inputJson['sku_code'];
     isActive = inputJson['is_active'];
     inStock = inputJson['in_stock'];
     if (inputJson.containsKey('variation_option') &&
@@ -457,7 +457,7 @@ class AddSkuPayload {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['base_price'] = this.basePrice;
-    data['sku_code'] = this.skuCode;
+    // data['sku_code'] = this.skuCode;
     if (variationValue != null && variationValue.isNotEmpty) {
       //final Map<String, dynamic> variation_options = new Map<String, dynamic>();
       //variation_options['variation_options'] = this.variationValue;

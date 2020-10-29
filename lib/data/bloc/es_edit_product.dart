@@ -19,7 +19,7 @@ class EsEditProductBloc {
   final displayLine1EditController = TextEditingController();
   final unitEditController = TextEditingController();
   final skuPriceEditController = TextEditingController();
-  final skuCodeEditController = TextEditingController();
+  // final skuCodeEditController = TextEditingController();
   final skuVariationValueEditController = TextEditingController();
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
@@ -43,7 +43,7 @@ class EsEditProductBloc {
   }
 
   updateControllersForSku(EsSku sku) {
-    skuCodeEditController.text = sku.skuCode;
+    // skuCodeEditController.text = sku.skuCode;
     skuPriceEditController.text = (sku.basePrice / 100).toString();
     skuVariationValueEditController.text = sku.variationValue;
   }
@@ -190,7 +190,7 @@ class EsEditProductBloc {
   addSkuToProduct(bool inStock, bool isActive, onSuccess, onFail) {
     var payload = AddSkuPayload(
         basePrice: (double.parse(skuPriceEditController.text) * 100).toInt(),
-        skuCode: skuCodeEditController.text,
+        // skuCode: skuCodeEditController.text,
         variationValue:
             "${skuVariationValueEditController.text} ${unitEditController.text}",
         inStock: inStock,
