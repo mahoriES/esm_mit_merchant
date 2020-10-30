@@ -10,9 +10,7 @@ import 'additional_charges_dialogue.dart';
 
 class EsOrderDetailsChargesComponent extends StatefulWidget {
   final EsOrderDetailsResponse orderDetails;
-
   EsOrderDetailsChargesComponent(this.orderDetails);
-
   @override
   _EsOrderDetailsChargesComponentState createState() =>
       _EsOrderDetailsChargesComponentState();
@@ -82,10 +80,17 @@ class _EsOrderDetailsChargesComponentState
     if (type == 0) {
       List addedCharges =
           additionalChargesList.map((e) => e.chargeName).toList();
-      availableCharges = AdditionChargesMetaDataGenerator.allKeyOptions
-          .toSet()
-          .difference(addedCharges.toSet())
-          .toList();
+      if (widget.orderDetails.deliveryType == 'SELF_PICK_UP') {
+        availableCharges = AdditionChargesMetaDataGenerator.selfPickupKeyOptions
+            .toSet()
+            .difference(addedCharges.toSet())
+            .toList();
+      } else {
+        availableCharges = AdditionChargesMetaDataGenerator.allKeyOptions
+            .toSet()
+            .difference(addedCharges.toSet())
+            .toList();
+      }
     }
     debugPrint('Available charges ${availableCharges.toString()}');
     var selectedCharge = await showDialog(
@@ -134,20 +139,20 @@ class _EsOrderDetailsChargesComponentState
                 _totalNumberOfItems.toString() +
                     '  Item' +
                     (_totalNumberOfItems > 1 ? 's' : ''),
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    .copyWith(fontWeight: FontWeight.w400),
+                style: Theme.of(context).textTheme.subtitle2.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
               ),
             ),
             Expanded(
               flex: 30,
               child: Text(
                 '\u{20B9} ${_itemCharges.toStringAsFixed(2)}',
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    .copyWith(fontWeight: FontWeight.w400),
+                style: Theme.of(context).textTheme.subtitle2.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                 textAlign: TextAlign.left,
               ),
             ),
@@ -157,32 +162,29 @@ class _EsOrderDetailsChargesComponentState
             ),
           ],
         ),
-        SizedBox(height: 10.toHeight),
-        Divider(
-          color: AppColors.greyishText,
-        ),
+        SizedBox(height: 5.toHeight),
         if (additionalChargesList.isNotEmpty) ...[
-          ListView.separated(
+          ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: additionalChargesList.length,
-            separatorBuilder: (context, index) => SizedBox(height: 10.toHeight),
             itemBuilder: (context, index) => Padding(
               padding: EdgeInsets.only(right: 8.toWidth),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Expanded(
-                      flex: 63,
-                      child: Text(
-                        AdditionChargesMetaDataGenerator
-                            .friendlyChargeNameFromKeyValue(
-                                additionalChargesList[index].chargeName),
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle2
-                            .copyWith(fontWeight: FontWeight.w400),
-                      )),
+                    flex: 60,
+                    child: Text(
+                      AdditionChargesMetaDataGenerator
+                          .friendlyChargeNameFromKeyValue(
+                              additionalChargesList[index].chargeName),
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2
+                          .copyWith(fontWeight: FontWeight.w400),
+                    ),
+                  ),
                   Expanded(
                     flex: 20,
                     child: TextFormField(
@@ -217,9 +219,13 @@ class _EsOrderDetailsChargesComponentState
                           .subtitle2
                           .copyWith(fontWeight: FontWeight.w400),
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.zero,
                         prefix: Padding(
-                            padding: EdgeInsets.only(right: 3.toWidth),
-                            child: Text('\u{20B9}')),
+                          padding: EdgeInsets.only(right: 3.toWidth),
+                          child: Text(
+                            '\u{20B9}',
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -233,7 +239,7 @@ class _EsOrderDetailsChargesComponentState
         ],
         if (additionalChargesList.length <
             AdditionChargesMetaDataGenerator.allKeyOptions.length) ...[
-          SizedBox(height: 10.toHeight),
+          SizedBox(height: 15.toHeight),
           Center(
             child: InkWell(
               child: Row(
@@ -259,6 +265,7 @@ class _EsOrderDetailsChargesComponentState
           ),
         ],
         Divider(
+          height: 20.toHeight,
           color: Colors.grey[400],
         ),
         Row(
@@ -339,6 +346,9 @@ class AdditionChargesMetaDataGenerator {
 
   static List<String> get allKeyOptions =>
       ['DELIVERY', 'EXTRA', 'PACKING', 'SERVICE'];
+
+  static List<String> get selfPickupKeyOptions =>
+      ['EXTRA', 'PACKING', 'SERVICE'];
 
   static String friendlyChargeNameFromEnumValue(
       AdditionalChargeType chargeType) {

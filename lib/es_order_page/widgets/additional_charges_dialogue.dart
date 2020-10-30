@@ -14,9 +14,11 @@ class AdditionalChargeDialogue extends StatefulWidget {
   ///added yet, and skips the ones which have been added, as they can only be either
   ///deleted or edited.
   final List<String> availableChargesOptions;
+
   ///The value [dialogActionType] can have 2 values - i) 0 when the action is meant to add new charges
   ///ii) 1 when an existing charge's value needs to be modified. Passed only when [dialogActionType] is 0.
   final int dialogActionType;
+
   ///[toBeEditedChargeName] holds the name of the charge whose value has to be changed. This value is passed
   ///only when [dialogActionType] is 1.
   final String toBeEditedChargeName;
@@ -112,32 +114,40 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
                   Row(
                     children: [
                       Expanded(
-                          child: buildDialogActionButton(0, () {
-                            //Show error when entered charge value is invalid and further execution is halted.
-                        if (priceController.text == '' ||
-                            double.tryParse(priceController.text) == null) {
-                          Fluttertoast.showToast(
-                              msg: 'Enter valid charge value!');
-                          return;
-                        }
-                        Navigator.pop(
-                            context,
-                            AdditionalChargesDetails(
-                                chargeName: widget.dialogActionType == 0
-                                    ? widget
-                                        .availableChargesOptions[dropdownValue]
-                                    : widget.toBeEditedChargeName,
-                                value:
-                                    (double.parse(priceController.text) * 100)
-                                        .toInt()));
-                      },),),
+                        child: buildDialogActionButton(
+                          1,
+                          () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
                       SizedBox(
                         width: 20.toWidth,
                       ),
                       Expanded(
-                          child: buildDialogActionButton(1, () {
-                        Navigator.pop(context);
-                      })),
+                        child: buildDialogActionButton(
+                          0,
+                          () {
+                            //Show error when entered charge value is invalid and further execution is halted.
+                            if (priceController.text == '' ||
+                                double.tryParse(priceController.text) == null) {
+                              Fluttertoast.showToast(
+                                  msg: 'Enter valid charge value!');
+                              return;
+                            }
+                            Navigator.pop(
+                                context,
+                                AdditionalChargesDetails(
+                                    chargeName: widget.dialogActionType == 0
+                                        ? widget.availableChargesOptions[
+                                            dropdownValue]
+                                        : widget.toBeEditedChargeName,
+                                    value: (double.parse(priceController.text) *
+                                            100)
+                                        .toInt()));
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -197,23 +207,14 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
   Widget buildDialogActionButton(int type, Function onPressed) {
     return Padding(
       padding: EdgeInsets.only(bottom: 10.toHeight, top: 20.toHeight),
-      child: GestureDetector(
-        onTap: onPressed,
-        child: Container(
-          padding: EdgeInsets.symmetric(
-              vertical: 10.toHeight, horizontal: 10.toWidth),
-          decoration: BoxDecoration(
-              color: AppColors.pureWhite,
-              borderRadius: BorderRadius.all(Radius.circular(20.toWidth)),
-              border: Border.all(
-                  width: 2.0,
-                  color: type == 0 ? AppColors.lightBlue : Colors.red)),
-          child: Text(
-            type == 0 ? 'Confirm' : 'Cancel',
-            textAlign: TextAlign.center,
-            style:
-                TextStyle(color: type == 0 ? AppColors.lightBlue : Colors.red),
-          ),
+      child: RaisedButton(
+        onPressed: onPressed,
+        padding:
+            EdgeInsets.symmetric(vertical: 10.toHeight, horizontal: 10.toWidth),
+        color: type == 0 ? AppColors.lightBlue : Colors.red,
+        child: Text(
+          type == 0 ? 'Confirm' : 'Cancel',
+          textAlign: TextAlign.center,
         ),
       ),
     );

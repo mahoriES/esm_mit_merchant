@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/constants/string_constants.dart';
 import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
@@ -61,14 +60,15 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
     super.initState();
   }
 
-
   //This function works for these cases - i) When only order charges are updated  ii) When only order items are updated
   //iii) When both are updated
   _updateOrder() {
     widget.params.updateOrder(
         context,
         UpdateOrderPayload(
-          additionalChargesUpdatedList: EsOrderDetails.chargesUpdated.value ? details.additionalChargesDetails : null,
+          additionalChargesUpdatedList: EsOrderDetails.chargesUpdated.value
+              ? details.additionalChargesDetails
+              : null,
           orderItems: List.generate(
             details.orderItems.length,
             (index) => UpdateOrderItems(
@@ -121,30 +121,46 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
         actions: [
           if (details?.customerPhones?.length != null &&
               details.customerPhones.length > 0) ...[
-            IconButton(
-              icon: Image.asset(
-                'assets/call.png',
-                height: 20.toHeight,
-                fit: BoxFit.cover,
-              ),
-              onPressed: () => launch(
-                StringConstants.callUrlLauncher(details.customerPhones[0]),
-              ),
-            ),
-            IconButton(
-              icon: Image.asset(
-                'assets/whatsapp.png',
-                height: 20.toHeight,
-                fit: BoxFit.cover,
-              ),
-              onPressed: () => launch(
-                Platform.isIOS
-                    ? StringConstants.whatsAppIosLauncher(
-                        details.customerPhones[0], 'Message from eSamudaay.')
-                    : StringConstants.whatsAppAndroidLauncher(
-                        details.customerPhones[0], 'Message from eSamudaay.'),
+            Material(
+              type: MaterialType.transparency,
+              child: InkWell(
+                child: Icon(
+                  Icons.call_rounded,
+                  size: 25.toHeight,
+                  color: Colors.lightBlue,
+                ),
+                onTap: () => launch(
+                  StringConstants.callUrlLauncher(
+                    details.customerPhones[0],
+                  ),
+                ),
               ),
             ),
+            SizedBox(width: 12.toWidth),
+            Material(
+              type: MaterialType.transparency,
+              child: InkWell(
+                child: Image.asset(
+                  'assets/whatsapp.png',
+                  width: 25.toWidth,
+                  // fit: BoxFit.fill,
+                ),
+                onTap: () => launch(
+                  Platform.isIOS
+                      ? StringConstants.whatsAppIosLauncher(
+                          details.customerPhones[0],
+                          StringConstants.whatsAppMessage(
+                              details.orderShortNumber, details.businessName),
+                        )
+                      : StringConstants.whatsAppAndroidLauncher(
+                          details.customerPhones[0],
+                          StringConstants.whatsAppMessage(
+                              details.orderShortNumber, details.businessName),
+                        ),
+                ),
+              ),
+            ),
+            SizedBox(width: 12.toWidth),
           ],
         ],
       ),
@@ -159,128 +175,151 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                 if (details.freeFormItems != null &&
                     details.freeFormItems.length > 0) ...[
                   SizedBox(height: 20.toHeight),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 20.toHeight,
-                      horizontal: 15.toWidth,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey[300],
-                      ),
-                    ),
-                    child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: details.freeFormItems.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) => FreeFormItemTile(
-                        item: details.freeFormItems[index],
-                        onConfirm: () async {
-                          bool isItemAdded = await _addItemsFromCatalogue();
-                          if (isItemAdded) {
-                            details.freeFormItems[index].productStatus =
-                                FreeFormItemStatus.added;
-                            setState(() {});
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (context) => ResponseDialogue(
-                                '',
-                                message: 'Add atleast 1 item to confirm this.',
-                              ),
-                            );
-                          }
-                        },
-                        onReject: () {
+                  Text(
+                    'Customer Item List',
+                    style: Theme.of(context).textTheme.subtitle1.copyWith(
+                          fontSize: 15.toFont,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  SizedBox(height: 5.toHeight),
+                  Text(
+                    'Accept or Remove items from this list before updating the order.',
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .copyWith(fontSize: 12.toFont),
+                  ),
+                  SizedBox(height: 8.toHeight),
+                  ListView.separated(
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: details.freeFormItems.length,
+                    shrinkWrap: true,
+                    separatorBuilder: (context, index) =>
+                        SizedBox(height: 8.toHeight),
+                    itemBuilder: (context, index) => FreeFormItemTile(
+                      item: details.freeFormItems[index],
+                      onConfirm: () async {
+                        bool isItemAdded = await _addItemsFromCatalogue();
+                        if (isItemAdded) {
                           details.freeFormItems[index].productStatus =
-                              FreeFormItemStatus.notAdded;
+                              FreeFormItemStatus.added;
                           setState(() {});
-                        },
-                      ),
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) => ResponseDialogue(
+                              '',
+                              message: 'Add atleast 1 item to confirm this.',
+                            ),
+                          );
+                        }
+                      },
+                      onReject: () {
+                        details.freeFormItems[index].productStatus =
+                            FreeFormItemStatus.notAdded;
+                        setState(() {});
+                      },
                     ),
                   ),
                 ],
-                SizedBox(height: 20.toHeight),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 20.toHeight,
-                    horizontal: 15.toWidth,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey[300],
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: details.orderItems?.length ?? 0,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          if (details.orderItems[index].itemStatus ==
-                              CatalogueItemStatus.notPresent)
-                            return Container();
-                          return OrderItemTile(
-                            details.orderItems[index],
-                            (updatedQuantity, updatedUnitPrice) {
-                              details.orderItems[index].itemQuantity =
-                                  updatedQuantity;
-                              details.orderItems[index].unitPrice =
-                                  updatedUnitPrice;
-                              isOrderUpdated = true;
-                              setState(() {});
-                            },
-                            () {
-                              isOrderUpdated = true;
-                              if (details.orderItems[index].itemStatus ==
-                                  CatalogueItemStatus.createdByMerchant) {
-                                details.orderItems.removeAt(index);
-                              } else {
-                                details.orderItems[index].itemStatus =
-                                    CatalogueItemStatus.notPresent;
-                              }
-                              setState(() {});
-                            },
-                          );
-                        },
+                Divider(
+                  color: Colors.grey[400],
+                  height: 20.toHeight,
+                ),
+                Text(
+                  'Catalogue Items',
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        fontSize: 15.toFont,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(height: 20.toHeight),
-                      !isOrderStatusCreated
-                          ? Container()
-                          : InkWell(
-                              child: Container(
-                                padding: EdgeInsets.all(8.toFont),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius:
-                                      BorderRadius.circular(12.toFont),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                    ),
-                                    Text(
-                                      'Add Item',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              onTap: () => _addItemsFromCatalogue(),
-                            )
-                    ],
+                ),
+                SizedBox(height: 8.toHeight),
+                ListView.separated(
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: details.orderItems?.length ?? 0,
+                  shrinkWrap: true,
+                  separatorBuilder: (context, index) =>
+                      SizedBox(height: 8.toHeight),
+                  itemBuilder: (context, index) {
+                    if (details.orderItems[index].itemStatus ==
+                        CatalogueItemStatus.notPresent)
+                      return SizedBox.shrink();
+                    return OrderItemTile(
+                      details.orderItems[index],
+                      (updatedQuantity, updatedUnitPrice) {
+                        details.orderItems[index].itemQuantity =
+                            updatedQuantity;
+                        details.orderItems[index].unitPrice = updatedUnitPrice;
+                        isOrderUpdated = true;
+                        setState(() {});
+                      },
+                      () {
+                        isOrderUpdated = true;
+                        if (details.orderItems[index].itemStatus ==
+                            CatalogueItemStatus.createdByMerchant) {
+                          details.orderItems.removeAt(index);
+                        } else {
+                          details.orderItems[index].itemStatus =
+                              CatalogueItemStatus.notPresent;
+                        }
+                        setState(() {});
+                      },
+                    );
+                  },
+                ),
+                SizedBox(height: 15.toHeight),
+                Align(
+                  alignment: Alignment.center,
+                  child: InkWell(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.add_circle_outline,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        SizedBox(width: 5.toWidth),
+                        Text(
+                          'Add Item',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                        ),
+                      ],
+                    ),
+                    onTap: () => _addItemsFromCatalogue(),
                   ),
                 ),
+                if (details.customerNote != null ||
+                    (details.customerNoteImages != null &&
+                        details.customerNoteImages.isNotEmpty)) ...[
+                  Divider(
+                    color: Colors.grey[400],
+                    height: 20.toHeight,
+                  ),
+                ],
                 if (details.customerNote != null) ...[
-                  SizedBox(height: 30.toHeight),
+                  SizedBox(height: 10.toHeight),
                   Container(
                     child: Column(
                       children: [
-                        Text(details.customerNote),
+                        RichText(
+                          text: TextSpan(
+                            text: "Note: ",
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(fontWeight: FontWeight.bold),
+                            children: [
+                              TextSpan(
+                                text: details.customerNote,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         SizedBox(height: 10.toHeight)
                       ],
                     ),
@@ -300,7 +339,11 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                           context: context,
                           pageBuilder: (context, _, __) =>
                               EsOrderDetailsImageView(
-                            details.customerNoteImages[index],
+                            details.customerNoteImages[index] is String
+                                ? details.customerNoteImages[index]
+                                : (details
+                                        .customerNoteImages[index]?.photoUrl ??
+                                    ''),
                           ),
                         ),
                         child: Container(
@@ -310,7 +353,12 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                           child: CachedNetworkImage(
                             height: double.infinity,
                             width: double.infinity,
-                            imageUrl: details.customerNoteImages[index] ?? '',
+                            imageUrl:
+                                details.customerNoteImages[index] is String
+                                    ? details.customerNoteImages[index]
+                                    : (details.customerNoteImages[index]
+                                            ?.photoUrl ??
+                                        ''),
                             fit: BoxFit.contain,
                             placeholder: (context, url) => Center(
                               child: CircularProgressIndicator(),
@@ -324,7 +372,10 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                     ),
                   ),
                 ],
-                SizedBox(height: 30.toHeight),
+                Divider(
+                  color: Colors.grey[400],
+                  height: 30.toHeight,
+                ),
                 EsOrderDetailsChargesComponent(details),
                 SizedBox(height: 30.toHeight),
                 !isOrderStatusCreated
@@ -335,62 +386,87 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              FoSubmitButton(
-                                text: 'Reject Order',
-                                onPressed: () =>
-                                    widget.params.cancelOrder(context),
-                                color: Colors.red,
+                              Expanded(
+                                flex: 1,
+                                child: RaisedButton(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10.toHeight),
+                                  child: Text('Reject Order'),
+                                  onPressed: () =>
+                                      widget.params.cancelOrder(context),
+                                  color: Theme.of(context).errorColor,
+                                ),
                               ),
-                              details.orderItems.length == 0
-                                  ? FoSubmitButton(
-                                      text: 'Update Order',
-                                      onPressed: () => showDialog(
-                                        context: context,
-                                        builder: (context) => ResponseDialogue(
-                                          '',
-                                          message:
-                                              'Please add at least 1 item in the order',
+                              SizedBox(width: 20.toWidth),
+                              Expanded(
+                                flex: 1,
+                                child: details.orderItems.length == 0
+                                    ? RaisedButton(
+                                        child: Text('Update Order'),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 10.toHeight),
+                                        onPressed: () => showDialog(
+                                          context: context,
+                                          builder: (context) =>
+                                              ResponseDialogue(
+                                            '',
+                                            message:
+                                                'Please add at least 1 item in the order',
+                                          ),
                                         ),
-                                      ),
-                                      color: Colors.grey[400],
-                                    )
-                                  : (details.freeFormItems != null &&
-                                          details.freeFormItems.length > 0)
-                                      ? allItemsUpdated
-                                          ? FoSubmitButton(
-                                              text: 'Update Order',
-                                              onPressed: _updateOrder,
-                                            )
-                                          : FoSubmitButton(
-                                              text: 'Update Order',
-                                              onPressed: () => showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    ResponseDialogue(
-                                                  '',
-                                                  message:
-                                                      'Please Accept/Decline the list items first',
+                                        color: Colors.grey[400],
+                                      )
+                                    : (details.freeFormItems != null &&
+                                            details.freeFormItems.length > 0)
+                                        ? allItemsUpdated
+                                            ? RaisedButton(
+                                                child: Text('Update Order'),
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 10.toHeight),
+                                                onPressed: _updateOrder,
+                                              )
+                                            : RaisedButton(
+                                                child: Text('Update Order'),
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 10.toHeight),
+                                                onPressed: () => showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      ResponseDialogue(
+                                                    '',
+                                                    message:
+                                                        'Please Accept/Decline the list items first',
+                                                  ),
                                                 ),
+                                                color: Colors.grey[400],
+                                              )
+
+                                        ///The [ValueNotifier] flag is used here to update the button title
+                                        : (isOrderUpdated || value)
+                                            ? RaisedButton(
+                                                child: Text('Update Order'),
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 10.toHeight),
+                                                onPressed: _updateOrder,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                              )
+                                            : RaisedButton(
+                                                child: Text('Accept Order'),
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 10.toHeight),
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                onPressed: () {
+                                                  debugPrint('Accept tapped');
+                                                  debugPrint(details
+                                                      .additionalChargesDetails
+                                                      .toString());
+                                                  widget.params
+                                                      .acceptOrder(context);
+                                                },
                                               ),
-                                              color: Colors.grey[400],
-                                            )
-                              ///The [ValueNotifier] flag is used here to update the button title
-                                      : (isOrderUpdated || value)
-                                          ? FoSubmitButton(
-                                              text: 'Update Order',
-                                              onPressed: _updateOrder,
-                                            )
-                                          : FoSubmitButton(
-                                              text: 'Accept Order',
-                                              onPressed: () {
-                                                debugPrint('Accept tapped');
-                                                debugPrint(details
-                                                    .additionalChargesDetails
-                                                    .toString());
-                                                widget.params
-                                                    .acceptOrder(context);
-                                              },
-                                            ),
+                              ),
                             ],
                           );
                         }),

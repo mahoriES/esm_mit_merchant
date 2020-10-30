@@ -25,6 +25,7 @@ class EsOrderStatus {
   static const ASSIGNED_TO_DA = 'ASSIGNED_TO_DA';
   static const PICKED_UP_BY_DA = 'PICKED_UP_BY_DA';
   static const CUSTOMER_CANCELLED = 'CUSTOMER_CANCELLED';
+  static const ALL_ORDERS = 'ALL_ORDERS';
 }
 
 class EsOrderPaymentStatus {
@@ -188,7 +189,7 @@ class EsOrder {
         statusString = "Customer cancelled";
         break;
       case EsOrderStatus.MERCHANT_UPDATED:
-        statusString = "Merchant updated";
+        statusString = "Awaiting customer\nconfirmation";
         break;
       case EsOrderStatus.PICKED_UP_BY_DA:
         statusString = "Delivering";
@@ -219,6 +220,12 @@ class EsOrder {
 
   get dIsShowComplete {
     return this.orderStatus == EsOrderStatus.READY_FOR_PICKUP && !dIsDelivery;
+  }
+
+  get dIsShowInDelivry {
+    return this.orderStatus == EsOrderStatus.PICKED_UP_BY_DA ||
+        this.orderStatus == EsOrderStatus.READY_FOR_PICKUP ||
+        this.orderStatus == EsOrderStatus.REQUESTING_TO_DA;
   }
 
   String get dOrderTotal {

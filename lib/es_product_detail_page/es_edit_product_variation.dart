@@ -50,6 +50,11 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
       widget.esEditProductBloc.setCurrentSku(widget.currentSku);
       this.isActive = widget.currentSku.isActive;
       this.inStock = widget.currentSku.inStock;
+    } else {
+      widget.esEditProductBloc.skuPriceEditController.text = "";
+      widget.esEditProductBloc.skuVariationValueEditController.text = "";
+      this.isActive = true;
+      this.inStock = true;
     }
   }
 
@@ -148,12 +153,8 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                       child: TextFormField(
                         controller: widget
                             .esEditProductBloc.skuVariationValueEditController,
-                        validator:
-                            // widget.esEditProductBloc.unitEditController.text ==
-                            //         "Piece"
-                            //     ? ValidationService().validateInt
-                            //     :
-                            ValidationService().validateDouble,
+                        validator: ValidationService().validateDouble,
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Variation (eg. 500gm)',

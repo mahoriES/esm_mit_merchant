@@ -24,6 +24,7 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
   final _formKey = GlobalKey<FormState>();
   final List<String> unitsList = [
     "Piece",
+    "Serving",
     "Kg",
     "Gm",
     "Litre",
@@ -31,7 +32,7 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
     "Dozen",
     "ft",
     "meter",
-    "sq. ft."
+    "sq. ft.",
   ];
 
   String selectedUnit;

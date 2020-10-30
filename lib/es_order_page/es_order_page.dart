@@ -1,108 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:foore/app_colors.dart';
 import 'package:foore/data/model/es_orders.dart';
-
 import 'es_order_list.dart';
+import 'package:foore/services/sizeconfig.dart';
 
-class EsOrderPage extends StatefulWidget {
+class EsOrderPage extends StatelessWidget {
   static const routeName = '/orders';
   final String title;
 
   EsOrderPage({this.title});
-
-  @override
-  _EsOrderPageState createState() => _EsOrderPageState();
-}
-
-class _EsOrderPageState extends State<EsOrderPage>
-    with SingleTickerProviderStateMixin {
-  TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(
-      vsync: this,
-      length: 5,
-    );
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+  final List<String> tabTitles = [
+    'New',
+    'Accepted',
+    'Ready',
+    'Delivery',
+    'All'
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Container(
-              child: TabBar(
-                controller: _tabController,
-                isScrollable: true,
-                tabs: [
-                  Tab(
-                    child: Text(
-                      'New',
-                      style: TextStyle(
-                        color: Colors.black54,
+        child: DefaultTabController(
+          length: tabTitles.length,
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: TabBar(
+                    isScrollable: true,
+                    tabs: List.generate(
+                      tabTitles.length,
+                      (index) => Tab(
+                        child: Text(
+                          tabTitles[index],
+                          style: TextStyle(
+                            color: Colors.black54,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      'Preparing',
-                      style: TextStyle(
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      'Ready',
-                      style: TextStyle(
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      'Delivery',
-                      style: TextStyle(
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      'All',
-                      style: TextStyle(
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ),
-                ],
+                    )),
               ),
-            ),
-            SizedBox(
-              child: Container(),
-              height: 40.0,
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  EsOrderList(EsOrderStatus.CREATED),
-                  EsOrderList(EsOrderStatus.MERCHANT_ACCEPTED),
-                  EsOrderList(EsOrderStatus.READY_FOR_PICKUP),
-                  EsOrderList(EsOrderStatus.REQUESTING_TO_DA),
-                  EsOrderList(null),
-                ],
+              SizedBox(height: 10.toHeight),
+              Divider(
+                color: AppColors.greyishText,
+                height: 0,
               ),
-            ),
-          ],
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    EsOrderList(EsOrderStatus.CREATED),
+                    EsOrderList(EsOrderStatus.MERCHANT_ACCEPTED),
+                    EsOrderList(EsOrderStatus.READY_FOR_PICKUP),
+                    EsOrderList(EsOrderStatus.REQUESTING_TO_DA),
+                    EsOrderList(EsOrderStatus.ALL_ORDERS),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

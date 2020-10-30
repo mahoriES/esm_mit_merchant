@@ -4,6 +4,7 @@ import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
 import 'package:foore/data/bloc/es_create_merchant_profile.dart';
+import 'package:foore/data/bloc/es_orders.dart';
 import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_business_guard/es_businesses_guard.dart';
@@ -200,6 +201,11 @@ class AppRouter {
                   Provider<EsVideoBloc>(
                     builder: (context) =>
                         EsVideoBloc(httpServiceBloc, esBusinessesBloc),
+                    dispose: (context, value) => value.dispose(),
+                  ),
+                  Provider<EsOrdersBloc>(
+                    create: (context) =>
+                        EsOrdersBloc(httpServiceBloc, esBusinessesBloc),
                     dispose: (context, value) => value.dispose(),
                   ),
                 ],

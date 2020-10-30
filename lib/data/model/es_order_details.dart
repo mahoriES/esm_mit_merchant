@@ -94,7 +94,7 @@ class EsOrderDetailsResponse {
   String clusterName;
   String customerName;
   String customerNote;
-  List<String> customerNoteImages;
+  List<dynamic> customerNoteImages;
   PickupAddress pickupAddress;
   PickupAddress deliveryAddress;
   String cancellationNote;
@@ -171,15 +171,14 @@ class EsOrderDetailsResponse {
     if (json['customer_note_images'] != null &&
         json['customer_note_images'] is List &&
         json['customer_note_images'].isNotEmpty) {
-
       ///To check the type of the elements in list, since it is a homogeneous list
       ///We can simply check type of first element(which will definitely exist since
       ///this block won't execute for empty lists)
 
       if (json['customer_note_images'].first is String)
+
         ///The customer note images is a list of Strings(image links)
         customerNoteImages = json['customer_note_images'].cast<String>();
-
       else if (Map<String, dynamic>.from(json['customer_note_images'].first) !=
               null &&
           Map<String, dynamic>.from(json['customer_note_images'].first)
@@ -322,9 +321,9 @@ class BusinessImages {
   BusinessImages({this.photoId, this.photoUrl, this.contentType});
 
   BusinessImages.fromJson(Map<String, dynamic> json) {
-    photoId = json['photo_id'];
-    photoUrl = json['photo_url'];
-    contentType = json['content_type'];
+    photoId = json['photo_id'] ?? '';
+    photoUrl = json['photo_url'] ?? '';
+    contentType = json['content_type'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
