@@ -6,10 +6,10 @@ import 'environments/environment.dart';
 
 // Toggle this to cause an async error to be thrown during initialization
 // and to test that runZonedGuarded() catches the error
-final _kShouldTestAsyncErrorOnInit = true;
+final _kShouldTestAsyncErrorOnInit = false;
 
 // Toggle this for testing Crashlytics in your app locally.
-final _kTestingCrashlytics = true;
+final _kTestingCrashlytics = false;
 
 class CrashlyticsDelegate {
   static void recordError(dynamic exception, StackTrace stack) {
