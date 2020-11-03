@@ -52,6 +52,12 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
   bool isOrderUpdated;
   bool isOrderStatusCreated;
 
+  bool get isCatalogueItemsNotAvailable =>
+      details.orderItems
+          .where((item) => item.itemStatus != CatalogueItemStatus.notPresent)
+          .length ==
+      0;
+
   @override
   void initState() {
     details = widget.params.esOrderDetailsResponse;
@@ -400,7 +406,7 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                               SizedBox(width: 20.toWidth),
                               Expanded(
                                 flex: 1,
-                                child: details.orderItems.length == 0
+                                child: isCatalogueItemsNotAvailable
                                     ? RaisedButton(
                                         child: Text('Update Order'),
                                         padding: EdgeInsets.symmetric(
