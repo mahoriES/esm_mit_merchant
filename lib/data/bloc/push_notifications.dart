@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:foore/data/constants/es_api_path.dart';
+import 'package:foore/data/constants/push_notification.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/esdy_print.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -32,8 +33,11 @@ class PushNotifications {
     esdyPrint.debug("displayLocalNotification >>");
     //TODO: Android Channel information
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'your channel id', 'your channel name', 'your channel description',
-        importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+        AnnoyingChannel.CONST_ID,
+        AnnoyingChannel.CONST_NAME,
+        AnnoyingChannel.CONST_DESCRIPTION,
+        importance: Importance.Max,
+        priority: Priority.High);
     var platformChannelSpecifics =
         NotificationDetails(androidPlatformChannelSpecifics, null);
     await flutterLocalNotificationsPlugin.show(
