@@ -83,7 +83,7 @@
 
 
 
-  "login_page_create_your_online_store": "Create your online store",
+    "login_page_create_your_online_store": "Create your online store",
 	"login_page_get_more_google_reviews": "Get more google reviews",
 	"login_page_Login_with_phone": "Login with phone",
 	"login_page_Create_new_account": "Create new account",
@@ -141,7 +141,7 @@
 	"profile_page_update_upi_id": "Update UPI ID",
 	"profile_page_upi_id": "UPI ID",
 	"profile_page_add_mobile_number": "Add Mobile Number",
-	"profile_page_10 digit Mobile number": "10 digit Mobile number",
+	"profile_page_10_digit_Mobile_number": "10 digit Mobile number",
 	"profile_page_add_notification_email": "Add Notification Email",
 	"profile_page_email_id": "Email ID",
 	"profile_page_add_notification_phone": "Add Notification Phone",

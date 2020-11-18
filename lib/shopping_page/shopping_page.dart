@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foore/es_login_page/es_login_page.dart';
 import 'package:foore/home_page/app_drawer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../app_translations.dart';
 
 class ShoppingPage extends StatefulWidget {
   static const routeName = '/shopping';
@@ -81,7 +82,9 @@ class _ShoppingPageState extends State<ShoppingPage> {
                   margin: EdgeInsets.only(top:8),
                     width: MediaQuery.of(context).size.width * 0.8,
                     child: Text(
-                      'Create your online store \n&\n Get more google reviews',
+                       AppTranslations.of(context).text("login_page_create_your_online_store")
+                       + '\n&\n' 
+                       +  AppTranslations.of(context).text("login_page_get_more_google_reviews"),
                       style: TextStyle(fontSize: 16),
                       textAlign: TextAlign.center,
                     )),
@@ -102,7 +105,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                   },
                   child: Container(
                     child: Text(
-                      'Login with phone',
+                      AppTranslations.of(context).text("login_page_Login_with_phone"),
                       style: Theme.of(context).textTheme.subhead.copyWith(
                             color: Colors.white,
                           ),
@@ -126,7 +129,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                   },
                   child: Container(
                     child: Text(
-                      'Create new account',
+                      AppTranslations.of(context).text("login_page_Create_new_account"),
                     ),
                   ),
                 ),
