@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
+import 'package:foore/data/bloc/app_translations_bloc.dart';
 import 'package:foore/data/bloc/es_orders.dart';
 import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
@@ -49,17 +51,17 @@ class OrdersAlertDialogs {
       context: context,
       alertDialog: AlertDialog(
         title: Container(),
-        content: Text('Do you want to accept this order ?'),
+        content: Text(AppTranslations.of(context).text('orders_page_accept_popup_title')),
         actions: <Widget>[
           RaisedButton(
             color: Theme.of(context).errorColor,
-            child: Text('Cancel'),
+            child: Text(AppTranslations.of(context).text('orders_page_cancel')),
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop(false);
             },
           ),
           RaisedButton(
-            child: Text('Accept'),
+            child: Text(AppTranslations.of(context).text('orders_page_accept')),
             color: Theme.of(context).primaryColor,
             onPressed: () {
               esOrdersBloc.acceptOrder(
@@ -143,17 +145,17 @@ class OrdersAlertDialogs {
     @required BuildContext context,
   }) async {
     final List<String> cancellationReasons = [
-      'Kitchen full',
-      'Item out of stock',
-      'No delivery person',
-      'Closing time',
-      'Other'
+      AppTranslations.of(context).text('orders_page_kitchen_full'),
+      AppTranslations.of(context).text("orders_page_item_out_of_stock"),
+      AppTranslations.of(context).text("orders_page_no_delivery_person"),
+      AppTranslations.of(context).text("orders_page_closing_time"),
+      AppTranslations.of(context).text("orders_page_other")
     ];
     return _showDialogCommon(
       esOrdersBloc: esOrdersBloc,
       context: context,
       alertDialog: AlertDialog(
-        title: Text('Choose a reason for cancellation'),
+        title: Text(AppTranslations.of(context).text('orders_page_cancel_popup_title')),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: cancellationReasons
@@ -184,7 +186,7 @@ class OrdersAlertDialogs {
         actions: <Widget>[
           RaisedButton(
             color: Theme.of(context).errorColor,
-            child: Text('Close'),
+            child: Text(AppTranslations.of(context).text('orders_page_close')),
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop(false);
             },
@@ -226,7 +228,7 @@ class OrdersAlertDialogs {
                   actions: <Widget>[
                     RaisedButton(
                       color: Theme.of(context).errorColor,
-                      child: Text('Close'),
+                      child: Text(AppTranslations.of(context).text('orders_page_close')),
                       onPressed: () {
                         Navigator.of(context, rootNavigator: true).pop(false);
                       },
@@ -255,13 +257,13 @@ class OrdersAlertDialogs {
                 actions: <Widget>[
                   RaisedButton(
                     color: Theme.of(context).errorColor,
-                    child: Text('Close'),
+                    child: Text(AppTranslations.of(context).text('orders_page_close')),
                     onPressed: () {
                       Navigator.of(context, rootNavigator: true).pop(false);
                     },
                   ),
                   RaisedButton(
-                    child: Text('Assign'),
+                    child: Text(AppTranslations.of(context).text('orders_page_assign')),
                     color: Theme.of(context).primaryColor,
                     onPressed: () {
                       esOrdersBloc.assignOrder(order.orderId, (a) {

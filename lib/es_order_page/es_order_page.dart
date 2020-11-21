@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foore/app_colors.dart';
 import 'package:foore/data/model/es_orders.dart';
+import '../app_translations.dart';
 import 'es_order_list.dart';
 import 'package:foore/services/sizeconfig.dart';
 
@@ -9,16 +10,17 @@ class EsOrderPage extends StatelessWidget {
   final String title;
 
   EsOrderPage({this.title});
-  final List<String> tabTitles = [
-    'New',
-    'Accepted',
-    'Ready',
-    'Delivery',
-    'All'
-  ];
+  List<String> tabTitles = [];
 
   @override
   Widget build(BuildContext context) {
+    tabTitles = [
+      AppTranslations.of(context).text("orders_page_new"),
+      AppTranslations.of(context).text("orders_page_accepted"),
+      AppTranslations.of(context).text("orders_page_ready"),
+      AppTranslations.of(context).text("orders_page_delivery"),
+      AppTranslations.of(context).text("orders_page_all")
+    ];
     return Scaffold(
       body: SafeArea(
         child: DefaultTabController(

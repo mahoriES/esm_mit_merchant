@@ -13,6 +13,8 @@ import 'package:foore/es_order_page/widgets/select_variation_dialogue.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 
+import '../app_translations.dart';
+
 class EsOrderAddItem extends StatefulWidget {
   static const routeName = '/addOrderItem';
 
@@ -101,7 +103,7 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Item'),
+        title: Text(AppTranslations.of(context).text("orders_page_add_item")),
         automaticallyImplyLeading: true,
         actions: [
           IconButton(

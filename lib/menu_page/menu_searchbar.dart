@@ -2,6 +2,8 @@ import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_products.dart';
 
+import '../app_translations.dart';
+
 class MenuSearchBar extends StatefulWidget {
 
   final EsProductsBloc productsBloc;
@@ -54,7 +56,7 @@ class _MenuSearchBarState extends State<MenuSearchBar>
             decoration: InputDecoration(
               border: InputBorder.none,
               isDense: true,
-              labelText: 'Search products',
+              labelText: (AppTranslations.of(context).text('products_page_search_products')),
               suffixIcon: Icon(Icons.search),
             ),
           ),

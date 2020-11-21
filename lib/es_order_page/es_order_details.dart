@@ -11,6 +11,7 @@ import 'package:foore/es_order_page/widgets/order_item_tile.dart';
 import 'package:foore/services/sizeconfig.dart';
 import 'package:foore/widgets/response_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../app_translations.dart';
 import 'widgets/image_view.dart';
 import 'widgets/order_details_charges_component.dart';
 
@@ -182,7 +183,8 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                     details.freeFormItems.length > 0) ...[
                   SizedBox(height: 20.toHeight),
                   Text(
-                    'Customer Item List',
+                    AppTranslations.of(context)
+                        .text("orders_page_customer_item_list"),
                     style: Theme.of(context).textTheme.subtitle1.copyWith(
                           fontSize: 15.toFont,
                           fontWeight: FontWeight.bold,
@@ -190,7 +192,8 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                   ),
                   SizedBox(height: 5.toHeight),
                   Text(
-                    'Accept or Remove items from this list before updating the order.',
+                    AppTranslations.of(context)
+                        .text("orders_page_customer_item_heading"),
                     style: Theme.of(context)
                         .textTheme
                         .caption
@@ -216,7 +219,8 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                             context: context,
                             builder: (context) => ResponseDialogue(
                               '',
-                              message: 'Add atleast 1 item to confirm this.',
+                              message: AppTranslations.of(context)
+                                  .text("orders_page_no_items_added_error"),
                             ),
                           );
                         }
@@ -234,7 +238,8 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                   height: 20.toHeight,
                 ),
                 Text(
-                  'Catalogue Items',
+                  AppTranslations.of(context)
+                      .text("orders_page_catalogue_items"),
                   style: Theme.of(context).textTheme.subtitle1.copyWith(
                         fontSize: 15.toFont,
                         fontWeight: FontWeight.bold,
@@ -287,7 +292,8 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                         ),
                         SizedBox(width: 5.toWidth),
                         Text(
-                          'Add Item',
+                          AppTranslations.of(context)
+                              .text("orders_page_add_item"),
                           style:
                               TextStyle(color: Theme.of(context).primaryColor),
                         ),
@@ -311,7 +317,8 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                       children: [
                         RichText(
                           text: TextSpan(
-                            text: "Note: ",
+                            text: AppTranslations.of(context)
+                                .text("orders_page_note"),
                             style: Theme.of(context)
                                 .textTheme
                                 .subtitle1
@@ -397,7 +404,10 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                                 child: RaisedButton(
                                   padding: EdgeInsets.symmetric(
                                       vertical: 10.toHeight),
-                                  child: Text('Reject Order'),
+                                  child: Text(
+                                    AppTranslations.of(context)
+                                        .text("orders_page_reject_order"),
+                                  ),
                                   onPressed: () =>
                                       widget.params.cancelOrder(context),
                                   color: Theme.of(context).errorColor,
@@ -408,7 +418,8 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                                 flex: 1,
                                 child: isCatalogueItemsNotAvailable
                                     ? RaisedButton(
-                                        child: Text('Update Order'),
+                                        child: Text(AppTranslations.of(context)
+                                            .text("orders_page_update_order")),
                                         padding: EdgeInsets.symmetric(
                                             vertical: 10.toHeight),
                                         onPressed: () => showDialog(
@@ -426,13 +437,19 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                                             details.freeFormItems.length > 0)
                                         ? allItemsUpdated
                                             ? RaisedButton(
-                                                child: Text('Update Order'),
+                                                child: Text(AppTranslations.of(
+                                                        context)
+                                                    .text(
+                                                        "orders_page_update_order")),
                                                 padding: EdgeInsets.symmetric(
                                                     vertical: 10.toHeight),
                                                 onPressed: _updateOrder,
                                               )
                                             : RaisedButton(
-                                                child: Text('Update Order'),
+                                                child: Text(AppTranslations.of(
+                                                        context)
+                                                    .text(
+                                                        "orders_page_update_order")),
                                                 padding: EdgeInsets.symmetric(
                                                     vertical: 10.toHeight),
                                                 onPressed: () => showDialog(
@@ -440,8 +457,10 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                                                   builder: (context) =>
                                                       ResponseDialogue(
                                                     '',
-                                                    message:
-                                                        'Please Accept/Decline the list items first',
+                                                    message: AppTranslations.of(
+                                                            context)
+                                                        .text(
+                                                            "orders_page_customer_items_due_error"),
                                                   ),
                                                 ),
                                                 color: Colors.grey[400],
@@ -450,7 +469,10 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                                         ///The [ValueNotifier] flag is used here to update the button title
                                         : (isOrderUpdated || value)
                                             ? RaisedButton(
-                                                child: Text('Update Order'),
+                                                child: Text(AppTranslations.of(
+                                                        context)
+                                                    .text(
+                                                        "orders_page_update_order")),
                                                 padding: EdgeInsets.symmetric(
                                                     vertical: 10.toHeight),
                                                 onPressed: _updateOrder,
@@ -458,7 +480,10 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                                                     .primaryColor,
                                               )
                                             : RaisedButton(
-                                                child: Text('Accept Order'),
+                                                child: Text(AppTranslations.of(
+                                                        context)
+                                                    .text(
+                                                        "orders_page_accept_order")),
                                                 padding: EdgeInsets.symmetric(
                                                     vertical: 10.toHeight),
                                                 color: Theme.of(context)

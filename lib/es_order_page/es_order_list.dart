@@ -8,6 +8,7 @@ import 'package:foore/services/sizeconfig.dart';
 import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
+import '../app_translations.dart';
 import 'widgets/es_order_card.dart';
 
 class EsOrderList extends StatefulWidget {
@@ -146,7 +147,7 @@ class _EsOrderListState extends State<EsOrderList> {
 
         if (ordersList.isEmpty) {
           return EmptyList(
-            titleText: 'No orders found',
+            titleText: AppTranslations.of(context).text("orders_page_no_orders_found"),
             subtitleText: "",
           );
         }
