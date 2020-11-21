@@ -6,6 +6,7 @@ import 'package:foore/data/bloc/es_orders.dart';
 import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/widgets/response_dialog.dart';
+import 'package:sprintf/sprintf.dart';
 
 class OrdersAlertDialogs {
   static _showDialogCommon<bool>({
@@ -51,7 +52,8 @@ class OrdersAlertDialogs {
       context: context,
       alertDialog: AlertDialog(
         title: Container(),
-        content: Text(AppTranslations.of(context).text('orders_page_accept_popup_title')),
+        content: Text(
+            AppTranslations.of(context).text('orders_page_accept_popup_title')),
         actions: <Widget>[
           RaisedButton(
             color: Theme.of(context).errorColor,
@@ -95,18 +97,20 @@ class OrdersAlertDialogs {
       context: context,
       alertDialog: AlertDialog(
         title: Container(),
-        content: Text('Do you want to mark this order as Ready for pickup?'),
+        content: Text(AppTranslations.of(context)
+            .text('orders_page_ready_for_pickup_popup_title')),
         actions: <Widget>[
           RaisedButton(
             color: Theme.of(context).errorColor,
-            child: Text('Cancel'),
+            child: Text(AppTranslations.of(context).text('orders_page_close')),
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop(false);
             },
           ),
           RaisedButton(
             color: Theme.of(context).primaryColor,
-            child: Text('Mark as Ready'),
+            child: Text(
+                AppTranslations.of(context).text('orders_page_mark_as_ready')),
             onPressed: () {
               esOrdersBloc.markReady(order.orderId, (a) {
                 Navigator.of(context, rootNavigator: true).pop(true);
@@ -155,7 +159,8 @@ class OrdersAlertDialogs {
       esOrdersBloc: esOrdersBloc,
       context: context,
       alertDialog: AlertDialog(
-        title: Text(AppTranslations.of(context).text('orders_page_cancel_popup_title')),
+        title: Text(
+            AppTranslations.of(context).text('orders_page_cancel_popup_title')),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: cancellationReasons
@@ -223,12 +228,13 @@ class OrdersAlertDialogs {
               if (snapshot.data.agents == null ||
                   snapshot.data.agents.isEmpty) {
                 return AlertDialog(
-                  content: Text(
-                      'You do not have any delivery partners. Please contact us if you need help onboarding delivery partners'),
+                  content: Text(AppTranslations.of(context)
+                      .text('orders_page_not_have_delivery_partners')),
                   actions: <Widget>[
                     RaisedButton(
                       color: Theme.of(context).errorColor,
-                      child: Text(AppTranslations.of(context).text('orders_page_close')),
+                      child: Text(AppTranslations.of(context)
+                          .text('orders_page_close')),
                       onPressed: () {
                         Navigator.of(context, rootNavigator: true).pop(false);
                       },
@@ -257,13 +263,15 @@ class OrdersAlertDialogs {
                 actions: <Widget>[
                   RaisedButton(
                     color: Theme.of(context).errorColor,
-                    child: Text(AppTranslations.of(context).text('orders_page_close')),
+                    child: Text(
+                        AppTranslations.of(context).text('orders_page_close')),
                     onPressed: () {
                       Navigator.of(context, rootNavigator: true).pop(false);
                     },
                   ),
                   RaisedButton(
-                    child: Text(AppTranslations.of(context).text('orders_page_assign')),
+                    child: Text(
+                        AppTranslations.of(context).text('orders_page_assign')),
                     color: Theme.of(context).primaryColor,
                     onPressed: () {
                       esOrdersBloc.assignOrder(order.orderId, (a) {
@@ -297,7 +305,11 @@ class OrdersAlertDialogs {
       alertDialog: AlertDialog(
         title: Container(),
         content: Text(
-            'Do you want to update payment status of order to $newStatus?'),
+          sprintf(
+              AppTranslations.of(context)
+                  .text('orders_page_order_payment_status_update_popup_title'),
+              [newStatus]),
+        ),
         actions: <Widget>[
           RaisedButton(
             color: Theme.of(context).errorColor,
@@ -339,17 +351,19 @@ class OrdersAlertDialogs {
       esOrdersBloc: esOrdersBloc,
       alertDialog: AlertDialog(
         title: Container(),
-        content: Text('Do you want to update this order ?'),
+        content: Text(
+            AppTranslations.of(context).text('orders_page_update_popup_title')),
         actions: <Widget>[
           RaisedButton(
             color: Theme.of(context).errorColor,
-            child: Text('Cancel'),
+            child: Text(AppTranslations.of(context).text('orders_page_close')),
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop(false);
             },
           ),
           RaisedButton(
-            child: Text('Update'),
+            child: Text(AppTranslations.of(context)
+                .text('orders_page_update_popup_button_update')),
             color: Theme.of(context).primaryColor,
             onPressed: () {
               esOrdersBloc.updateOrder(
@@ -394,7 +408,7 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
   String radioValue;
   @override
   void initState() {
-    print('initially ${widget.order.dPaymentStatus}');
+    debugPrint('initially ${widget.order.dPaymentStatus}');
     if (widget.order.dPaymentStatus == EsOrderPaymentStatus.APPROVED ||
         widget.order.dPaymentStatus == EsOrderPaymentStatus.REJECTED) {
       radioValue = widget.order.dPaymentStatus;
@@ -424,7 +438,8 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       scrollable: true,
-      title: Text('Complete Order'),
+      title: Text(AppTranslations.of(context)
+          .text('orders_page_complete_order_popup_title')),
       content: Column(
         children: [
           RichText(
@@ -457,7 +472,8 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
                 });
               },
             ),
-            title: Text('Yes'),
+            title: Text(AppTranslations.of(context)
+                .text('orders_page_complete_order_popup_option_yes')),
             contentPadding: EdgeInsets.zero,
           ),
           ListTile(
@@ -471,7 +487,8 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
                 });
               },
             ),
-            title: Text('No'),
+            title: Text(AppTranslations.of(context)
+                .text('orders_page_complete_order_popup_option_no')),
             contentPadding: EdgeInsets.zero,
           ),
           ListTile(
@@ -485,7 +502,8 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
                 });
               },
             ),
-            title: Text("Don't Know"),
+            title: Text(AppTranslations.of(context)
+                .text('orders_page_complete_order_popup_option_dont_know')),
             contentPadding: EdgeInsets.zero,
           ),
         ],
@@ -494,7 +512,7 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
         RaisedButton(
           color: Theme.of(context).errorColor,
           child: Text(
-            'Cancel',
+            AppTranslations.of(context).text('orders_page_close'),
             style: Theme.of(context)
                 .textTheme
                 .button
@@ -505,7 +523,8 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
           },
         ),
         RaisedButton(
-          child: Text('Mark Completed'),
+          child: Text(
+              AppTranslations.of(context).text('orders_page_mark_completed')),
           color: Theme.of(context).primaryColor,
           onPressed: () async {
             if (radioValue != widget.order.dPaymentStatus &&

@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:intl/intl.dart';
 
@@ -34,17 +36,22 @@ class EsOrderPaymentStatus {
   static const APPROVED = 'APPROVED';
   static const REJECTED = 'REJECTED';
 
-  static String paymentString(paymentStatus) {
-    String paymentString = "Payment pending";
+  static String getDisplayablePaymentString(
+      BuildContext context, String paymentStatus) {
+    String paymentString =
+        AppTranslations.of(context).text('orders_page_payemnt_pending');
     switch (paymentStatus) {
       case EsOrderPaymentStatus.INITIATED:
-        paymentString = "Customer Paid";
+        paymentString =
+            AppTranslations.of(context).text('orders_page_customer_paid');
         break;
       case EsOrderPaymentStatus.APPROVED:
-        paymentString = "Payment Approved";
+        paymentString =
+            AppTranslations.of(context).text('orders_page_payment_approved');
         break;
       case EsOrderPaymentStatus.REJECTED:
-        paymentString = "Payment Rejected";
+        paymentString =
+            AppTranslations.of(context).text('orders_page_payment_rejected');
         break;
     }
     return paymentString;
@@ -143,11 +150,11 @@ class EsOrder {
     return this.orderStatus == EsOrderStatus.COMPLETED;
   }
 
-  get dDeliveryType {
+  String dDeliveryType(BuildContext context) {
     if (this.deliveryType == 'SELF_PICK_UP') {
-      return 'Self Pickup';
+      return AppTranslations.of(context).text('orders_page_self_pickup');
     }
-    return 'Delivery';
+    return AppTranslations.of(context).text('orders_page_delivery');
   }
 
   get dIsDelivery {

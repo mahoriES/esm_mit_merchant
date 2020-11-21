@@ -119,7 +119,9 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
         automaticallyImplyLeading: true,
         centerTitle: false,
         title: Text(
-          'Order #' + details.orderShortNumber,
+          AppTranslations.of(context).text('orders_page_order') +
+              ' #' +
+              details.orderShortNumber,
           style: Theme.of(context)
               .textTheme
               .subtitle1
