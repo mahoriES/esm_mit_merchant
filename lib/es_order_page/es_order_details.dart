@@ -63,7 +63,7 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
   void initState() {
     details = widget.params.esOrderDetailsResponse;
     isOrderUpdated = false;
-    isOrderStatusCreated = details.orderStatus == 'CREATED';
+    isOrderStatusCreated = details.orderStatus == EsOrderStatus.CREATED;
     super.initState();
   }
 
@@ -429,8 +429,9 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                                           builder: (context) =>
                                               ResponseDialogue(
                                             '',
-                                            message:
-                                                'Please add at least 1 item in the order',
+                                            message: AppTranslations.of(context)
+                                                .text(
+                                                    'orders_page_add_atleast_one_item'),
                                           ),
                                         ),
                                         color: Colors.grey[400],

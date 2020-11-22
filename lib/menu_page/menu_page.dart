@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_products.dart';
 import 'package:foore/data/http_service.dart';
@@ -87,8 +88,10 @@ class _MenuPageState extends State<MenuPage> {
                         );
                       } else if (snapshot.data.items.length == 0) {
                         return EmptyList(
-                          titleText: 'No products found',
-                          subtitleText: "Press 'Add item' to add new products",
+                          titleText: AppTranslations.of(context)
+                              .text('products_page_no_products_found'),
+                          subtitleText: AppTranslations.of(context).text(
+                              'products_page_no_products_found_description'),
                         );
                       } else {
                         return NotificationListener<ScrollNotification>(
@@ -160,7 +163,7 @@ class _MenuPageState extends State<MenuPage> {
           },
           child: Container(
             child: Text(
-              'Add item',
+              AppTranslations.of(context).text('products_page_add_item'),
               style: Theme.of(context).textTheme.subhead.copyWith(
                     color: Colors.white,
                   ),

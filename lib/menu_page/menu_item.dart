@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:foore/data/bloc/es_link_sharing.dart';
 import 'package:foore/data/model/es_product.dart';
 
 class MenuItemWidget extends StatelessWidget {

@@ -1,17 +1,15 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_category_page/es_category_page.dart';
 import 'package:provider/provider.dart';
 
-import 'es_edit_product_display_line_1.dart';
 import 'es_edit_product_image_list.dart';
-import 'es_edit_product_long_description.dart';
 import 'es_edit_product_name.dart';
-import 'es_edit_product_short_description.dart';
 import 'es_edit_product_unit.dart';
 import 'es_edit_product_variation.dart';
 
@@ -43,6 +41,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
     return false;
   }
 
+  // todo Move this function to a common place.
   _showFailedAlertDialog() async {
     await showDialog(
       context: context,
@@ -116,31 +115,14 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
       }
     }
 
-    editShortDescription() async {
-      await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) =>
-              EsEditProductShortDescriptionPage(esEditProductBloc)));
-    }
-
     editName() async {
       await Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => EsEditProductNamePage(esEditProductBloc)));
     }
 
-    editLongDescription() async {
-      await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) =>
-              EsEditProductLongDescriptionPage(esEditProductBloc)));
-    }
-
     editUnit() async {
       await Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => EsEditProductUnitPage(esEditProductBloc)));
-    }
-
-    editDisplayLine1() async {
-      await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => EsEditDisplayLine1Page(esEditProductBloc)));
     }
 
     editSku(EsSku sku) async {
@@ -178,7 +160,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ),
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        'Name',
+                        AppTranslations.of(context).text('products_page_name'),
                         style: Theme.of(context).textTheme.subtitle2,
                       ),
                     ),
@@ -190,7 +172,8 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                 FlatButton(
                                   onPressed: editName,
                                   child: Text(
-                                    "+ Add name",
+                                    AppTranslations.of(context)
+                                        .text('products_page_add_name'),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -231,7 +214,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ),
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        'Unit',
+                        AppTranslations.of(context).text('products_page_unit'),
                         style: Theme.of(context).textTheme.subtitle2,
                       ),
                     ),
@@ -243,7 +226,8 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                 FlatButton(
                                   onPressed: editUnit,
                                   child: Text(
-                                    "+ Add unit",
+                                    AppTranslations.of(context)
+                                        .text('products_page_add_unit'),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -285,7 +269,8 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ),
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        'Categories',
+                        AppTranslations.of(context)
+                            .text('products_page_categories'),
                         style: Theme.of(context).textTheme.subtitle2,
                       ),
                     ),
@@ -313,7 +298,8 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                         color: Colors.white,
                                       ),
                                       label: Text(
-                                        "Add category",
+                                        AppTranslations.of(context)
+                                            .text('products_page_add_category'),
                                         overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context)
                                             .textTheme
@@ -359,7 +345,8 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ),
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        'Variations',
+                        AppTranslations.of(context)
+                            .text('products_page_variations'),
                         style: Theme.of(context).textTheme.subtitle2,
                       ),
                     ),
@@ -388,7 +375,9 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                       addSku(esEditProductBloc);
                                     },
                                     child: Text(
-                                      "+ Add variation",
+                                      '+ ' +
+                                          AppTranslations.of(context).text(
+                                              'products_page_add_variation'),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -458,7 +447,11 @@ class VariationCard extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Text(
-                      sku.inStock ? "In stock" : "Not in stock",
+                      sku.inStock
+                          ? AppTranslations.of(context)
+                              .text('products_page_in_stock')
+                          : AppTranslations.of(context)
+                              .text('products_page_not_in_stock'),
                       style: TextStyle(
                           color: sku.inStock
                               ? Colors.green[400]
@@ -466,7 +459,11 @@ class VariationCard extends StatelessWidget {
                     ),
                     SizedBox(width: 16),
                     Text(
-                      sku.isActive ? "Is active" : "Not active",
+                      sku.isActive
+                          ? AppTranslations.of(context)
+                              .text('products_page_is_active')
+                          : AppTranslations.of(context)
+                              .text('products_page_is_active'),
                       style: TextStyle(
                           color: sku.isActive
                               ? Colors.green[400]
