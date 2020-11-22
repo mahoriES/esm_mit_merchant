@@ -90,12 +90,12 @@ class _LoginPageState extends State<LoginPage> {
               child: Container(),
             ),
             Text(
-              AppTranslations.of(context).text("login_page_title"),
+              AppTranslations.of(context).text("review_login_page_title"),
               style: Theme.of(context).textTheme.headline,
             ),
             const SizedBox(height: 32.0),
             Text(
-              AppTranslations.of(context).text("login_page_sub_title"),
+              AppTranslations.of(context).text("review_login_page_sub_title"),
               style: Theme.of(context).textTheme.subtitle,
             ),
             const SizedBox(height: 16.0),
@@ -105,12 +105,12 @@ class _LoginPageState extends State<LoginPage> {
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: AppTranslations.of(context)
-                    .text("login_page_email_address_label"),
+                    .text("review_login_page_email_address_label"),
               ),
               validator: (String value) {
                 return value.length < 1
                     ? AppTranslations.of(context)
-                        .text("login_page_email_address_validation")
+                        .text("review_login_page_email_address_validation")
                     : null;
               },
             ),
@@ -129,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                       ))
                     : Text(
                         AppTranslations.of(context)
-                            .text("login_page_button_get_otp"),
+                            .text("review_login_page_button_get_otp"),
                         style: Theme.of(context).textTheme.button.copyWith(
                               color: Colors.white,
                             ),
