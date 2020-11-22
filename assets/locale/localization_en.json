@@ -83,6 +83,21 @@
 
 
 
+    "create_business_page_title": "Create business",
+    "create_business_page_business_name": "Business name",
+    "create_business_page_circle": "Circle",
+    "create_business_page_get_in_touch_to_get_circle_code": "Get in touch with us to get Circle code",
+	"create_business_page_save": "save",
+	
+	"generic_save": "save",
+	"generic_confirm": "Confirm",
+	"generic_cancel": "Cancel",
+	"generic_close": "Close",
+	"generic_select": "Select",
+	
+	"merchant_profile_page_title": "Create profile",
+	"merchant_profile_page_name": "Name",
+
     "login_page_create_your_online_store": "Create your online store",
 	"login_page_get_more_google_reviews": "Get more google reviews",
 	"login_page_Login_with_phone": "Login with phone",
@@ -92,7 +107,7 @@
 	"login_page_enter_otp": "ENTER OTP",
 	"login_page_otp_sent_to": "OTP sent to ",
 	"login_page_resend_otp": "Resend OTP",
-	"login_page_resend_otp_in": "Resend OTP in",
+	"login_page_resend_otp_in_n_seconds": "Resend OTP in %s seconds",
 	"login_page_otp_sent_to_device": "OTP sent successfully",
 	"login_page_enter_email_linked": "Please enter your email address linked to Foore",
 	"login_page_email_address_label": "Email Address",
@@ -132,12 +147,14 @@
 	"profile_page_sms_notifications": "SMS Notifications",
 	"profile_page_update_business_name": "Update business name",
 	"profile_page_business_name": "Business Name",
+	"profile_page_button_add_business_name": "+ Add business name",
 	"profile_page_update_business_description": "Update business description",
 	"profile_page_business_description": "Business description",
 	"profile_page_update_business_address": "Update business address",
 	"profile_page_pincode": "Pin code",
 	"profile_page_city": "City",
 	"profile_page_update_business_notice": "Update business notice",
+	"profile_page_update_business_notice_label": "Delivery will be delayed due to rain..",
 	"profile_page_update_upi_id": "Update UPI ID",
 	"profile_page_upi_id": "UPI ID",
 	"profile_page_add_mobile_number": "Add Mobile Number",
@@ -219,6 +236,14 @@
 	"orders_page_label_display_line1": "Display line 1",
 	"orders_page_save": "Save",
 	"orders_image_upload_failed": "Upload failed",
+	"orders_page_add_a_charge": "Add a Charge",
+	"orders_page_edit_a_charge": "Edit %s",
+	"orders_page_error_enter_valid_charge": "Enter valid charge value!",
+	"orders_page_unknown_charge": "Unknown Charge",
+	"orders_page_could_not_open_maps": "Could not open maps",
+	"orders_page_sure_add_item_to_the_order": "Are you sure you want to add %s to the order",
+	"orders_page_sure_remove_item_from_the_order": "'Are you sure you want to remove %s from the order?'",
+	
 
 	"products_page_no_products_found": "No products found",
 	"products_page_no_products_found_description": "Press 'Add item' to add new products",
@@ -268,6 +293,17 @@
 	"video_page_select_video_file": "Please select a video file",
 	"video_page_no_videos_uploaded": "No Videos Uploaded Yet !!",
 	"video_page_add_new_videos": "Press 'Add Video' to add new videos",
+
+	"category_page_add_category": "Add category",
+	"category_page_category_name": "Category name",
+	"category_page_category_description": "Category description",
+	"category_page_add_sub_category": "Add Sub category\n",
+	"category_page_sub_category_name": "Sub Category name",
+	"category_page_select_a_category": "Select a category",
+	"category_page_no_categories_found": "No categories found",
+	"category_page_no_categories_found_message": "Press 'Add category' to add new categories",
+	
+
 	"review_page_title1": "Check-in to collect Google reviews",
 	"review_page_title2": "More Google reviews, more customers",
 	"review_page_continue_with_google": "Continue with Google",

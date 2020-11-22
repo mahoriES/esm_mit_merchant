@@ -77,7 +77,9 @@ class _EsOrderCardState extends State<EsOrderCard> {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      Fluttertoast.showToast(msg: 'Could not open maps');
+      Fluttertoast.showToast(
+          msg: AppTranslations.of(context)
+              .text('orders_page_could_not_open_maps'));
     }
   }
 

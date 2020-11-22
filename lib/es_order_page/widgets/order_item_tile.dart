@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/services/sizeconfig.dart';
+import 'package:sprintf/sprintf.dart';
 
 import 'confirm_dialogue.dart';
 
@@ -95,8 +97,10 @@ class _OrderItemTileState extends State<OrderItemTile> {
             showDialog(
               context: context,
               builder: (context) => AddOrDeleteItemDialogue(
-                message:
-                    'Are you sure you want to remove ${widget.orderItem.productName} from the order?',
+                message: sprintf(
+                    AppTranslations.of(context)
+                        .text('orders_page_sure_remove_item_from_the_order'),
+                    [widget.orderItem.productName]),
                 onConfirm: widget.onDelete,
               ),
             );

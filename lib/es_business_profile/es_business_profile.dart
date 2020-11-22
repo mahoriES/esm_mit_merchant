@@ -116,7 +116,7 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
         builder: (context) => EsEditBaseTextPage(
             this.esBusinessProfileBloc,
             AppTranslations.of(context).text("profile_page_update_business_notice"),
-            'Delivery will be delayed due to rain..',
+            AppTranslations.of(context).text('profile_page_update_business_notice_label'),
             this.esBusinessProfileBloc.noticeEditController,
             this.esBusinessProfileBloc.updateNotice,
             127),
@@ -282,7 +282,7 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                 FlatButton(
                   onPressed: editName,
                   child: Text(
-                    "+ Add business name",
+                    AppTranslations.of(context).text('profile_page_button_add_business_name'),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),

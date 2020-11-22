@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/es_create_merchant_profile.dart';
@@ -76,7 +77,6 @@ class EsCreateMerchantProfilePageState
         Provider.of<EsCreateMerchantProfileBloc>(context);
 
     onCreateMerchantProfileSuccess(EsProfile profile) {
-      print('onCreateMerchantProfileSuccess');
       var authBloc = Provider.of<AuthBloc>(context);
       authBloc.authState.esMerchantProfile = profile;
       Navigator.of(context).pushNamed(EsHomePage.routeName);
@@ -92,7 +92,7 @@ class EsCreateMerchantProfilePageState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Create profile',
+          AppTranslations.of(context).text('merchant_profile_page_title')
         ),
       ),
       body: Form(
@@ -119,7 +119,7 @@ class EsCreateMerchantProfilePageState
                             createMerchantProfileBloc.nameEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Name',
+                          labelText: AppTranslations.of(context).text('merchant_profile_page_name'),
                         ),
                       ),
                     ),
@@ -162,7 +162,7 @@ class EsCreateMerchantProfilePageState
             }),
       ),
       floatingActionButton: FoSubmitButton(
-        text: 'Save',
+        text: AppTranslations.of(context).text('generic_save'),
         onPressed: submit,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

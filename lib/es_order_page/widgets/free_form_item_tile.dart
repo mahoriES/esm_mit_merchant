@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/es_order_page/widgets/confirm_dialogue.dart';
 import 'package:foore/services/sizeconfig.dart';
+import 'package:sprintf/sprintf.dart';
 
 class FreeFormItemTile extends StatefulWidget {
   final FreeFormItems item;
@@ -41,8 +43,10 @@ class _FreeFormItemTileState extends State<FreeFormItemTile> {
               showDialog(
                 context: context,
                 builder: (context) => AddOrDeleteItemDialogue(
-                  message:
-                      'Are you sure you want to add ${widget.item.skuName} to the order?',
+                  message: sprintf(
+                      AppTranslations.of(context).text(
+                          'orders_page_sure_add_item_to_the_order'),
+                      [widget.item.skuName]),
                   onConfirm: widget.onConfirm,
                 ),
               );
@@ -62,8 +66,10 @@ class _FreeFormItemTileState extends State<FreeFormItemTile> {
               showDialog(
                 context: context,
                 builder: (context) => AddOrDeleteItemDialogue(
-                  message:
-                      'Are you sure you want to remove ${widget.item.skuName} from the order?',
+                  message: sprintf(
+                      AppTranslations.of(context).text(
+                          'orders_page_sure_remove_item_from_the_order'),
+                      [widget.item.skuName]),
                   onConfirm: widget.onReject,
                 ),
               );

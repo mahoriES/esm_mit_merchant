@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_categories.dart';
 import 'package:foore/data/http_service.dart';
@@ -66,7 +67,8 @@ class _EsCategoryPageState extends State<EsCategoryPage> {
         //     Scaffold.of(context).openDrawer();
         //   },
         // ),
-        title: Text('Select a category'),
+        title: Text(AppTranslations.of(context)
+            .text('category_page_select_a_category')),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
@@ -97,9 +99,10 @@ class _EsCategoryPageState extends State<EsCategoryPage> {
                         );
                       } else if (snapshot.data.parentCategories.length == 0) {
                         return EmptyList(
-                          titleText: 'No categories found',
-                          subtitleText:
-                              "Press 'Add category' to add new categories",
+                          titleText: AppTranslations.of(context)
+                              .text('category_page_no_categories_found'),
+                          subtitleText: AppTranslations.of(context).text(
+                              'category_page_no_categories_found_message'),
                         );
                       } else {
                         return ListView.builder(
@@ -164,7 +167,7 @@ class _EsCategoryPageState extends State<EsCategoryPage> {
                 ,
                 child: Container(
                   child: Text(
-                    'Save',
+                    AppTranslations.of(context).text('generic_save'),
                     style: Theme.of(context).textTheme.subhead.copyWith(
                           color: Colors.white,
                         ),

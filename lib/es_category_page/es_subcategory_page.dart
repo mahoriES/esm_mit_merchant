@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:foore/data/bloc/es_businesses.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_categories.dart';
-import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/es_category_page/es_add_subcategory.dart';
 import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
-import 'package:provider/provider.dart';
 
 class EsSabCategoryParam {
   final EsCategory parentCategory;
@@ -110,9 +108,10 @@ class _EsSubCategoryPageState extends State<EsSubCategoryPage> {
                               .length ==
                           0) {
                         return EmptyList(
-                          titleText: 'No categories found',
-                          subtitleText:
-                              "Press 'Add category' to add new categories",
+                          titleText: AppTranslations.of(context)
+                              .text('category_page_no_categories_found'),
+                          subtitleText: AppTranslations.of(context).text(
+                              'category_page_no_categories_found_message'),
                         );
                       } else {
                         return ListView.builder(
