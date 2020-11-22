@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/model/es_product.dart';
 
 class MenuItemWidget extends StatelessWidget {
@@ -125,7 +126,8 @@ class MenuItemWidget extends StatelessWidget {
                                       ),
                                 )
                               : Text(
-                                  'No skus',
+                                  AppTranslations.of(context)
+                                      .text('products_page_no_skus'),
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyText2
@@ -140,7 +142,9 @@ class MenuItemWidget extends StatelessWidget {
                         ),
                         esProduct.dNumberOfMoreVariations > 0
                             ? Text(
-                                '+${esProduct.dNumberOfMoreVariations} variations',
+                                '+${esProduct.dNumberOfMoreVariations} ' +
+                                    AppTranslations.of(context)
+                                        .text('products_page_variations'),
                                 style: Theme.of(context).textTheme.caption)
                             : Container(),
                       ],
@@ -171,9 +175,10 @@ class MenuItemWidget extends StatelessWidget {
                     },
                     itemBuilder: (BuildContext context) =>
                         <PopupMenuEntry<int>>[
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 1,
-                        child: Text('View'),
+                        child: Text(AppTranslations.of(context)
+                            .text('products_page_view')),
                       ),
                       // const PopupMenuItem(
                       //   value: '',

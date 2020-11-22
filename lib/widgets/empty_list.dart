@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 
 class EmptyList extends StatelessWidget {
   final String titleText;
@@ -25,7 +26,9 @@ class EmptyList extends StatelessWidget {
           SizedBox(
             height: 16,
           ),
-          Text(titleText ?? 'No items found.',
+          Text(
+              titleText ??
+                  AppTranslations.of(context).text('generic_no_items_found'),
               style: Theme.of(context).textTheme.title),
           SizedBox(
             height: 16,

@@ -94,6 +94,10 @@
 	"generic_cancel": "Cancel",
 	"generic_close": "Close",
 	"generic_select": "Select",
+	"generic_no_items_found.": "No items found.",
+	"generic_something_went_wrong": "Something went wrong",
+	"generic_retry": "Retry",
+	"generic_please_check_internet_connection": "Please check your internet connection and try again.",
 	
 	"merchant_profile_page_title": "Create profile",
 	"merchant_profile_page_name": "Name",
@@ -253,6 +257,7 @@
 	"products_page_view": "View",
 	"products_page_no_skus": "No skus",
 	"products_page_add_product": "Add Product",
+	"products_page_edit_product": "Edit Product",
 	"products_page_product_name": "Product name",
 	"products_page_select_a_unit": "Select a unit",
 	"products_page_name": "Name",
@@ -276,6 +281,9 @@
 	"products_page_stock": "Stock",
 	"products_page_save": "Save",
 	"products_page_edit": "Edit",
+	"products_page_please_select_unit_first": "Please Select Unit First",
+
+
 	"video_page_publish": "Publish",
 	"video_page_unpublish": "Unpublish",
 	"video_page_update": "Update",

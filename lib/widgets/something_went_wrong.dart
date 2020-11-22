@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/services/sizeconfig.dart';
 
 class SomethingWentWrong extends StatelessWidget {
@@ -18,7 +19,10 @@ class SomethingWentWrong extends StatelessWidget {
             flex: 1,
             child: Container(),
           ),
-          Text(titleText ?? 'Something went wrong',
+          Text(
+              titleText ??
+                  AppTranslations.of(context)
+                      .text('generic_something_went_wrong'),
               style: Theme.of(context).textTheme.title),
           SizedBox(
             height: 16.toHeight,
@@ -27,7 +31,8 @@ class SomethingWentWrong extends StatelessWidget {
               width: SizeConfig().screenWidth * 0.8,
               child: Text(
                 subtitleText ??
-                    'Please check your internet connection and try again.',
+                    AppTranslations.of(context)
+                        .text('generic_please_check_internet_connection'),
                 textAlign: TextAlign.center,
               )),
           SizedBox(
@@ -40,7 +45,7 @@ class SomethingWentWrong extends StatelessWidget {
             ),
             onPressed: this.onRetry,
             child: Container(
-              child: Text('Retry'),
+              child: Text(AppTranslations.of(context).text('generic_retry')),
             ),
           ),
           Flexible(

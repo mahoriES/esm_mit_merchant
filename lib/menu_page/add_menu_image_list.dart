@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
 
@@ -12,12 +13,10 @@ class EsAddMenuItemImageList extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _EsAddMenuItemImageListState createState() =>
-      _EsAddMenuItemImageListState();
+  _EsAddMenuItemImageListState createState() => _EsAddMenuItemImageListState();
 }
 
-class _EsAddMenuItemImageListState
-    extends State<EsAddMenuItemImageList> {
+class _EsAddMenuItemImageListState extends State<EsAddMenuItemImageList> {
   File imageFile;
 
   @override
@@ -66,7 +65,8 @@ class _EsAddMenuItemImageListState
               List.generate(snapshot.data.uploadingImages.length + 1, (index) {
             if (index == snapshot.data.uploadingImages.length) {
               return GestureDetector(
-                onTap: widget.esEdiProductBloc.selectAndUploadImageForAddProduct,
+                onTap:
+                    widget.esEdiProductBloc.selectAndUploadImageForAddProduct,
                 child: Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4.0),
@@ -113,29 +113,30 @@ class _EsAddMenuItemImageListState
                                 : null,
                       ),
                       Container(
-                        child:
-                            snapshot.data.uploadingImages[index].isUploadFailed
-                                ? Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    child: Container(
-                                      height: 120,
-                                      width: 120,
-                                      color: Colors.white60,
-                                      child: Center(
-                                        child: Text(
-                                          'Upload failed',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .caption
-                                              .copyWith(
-                                                color: Colors.black,
-                                              ),
-                                        ),
-                                      ),
+                        child: snapshot
+                                .data.uploadingImages[index].isUploadFailed
+                            ? Positioned(
+                                top: 0,
+                                left: 0,
+                                child: Container(
+                                  height: 120,
+                                  width: 120,
+                                  color: Colors.white60,
+                                  child: Center(
+                                    child: Text(
+                                      AppTranslations.of(context)
+                                          .text('orders_image_upload_failed'),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .caption
+                                          .copyWith(
+                                            color: Colors.black,
+                                          ),
                                     ),
-                                  )
-                                : null,
+                                  ),
+                                ),
+                              )
+                            : null,
                       ),
                       Container(
                         child:
