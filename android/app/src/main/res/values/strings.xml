@@ -1,0 +1,7 @@
+<resources>
+    <!--    configurations-->
+    <string name="annoying_channel_id">annoying_notification_channel_1</string>
+    <string name="annoying_channel_name">Annoying Notifications</string>
+    <string name="annoying_channel_description">Makes annoying sound for super important notifications</string>
+    <!--    configurations-->
+</resources>
