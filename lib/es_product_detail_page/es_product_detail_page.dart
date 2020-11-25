@@ -463,7 +463,7 @@ class VariationCard extends StatelessWidget {
                           ? AppTranslations.of(context)
                               .text('products_page_is_active')
                           : AppTranslations.of(context)
-                              .text('products_page_is_active'),
+                              .text('products_page_not_active'),
                       style: TextStyle(
                           color: sku.isActive
                               ? Colors.green[400]

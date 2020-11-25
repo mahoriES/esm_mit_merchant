@@ -10,11 +10,10 @@ class EsOrderPage extends StatelessWidget {
   final String title;
 
   EsOrderPage({this.title});
-  List<String> tabTitles = [];
 
   @override
   Widget build(BuildContext context) {
-    tabTitles = [
+    final List<String> tabTitles = [
       AppTranslations.of(context).text("orders_page_new"),
       AppTranslations.of(context).text("orders_page_accepted"),
       AppTranslations.of(context).text("orders_page_ready"),

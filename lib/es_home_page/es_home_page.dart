@@ -27,8 +27,6 @@ class EsHomePage extends StatefulWidget {
 class _EsHomePageState extends State<EsHomePage> {
   int _selectedIndex = 0;
 
-  List<String> title = [];
-
   final List<IconData> icons = [
     Icons.store,
     Icons.shopping_basket,
@@ -49,12 +47,12 @@ class _EsHomePageState extends State<EsHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    title = [
-    AppTranslations.of(context).text("bottom_nav_profile"),
-    AppTranslations.of(context).text("bottom_nav_orders"),
-    AppTranslations.of(context).text("bottom_nav_products"),
-    AppTranslations.of(context).text("bottom_nav_videos"),
-    AppTranslations.of(context).text("bottom_nav_reviews")
+    final List<String> title = [
+      AppTranslations.of(context).text("bottom_nav_profile"),
+      AppTranslations.of(context).text("bottom_nav_orders"),
+      AppTranslations.of(context).text("bottom_nav_products"),
+      AppTranslations.of(context).text("bottom_nav_videos"),
+      AppTranslations.of(context).text("bottom_nav_reviews")
     ];
     SizeConfig().init(context);
     final List<Widget> _widgetOptions = <Widget>[
