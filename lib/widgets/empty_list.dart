@@ -9,6 +9,7 @@ class EmptyList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         // mainAxisAlignment: MainAxisAlignment.center,
@@ -27,11 +28,13 @@ class EmptyList extends StatelessWidget {
             height: 16,
           ),
           Text(
-              titleText ??
-                  AppTranslations.of(context).text('generic_no_items_found'),
-              style: Theme.of(context).textTheme.title),
+            titleText ??
+                AppTranslations.of(context).text('generic_no_items_found'),
+            style: Theme.of(context).textTheme.title,
+            textAlign: TextAlign.center,
+          ),
           SizedBox(
-            height: 16,
+            height: 26,
           ),
           Container(
               width: MediaQuery.of(context).size.width * 0.6,
