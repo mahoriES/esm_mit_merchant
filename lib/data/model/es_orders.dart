@@ -168,41 +168,41 @@ class EsOrder {
     return timeText;
   }
 
-  get dStatusString {
-    String statusString = "Unknown";
+  String dStatusString(BuildContext context) {
+    String statusString = AppTranslations.of(context).text('orders_page_order_status_unknown');
     switch (this.orderStatus) {
       case EsOrderStatus.CREATED:
-        statusString = "New";
+        statusString = AppTranslations.of(context).text('orders_page_order_status_new');
         break;
       case EsOrderStatus.COMPLETED:
-        statusString = "Complete";
+        statusString = AppTranslations.of(context).text('orders_page_order_status_complete');
         break;
       case EsOrderStatus.MERCHANT_ACCEPTED:
-        statusString = "Preparing";
+        statusString = AppTranslations.of(context).text('orders_page_order_status_preparing');
         break;
       case EsOrderStatus.MERCHANT_CANCELLED:
-        statusString = "Merchant Cancelled";
+        statusString = AppTranslations.of(context).text('orders_page_order_status_merchant_cancelled');
         break;
       case EsOrderStatus.READY_FOR_PICKUP:
-        statusString = "Ready";
+        statusString = AppTranslations.of(context).text('orders_page_order_status_ready');
         break;
       case EsOrderStatus.REQUESTING_TO_DA:
-        statusString = "Searching Agent";
+        statusString = AppTranslations.of(context).text('orders_page_order_status_searching_agent');
         break;
       case EsOrderStatus.ASSIGNED_TO_DA:
-        statusString = "Agent Assigned";
+        statusString = AppTranslations.of(context).text('orders_page_order_status_agent_assigned');
         break;
       case EsOrderStatus.CUSTOMER_CANCELLED:
-        statusString = "Customer cancelled";
+        statusString = AppTranslations.of(context).text('orders_page_order_status_customer_cancelled');
         break;
       case EsOrderStatus.MERCHANT_UPDATED:
-        statusString = "Awaiting customer\nconfirmation";
+        statusString = AppTranslations.of(context).text('orders_page_order_status_awaiting_customer_confirmation');
         break;
       case EsOrderStatus.PICKED_UP_BY_DA:
-        statusString = "Delivering";
+        statusString = AppTranslations.of(context).text('orders_page_order_status_delivering');
         break;
       case EsOrderStatus.READY_FOR_PICKUP:
-        statusString = "Waiting pickup";
+        statusString = AppTranslations.of(context).text('orders_page_order_status_waiting_pickup');
         break;
       default:
     }

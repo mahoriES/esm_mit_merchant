@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/app_translations.dart';
-import 'package:foore/data/bloc/app_translations_bloc.dart';
 import 'package:foore/data/bloc/es_orders.dart';
 import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
@@ -244,7 +243,7 @@ class OrdersAlertDialogs {
               }
 
               return AlertDialog(
-                title: Text('Choose delivery partners'),
+                title: Text(AppTranslations.of(context).text('orders_page_assign_order_popup_title')),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: snapshot.data.agents
@@ -313,7 +312,7 @@ class OrdersAlertDialogs {
         actions: <Widget>[
           RaisedButton(
             color: Theme.of(context).errorColor,
-            child: Text('Cancel'),
+            child: Text(AppTranslations.of(context).text('orders_page_cancel')),
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop(false);
             },

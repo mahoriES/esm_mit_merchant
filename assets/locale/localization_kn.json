@@ -282,6 +282,18 @@
 	"orders_page_could_not_open_maps": "ನಕ್ಷೆಗಳನ್ನು ತೆರೆಯಲಾಗಲಿಲ್ಲ",
 	"orders_page_sure_add_item_to_the_order": "ನೀವು ಆದೇಶಕ್ಕೆ%  ಸೇರಿಸಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ",
 	"orders_page_sure_remove_item_from_the_order": "ಆದೇಶದಿಂದ %s  ಅನ್ನು ತೆಗೆದುಹಾಕಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ? ",
+	"orders_page_order_status_unknown": "ಅಜ್ಞಾತ",
+	"orders_page_order_status_new": "ಹೊಸದು",
+	"orders_page_order_status_complete": "ಪೂರ್ಣಗೊಂಡಿದೆ",
+	"orders_page_order_status_preparing": "ಸಿದ್ಧತೆಯಾಗುತ್ತಿದೆ",
+	"orders_page_order_status_merchant_cancelled": "ವ್ಯಾಪಾರಿ ರದ್ದುಗೊಳಿಸಿದ್ದಾರೆ",
+	"orders_page_order_status_ready": "ಸಿದ್ಧವಾಗಿದೆ",
+	"orders_page_order_status_searching_agent": "ಏಜೆಂಟಿಗಾಗಿ ಹುಡುಕುತ್ತಿದೆ",
+	"orders_page_order_status_agent_assigned": "ಏಜೆಂಟ್ ನಿಯೋಜಿಸಲಾಗಿದೆ",
+	"orders_page_order_status_customer_cancelled": "ಗ್ರಾಹಕ ರದ್ದುಗೊಳಿಸಲಾಗಿದೆ",
+	"orders_page_order_status_awaiting_customer_confirmation": "ವ್ಯಾಪಾರಿಯ ಆದೇಶಕ್ಕಾಗಿ ಕಾಯುತ್ತಿದ್ದೇವೆ",
+	"orders_page_order_status_delivering": "ವಿತರಣೆಯಾಗುತ್ತಿದೆ",
+	"orders_page_order_status_waiting_pickup": "ಪಿಕಪ್ ಕಾಯಲಾಗುತ್ತಿದೆ",
 	
 
 	"products_page_no_products_found": "ಯಾವುದೇ ಉತ್ಪನ್ನಗಳು ಕಂಡುಬಂದಿಲ್ಲ",

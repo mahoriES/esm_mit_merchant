@@ -138,8 +138,8 @@ class _EsOrderDetailsChargesComponentState
               flex: 60,
               child: Text(
                 _totalNumberOfItems.toString() +
-                    '  Item' +
-                    (_totalNumberOfItems > 1 ? 's' : ''),
+                    ' ' +
+                    AppTranslations.of(context).text('orders_page_item'),
                 style: Theme.of(context).textTheme.subtitle2.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,

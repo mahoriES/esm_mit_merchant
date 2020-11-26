@@ -183,7 +183,7 @@ class _EsOrderCardState extends State<EsOrderCard> {
                                       ),
                         SizedBox(width: 4.toWidth),
                         Text(
-                          widget.esOrder.dStatusString,
+                          widget.esOrder.dStatusString(context),
                           style: Theme.of(context).textTheme.caption,
                         ),
                       ],
