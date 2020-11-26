@@ -249,7 +249,7 @@
 	"orders_page_update_popup_title": "क्या आप इस ऑर्डर को अपडेट करना चाहते हैं?",
 	"orders_page_ready_for_pickup_popup_title": "क्या आप इस ऑर्डर को 'पिकअप के लिए तैयार' चिह्नित करना चाहते हैं?",
 	"orders_page_not_have_delivery_partners": "आपके पास कोई डिलीवरी पार्टनर नहीं है। यदि आपको डिलीवरी पार्टनर्स को ऑनबोर्ड करने में मदद चाहिए तो कृपया हमसे संपर्क करें।",
-	"orders_page_order_payment_status_update_popup_title": "'क्या आप ऑर्डर  %s  के भुगतान की स्थिति  अपडेट करना चाहते हैं? '",
+	"orders_page_order_payment_status_update_popup_title": "क्या आप ऑर्डर के भुगतान की स्थिति को %s अपडेट करना चाहते हैं?",
 	"orders_page_accept": "स्वीकार करें",
 	"orders_page_no_items_added_error": "इसकी पुष्टि के लिए कम से कम 1 आइटम जोड़ें.",
 	"orders_page_customer_items_due_error": "कृपया पहले आइटम की सूची को स्वीकार / अस्वीकार करें",
