@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/app_colors.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/services/sizeconfig.dart';
@@ -137,8 +138,8 @@ class _EsOrderDetailsChargesComponentState
               flex: 60,
               child: Text(
                 _totalNumberOfItems.toString() +
-                    '  Item' +
-                    (_totalNumberOfItems > 1 ? 's' : ''),
+                    ' ' +
+                    AppTranslations.of(context).text('orders_page_item'),
                 style: Theme.of(context).textTheme.subtitle2.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -251,7 +252,7 @@ class _EsOrderDetailsChargesComponentState
                   ),
                   SizedBox(width: 5.toWidth),
                   Text(
-                    'Add Charges',
+                    AppTranslations.of(context).text('orders_page_add_charges'),
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                     ),
@@ -274,7 +275,7 @@ class _EsOrderDetailsChargesComponentState
             Expanded(
                 flex: 65,
                 child: Text(
-                  'Total Amount',
+                  AppTranslations.of(context).text('orders_page_total_amount'),
                   style: Theme.of(context)
                       .textTheme
                       .headline6
@@ -350,23 +351,24 @@ class AdditionChargesMetaDataGenerator {
   static List<String> get selfPickupKeyOptions =>
       ['EXTRA', 'PACKING', 'SERVICE'];
 
+  // Todo: Where is it used?
   static String friendlyChargeNameFromEnumValue(
-      AdditionalChargeType chargeType) {
+      BuildContext context, AdditionalChargeType chargeType) {
     switch (chargeType) {
       case AdditionalChargeType.deliveryCharge:
-        return 'Delivery Charges';
+        return AppTranslations.of(context).text('orders_page_delivery_charges');
         break;
       case AdditionalChargeType.extraCharge:
-        return 'Extra Charges';
+        return AppTranslations.of(context).text('orders_page_extra_charges');
         break;
       case AdditionalChargeType.packingCharge:
-        return 'Packing Charges';
+        return AppTranslations.of(context).text('orders_page_packing_charges');
         break;
       case AdditionalChargeType.serviceCharge:
-        return 'Service Charges';
+        return AppTranslations.of(context).text('orders_page_service_charges');
         break;
       default:
-        return 'Other Charge';
+        return AppTranslations.of(context).text('orders_page_other_charges');
     }
   }
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_add_category.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
@@ -11,7 +12,7 @@ import 'package:provider/provider.dart';
 class EsAddSubCategoryPageParams {
   final String parentCategoryName;
   final int parentCategoryId;
-  
+
   EsAddSubCategoryPageParams(this.parentCategoryId, this.parentCategoryName);
 }
 
@@ -93,14 +94,15 @@ class EsAddSubCategoryPageState extends State<EsAddSubCategoryPage>
             (esCategory) {
           Navigator.of(context).pop(esCategory);
           //Add to list
-          
         });
       }
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add Sub category\n" + this.widget.parentCategoryName),
+        title: Text(
+            AppTranslations.of(context).text('category_page_add_sub_category') +
+                this.widget.parentCategoryName),
       ),
       body: Form(
         key: _formKey,
@@ -125,7 +127,8 @@ class EsAddSubCategoryPageState extends State<EsAddSubCategoryPage>
                         controller: this.esCategoriesBloc.nameEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Sub Category name',
+                          labelText: AppTranslations.of(context)
+                              .text('category_page_sub_category_name'),
                         ),
                       ),
                     ),
@@ -157,7 +160,7 @@ class EsAddSubCategoryPageState extends State<EsAddSubCategoryPage>
               return Container();
             }
             return FoSubmitButton(
-              text: 'Save',
+              text: AppTranslations.of(context).text('generic_save'),
               onPressed: submit,
               isLoading: snapshot.data.isSubmitting,
             );

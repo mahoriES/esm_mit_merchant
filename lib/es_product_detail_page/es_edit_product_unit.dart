@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
@@ -20,6 +21,7 @@ class EsEditProductUnitPageState extends State<EsEditProductUnitPage>
     with AfterLayoutMixin<EsEditProductUnitPage> {
   final _formKey = GlobalKey<FormState>();
 
+  // todo Move this function to a common place.
   _showFailedAlertDialog() async {
     await showDialog(
       context: context,
@@ -73,7 +75,7 @@ class EsEditProductUnitPageState extends State<EsEditProductUnitPage>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Update product unit',
+          AppTranslations.of(context).text('products_page_update_product_unit'),
         ),
       ),
       body: Form(
@@ -96,11 +98,11 @@ class EsEditProductUnitPageState extends State<EsEditProductUnitPage>
                         right: 20,
                       ),
                       child: TextFormField(
-                        controller: widget
-                            .esEditProductBloc.unitEditController,
+                        controller: widget.esEditProductBloc.unitEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Product unit',
+                          labelText: AppTranslations.of(context)
+                              .text('products_page_product_unit'),
                         ),
                       ),
                     ),
@@ -116,7 +118,7 @@ class EsEditProductUnitPageState extends State<EsEditProductUnitPage>
               return Container();
             }
             return FoSubmitButton(
-              text: 'Save',
+              text: AppTranslations.of(context).text('products_page_save'),
               onPressed: submit,
               isLoading: snapshot.data.isSubmitting,
             );

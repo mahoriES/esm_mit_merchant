@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
@@ -105,7 +106,7 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Create business',
+          AppTranslations.of(context).text('create_business_page_title'),
         ),
       ),
       body: Form(
@@ -131,7 +132,7 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
                         controller: createBusinessBloc.nameEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Business name',
+                          labelText: AppTranslations.of(context).text('create_business_page_business_name'),
                         ),
                       ),
                     ),
@@ -146,7 +147,7 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
                         controller: createBusinessBloc.circleEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Circle',
+                          labelText: AppTranslations.of(context).text('create_business_page_circle'),
                         ),
                       ),
                     ),
@@ -169,7 +170,7 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
                           children: <Widget>[
                             Container(
                               child: Text(
-                                'Get in touch with us to get Circle code',
+                                AppTranslations.of(context).text('create_business_page_get_in_touch_to_get_circle_code'),
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: Colors.blue,
@@ -204,7 +205,7 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
               return Container();
             }
             return FoSubmitButton(
-              text: 'Save',
+              text: AppTranslations.of(context).text('create_business_page_save'),
               onPressed: () {
                 if (this._formKey.currentState.validate()) {
                   confirmBusinessAlert(

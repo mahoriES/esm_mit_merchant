@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
@@ -23,6 +24,7 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
   bool inStock = true;
   bool isActive = true;
 
+  // todo Move this function to a common place.
   _showFailedAlertDialog() async {
     await showDialog(
       context: context,
@@ -94,8 +96,9 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
       appBar: AppBar(
         title: Text(
           widget.currentSku != null
-              ? "Edit ${widget.currentSku.skuCode}"
-              : 'Add variation',
+              ? AppTranslations.of(context).text('products_page_edit') +
+                  widget.currentSku.skuCode
+              : AppTranslations.of(context).text('products_page_add_variation'),
         ),
       ),
       body: Form(
@@ -140,7 +143,9 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                         validator: ValidationService().validateDouble,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Price (eg. 120.0)',
+                          labelText: AppTranslations.of(context)
+                                  .text('products_page_price') +
+                              ' (eg. 120.0)',
                         ),
                       ),
                     ),
@@ -157,7 +162,9 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Variation (eg. 500gm)',
+                          labelText: AppTranslations.of(context)
+                                  .text('products_page_variation') +
+                              ' (eg. 500gm)',
                           suffix: Text(
                               widget.esEditProductBloc.unitEditController.text),
                         ),
@@ -176,7 +183,8 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                             this.isActive = updatedVal;
                           });
                         },
-                        title: Text("Active"),
+                        title: Text(AppTranslations.of(context)
+                            .text('products_page_active')),
                       ),
                     ),
                     Padding(
@@ -192,7 +200,8 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                             this.inStock = updatedVal;
                           });
                         },
-                        title: Text("Stock"),
+                        title: Text(AppTranslations.of(context)
+                            .text('products_page_stock')),
                       ),
                     ),
                   ],
@@ -207,7 +216,7 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
               return Container();
             }
             return FoSubmitButton(
-              text: 'Save',
+              text: AppTranslations.of(context).text('products_page_save'),
               onPressed: submit,
               isLoading: snapshot.data.isSubmitting,
             );

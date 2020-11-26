@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:foore/app_translations.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/es_create_business/es_create_business.dart';
@@ -43,7 +43,7 @@ class EsSelectBusiness extends PreferredSize {
                       child: Row(
                         children: <Widget>[
                           Text(
-                            'Select business',
+                             AppTranslations.of(context).text("business_select"),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             softWrap: true,
@@ -60,7 +60,8 @@ class EsSelectBusiness extends PreferredSize {
                                 EsCreateBusinessPage.routeName);
                             },
                             icon: Icon(Icons.add),
-                            label: Text('Add business'),
+                            // label: Text('Add business'),
+                            label: Text( AppTranslations.of(context).text("business_select_add_business")),
                           )
                         ],
                       ),
@@ -89,7 +90,7 @@ class EsSelectBusiness extends PreferredSize {
                                       Text(businessInfo
                                       .dBusinessPrettyAddress),
                                       Text(
-                                        "Not Approved",
+                                        AppTranslations.of(context).text("business_select_not_approved"),
                                         style: TextStyle(
                                           color: Colors.redAccent),
                                       ),

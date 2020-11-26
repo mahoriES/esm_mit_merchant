@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foore/app_translations.dart';
 import 'package:foore/auth_guard/auth_guard.dart';
-import 'package:foore/data/bloc/es_link_sharing.dart';
 import 'package:foore/data/bloc/people.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/es_business_profile/es_business_profile.dart';
@@ -28,14 +27,6 @@ class EsHomePage extends StatefulWidget {
 class _EsHomePageState extends State<EsHomePage> {
   int _selectedIndex = 0;
 
-  final List<String> title = [
-    'Profile',
-    'Orders',
-    'Products',
-    'Videos',
-    'Reviews',
-  ];
-
   final List<IconData> icons = [
     Icons.store,
     Icons.shopping_basket,
@@ -56,6 +47,13 @@ class _EsHomePageState extends State<EsHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> title = [
+      AppTranslations.of(context).text("bottom_nav_profile"),
+      AppTranslations.of(context).text("bottom_nav_orders"),
+      AppTranslations.of(context).text("bottom_nav_products"),
+      AppTranslations.of(context).text("bottom_nav_videos"),
+      AppTranslations.of(context).text("bottom_nav_reviews")
+    ];
     SizeConfig().init(context);
     final List<Widget> _widgetOptions = <Widget>[
       EsBusinessProfile(),

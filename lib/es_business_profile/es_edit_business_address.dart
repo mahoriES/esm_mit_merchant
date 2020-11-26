@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_business_profile.dart';
 import 'package:geolocator/geolocator.dart';
@@ -110,7 +111,7 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Update business address',
+          AppTranslations.of(context).text('profile_page_update_business_address'),
         ),
       ),
       body: Form(
@@ -162,7 +163,7 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
                             widget.esBusinessProfileBloc.addressEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Address',
+                          labelText: AppTranslations.of(context).text('profile_page_address'),
                         ),
                       ),
                     ),
@@ -177,7 +178,7 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
                             widget.esBusinessProfileBloc.pinCodeEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Pin code',
+                          labelText: AppTranslations.of(context).text('profile_page_pincode'),
                         ),
                       ),
                     ),
@@ -192,7 +193,7 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
                             widget.esBusinessProfileBloc.cityEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'City',
+                          labelText: AppTranslations.of(context).text('profile_page_city'),
                         ),
                       ),
                     ),
@@ -230,7 +231,7 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
               return Container();
             }
             return FoSubmitButton(
-              text: 'Save',
+              text: AppTranslations.of(context).text('generic_save'),
               onPressed: submit,
               isLoading: snapshot.data.isSubmitting,
             );

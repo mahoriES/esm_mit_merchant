@@ -29,7 +29,7 @@ class _EsVideoPageState extends State<EsVideoPage> {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FoSubmitButton(
-          text: 'Add Video',
+          text: AppTranslations.of(context).text('video_page_add_video'),
           onPressed: () =>
               Navigator.of(context).pushNamed(EsAddVideo.routeName),
         ),
@@ -67,9 +67,11 @@ class _EsVideoPageState extends State<EsVideoPage> {
                   context: context,
                   barrierDismissible: false,
                   builder: (context) => ResponseDialogue(
-                    'Update Failed',
+                    AppTranslations.of(context)
+                        .text('video_page_update_failed'),
                     message: snapshot.data.errorMessage,
-                    buttonText: 'dismiss',
+                    buttonText:
+                        AppTranslations.of(context).text('video_page_dismiss'),
                   ),
                 );
               });
@@ -77,8 +79,10 @@ class _EsVideoPageState extends State<EsVideoPage> {
 
             if (snapshot.data.filteredVideosList.length == 0) {
               return EmptyList(
-                titleText: 'No Videos Uploaded Yet !!',
-                subtitleText: "Press 'Add Video' to add new videos",
+                titleText: AppTranslations.of(context)
+                    .text('video_page_no_videos_uploaded'),
+                subtitleText: AppTranslations.of(context)
+                    .text('video_page_add_new_videos'),
               );
             }
 
@@ -202,8 +206,8 @@ class _EsVideoPageState extends State<EsVideoPage> {
                                             .filteredVideosList[index].postId);
                                 await EsDynamicLinkSharing().shareLink(
                                   parameters: linkParameters,
-                                  text: AppTranslations.of(context)
-                                      .text('Share Link For this Video'),
+                                  text: AppTranslations.of(context).text(
+                                      'profile_page_share_link_for_this_video'),
                                   storeName: _esBusinessesBloc
                                       .getSelectedBusinessName(),
                                 );

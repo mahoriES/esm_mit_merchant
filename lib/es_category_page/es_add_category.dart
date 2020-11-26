@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_add_category.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
@@ -86,7 +87,7 @@ class EsAddCategoryPageState extends State<EsAddCategoryPage>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Add category',
+          AppTranslations.of(context).text('category_page_add_category'),
         ),
       ),
       body: Form(
@@ -112,7 +113,8 @@ class EsAddCategoryPageState extends State<EsAddCategoryPage>
                         controller: this.esCategoriesBloc.nameEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Category name',
+                          labelText: AppTranslations.of(context)
+                              .text('category_page_category_name'),
                         ),
                       ),
                     ),
@@ -127,7 +129,8 @@ class EsAddCategoryPageState extends State<EsAddCategoryPage>
                             this.esCategoriesBloc.descriptionEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Category description',
+                          labelText: AppTranslations.of(context)
+                              .text('category_page_category_description'),
                         ),
                       ),
                     ),
@@ -143,7 +146,7 @@ class EsAddCategoryPageState extends State<EsAddCategoryPage>
               return Container();
             }
             return FoSubmitButton(
-              text: 'Save',
+              text: AppTranslations.of(context).text('generic_save'),
               onPressed: submit,
               isLoading: snapshot.data.isSubmitting,
             );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/data/model/es_video_models/es_video_list.dart';
 import 'package:foore/es_video_page/widgets/update_details_dialogue.dart';
@@ -64,15 +65,17 @@ class _EsVideoDetailsWidgetState extends State<EsVideoDetailsWidget> {
           value: isPublished
               ? UpdateVideoAction.UNPUBLISH
               : UpdateVideoAction.PUBLISH,
-          child: Text(isPublished ? 'Unpublish' : 'Publish'),
+          child: Text(isPublished
+              ? AppTranslations.of(context).text('video_page_unpublish')
+              : AppTranslations.of(context).text('video_page_publish')),
         ),
         PopupMenuItem(
           value: UpdateVideoAction.UPDATE_DETAILS,
-          child: Text('Update'),
+          child: Text(AppTranslations.of(context).text('video_page_update')),
         ),
         PopupMenuItem(
           value: UpdateVideoAction.DELETE,
-          child: Text('Delete'),
+          child: Text(AppTranslations.of(context).text('video_page_delete')),
         ),
       ],
     );

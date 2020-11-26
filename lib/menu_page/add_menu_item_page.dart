@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
@@ -85,7 +86,9 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
     submit() {
       if (this._formKey.currentState.validate()) {
         if (selectedUnit == null) {
-          Fluttertoast.showToast(msg: 'Please Select Unit First');
+          Fluttertoast.showToast(
+              msg: AppTranslations.of(context)
+                  .text('products_page_please_select_unit_first'));
         } else {
           esEditProductBloc.unitEditController.text = selectedUnit;
           esEditProductBloc.addProduct((EsProduct product) {
@@ -98,7 +101,9 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.currentProduct != null ? 'Edit Product' : 'Add Product',
+          widget.currentProduct != null
+              ? AppTranslations.of(context).text('products_page_edit_product')
+              : AppTranslations.of(context).text('products_page_add_product'),
         ),
       ),
       body: StreamBuilder<EsEditProductState>(
@@ -126,7 +131,8 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
                         validator: ValidationService().validateProductName,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Product name',
+                          labelText: AppTranslations.of(context)
+                              .text('products_page_product_name'),
                         ),
                         maxLength: 128,
                       ),
@@ -139,7 +145,8 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
                       ),
                       child: DropdownButtonFormField(
                         value: selectedUnit,
-                        hint: Text('Select a unit'),
+                        hint: Text(AppTranslations.of(context)
+                            .text('products_page_select_a_unit')),
                         validator: (value) => ValidationService()
                             .validateString(value.toString()),
                         items: List.generate(
@@ -168,7 +175,7 @@ class AddMenuItemPageState extends State<AddMenuItemPage>
               return Container();
             }
             return FoSubmitButton(
-              text: 'Save',
+              text: AppTranslations.of(context).text('generic_save'),
               onPressed: submit,
               isLoading: snapshot.data.isSubmitting,
             );

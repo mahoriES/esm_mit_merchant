@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/services/sizeconfig.dart';
@@ -76,7 +77,7 @@ class _SelectVariationDialogueState extends State<SelectVariationDialogue> {
               ),
               SizedBox(height: 10.toHeight),
               FoSubmitButton(
-                text: 'Select',
+                text: AppTranslations.of(context).text('generic_select'),
                 onPressed: () {
                   widget.addItem(selectedIndex);
                   Navigator.pop(context);

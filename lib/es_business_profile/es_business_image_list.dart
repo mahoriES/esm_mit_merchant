@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_business_profile.dart';
 import 'package:foore/data/model/es_business.dart';
 
@@ -124,7 +125,7 @@ class _EsBusinessProfileImageListState
                                       color: Colors.white60,
                                       child: Center(
                                         child: Text(
-                                          'Upload failed',
+                                          AppTranslations.of(context).text('orders_image_upload_failed'),
                                           style: Theme.of(context)
                                               .textTheme
                                               .caption

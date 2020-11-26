@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/services/sizeconfig.dart';
 
 class AddOrDeleteItemDialogue extends StatelessWidget {
@@ -50,7 +51,7 @@ class AddOrDeleteItemDialogue extends StatelessWidget {
                   },
                   color: Theme.of(context).errorColor,
                   child: Text(
-                    'Cancel',
+                    AppTranslations.of(context).text('generic_close'),
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.white,
@@ -66,7 +67,7 @@ class AddOrDeleteItemDialogue extends StatelessWidget {
                   },
                   color: Theme.of(context).primaryColor,
                   child: Text(
-                    'Confirm',
+                    AppTranslations.of(context).text('generic_confirm'),
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.white,

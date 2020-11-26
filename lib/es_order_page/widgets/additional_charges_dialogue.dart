@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/app_colors.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/services/sizeconfig.dart';
+import 'package:sprintf/sprintf.dart';
 import 'order_details_charges_component.dart';
 
 ///This is a configurable dialog box shown to add/edit additional charge(s).
@@ -55,8 +57,13 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
   @override
   Widget build(BuildContext context) {
     String titleText = widget.dialogActionType == 0
-        ? 'Add a Charge'
-        : 'Edit ${AdditionChargesMetaDataGenerator.friendlyChargeNameFromKeyValue(widget.toBeEditedChargeName)}';
+        ? AppTranslations.of(context).text('orders_page_add_a_charge')
+        : sprintf(
+            AppTranslations.of(context).text('orders_page_edit_a_charge'), [
+            AdditionChargesMetaDataGenerator.friendlyChargeNameFromKeyValue(
+                widget.toBeEditedChargeName)
+          ]);
+    // : 'Edit ${}';
     return GestureDetector(
       onTap: () {
         focusNode?.unfocus();
@@ -103,7 +110,8 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
                               keyboardType: TextInputType.number,
                               controller: priceController,
                               decoration: InputDecoration(
-                                hintText: 'Amount',
+                                hintText: AppTranslations.of(context)
+                                    .text('orders_page_amount'),
                                 contentPadding: EdgeInsets.symmetric(
                                     horizontal: 8.toWidth,
                                     vertical: 8.toHeight),
@@ -132,7 +140,8 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
                             if (priceController.text == '' ||
                                 double.tryParse(priceController.text) == null) {
                               Fluttertoast.showToast(
-                                  msg: 'Enter valid charge value!');
+                                  msg: AppTranslations.of(context).text(
+                                      'orders_page_error_enter_valid_charge'));
                               return;
                             }
                             Navigator.pop(
@@ -197,7 +206,7 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
     return Text(
       AdditionChargesMetaDataGenerator.friendlyChargeNameFromKeyValue(
               widget.toBeEditedChargeName) ??
-          'Unknown Charge',
+          AppTranslations.of(context).text('orders_page_unknown_charge'),
       style: TextStyle(
         color: AppColors.greyishText,
       ),
@@ -213,7 +222,9 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
             EdgeInsets.symmetric(vertical: 10.toHeight, horizontal: 10.toWidth),
         color: type == 0 ? AppColors.lightBlue : Colors.red,
         child: Text(
-          type == 0 ? 'Confirm' : 'Cancel',
+          type == 0
+              ? AppTranslations.of(context).text('generic_confirm')
+              : AppTranslations.of(context).text('generic_cancel'),
           textAlign: TextAlign.center,
         ),
       ),

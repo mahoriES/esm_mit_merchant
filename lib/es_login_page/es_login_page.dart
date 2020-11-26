@@ -9,6 +9,8 @@ import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/http_service.dart';
 import 'dart:async';
 
+import 'package:sprintf/sprintf.dart';
+
 class EsLoginPage extends StatefulWidget {
   static const routeName = '/esLogin';
   static const signUpRouteName = '/esSignUp';
@@ -118,10 +120,14 @@ class _EsLoginPageState extends State<EsLoginPage> {
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Phone',
+                  labelText: AppTranslations.of(context)
+                      .text("login_page_phone_number"),
                 ),
                 validator: (String value) {
-                  return value.length < 1 ? 'Required' : null;
+                  return value.length < 1
+                      ? AppTranslations.of(context)
+                          .text('error_messages_required')
+                      : null;
                 },
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(10),
@@ -140,7 +146,7 @@ class _EsLoginPageState extends State<EsLoginPage> {
                         backgroundColor: Colors.white,
                       ))
                     : Text(
-                        'Get otp',
+                        AppTranslations.of(context).text("login_page_get_otp"),
                         style: Theme.of(context).textTheme.button.copyWith(
                               color: Colors.white,
                             ),
@@ -195,12 +201,13 @@ class _EsLoginPageState extends State<EsLoginPage> {
               child: Container(),
             ),
             Text(
-              'Enter otp',
+              AppTranslations.of(context).text("login_page_enter_otp"),
               style: Theme.of(context).textTheme.headline,
             ),
             const SizedBox(height: 32.0),
             Text(
-              'OTP sent to ' + this._esLoginBloc.phoneEditController.text,
+              AppTranslations.of(context).text("login_page_otp_sent_to") +
+                  this._esLoginBloc.phoneEditController.text,
               style: Theme.of(context).textTheme.subtitle,
             ),
             const SizedBox(height: 16.0),
@@ -209,10 +216,14 @@ class _EsLoginPageState extends State<EsLoginPage> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Enter otp',
+                labelText:
+                    AppTranslations.of(context).text("login_page_enter_otp"),
               ),
               validator: (String value) {
-                return value.length < 1 ? 'Required' : null;
+                return value.length < 1
+                    ? AppTranslations.of(context)
+                        .text("error_messages_required")
+                    : null;
               },
             ),
             const SizedBox(height: 20),
@@ -229,7 +240,7 @@ class _EsLoginPageState extends State<EsLoginPage> {
                         backgroundColor: Colors.white,
                       ))
                     : Text(
-                        'Login',
+                        AppTranslations.of(context).text("login_page_login"),
                         style: Theme.of(context).textTheme.button.copyWith(
                               color: Colors.white,
                             ),
@@ -250,7 +261,6 @@ class _EsLoginPageState extends State<EsLoginPage> {
 }
 
 class ResendOtpComponent extends StatefulWidget {
-
   ///The [onCodeRequest] function is received from the caller module and executed
   ///when the Resend OTP action is performed alongwith assigning of new values to
   ///the timer, and showing a toast to user that message has been sent.
@@ -322,18 +332,21 @@ class _ResendOtpComponentState extends State<ResendOtpComponent> {
                     widget.onCodeRequest();
                     Fluttertoast.showToast(
                         msg: AppTranslations.of(context)
-                            .text('otp_sent_to_device'));
+                            .text('login_page_otp_sent_to_device'));
                     setState(() {
                       startTimer();
                     });
                   },
                   child: Text(
-                    AppTranslations.of(context).text('resend_otp'),
+                    AppTranslations.of(context).text('login_page_resend_otp'),
                     style: TextStyle(color: AppColors.lightBlue),
                   ),
                 )
               : Text(
-                  'Resend OTP in $_start seconds',
+                  sprintf(
+                      AppTranslations.of(context)
+                          .text('login_page_resend_otp_in_n_seconds'),
+                      [_start]),
                   style: TextStyle(
                     color: AppColors.greyishText,
                   ),

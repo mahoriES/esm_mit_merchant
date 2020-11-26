@@ -97,13 +97,13 @@ flutter:
     - assets/promotion-banner.png
     - assets/locale/localization_hi.json
     - assets/locale/localization_kn.json
-    - assets/locale/localization_ml.json
-    - assets/locale/localization_mr.json
+    # - assets/locale/localization_ml.json
+    # - assets/locale/localization_mr.json
     - assets/locale/localization_ta.json
     - assets/locale/localization_te.json
-    - assets/locale/localization_pa.json
+    # - assets/locale/localization_pa.json
     - assets/locale/localization_en.json
-    - assets/locale/localization_gu.json
+    # - assets/locale/localization_gu.json
   fonts:
     - family: Lato
       fonts:

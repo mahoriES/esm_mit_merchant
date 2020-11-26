@@ -9,11 +9,11 @@ class AppTranslationsBloc {
   static final List<String> supportedLanguages = [
     "English",
     "हिन्दी (Hindi)",
-    "मराठी (Marathi)",
-    "ગુજરાતી (Gujarati)",
-    "ਪੰਜਾਬੀ (Punjabi)",
+    // "मराठी (Marathi)",
+    // "ગુજરાતી (Gujarati)",
+    // "ਪੰਜਾਬੀ (Punjabi)",
     "தமிழ் (Tamil)",
-    "മലയാളം (Malayalam)",
+    // "മലയാളം (Malayalam)",
     "తెలుగు (Telugu)",
     "ಕನ್ನಡ (Kannada)"
   ];
@@ -21,11 +21,11 @@ class AppTranslationsBloc {
   static final List<String> supportedLanguageCodes = [
     "en",
     "hi",
-    "mr",
-    "gu",
-    "pa",
+    // "mr",
+    // "gu",
+    // "pa",
     "ta",
-    "ml",
+    // "ml",
     "te",
     "kn"
   ];

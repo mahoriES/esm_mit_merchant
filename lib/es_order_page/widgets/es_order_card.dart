@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_orders.dart';
 import 'package:foore/data/constants/string_constants.dart';
 import 'package:foore/data/model/es_order_details.dart';
@@ -76,7 +77,9 @@ class _EsOrderCardState extends State<EsOrderCard> {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      Fluttertoast.showToast(msg: 'Could not open maps');
+      Fluttertoast.showToast(
+          msg: AppTranslations.of(context)
+              .text('orders_page_could_not_open_maps'));
     }
   }
 
@@ -148,7 +151,9 @@ class _EsOrderCardState extends State<EsOrderCard> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Order #${widget.esOrder.orderShortNumber}',
+                          AppTranslations.of(context)
+                                  .text('orders_page_order') +
+                              ' #${widget.esOrder.orderShortNumber}',
                           style: Theme.of(context).textTheme.bodyText2.copyWith(
                                 color:
                                     Theme.of(context).textTheme.caption.color,
@@ -178,7 +183,7 @@ class _EsOrderCardState extends State<EsOrderCard> {
                                       ),
                         SizedBox(width: 4.toWidth),
                         Text(
-                          widget.esOrder.dStatusString,
+                          widget.esOrder.dStatusString(context),
                           style: Theme.of(context).textTheme.caption,
                         ),
                       ],
@@ -231,7 +236,8 @@ class _EsOrderCardState extends State<EsOrderCard> {
                                 Icon(Icons.announcement, size: 16),
                                 SizedBox(width: 4),
                                 Text(
-                                  "Cancellation Note",
+                                  AppTranslations.of(context)
+                                      .text('orders_page_cancellation_note'),
                                   style: Theme.of(context)
                                       .textTheme
                                       .subtitle1
@@ -288,7 +294,7 @@ class _EsOrderCardState extends State<EsOrderCard> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.esOrder.dDeliveryType,
+                                widget.esOrder.dDeliveryType(context),
                                 style: Theme.of(context)
                                     .textTheme
                                     .subtitle2
@@ -323,7 +329,7 @@ class _EsOrderCardState extends State<EsOrderCard> {
                       ),
                     ] else ...[
                       Text(
-                        widget.esOrder.dDeliveryType,
+                        widget.esOrder.dDeliveryType(context),
                         style: Theme.of(context).textTheme.subtitle2.copyWith(
                               color: ListTileTheme.of(context).textColor,
                               fontWeight: FontWeight.bold,
@@ -360,7 +366,8 @@ class _EsOrderCardState extends State<EsOrderCard> {
                       RaisedButton(
                         onPressed: widget.onCancel,
                         color: Theme.of(context).errorColor,
-                        child: Text('Reject'),
+                        child: Text(AppTranslations.of(context)
+                            .text('orders_page_reject')),
                       ),
                       SizedBox(width: 20.toWidth),
                       RaisedButton(
@@ -371,7 +378,8 @@ class _EsOrderCardState extends State<EsOrderCard> {
                             isExpanded = true;
                           });
                         },
-                        child: Text('Check'),
+                        child: Text(AppTranslations.of(context)
+                            .text('orders_page_check')),
                       ),
                     ],
                     if ((widget.esOrder.dIsReady ||
@@ -379,7 +387,8 @@ class _EsOrderCardState extends State<EsOrderCard> {
                         !widget.esOrder.dIsStatusCancelled) ...[
                       RaisedButton(
                         onPressed: widget.onMarkCompleted,
-                        child: Text('Mark Completed'),
+                        child: Text(AppTranslations.of(context)
+                            .text('orders_page_mark_completed')),
                       ),
                     ],
                     widget.esOrder.dIsShowAssign
@@ -388,14 +397,16 @@ class _EsOrderCardState extends State<EsOrderCard> {
                               SizedBox(width: 20.toWidth),
                               RaisedButton(
                                 onPressed: widget.onAssign,
-                                child: Text('Assign'),
+                                child: Text(AppTranslations.of(context)
+                                    .text('orders_page_assign')),
                               ),
                             ],
                           )
                         : widget.esOrder.dIsPreparing
                             ? RaisedButton(
                                 onPressed: widget.onMarkReady,
-                                child: Text('Ready'),
+                                child: Text(AppTranslations.of(context)
+                                    .text('orders_page_ready')),
                               )
                             : SizedBox.shrink(),
                   ],
@@ -495,7 +506,8 @@ class _CardExpandedView extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Text(
-                      "Order Items",
+                      AppTranslations.of(context)
+                          .text('orders_page_order_items'),
                       style: Theme.of(context).textTheme.subtitle1.copyWith(
                           color: ListTileTheme.of(context).textColor,
                           fontWeight: FontWeight.bold),
@@ -539,7 +551,8 @@ class _CardExpandedView extends StatelessWidget {
                 ////////////////////////////////////
                 SizedBox(height: 20.toHeight),
                 Text(
-                  "Payment Details",
+                  AppTranslations.of(context)
+                      .text('orders_page_payment_details'),
                   style: Theme.of(context).textTheme.subtitle1.copyWith(
                       color: ListTileTheme.of(context).textColor,
                       fontWeight: FontWeight.bold),
@@ -562,13 +575,14 @@ class UpiPaymentRow extends StatelessWidget {
 
   const UpiPaymentRow({this.esOrder, this.onClick, this.buildContext});
 
-  Widget getForStatusPending() {
+  Widget getForStatusPending(BuildContext context) {
     return Row(
       children: <Widget>[
         Icon(Icons.access_time, size: 16),
         SizedBox(width: 4),
         Text(
-          EsOrderPaymentStatus.paymentString(esOrder.dPaymentStatus),
+          EsOrderPaymentStatus.getDisplayablePaymentString(
+              context, esOrder.dPaymentStatus),
           style: Theme.of(buildContext).textTheme.subtitle2.copyWith(
                 color: ListTileTheme.of(buildContext).textColor,
               ),
@@ -579,7 +593,7 @@ class UpiPaymentRow extends StatelessWidget {
               onClick(esOrder, EsOrderPaymentStatus.APPROVED);
             },
             child: Text(
-              "Mark Paid",
+              AppTranslations.of(context).text('orders_page_mark_paid'),
               style: TextStyle(
                 decoration: TextDecoration.underline,
                 color: Theme.of(buildContext).primaryColor,
@@ -589,13 +603,14 @@ class UpiPaymentRow extends StatelessWidget {
     );
   }
 
-  Widget getForStatusInitiated() {
+  Widget getForStatusInitiated(BuildContext context) {
     return Row(
       children: <Widget>[
         Icon(Icons.new_releases, size: 16, color: Colors.orange),
         SizedBox(width: 4),
         Text(
-          EsOrderPaymentStatus.paymentString(esOrder.dPaymentStatus),
+          EsOrderPaymentStatus.getDisplayablePaymentString(
+              context, esOrder.dPaymentStatus),
           style: Theme.of(buildContext).textTheme.subtitle2.copyWith(
                 color: ListTileTheme.of(buildContext).textColor,
               ),
@@ -606,7 +621,7 @@ class UpiPaymentRow extends StatelessWidget {
               onClick(esOrder, EsOrderPaymentStatus.APPROVED);
             },
             child: Text(
-              "Approve Payment",
+              AppTranslations.of(context).text('orders_page_approve_payment'),
               style: TextStyle(
                 decoration: TextDecoration.underline,
                 color: Theme.of(buildContext).primaryColor,
@@ -616,13 +631,14 @@ class UpiPaymentRow extends StatelessWidget {
     );
   }
 
-  Widget getForStatusApproved() {
+  Widget getForStatusApproved(BuildContext context) {
     return Row(
       children: <Widget>[
         Icon(Icons.done, size: 16, color: Theme.of(buildContext).primaryColor),
         SizedBox(width: 4),
         Text(
-          EsOrderPaymentStatus.paymentString(esOrder.dPaymentStatus),
+          EsOrderPaymentStatus.getDisplayablePaymentString(
+              context, esOrder.dPaymentStatus),
           style: Theme.of(buildContext).textTheme.subtitle2.copyWith(
                 color: ListTileTheme.of(buildContext).textColor,
               ),
@@ -633,7 +649,7 @@ class UpiPaymentRow extends StatelessWidget {
               onClick(esOrder, EsOrderPaymentStatus.REJECTED);
             },
             child: Text(
-              "Reject Payment",
+              AppTranslations.of(context).text('orders_page_reject_payment'),
               style: TextStyle(
                 decoration: TextDecoration.underline,
                 color: Theme.of(buildContext).errorColor,
@@ -643,13 +659,14 @@ class UpiPaymentRow extends StatelessWidget {
     );
   }
 
-  Widget getForStatusRejected() {
+  Widget getForStatusRejected(BuildContext context) {
     return Row(
       children: <Widget>[
         Icon(Icons.cancel, size: 16, color: Theme.of(buildContext).errorColor),
         SizedBox(width: 4),
         Text(
-          EsOrderPaymentStatus.paymentString(esOrder.dPaymentStatus),
+          EsOrderPaymentStatus.getDisplayablePaymentString(
+              context, esOrder.dPaymentStatus),
           style: Theme.of(buildContext).textTheme.subtitle2.copyWith(
                 color: ListTileTheme.of(buildContext).textColor,
               ),
@@ -660,7 +677,7 @@ class UpiPaymentRow extends StatelessWidget {
               onClick(esOrder, EsOrderPaymentStatus.APPROVED);
             },
             child: Text(
-              "Approve Payment",
+              AppTranslations.of(context).text('orders_page_approve_payment'),
               style: TextStyle(
                 decoration: TextDecoration.underline,
                 color: Theme.of(buildContext).primaryColor,
@@ -678,12 +695,12 @@ class UpiPaymentRow extends StatelessWidget {
         : Container(
             padding: EdgeInsets.only(top: 8),
             child: esOrder.dPaymentStatus == EsOrderPaymentStatus.PENDING
-                ? getForStatusPending()
+                ? getForStatusPending(context)
                 : esOrder.dPaymentStatus == EsOrderPaymentStatus.INITIATED
-                    ? getForStatusInitiated()
+                    ? getForStatusInitiated(context)
                     : esOrder.dPaymentStatus == EsOrderPaymentStatus.APPROVED
-                        ? getForStatusApproved()
-                        : getForStatusRejected(),
+                        ? getForStatusApproved(context)
+                        : getForStatusRejected(context),
           );
   }
 }
@@ -718,14 +735,15 @@ class _ChargesComponent extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Delivery Charges'),
+            Text(AppTranslations.of(context)
+                .text('orders_page_delivery_charges')),
             Text('\u{20B9} $_deliveryCharges')
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Other Charges'),
+            Text(AppTranslations.of(context).text('orders_page_other_charges')),
             Text('\u{20B9} $_otherCharges'),
           ],
         ),
@@ -734,7 +752,8 @@ class _ChargesComponent extends StatelessWidget {
           children: [
             Text(
               orderDetails.orderItems?.length.toString() +
-                  '  Item' +
+                  ' ' +
+                  AppTranslations.of(context).text('orders_page_item') +
                   (orderDetails.orderItems.length > 1 ? 's' : ''),
             ),
             Text(
@@ -748,7 +767,7 @@ class _ChargesComponent extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Total Amount'),
+            Text(AppTranslations.of(context).text('orders_page_total_amount')),
             Text(
               '\u{20B9} ${(_itemCharges + _deliveryCharges + _otherCharges).toStringAsFixed(2)}',
               style: Theme.of(context)

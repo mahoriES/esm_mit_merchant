@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/es_video_page/widgets/custom_input_field.dart';
@@ -23,7 +24,7 @@ class EsAddVideo extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Video'),
+        title: Text(AppTranslations.of(context).text('video_page_add_video')),
         centerTitle: false,
       ),
       body: SingleChildScrollView(
@@ -48,7 +49,9 @@ class EsAddVideo extends StatelessWidget {
                 SizedBox(
                   height: 30.toHeight,
                 ),
-                CustomInputField('Video Name', videoNameController),
+                CustomInputField(
+                    AppTranslations.of(context).text('video_page_video_name'),
+                    videoNameController),
                 // SizedBox(
                 //   height: 20.toHeight,
                 // ),
@@ -66,9 +69,11 @@ class EsAddVideo extends StatelessWidget {
                           context: context,
                           barrierDismissible: false,
                           builder: (context) => ResponseDialogue(
-                            'Submit Failed',
+                            AppTranslations.of(context)
+                                .text('video_page_submit_failed'),
                             message: snapshot.data.errorMessage ?? '',
-                            buttonText: 'dismiss',
+                            buttonText: AppTranslations.of(context)
+                                .text('video_page_dismiss'),
                           ),
                         );
                         _esVideoBloc.esVideoState.addVideoState =
@@ -81,10 +86,12 @@ class EsAddVideo extends StatelessWidget {
                           context: context,
                           barrierDismissible: false,
                           builder: (context) => ResponseDialogue(
-                            'Video Uploaded',
-                            message:
-                                'Your video may take some time in being processed. Please refresh after few minutes to get it in your feed.',
-                            buttonText: 'okay',
+                            AppTranslations.of(context)
+                                .text('video_page_video_uploaded'),
+                            message: AppTranslations.of(context)
+                                .text('video_page_video_uploaded_message'),
+                            buttonText: AppTranslations.of(context)
+                                .text('video_page_okay'),
                             onTap: () {
                               Navigator.of(context).pop();
                             },
@@ -95,7 +102,7 @@ class EsAddVideo extends StatelessWidget {
                       });
                     }
                     return FoSubmitButton(
-                      text: 'Save',
+                      text: AppTranslations.of(context).text('video_page_save'),
                       onPressed: () {
                         if (formKey.currentState.validate()) {
                           if (videoFile == null) {
@@ -103,9 +110,12 @@ class EsAddVideo extends StatelessWidget {
                               context: context,
                               barrierDismissible: false,
                               builder: (context) => ResponseDialogue(
-                                'Submit Failed',
-                                message: 'Please select a video file',
-                                buttonText: 'dismiss',
+                                AppTranslations.of(context)
+                                    .text('video_page_submit_failed'),
+                                message: AppTranslations.of(context)
+                                    .text('video_page_select_video_file'),
+                                buttonText: AppTranslations.of(context)
+                                    .text('video_page_dismiss'),
                               ),
                             );
                           } else {

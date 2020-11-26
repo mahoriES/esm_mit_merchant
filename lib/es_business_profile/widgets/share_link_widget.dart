@@ -30,7 +30,7 @@ class EsShareLink extends StatelessWidget {
                     Expanded(
                       flex: 5,
                       child: Text(
-                        AppTranslations.of(context).text('Store Link'),
+                        AppTranslations.of(context).text('profile_page_store_Link'),
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1
@@ -47,7 +47,7 @@ class EsShareLink extends StatelessWidget {
                             EsDynamicLinkSharing().shareLink(
                               parameters: snapshot.data.linkParameters,
                               text: AppTranslations.of(context)
-                                  .text('Share Your Store Link'),
+                                  .text('profile_page_share_your_store_link'),
                               storeName: snapshot
                                   .data.selectedBusinessInfo.businessName,
                             );
@@ -64,7 +64,7 @@ class EsShareLink extends StatelessWidget {
                       flex: 5,
                       child: Text(
                         AppTranslations.of(context).text(
-                            'Let your customers checkout your store directly through this link.'),
+                            'profile_page_link_description'),
                       ),
                     ),
                     Expanded(
@@ -101,7 +101,7 @@ class EsShareLink extends StatelessWidget {
                               (result) {
                                 Fluttertoast.showToast(
                                   msg: AppTranslations.of(context)
-                                      .text('Copied to Clipboard'),
+                                      .text('profile_page_copied_to_clipboard'),
                                 );
                               },
                             );

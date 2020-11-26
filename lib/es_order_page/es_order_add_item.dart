@@ -12,6 +12,9 @@ import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/es_order_page/widgets/select_variation_dialogue.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
+import 'package:sprintf/sprintf.dart';
+
+import '../app_translations.dart';
 
 class EsOrderAddItem extends StatefulWidget {
   static const routeName = '/addOrderItem';
@@ -101,7 +104,7 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Item'),
+        title: Text(AppTranslations.of(context).text("products_page_add_item")),
         automaticallyImplyLeading: true,
         actions: [
           IconButton(
@@ -142,8 +145,10 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
                         );
                       } else if (snapshot.data.items.length == 0) {
                         return EmptyList(
-                          titleText: 'No products found',
-                          subtitleText: "Press 'Add item' to add new products",
+                          titleText: AppTranslations.of(context)
+                              .text('products_page_no_products_found'),
+                          subtitleText: AppTranslations.of(context).text(
+                              'products_page_no_products_found_description'),
                         );
                       } else {
                         return NotificationListener<ScrollNotification>(
@@ -213,7 +218,10 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
                 },
                 child: Container(
                   child: Text(
-                    'Add ${selectedItems.length} item',
+                    sprintf(
+                        AppTranslations.of(context)
+                            .text('products_page_add_n_item'),
+                        [selectedItems.length]),
                     style: Theme.of(context).textTheme.subhead.copyWith(
                           color: Colors.white,
                         ),

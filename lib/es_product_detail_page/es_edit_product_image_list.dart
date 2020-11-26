@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
 
@@ -109,29 +110,30 @@ class _EsEditProductImageListState extends State<EsEditProductImageList> {
                                 : null,
                       ),
                       Container(
-                        child:
-                            snapshot.data.uploadingImages[index].isUploadFailed
-                                ? Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    child: Container(
-                                      height: 120,
-                                      width: 120,
-                                      color: Colors.white60,
-                                      child: Center(
-                                        child: Text(
-                                          'Upload failed',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .caption
-                                              .copyWith(
-                                                color: Colors.black,
-                                              ),
-                                        ),
-                                      ),
+                        child: snapshot
+                                .data.uploadingImages[index].isUploadFailed
+                            ? Positioned(
+                                top: 0,
+                                left: 0,
+                                child: Container(
+                                  height: 120,
+                                  width: 120,
+                                  color: Colors.white60,
+                                  child: Center(
+                                    child: Text(
+                                      AppTranslations.of(context)
+                                          .text('orders_image_upload_failed'),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .caption
+                                          .copyWith(
+                                            color: Colors.black,
+                                          ),
                                     ),
-                                  )
-                                : null,
+                                  ),
+                                ),
+                              )
+                            : null,
                       ),
                       Container(
                         child:
