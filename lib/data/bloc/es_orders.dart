@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
@@ -251,6 +252,8 @@ class EsOrdersBloc {
         .esPost(
             EsApiPaths.postOrderRequestDeliveryAgent(orderId), payloadString)
         .then((httpResponse) {
+      debugPrint("payload => $payloadString");
+
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
         this._esOrdersState.submittingStatus = DataState.SUCCESS;
         var createdBusinessInfo =
@@ -428,8 +431,10 @@ class EsOrdersState {
 
   String errorMessage;
 
-  List<String> get selectedDeliveryAgentIds =>
-      agents.map((e) => e.deliveryagentId).toList();
+  List<String> get selectedDeliveryAgentIds => agents
+      .where((element) => element.dIsSelected)
+      .map((e) => e.deliveryagentId)
+      .toList();
 
   EsOrdersState() {
     ordersListStatus = {
