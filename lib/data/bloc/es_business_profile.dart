@@ -8,6 +8,7 @@ import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:foore/data/model/es_media.dart';
 import 'package:foore/widgets/image_cropper.dart';
+import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -260,6 +261,31 @@ class EsBusinessProfileBloc {
 
   setIsSubmitting(bool isSubmitting) {
     this._esBusinessProfileState.isSubmitting = isSubmitting;
+    this._updateState();
+  }
+
+  updateLocationField(PickResult result) async {
+    String _address = "";
+
+    result.addressComponents.forEach((element) {
+      debugPrint(
+          "address comp => ${element.longName} && ${element.shortName} && ${element.types}");
+
+      if (element.types.contains("premise") ||
+          element.types.contains("sublocality") ||
+          element.types.contains("locality")) {
+        _address = _address == ""
+            ? element.longName
+            : "$_address , ${element.longName}";
+      } else if (element.types.contains("administrative_area_level_2")) {
+        cityEditController.text = element.longName;
+      } else if (element.types.contains("postal_code")) {
+        pinCodeEditController.text = element.longName;
+      }
+    });
+    addressEditController.text = result.formattedAddress ?? _address;
+    setCurrentLocationPoint(
+        result.geometry.location.lat, result.geometry.location.lng);
     this._updateState();
   }
 
@@ -516,7 +542,7 @@ class EsBusinessProfileBloc {
   }
 
   setCurrentLocationPoint(lat, lng) {
-    esdyPrint(lat + lng);
+    esdyPrint(lat.toString() + lng.toString());
     this._esBusinessProfileState.currentLocationPoint =
         EsLocationPoint(lat: lat, lon: lng);
     this._updateState();

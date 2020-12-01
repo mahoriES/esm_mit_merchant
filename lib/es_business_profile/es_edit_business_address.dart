@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_business_profile.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 
 class EsEditBusinessAddressPage extends StatefulWidget {
   static const routeName = '/create-business-page';
@@ -27,15 +29,15 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
 
   getPosition() async {
     try {
-      Position pos = await getLastKnownPosition();
+      Position pos = await Geolocator.getLastKnownPosition();
       print(pos);
       if (pos != null) {
         widget.esBusinessProfileBloc
             .setCurrentLocationPoint(pos.latitude, pos.longitude);
       } else {
         print(pos);
-        Position posCurrent =
-            await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        Position posCurrent = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high);
         if (posCurrent != null) {
           widget.esBusinessProfileBloc.setCurrentLocationPoint(
               posCurrent.latitude, posCurrent.longitude);
@@ -82,16 +84,6 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
     super.initState();
   }
 
-  // Set<Marker> markers = Set.from([]);
-
-  // setMarkers(LatLng latLang) async {
-  //   final Marker marker =
-  //       Marker(markerId: MarkerId('foMarker'), position: latLang);
-  //   setState(() {
-  //     this.markers = Set.from([marker]);
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     onSuccess() {
@@ -102,16 +94,38 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
       this._showFailedAlertDialog();
     }
 
-    submit() {
-      if (this._formKey.currentState.validate()) {
+    submit(bool isLocationValid) {
+      if (this._formKey.currentState.validate() && isLocationValid) {
         widget.esBusinessProfileBloc.updateAddress(onSuccess, onFail);
+      } else {
+        Fluttertoast.showToast(msg: "Invalid Address");
       }
+    }
+
+    navigateToMap(LatLng initialPosition) async {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PlacePicker(
+            apiKey: "AIzaSyBGRrg0YVy9U3SUF34GoAeGbUP_s5RAYAY",
+            initialPosition: initialPosition,
+            onPlacePicked: (result) async {
+              await widget.esBusinessProfileBloc.updateLocationField(result);
+              WidgetsBinding.instance
+                  .addPostFrameCallback((timeStamp) => Navigator.pop(context));
+            },
+            useCurrentLocation: true,
+            autocompleteTypes: ["address"],
+          ),
+        ),
+      );
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppTranslations.of(context).text('profile_page_update_business_address'),
+          AppTranslations.of(context)
+              .text('profile_page_update_business_address'),
         ),
       ),
       body: Form(
@@ -123,31 +137,6 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
               if (!snapshot.hasData) {
                 return Container();
               }
-              var latLang = LatLng(
-                0,
-                0,
-              );
-              Set<Marker> markers = Set.from([]);
-              if (snapshot.data.currentLocationPoint != null) {
-                latLang = LatLng(
-                  snapshot.data.currentLocationPoint.lat ?? 0,
-                  snapshot.data.currentLocationPoint.lon ?? 0,
-                );
-                // this.setMarkers(latLang);
-                final Marker marker =
-                    Marker(markerId: MarkerId('foMarker'), position: latLang);
-                markers = Set.from([marker]);
-                _isReady.future.then((controller) {
-                  controller.moveCamera(
-                    CameraUpdate.newCameraPosition(
-                      CameraPosition(
-                        target: latLang,
-                        zoom: 14.4746,
-                      ),
-                    ),
-                  );
-                });
-              }
               return Scrollbar(
                 child: ListView(
                   children: <Widget>[
@@ -158,65 +147,23 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
                         left: 20,
                         right: 20,
                       ),
-                      child: TextFormField(
-                        controller:
-                            widget.esBusinessProfileBloc.addressEditController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: AppTranslations.of(context).text('profile_page_address'),
+                      child: GestureDetector(
+                        onTap: () => navigateToMap(LatLng(
+                          snapshot.data.currentLocationPoint.lat,
+                          snapshot.data.currentLocationPoint.lon,
+                        )),
+                        child: TextFormField(
+                          controller: widget
+                              .esBusinessProfileBloc.addressEditController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: AppTranslations.of(context)
+                                .text('profile_page_address'),
+                          ),
+                          maxLines: 5,
+                          minLines: 1,
+                          enabled: false,
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: TextFormField(
-                        controller:
-                            widget.esBusinessProfileBloc.pinCodeEditController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: AppTranslations.of(context).text('profile_page_pincode'),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: TextFormField(
-                        controller:
-                            widget.esBusinessProfileBloc.cityEditController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: AppTranslations.of(context).text('profile_page_city'),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 200,
-                      // width: 500,
-                      padding: EdgeInsets.all(20),
-                      child: GoogleMap(
-                        mapType: MapType.normal,
-                        initialCameraPosition: CameraPosition(
-                          target: latLang,
-                          zoom: 14.4746,
-                        ),
-                        onMapCreated: (GoogleMapController controller) {
-                          _isReady.complete(controller);
-                        },
-                        markers: markers,
-                        onCameraMove: (CameraPosition position) {},
-                        onTap: (LatLng latLng) {
-                          widget.esBusinessProfileBloc.setCurrentLocationPoint(
-                              latLng.latitude, latLang.longitude);
-                          // this.setMarkers(latLang);
-                        },
                       ),
                     ),
                   ],
@@ -232,7 +179,10 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
             }
             return FoSubmitButton(
               text: AppTranslations.of(context).text('generic_save'),
-              onPressed: submit,
+              onPressed: () => submit(
+                snapshot.data.currentLocationPoint.lat != null &&
+                    snapshot.data.currentLocationPoint.lon != null,
+              ),
               isLoading: snapshot.data.isSubmitting,
             );
           }),

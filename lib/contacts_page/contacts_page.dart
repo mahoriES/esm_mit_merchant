@@ -57,27 +57,23 @@ class _ContactsPageState extends State<ContactsPage>
   }
 
   Future<bool> getPermissions() async {
-    bool isGranted = false;
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.contacts);
-    isGranted = permission.value == PermissionStatus.granted.value;
+    bool isGranted = await Permission.contacts.status.isGranted;
     if (!isGranted) {
-      bool shouldShowPermissionDialog = await PermissionHandler()
-          .shouldShowRequestPermissionRationale(PermissionGroup.contacts);
+      bool shouldShowPermissionDialog =
+          await Permission.contacts.shouldShowRequestRationale;
+      // .shouldShowRequestPermissionRationale(PermissionGroup.contacts);
       if (permissionDeniedCount == 0) {
-        Map<PermissionGroup, PermissionStatus> permissions =
-            await PermissionHandler()
-                .requestPermissions([PermissionGroup.contacts]);
-        isGranted = permissions[PermissionGroup.contacts]?.value ==
-            PermissionStatus.granted.value;
+        PermissionStatus _permissionStatus =
+            await Permission.contacts.request();
+        isGranted = _permissionStatus == PermissionStatus.granted;
       } else if (shouldShowPermissionDialog) {
-        Map<PermissionGroup, PermissionStatus> permissions =
-            await PermissionHandler()
-                .requestPermissions([PermissionGroup.contacts]);
-        isGranted = permissions[PermissionGroup.contacts]?.value ==
-            PermissionStatus.granted.value;
+        PermissionStatus _permissionStatus =
+            await Permission.contacts.request();
+
+        isGranted = _permissionStatus == PermissionStatus.granted;
+        // PermissionStatus.granted.value;
       } else if (permissionDeniedCount > 0) {
-        await PermissionHandler().openAppSettings();
+        await openAppSettings();
         Navigator.of(context).pop();
       }
     }
