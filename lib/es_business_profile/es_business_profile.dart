@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/es_address_bloc.dart';
 import 'package:foore/data/bloc/es_business_profile.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/http_service.dart';
@@ -93,7 +94,10 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
   addAddress() async {
     await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) =>
-            EsEditBusinessAddressPage(this.esBusinessProfileBloc)));
+            EsEditBusinessAddressPage(this.esBusinessProfileBloc)))
+            .then(
+              (value) => Provider.of<EsAddressBloc>(context).reset(),
+            );
   }
 
   addDescription() async {

@@ -217,7 +217,7 @@ class EsBusinessProfileBloc {
   }
 
   addAddress(
-      payload, Function onUpdateBusinessSuccess, Function onUpdateError) async {
+     EsAddressPayload payload, Function onUpdateBusinessSuccess, Function onUpdateError) async {
     this._esBusinessProfileState.isSubmitting = true;
     this._esBusinessProfileState.isSubmitFailed = false;
     this._esBusinessProfileState.isSubmitSuccess = false;
@@ -356,23 +356,6 @@ class EsBusinessProfileBloc {
     this.updateBusiness(payload, onSuccess, onFail);
   }
 
-  updateAddress(onSuccess, onFail) {
-    var address = EsAddressPayload(
-      addressName: '',
-      geoAddr: EsGeoAddr(
-        city: cityEditController.text,
-        pincode: pinCodeEditController.text,
-      ),
-      lat: _esBusinessProfileState.currentLocationPoint != null
-          ? _esBusinessProfileState.currentLocationPoint.lat
-          : 0,
-      lon: _esBusinessProfileState.currentLocationPoint != null
-          ? _esBusinessProfileState.currentLocationPoint.lon
-          : 0,
-      prettyAddress: addressEditController.text,
-    );
-    this.addAddress(address, onSuccess, onFail);
-  }
 
   addPhone(onSuccess, onFail) {
     var phones = List<String>();

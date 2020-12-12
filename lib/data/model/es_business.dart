@@ -338,19 +338,39 @@ class EsLocationPoint {
 class EsGeoAddr {
   String pincode;
   String city;
+  String landmark;
+  String house;
 
-  EsGeoAddr({this.pincode, this.city});
+  EsGeoAddr({this.pincode, this.city, this.house, this.landmark});
 
   EsGeoAddr.fromJson(Map<String, dynamic> json) {
     pincode = json['pincode'];
     city = json['city'];
+    landmark = json['landmark'];
+    house = json['house'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['pincode'] = this.pincode;
     data['city'] = this.city;
+    data['landmark'] = this.landmark;
+    data['house'] = this.house;
     return data;
+  }
+
+  copyWith({
+    String pincode,
+    String city,
+    String landmark,
+    String house,
+  }) {
+    return EsGeoAddr(
+      pincode: pincode ?? this.pincode,
+      city: city ?? this.city,
+      landmark: landmark ?? this.landmark,
+      house: house ?? this.house,
+    );
   }
 }
 
@@ -566,6 +586,22 @@ class EsAddressPayload {
       data['geo_addr'] = this.geoAddr.toJson();
     }
     return data;
+  }
+
+  copyWith({
+    String addressName,
+    String prettyAddress,
+    double lat,
+    double lon,
+    EsGeoAddr geoAddr,
+  }) {
+    return EsAddressPayload(
+      addressName: addressName ?? this.addressName,
+      prettyAddress: prettyAddress ?? this.prettyAddress,
+      lat: lat ?? this.lat,
+      lon: lon ?? this.lon,
+      geoAddr: geoAddr ?? this.geoAddr,
+    );
   }
 }
 

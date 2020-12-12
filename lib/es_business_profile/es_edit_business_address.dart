@@ -1,13 +1,12 @@
-import 'dart:async';
-import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
+import 'package:foore/data/bloc/es_address_bloc.dart';
 import 'package:foore/data/bloc/es_business_profile.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_place_picker/google_maps_place_picker.dart';
+import 'package:foore/data/model/es_business.dart';
+import 'package:foore/es_address_picker_view/add_new_address_view.dart/add_new_address_view.dart';
+import 'package:provider/provider.dart';
 
 class EsEditBusinessAddressPage extends StatefulWidget {
   static const routeName = '/create-business-page';
@@ -21,32 +20,9 @@ class EsEditBusinessAddressPage extends StatefulWidget {
       EsEditBusinessAddressPageState();
 }
 
-class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
-    with AfterLayoutMixin<EsEditBusinessAddressPage> {
-  final _formKey = GlobalKey<FormState>();
-
-  Completer<GoogleMapController> _isReady = Completer();
-
-  getPosition() async {
-    try {
-      Position pos = await Geolocator.getLastKnownPosition();
-      print(pos);
-      if (pos != null) {
-        widget.esBusinessProfileBloc
-            .setCurrentLocationPoint(pos.latitude, pos.longitude);
-      } else {
-        print(pos);
-        Position posCurrent = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
-        if (posCurrent != null) {
-          widget.esBusinessProfileBloc.setCurrentLocationPoint(
-              posCurrent.latitude, posCurrent.longitude);
-        }
-      }
-    } catch (err) {
-      print(err);
-    }
-  }
+class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage> {
+  EsAddressBloc esAddressBloc;
+  TextEditingController addressTextController;
 
   _showFailedAlertDialog() async {
     await showDialog(
@@ -70,17 +46,10 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
   }
 
   @override
-  void afterFirstLayout(BuildContext context) {
-    getPosition();
-  }
-
-  Future<bool> _onWillPop() async {
-    Navigator.pop(context);
-    return false;
-  }
-
-  @override
   void initState() {
+    esAddressBloc = Provider.of<EsAddressBloc>(context, listen: false);
+    addressTextController = new TextEditingController(
+        text: widget.esBusinessProfileBloc.addressEditController.text);
     super.initState();
   }
 
@@ -94,99 +63,86 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage>
       this._showFailedAlertDialog();
     }
 
-    submit(bool isLocationValid) {
-      if (this._formKey.currentState.validate() && isLocationValid) {
-        widget.esBusinessProfileBloc.updateAddress(onSuccess, onFail);
+    submit(bool isLocationValid, EsAddressPayload addressPayload) {
+      if (isLocationValid) {
+        widget.esBusinessProfileBloc.addAddress(
+          addressPayload,
+          onSuccess,
+          onFail,
+        );
       } else {
         Fluttertoast.showToast(msg: "Invalid Address");
       }
     }
 
-    navigateToMap(LatLng initialPosition) async {
+    navigateToMap() async {
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => PlacePicker(
-            apiKey: "AIzaSyBGRrg0YVy9U3SUF34GoAeGbUP_s5RAYAY",
-            initialPosition: initialPosition,
-            onPlacePicked: (result) async {
-              await widget.esBusinessProfileBloc.updateLocationField(result);
-              WidgetsBinding.instance
-                  .addPostFrameCallback((timeStamp) => Navigator.pop(context));
-            },
-            useCurrentLocation: true,
-            autocompleteTypes: ["address"],
-          ),
+          builder: (context) => AddNewAddressView(),
         ),
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          AppTranslations.of(context)
-              .text('profile_page_update_business_address'),
-        ),
-      ),
-      body: Form(
-        key: _formKey,
-        onWillPop: _onWillPop,
-        child: StreamBuilder<EsBusinessProfileState>(
-            stream: widget.esBusinessProfileBloc.createBusinessObservable,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Container();
-              }
-              return Scrollbar(
-                child: ListView(
-                  children: <Widget>[
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
+    return StreamBuilder<EsAddressState>(
+      stream: esAddressBloc.esAddressStateObservable,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Container();
+        }
+
+        addressTextController.text =
+            snapshot.data.selectedAddressRequest?.prettyAddress ??
+                widget.esBusinessProfileBloc.addressEditController.text;
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              AppTranslations.of(context)
+                  .text('profile_page_update_business_address'),
+            ),
+          ),
+          body: Scrollbar(
+            child: ListView(
+              children: <Widget>[
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 24.0,
+                    left: 20,
+                    right: 20,
+                  ),
+                  child: GestureDetector(
+                    onTap: () => navigateToMap(),
+                    child: TextFormField(
+                      controller: addressTextController,
+                      decoration: InputDecoration(
+                        enabled: false,
+                        border: OutlineInputBorder(),
+                        labelText: AppTranslations.of(context)
+                            .text('profile_page_address'),
                       ),
-                      child: GestureDetector(
-                        onTap: () => navigateToMap(LatLng(
-                          snapshot.data.currentLocationPoint.lat,
-                          snapshot.data.currentLocationPoint.lon,
-                        )),
-                        child: TextFormField(
-                          controller: widget
-                              .esBusinessProfileBloc.addressEditController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: AppTranslations.of(context)
-                                .text('profile_page_address'),
-                          ),
-                          maxLines: 5,
-                          minLines: 1,
-                          enabled: false,
-                        ),
-                      ),
+                      maxLines: 5,
+                      minLines: 1,
+                      enabled: false,
                     ),
-                  ],
+                  ),
                 ),
-              );
-            }),
-      ),
-      floatingActionButton: StreamBuilder<EsBusinessProfileState>(
-          stream: widget.esBusinessProfileBloc.createBusinessObservable,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Container();
-            }
-            return FoSubmitButton(
-              text: AppTranslations.of(context).text('generic_save'),
-              onPressed: () => submit(
-                snapshot.data.currentLocationPoint.lat != null &&
-                    snapshot.data.currentLocationPoint.lon != null,
-              ),
-              isLoading: snapshot.data.isSubmitting,
-            );
-          }),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+              ],
+            ),
+          ),
+          floatingActionButton: FoSubmitButton(
+            text: AppTranslations.of(context).text('generic_save'),
+            onPressed: () => submit(
+              !snapshot.data.isLocationNull,
+              snapshot.data.selectedAddressRequest,
+            ),
+            isLoading: snapshot.data.addressStatus == LaodingStatus.LOADING,
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+        );
+      },
     );
   }
 }
