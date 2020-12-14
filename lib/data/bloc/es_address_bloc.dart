@@ -92,14 +92,6 @@ class EsAddressBloc {
   }
 
   addAddress() {
-    // esAddressState.tempAddressRequest =
-    //     esAddressState.tempAddressRequest.copyWith(
-    //   addressName: "",
-    //   geoAddr: esAddressState.tempAddressRequest.geoAddr.copyWith(
-    //     house: house,
-    //     landmark: landMark,
-    //   ),
-    // );
     esAddressState.selectedAddressRequest = new EsAddressPayload(
       addressName: "",
       prettyAddress: esAddressState.prettyAddress,

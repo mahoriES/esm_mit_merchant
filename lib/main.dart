@@ -56,7 +56,7 @@ void main() {
             dispose: (context, value) => value.dispose(),
           ),
           Provider<EsAddressBloc>(
-            builder: (context) => EsAddressBloc(),
+            create: (context) => EsAddressBloc(),
             dispose: (context, value) => value.dispose(),
           ),
         ],

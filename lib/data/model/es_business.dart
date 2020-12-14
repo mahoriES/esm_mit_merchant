@@ -358,20 +358,6 @@ class EsGeoAddr {
     data['house'] = this.house;
     return data;
   }
-
-  copyWith({
-    String pincode,
-    String city,
-    String landmark,
-    String house,
-  }) {
-    return EsGeoAddr(
-      pincode: pincode ?? this.pincode,
-      city: city ?? this.city,
-      landmark: landmark ?? this.landmark,
-      house: house ?? this.house,
-    );
-  }
 }
 
 class EsTiming {
@@ -586,22 +572,6 @@ class EsAddressPayload {
       data['geo_addr'] = this.geoAddr.toJson();
     }
     return data;
-  }
-
-  copyWith({
-    String addressName,
-    String prettyAddress,
-    double lat,
-    double lon,
-    EsGeoAddr geoAddr,
-  }) {
-    return EsAddressPayload(
-      addressName: addressName ?? this.addressName,
-      prettyAddress: prettyAddress ?? this.prettyAddress,
-      lat: lat ?? this.lat,
-      lon: lon ?? this.lon,
-      geoAddr: geoAddr ?? this.geoAddr,
-    );
   }
 }
 
