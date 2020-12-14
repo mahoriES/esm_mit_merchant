@@ -14,11 +14,11 @@ class ConfirmLocationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    EsAddressBloc _esVideoBloc =
+    EsAddressBloc _esAddressBloc =
         Provider.of<EsAddressBloc>(context, listen: false);
 
     return StreamBuilder<EsAddressState>(
-      stream: _esVideoBloc.esAddressStateObservable,
+      stream: _esAddressBloc.esAddressStateObservable,
       builder: (context, snapshot) {
         return Container(
           padding: EdgeInsets.all(20.toWidth),

@@ -8,10 +8,8 @@ import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:foore/data/model/es_media.dart';
 import 'package:foore/widgets/image_cropper.dart';
-import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'es_businesses.dart';
 import 'es_link_sharing.dart';
 
@@ -34,7 +32,6 @@ class EsBusinessProfileBloc {
   final notificationPhoneEditingControllers = TextEditingController();
   final notificationEmailEditingControllers = TextEditingController();
   final noticeEditController = TextEditingController();
-  
 
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
@@ -216,8 +213,11 @@ class EsBusinessProfileBloc {
     }
   }
 
-  addAddress(
-     EsAddressPayload payload, Function onUpdateBusinessSuccess, Function onUpdateError) async {
+  addAddress(EsAddressPayload payload, Function onUpdateBusinessSuccess,
+      Function onUpdateError) async {
+    payload.addressName =
+        this._esBusinessProfileState.selectedBusinessInfo.businessName;
+
     this._esBusinessProfileState.isSubmitting = true;
     this._esBusinessProfileState.isSubmitFailed = false;
     this._esBusinessProfileState.isSubmitSuccess = false;
@@ -225,9 +225,10 @@ class EsBusinessProfileBloc {
     this._updateState();
     try {
       var httpResponse = await this.httpService.esPut(
-          EsApiPaths.putUpdateBusinessAddress(
-              this._esBusinessProfileState.selectedBusinessInfo.businessId),
-          payloadString);
+            EsApiPaths.putUpdateBusinessAddress(
+                this._esBusinessProfileState.selectedBusinessInfo.businessId),
+            payloadString,
+          );
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
         this._esBusinessProfileState.isSubmitting = false;
         this._esBusinessProfileState.isSubmitFailed = false;
@@ -261,31 +262,6 @@ class EsBusinessProfileBloc {
 
   setIsSubmitting(bool isSubmitting) {
     this._esBusinessProfileState.isSubmitting = isSubmitting;
-    this._updateState();
-  }
-
-  updateLocationField(PickResult result) async {
-    String _address = "";
-
-    result.addressComponents.forEach((element) {
-      debugPrint(
-          "address comp => ${element.longName} && ${element.shortName} && ${element.types}");
-
-      if (element.types.contains("premise") ||
-          element.types.contains("sublocality") ||
-          element.types.contains("locality")) {
-        _address = _address == ""
-            ? element.longName
-            : "$_address , ${element.longName}";
-      } else if (element.types.contains("administrative_area_level_2")) {
-        cityEditController.text = element.longName;
-      } else if (element.types.contains("postal_code")) {
-        pinCodeEditController.text = element.longName;
-      }
-    });
-    addressEditController.text = result.formattedAddress ?? _address;
-    setCurrentLocationPoint(
-        result.geometry.location.lat, result.geometry.location.lng);
     this._updateState();
   }
 
@@ -355,7 +331,6 @@ class EsBusinessProfileBloc {
     var payload = EsUpdateBusinessPayload(upiStatus: status);
     this.updateBusiness(payload, onSuccess, onFail);
   }
-
 
   addPhone(onSuccess, onFail) {
     var phones = List<String>();

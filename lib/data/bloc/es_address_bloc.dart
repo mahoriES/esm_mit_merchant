@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/data/constants/string_constants.dart';
 import 'package:foore/data/model/es_business.dart';
@@ -40,11 +41,9 @@ class EsAddressBloc {
 
       getAddressForLocation(_latLng);
 
-      esAddressState.tempAddressRequest =
-          esAddressState.tempAddressRequest.copyWith(
-        lat: position.latitude,
-        lon: position.longitude,
-      );
+      esAddressState.locationPoints =
+          LatLng(position.latitude, position.longitude);
+
       esAddressState.addressStatus = LaodingStatus.SUCCESS;
     } catch (e) {
       esAddressState.addressStatus = LaodingStatus.FAILURE;
@@ -64,17 +63,13 @@ class EsAddressBloc {
       );
 
       if (address != null && address.isNotEmpty) {
-        esAddressState.tempAddressRequest =
-            esAddressState.tempAddressRequest.copyWith(
-          prettyAddress: address.first.addressLine,
-          geoAddr: esAddressState.tempAddressRequest.geoAddr.copyWith(
-            pincode: address.first.postalCode,
-            city: address.first.subLocality,
-          ),
-        );
+        esAddressState.prettyAddress = address.first.addressLine;
+        esAddressState.pinCode = address.first.postalCode;
+        esAddressState.city = address.first.subLocality;
+
         esAddressState.addressStatus = LaodingStatus.SUCCESS;
       } else {
-        throw ("");
+        throw Exception();
       }
     } catch (e) {
       esAddressState.addressStatus = LaodingStatus.FAILURE;
@@ -85,11 +80,8 @@ class EsAddressBloc {
   }
 
   updateMarkerPosition(LatLng position) {
-    esAddressState.tempAddressRequest =
-        esAddressState.tempAddressRequest.copyWith(
-      lat: position.latitude,
-      lon: position.longitude,
-    );
+    esAddressState.locationPoints =
+        LatLng(position.latitude, position.longitude);
     _updateState();
   }
 
@@ -99,16 +91,27 @@ class EsAddressBloc {
     _updateState();
   }
 
-  addAddress(String house, String landMark) {
-    esAddressState.tempAddressRequest =
-        esAddressState.tempAddressRequest.copyWith(
+  addAddress() {
+    // esAddressState.tempAddressRequest =
+    //     esAddressState.tempAddressRequest.copyWith(
+    //   addressName: "",
+    //   geoAddr: esAddressState.tempAddressRequest.geoAddr.copyWith(
+    //     house: house,
+    //     landmark: landMark,
+    //   ),
+    // );
+    esAddressState.selectedAddressRequest = new EsAddressPayload(
       addressName: "",
-      geoAddr: esAddressState.tempAddressRequest.geoAddr.copyWith(
-        house: house,
-        landmark: landMark,
+      prettyAddress: esAddressState.prettyAddress,
+      lat: esAddressState.locationPoints.latitude,
+      lon: esAddressState.locationPoints.longitude,
+      geoAddr: new EsGeoAddr(
+        pincode: esAddressState.pinCode,
+        city: esAddressState.city,
+        house: esAddressState.houseNumberController.text,
+        landmark: esAddressState.landMarkController.text,
       ),
     );
-    esAddressState.selectedAddressRequest = esAddressState.tempAddressRequest;
     _updateState();
   }
 
@@ -125,11 +128,8 @@ class EsAddressBloc {
 
       if (geocodingResponse.isOkay || geocodingResponse.hasNoResults) {
         esAddressState.placesSearchResponse = geocodingResponse;
-
-        print(
-            "got suggestions => ${esAddressState.placesSearchResponse.predictions.length}");
       } else {
-        throw ("");
+        throw Exception();
       }
     } catch (e) {
       Fluttertoast.showToast(msg: "Some Error Occured");
@@ -148,33 +148,32 @@ class EsAddressBloc {
 
       if (placesDetailsResponse.isOkay) {
         final PlaceDetails placeDetails = placesDetailsResponse.result;
-        String pinCode = "";
-        String city = "";
+        String _pinCode = "";
+        String _city = "";
 
         placeDetails.addressComponents.forEach((element) {
           if (element.types.contains("postal_code")) {
-            pinCode = element.longName ?? "";
+            _pinCode = element.longName ?? "";
           } else if (element.types.contains("administrative_area_level_2")) {
-            city = element.longName ?? "";
+            _city = element.longName ?? "";
           }
         });
 
         esAddressState.suggestionsStatus = LaodingStatus.SUCCESS;
-        esAddressState.tempAddressRequest =
-            esAddressState.tempAddressRequest.copyWith(
-          prettyAddress: placeDetails.formattedAddress,
-          lat: placeDetails.geometry.location.lat,
-          lon: placeDetails.geometry.location.lng,
-          geoAddr: esAddressState.tempAddressRequest.geoAddr.copyWith(
-            pincode: pinCode,
-            city: city,
-          ),
-        );
+
+        esAddressState.prettyAddress = placeDetails.formattedAddress;
+        esAddressState.locationPoints = LatLng(
+            placeDetails.geometry.location.lat,
+            placeDetails.geometry.location.lng);
+        esAddressState.pinCode = _pinCode;
+        esAddressState.city = _city;
+
+        esAddressState.sessionToken = new Uuid().v4();
       } else if (placesDetailsResponse.hasNoResults) {
         Fluttertoast.showToast(msg: "No Results Found");
         esAddressState.suggestionsStatus = LaodingStatus.FAILURE;
       } else {
-        throw ("");
+        throw Exception();
       }
     } catch (e) {
       esAddressState.suggestionsStatus = LaodingStatus.FAILURE;
@@ -198,26 +197,32 @@ class EsAddressState {
   List<EsAddressPayload> savedAddressList;
   LaodingStatus addressStatus;
   LaodingStatus suggestionsStatus;
-  EsAddressPayload tempAddressRequest;
   EsAddressPayload selectedAddressRequest;
   PlacesAutocompleteResponse placesSearchResponse;
   String sessionToken;
-
-  LatLng get location => LatLng(tempAddressRequest.lat, tempAddressRequest.lon);
+  String prettyAddress;
+  LatLng locationPoints;
+  String pinCode;
+  String city;
+  TextEditingController houseNumberController;
+  TextEditingController landMarkController;
 
   bool get isLocationNull =>
-      tempAddressRequest?.lat == null || tempAddressRequest?.lon == null;
-
-  String get prettyAddress => tempAddressRequest.prettyAddress ?? "";
+      locationPoints?.latitude == null || locationPoints?.longitude == null;
 
   EsAddressState() {
     this.savedAddressList = [];
     this.addressStatus = LaodingStatus.IDLE;
     this.suggestionsStatus = LaodingStatus.IDLE;
-    this.tempAddressRequest = EsAddressPayload(geoAddr: new EsGeoAddr());
     this.selectedAddressRequest = null;
     placesSearchResponse = null;
     sessionToken = new Uuid().v4();
+    prettyAddress = "";
+    locationPoints = null;
+    pinCode = null;
+    city = null;
+    houseNumberController = new TextEditingController();
+    landMarkController = new TextEditingController();
   }
 }
 

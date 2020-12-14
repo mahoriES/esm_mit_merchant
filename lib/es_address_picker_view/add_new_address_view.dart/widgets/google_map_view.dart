@@ -13,19 +13,19 @@ class GoogleMapView extends StatefulWidget {
 
 class _GoogleMapViewState extends State<GoogleMapView> {
   Completer<GoogleMapController> _controller = Completer();
-  EsAddressBloc _esVideoBloc;
+  EsAddressBloc _esAddressBloc;
 
   @override
   void initState() {
-    _esVideoBloc = Provider.of<EsAddressBloc>(context, listen: false);
-    _esVideoBloc.getInitialLocation();
+    _esAddressBloc = Provider.of<EsAddressBloc>(context, listen: false);
+    _esAddressBloc.getInitialLocation();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<EsAddressState>(
-      stream: _esVideoBloc.esAddressStateObservable,
+      stream: _esAddressBloc.esAddressStateObservable,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container();
@@ -39,7 +39,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                   mapController.animateCamera(
                     CameraUpdate.newCameraPosition(
                       CameraPosition(
-                          target: snapshot.data.location, zoom: 14.4746),
+                          target: snapshot.data.locationPoints, zoom: 14.4746),
                     ),
                   );
                 },
@@ -51,19 +51,19 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           // _esVideoBloc.resetSearchDetails();
         }
 
-        return snapshot.data.isLocationNull || snapshot.data.location == null
+        return snapshot.data.isLocationNull
             ? Center(child: CircularProgressIndicator())
             : GoogleMap(
                 mapType: MapType.normal,
                 initialCameraPosition: CameraPosition(
-                  target: snapshot.data.location,
+                  target: snapshot.data.locationPoints,
                   zoom: 14.4746,
                 ),
                 markers: Set<Marker>.from(
                   [
                     new Marker(
                       markerId: new MarkerId("pinLocation"),
-                      position: snapshot.data.location,
+                      position: snapshot.data.locationPoints,
                     ),
                   ],
                 ),
@@ -73,10 +73,11 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                 zoomGesturesEnabled: true,
                 zoomControlsEnabled: false,
                 onCameraMove: (CameraPosition position) =>
-                    _esVideoBloc.updateMarkerPosition(position.target),
+                    _esAddressBloc.updateMarkerPosition(position.target),
                 onCameraIdle: () {
                   debugPrint("*********************** on Idle");
-                  _esVideoBloc.getAddressForLocation(snapshot.data.location);
+                  _esAddressBloc
+                      .getAddressForLocation(snapshot.data.locationPoints);
                 },
                 onCameraMoveStarted: widget.goToConfirmLocation,
                 myLocationEnabled: true,

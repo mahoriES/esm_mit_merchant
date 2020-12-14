@@ -18,26 +18,25 @@ class AddressDetailsWidget extends StatefulWidget {
 }
 
 class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
-  final TextEditingController houseNumberController =
-      new TextEditingController();
-
-  final TextEditingController landMarkController = new TextEditingController();
-
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
-  EsAddressBloc _esVideoBloc;
+  EsAddressBloc _esAddressBloc;
 
   @override
   void initState() {
-    _esVideoBloc = Provider.of<EsAddressBloc>(context, listen: false);
+    _esAddressBloc = Provider.of<EsAddressBloc>(context, listen: false);
+    _esAddressBloc.esAddressState.houseNumberController.text = "";
+    _esAddressBloc.esAddressState.landMarkController.text = "";
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<EsAddressState>(
-      stream: _esVideoBloc.esAddressStateObservable,
+      stream: _esAddressBloc.esAddressStateObservable,
       builder: (context, snapshot) {
+        if (!snapshot.hasData) return Container();
+
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           if (snapshot.data?.addressStatus == LaodingStatus.LOADING) {
             LoadingDialog.show();
@@ -45,6 +44,7 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
             LoadingDialog.hide();
           }
         });
+
         return Container(
           padding: EdgeInsets.all(20.toWidth),
           color: Colors.white,
@@ -95,14 +95,14 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
                     children: [
                       InputField(
                         hintText: "address_page_house_number".localize,
-                        controller: houseNumberController,
+                        controller: snapshot.data.houseNumberController,
                         onChanged: (s) {
                           setState(() {});
                         },
                       ),
                       InputField(
                         hintText: "address_page_landmark".localize,
-                        controller: landMarkController,
+                        controller: snapshot.data.landMarkController,
                         onChanged: (s) {
                           setState(() {});
                         },
@@ -120,14 +120,12 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
                     if (formKey.currentState.validate()) {
                       debugPrint("is validated **********");
                       Navigator.pop(context);
-                      _esVideoBloc.addAddress(
-                        houseNumberController.text,
-                        landMarkController.text,
-                      );
+                      _esAddressBloc.addAddress();
                     }
                   },
-                  isDisabled: landMarkController.text.trim() == "" ||
-                      houseNumberController.text.trim() == "",
+                  isDisabled:
+                      snapshot.data.landMarkController.text.trim() == "" ||
+                          snapshot.data.houseNumberController.text.trim() == "",
                 ),
               ],
             ),
