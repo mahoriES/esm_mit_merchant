@@ -91,7 +91,7 @@ class _SearchAddressViewState extends State<SearchAddressView> {
                                       index)
                                   ? snapshot.data.placesSearchResponse
                                       ?.predictions[index]?.description
-                                  : "dummy",
+                                  : "",
                             ),
                           ),
                         ),

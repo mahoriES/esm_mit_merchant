@@ -368,5 +368,6 @@
 	"address_page_change": "CHANGE",
 	"address_page_search_location": "Search Location",
 	"address_page_select_location": "Select Location",
-	"address_page_confirm_location": "Confirm Location"
+	"address_page_confirm_location": "Confirm Location",
+	"address_page_invalid_address": "Invalid Address"
 }
