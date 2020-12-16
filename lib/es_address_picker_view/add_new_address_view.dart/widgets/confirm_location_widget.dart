@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:foore/app_colors.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_address_bloc.dart';
 import 'package:foore/es_address_picker_view/widgets/action_button.dart';
 import 'package:foore/es_address_picker_view/widgets/topTile.dart';
 import 'package:foore/services/sizeconfig.dart';
-import 'package:foore/utils/extensions.dart';
 import 'package:provider/provider.dart';
 
 class ConfirmLocationCard extends StatelessWidget {
@@ -28,10 +28,13 @@ class ConfirmLocationCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              TopTile("address_page_select_location".localize),
+              TopTile(AppTranslations.of(context)
+                  .text("address_page_select_location")),
               SizedBox(height: 14.toHeight),
               Text(
-                ("address_page_your_location".localize).toUpperCase(),
+                AppTranslations.of(context)
+                    .text("address_page_your_location")
+                    .toUpperCase(),
                 style: AppTextStyles.body2Faded,
               ),
               SizedBox(height: 8.toHeight),
@@ -53,7 +56,8 @@ class ConfirmLocationCard extends StatelessWidget {
               ),
               SizedBox(height: 20.toHeight),
               ActionButton(
-                text: "address_page_confirm_location".localize,
+                text: AppTranslations.of(context)
+                    .text("address_page_confirm_location"),
                 onTap: goToAddressDetails,
                 isDisabled: false,
               ),

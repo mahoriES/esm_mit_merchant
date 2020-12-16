@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foore/app_colors.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_address_bloc.dart';
 import 'package:foore/services/sizeconfig.dart';
-import 'package:foore/utils/extensions.dart';
 import 'package:provider/provider.dart';
 
 class SearchAddressView extends StatefulWidget {
@@ -24,7 +24,7 @@ class _SearchAddressViewState extends State<SearchAddressView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "address_page_search_location".localize,
+          AppTranslations.of(context).text("address_page_search_location"),
           style: AppTextStyles.topTileTitle,
         ),
       ),

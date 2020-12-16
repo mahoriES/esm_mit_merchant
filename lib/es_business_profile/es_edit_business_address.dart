@@ -7,7 +7,6 @@ import 'package:foore/data/bloc/es_business_profile.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:foore/es_address_picker_view/add_new_address_view.dart/add_new_address_view.dart';
 import 'package:provider/provider.dart';
-import 'package:foore/utils/extensions.dart';
 
 class EsEditBusinessAddressPage extends StatefulWidget {
   static const routeName = '/create-business-page';
@@ -31,11 +30,14 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage> {
       barrierDismissible: true, // user must tap button for close dialog!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('generic_submit_failed'.localize),
-          content: Text("generic_please_please_try_again".localize),
+          title:
+              Text(AppTranslations.of(context).text('generic_submit_failed')),
+          content: Text(AppTranslations.of(context)
+              .text("generic_please_please_try_again")),
           actions: <Widget>[
             FlatButton(
-              child: Text('video_page_dismiss'.localize),
+              child:
+                  Text(AppTranslations.of(context).text('video_page_dismiss')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -77,7 +79,10 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage> {
             onFail,
           );
         } else {
-          Fluttertoast.showToast(msg: "address_page_invalid_address".localize);
+          Fluttertoast.showToast(
+            msg: AppTranslations.of(context)
+                .text("address_page_invalid_address"),
+          );
         }
       }
     }

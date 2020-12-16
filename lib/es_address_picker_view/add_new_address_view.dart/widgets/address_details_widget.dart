@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foore/app_colors.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_address_bloc.dart';
 import 'package:foore/es_address_picker_view/search_view/search_view.dart';
 import 'package:foore/es_address_picker_view/widgets/action_button.dart';
@@ -8,7 +9,6 @@ import 'package:foore/es_address_picker_view/widgets/topTile.dart';
 import 'package:foore/widgets/loading_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:foore/services/sizeconfig.dart';
-import 'package:foore/utils/extensions.dart';
 
 class AddressDetailsWidget extends StatefulWidget {
   const AddressDetailsWidget({Key key}) : super(key: key);
@@ -54,10 +54,13 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                TopTile("address_page_enter_address_details".localize),
+                TopTile(AppTranslations.of(context)
+                    .text("address_page_enter_address_details")),
                 SizedBox(height: 14.toHeight),
                 Text(
-                  ("address_page_your_location".localize).toUpperCase(),
+                  (AppTranslations.of(context)
+                          .text("address_page_your_location"))
+                      .toUpperCase(),
                   style: AppTextStyles.body2Faded,
                 ),
                 SizedBox(height: 8.toHeight),
@@ -78,7 +81,9 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
                     SizedBox(width: 12.toWidth),
                     TextButton(
                       child: Text(
-                        ("address_page_change".localize).toUpperCase(),
+                        (AppTranslations.of(context)
+                                .text("address_page_change"))
+                            .toUpperCase(),
                         style: AppTextStyles.body2Secondary,
                       ),
                       onPressed: () => Navigator.of(context).pushNamed(
@@ -94,14 +99,16 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       InputField(
-                        hintText: "address_page_house_number".localize,
+                        hintText: AppTranslations.of(context)
+                            .text("address_page_house_number"),
                         controller: snapshot.data.houseNumberController,
                         onChanged: (s) {
                           setState(() {});
                         },
                       ),
                       InputField(
-                        hintText: "address_page_landmark".localize,
+                        hintText: AppTranslations.of(context)
+                            .text("address_page_landmark"),
                         controller: snapshot.data.landMarkController,
                         onChanged: (s) {
                           setState(() {});
@@ -113,7 +120,8 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
                 ),
                 SizedBox(height: 20.toHeight),
                 ActionButton(
-                  text: "address_page_save_address".localize,
+                  text: AppTranslations.of(context)
+                      .text("address_page_save_address"),
                   icon: null,
                   onTap: () {
                     print("ontap");
