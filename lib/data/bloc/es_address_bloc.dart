@@ -202,6 +202,13 @@ class EsAddressState {
   bool get isLocationNull =>
       locationPoints?.latitude == null || locationPoints?.longitude == null;
 
+  bool get isAddressUpdated => selectedAddressRequest != null;
+
+  bool get isSelectedAddressValid =>
+      selectedAddressRequest != null &&
+      selectedAddressRequest?.lat != null &&
+      selectedAddressRequest?.lon != null;
+
   EsAddressState() {
     this.savedAddressList = [];
     this.addressStatus = LaodingStatus.IDLE;

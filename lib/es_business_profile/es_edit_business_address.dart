@@ -64,15 +64,21 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage> {
       this._showFailedAlertDialog();
     }
 
-    submit(bool isLocationValid, EsAddressPayload addressPayload) {
-      if (isLocationValid) {
-        widget.esBusinessProfileBloc.addAddress(
-          addressPayload,
-          onSuccess,
-          onFail,
-        );
-      } else {
-        Fluttertoast.showToast(msg: "address_page_invalid_address".localize);
+    submit(
+      bool isAddressUpdated,
+      bool isUpdatedAddressValid,
+      EsAddressPayload addressPayload,
+    ) {
+      if (isAddressUpdated) {
+        if (isUpdatedAddressValid) {
+          widget.esBusinessProfileBloc.addAddress(
+            addressPayload,
+            onSuccess,
+            onFail,
+          );
+        } else {
+          Fluttertoast.showToast(msg: "address_page_invalid_address".localize);
+        }
       }
     }
 
@@ -135,7 +141,8 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage> {
           floatingActionButton: FoSubmitButton(
             text: AppTranslations.of(context).text('generic_save'),
             onPressed: () => submit(
-              !snapshot.data.isLocationNull,
+              snapshot.data.isAddressUpdated,
+              snapshot.data.isSelectedAddressValid,
               snapshot.data.selectedAddressRequest,
             ),
             isLoading: snapshot.data.addressStatus == LaodingStatus.LOADING,

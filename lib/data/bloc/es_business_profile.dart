@@ -215,8 +215,10 @@ class EsBusinessProfileBloc {
 
   addAddress(EsAddressPayload payload, Function onUpdateBusinessSuccess,
       Function onUpdateError) async {
-    payload.addressName =
-        this._esBusinessProfileState.selectedBusinessInfo.businessName;
+    if (payload != null) {
+      payload.addressName =
+          this._esBusinessProfileState.selectedBusinessInfo.businessName;
+    }
 
     this._esBusinessProfileState.isSubmitting = true;
     this._esBusinessProfileState.isSubmitFailed = false;
