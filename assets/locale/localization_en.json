@@ -122,7 +122,7 @@
     "create_business_page_circle": "Circle",
     "create_business_page_get_in_touch_to_get_circle_code": "Get in touch with us to get Circle code",
 	"create_business_page_save": "save",
-	
+ 
 	"generic_save": "save",
 	"generic_confirm": "Confirm",
 	"generic_cancel": "Cancel",
@@ -134,7 +134,7 @@
 	"generic_please_check_internet_connection": "Please check your internet connection and try again.",
 	"generic_submit_failed": "Submit failed",
 	"generic_please_please_try_again": "Please try again..",
-	
+ 
 	"merchant_profile_page_title": "Create profile",
 	"merchant_profile_page_name": "Name",
 
@@ -358,5 +358,16 @@
 	"category_page_sub_category_name": "Sub Category name",
 	"category_page_select_a_category": "Select a category",
 	"category_page_no_categories_found": "No categories found",
-	"category_page_no_categories_found_message": "Press 'Add category' to add new categories"
+	"category_page_no_categories_found_message": "Press 'Add category' to add new categories",
+	
+	"address_page_enter_address_details": "Enter Address Details",
+	"address_page_your_location": "Your Location",
+	"address_page_house_number": "Enter House no. / Flat no. / Bungalow name ",
+	"address_page_landmark": "Enter Landmark / Directions",
+	"address_page_save_address": "Save Address",
+	"address_page_change": "CHANGE",
+	"address_page_search_location": "Search Location",
+	"address_page_select_location": "Select Location",
+	"address_page_confirm_location": "Confirm Location",
+	"address_page_invalid_address": "Invalid Address"
 }

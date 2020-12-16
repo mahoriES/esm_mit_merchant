@@ -139,9 +139,10 @@ class EsSelectBusiness extends PreferredSize {
                   return Container();
                 }
                 return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SafeArea(
+                    Flexible(
+                      child: SafeArea(
                       child: Container(
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
@@ -180,6 +181,7 @@ class EsSelectBusiness extends PreferredSize {
                         ),
                       ),
                     ),
+                   ),
                     allowChange
                         ? Transform.rotate(
                             angle: pi / 2,

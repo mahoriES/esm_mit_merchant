@@ -290,7 +290,8 @@ class _EsOrderCardState extends State<EsOrderCard> {
                             ),
                           ),
                           SizedBox(width: 10.toWidth),
-                          Column(
+                          Flexible(
+                            child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
@@ -325,8 +326,10 @@ class _EsOrderCardState extends State<EsOrderCard> {
                               ),
                             ],
                           ),
+                        ),
                         ],
                       ),
+                      SizedBox(height: 4.toHeight),
                     ] else ...[
                       Text(
                         widget.esOrder.dDeliveryType(context),

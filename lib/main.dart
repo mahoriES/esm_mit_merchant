@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:foore/app_translations_delegate.dart';
 import 'package:foore/crashlytics_delegate.dart';
 import 'package:foore/theme/light.dart';
+import 'package:foore/utils/navigation_delegate.dart';
 import 'package:provider/provider.dart';
 import 'data/bloc/analytics.dart';
+import 'data/bloc/es_address_bloc.dart';
 import 'data/bloc/es_businesses.dart';
 import 'data/bloc/login.dart';
 import 'data/bloc/onboarding_guard.dart';
@@ -51,6 +53,10 @@ void main() {
           ),
           Provider<AppTranslationsBloc>(
             builder: (context) => AppTranslationsBloc(),
+            dispose: (context, value) => value.dispose(),
+          ),
+          Provider<EsAddressBloc>(
+            create: (context) => EsAddressBloc(),
             dispose: (context, value) => value.dispose(),
           ),
         ],
@@ -126,6 +132,8 @@ class _ReviewAppState extends State<ReviewApp>
             debugShowCheckedModeBanner: false,
             initialRoute: AppRouter.homeRoute,
             onGenerateRoute: router.routeGenerator,
+            navigatorKey: NavigationHandler.navigatorKey,
+            navigatorObservers: [NavigationHandler.routeObserver],
             localizationsDelegates: [
               snapshot.data.localeDelegate,
               GlobalMaterialLocalizations.delegate,

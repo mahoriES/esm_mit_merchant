@@ -10,7 +10,6 @@ import 'package:foore/data/model/es_media.dart';
 import 'package:foore/widgets/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'es_businesses.dart';
 import 'es_link_sharing.dart';
 
@@ -33,7 +32,6 @@ class EsBusinessProfileBloc {
   final notificationPhoneEditingControllers = TextEditingController();
   final notificationEmailEditingControllers = TextEditingController();
   final noticeEditController = TextEditingController();
-  
 
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
@@ -215,8 +213,13 @@ class EsBusinessProfileBloc {
     }
   }
 
-  addAddress(
-      payload, Function onUpdateBusinessSuccess, Function onUpdateError) async {
+  addAddress(EsAddressPayload payload, Function onUpdateBusinessSuccess,
+      Function onUpdateError) async {
+    if (payload != null) {
+      payload.addressName =
+          this._esBusinessProfileState.selectedBusinessInfo.businessName;
+    }
+
     this._esBusinessProfileState.isSubmitting = true;
     this._esBusinessProfileState.isSubmitFailed = false;
     this._esBusinessProfileState.isSubmitSuccess = false;
@@ -224,9 +227,10 @@ class EsBusinessProfileBloc {
     this._updateState();
     try {
       var httpResponse = await this.httpService.esPut(
-          EsApiPaths.putUpdateBusinessAddress(
-              this._esBusinessProfileState.selectedBusinessInfo.businessId),
-          payloadString);
+            EsApiPaths.putUpdateBusinessAddress(
+                this._esBusinessProfileState.selectedBusinessInfo.businessId),
+            payloadString,
+          );
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
         this._esBusinessProfileState.isSubmitting = false;
         this._esBusinessProfileState.isSubmitFailed = false;
@@ -328,24 +332,6 @@ class EsBusinessProfileBloc {
   updateUpiStatus(bool status, onSuccess, onFail) {
     var payload = EsUpdateBusinessPayload(upiStatus: status);
     this.updateBusiness(payload, onSuccess, onFail);
-  }
-
-  updateAddress(onSuccess, onFail) {
-    var address = EsAddressPayload(
-      addressName: '',
-      geoAddr: EsGeoAddr(
-        city: cityEditController.text,
-        pincode: pinCodeEditController.text,
-      ),
-      lat: _esBusinessProfileState.currentLocationPoint != null
-          ? _esBusinessProfileState.currentLocationPoint.lat
-          : 0,
-      lon: _esBusinessProfileState.currentLocationPoint != null
-          ? _esBusinessProfileState.currentLocationPoint.lon
-          : 0,
-      prettyAddress: addressEditController.text,
-    );
-    this.addAddress(address, onSuccess, onFail);
   }
 
   addPhone(onSuccess, onFail) {
@@ -516,7 +502,7 @@ class EsBusinessProfileBloc {
   }
 
   setCurrentLocationPoint(lat, lng) {
-    esdyPrint(lat + lng);
+    esdyPrint(lat.toString() + lng.toString());
     this._esBusinessProfileState.currentLocationPoint =
         EsLocationPoint(lat: lat, lon: lng);
     this._updateState();
