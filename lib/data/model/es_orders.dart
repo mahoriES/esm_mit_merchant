@@ -131,11 +131,11 @@ class EsOrder {
   get dPaymentStatus {
     return paymentInfo == null
         ? EsOrderPaymentStatus.PENDING
-        : paymentInfo.status;
+        : paymentInfo.paymentStatus;
   }
 
   get dPaymentDateTimeString {
-    return paymentInfo == null ? null : paymentInfo.dt;
+    return paymentInfo == null ? null : paymentInfo.lastUpdated;
   }
 
   get dIsStatusNew {
@@ -611,13 +611,13 @@ class EsOrderPaymentInfo {
   ///   II) APPROVED : Merchant approved payment
   ///   III) REJECTED : Merchant rejected the payment claim
   ///
-  String status;
-  String dt;
+  String paymentStatus;
+  String lastUpdated;
 
   String get dTransactionTime {
-    if (this.dt != null) {
-      var lastInteractionDate = DateTime.parse(this.dt).toLocal();
-      var formatter = new DateFormat(' d MMM, hh:mm a');
+    if (this.lastUpdated != null) {
+      final lastInteractionDate = DateTime.parse(this.lastUpdated).toLocal();
+      final formatter = new DateFormat(' d MMM, hh:mm a');
       String timeText = formatter.format(lastInteractionDate);
       return timeText;
     }
@@ -628,6 +628,10 @@ class EsOrderPaymentInfo {
   /// e.g. Direct UPI, Deutsche bank, PayTM, OlaMoney etc.
   ///
   String paymentMadeVia;
+
+  String get dPaymentMadeVia {
+    return paymentMadeVia != null ? paymentMadeVia : '';
+  }
 
   /// Amount paid via the [paymentMadeVia] channel in paise. This may be different
   /// than the order total billed amount
@@ -641,19 +645,23 @@ class EsOrderPaymentInfo {
   }
 
   EsOrderPaymentInfo(
-      {this.upi, this.status, this.dt, this.paymentMadeVia, this.amount});
+      {this.upi,
+      this.paymentStatus,
+      this.lastUpdated,
+      this.paymentMadeVia,
+      this.amount});
   EsOrderPaymentInfo.fromJson(Map<String, dynamic> json) {
     upi = json['upi'];
-    status = json['status'];
-    dt = json['dt'];
+    paymentStatus = json['status'];
+    lastUpdated = json['dt'];
     amount = json['amount'];
     paymentMadeVia = json['via'];
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['upi'] = this.upi;
-    data['status'] = this.status;
-    data['dt'] = this.dt;
+    data['status'] = this.paymentStatus;
+    data['dt'] = this.lastUpdated;
     data['via'] = paymentMadeVia;
     data['amount'] = amount;
     return data;

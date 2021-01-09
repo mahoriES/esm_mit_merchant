@@ -580,7 +580,7 @@ class PaymentStatusRow extends StatelessWidget {
   IconData get paymentStatusIcon {
     final EsOrderPaymentInfo paymentInfo = esOrder.paymentInfo;
     IconData paymentStatusIcon = Icons.access_time;
-    switch (paymentInfo.status) {
+    switch (paymentInfo.paymentStatus) {
       // Old statuses
       case EsOrderPaymentStatus.INITIATED:
         paymentStatusIcon = Icons.new_releases;
@@ -609,7 +609,7 @@ class PaymentStatusRow extends StatelessWidget {
   Color getPaymentStatusIconColor(BuildContext context) {
     final EsOrderPaymentInfo paymentInfo = esOrder.paymentInfo;
     Color paymentStatusIconColor = Theme.of(context).errorColor;
-    switch (paymentInfo.status) {
+    switch (paymentInfo.paymentStatus) {
       // Old statuses
       case EsOrderPaymentStatus.INITIATED:
         paymentStatusIconColor = Colors.orange;
@@ -639,7 +639,7 @@ class PaymentStatusRow extends StatelessWidget {
     final EsOrderPaymentInfo paymentInfo = esOrder.paymentInfo;
     String paymentString =
         AppTranslations.of(context).text('orders_page_payemnt_pending');
-    switch (paymentInfo.status) {
+    switch (paymentInfo.paymentStatus) {
       // Old statuses
       case EsOrderPaymentStatus.INITIATED:
         paymentString =
@@ -657,7 +657,7 @@ class PaymentStatusRow extends StatelessWidget {
       // Todo: Add translations.
       case EsOrderPaymentStatus.SUCCESS:
         paymentString =
-            'Paid ${paymentInfo.dAmount} using ${paymentInfo.paymentMadeVia}';
+            'Paid ${paymentInfo.dAmount} using ${paymentInfo.dPaymentMadeVia}';
         break;
       case EsOrderPaymentStatus.FAIL:
         paymentString = 'Payment Failed';
@@ -672,11 +672,8 @@ class PaymentStatusRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return [
-      EsOrderStatus.CREATED,
-      // Removed Merchant Updated status for this check.
-      // EsOrderStatus.MERCHANT_UPDATED,
-    ].contains(esOrder.orderStatus)
+    // Removed Merchant Updated status for this check.
+    return esOrder.orderStatus == esOrder.orderStatus
         ? Container()
         : Row(
             children: <Widget>[

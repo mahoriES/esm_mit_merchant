@@ -408,12 +408,12 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
   bool isPaymentCompleted;
 
   get isShowPaymentConfirmationChecbox =>
-      widget.order?.paymentInfo?.status != EsOrderPaymentStatus.SUCCESS;
+      widget.order?.paymentInfo?.paymentStatus != EsOrderPaymentStatus.SUCCESS;
 
   @override
   void initState() {
-    isPaymentCompleted =
-        widget.order?.paymentInfo?.status == EsOrderPaymentStatus.SUCCESS;
+    isPaymentCompleted = widget.order?.paymentInfo?.paymentStatus ==
+        EsOrderPaymentStatus.SUCCESS;
     super.initState();
   }
 
