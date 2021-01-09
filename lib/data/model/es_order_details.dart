@@ -517,22 +517,42 @@ class Rating {
 
 class PaymentInfo {
   String upi;
+  /// The payment status of the order. Can have following possible values
+  ///   I) PENDING : Payment not done
+  ///   II) SUCCESS : Payment succeded. Could be online or COD.
+  ///   III) FAIL : Online payment failed
+  ///   IV) REFUNDED : Money refunded
+  ///
+  ///  Old Statuses:
+  ///   I) INITIATED : Customer marked paid
+  ///   II) APPROVED : Merchant approved payment
+  ///   III) REJECTED : Merchant rejected the payment claim
+  ///
   String status;
-  var dt;
-
-  PaymentInfo({this.upi, this.status, this.dt});
-
+  String dt;
+  /// A string containing info regarding the source of the payment
+  /// e.g. Direct UPI, Deutsche bank, PayTM, OlaMoney etc.
+  ///
+  String paymentMadeVia;
+  /// Amount paid via the [paymentMadeVia] channel in paise. This may be different
+  /// than the order total billed amount
+  ///
+  int amount;
+  PaymentInfo({this.upi, this.status, this.dt, this.paymentMadeVia, this.amount});
   PaymentInfo.fromJson(Map<String, dynamic> json) {
     upi = json['upi'];
     status = json['status'];
     dt = json['dt'];
+    amount = json['amount'];
+    paymentMadeVia = json['via'];
   }
-
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['upi'] = this.upi;
     data['status'] = this.status;
     data['dt'] = this.dt;
+    data['via'] = paymentMadeVia;
+    data['amount'] = amount;
     return data;
   }
 }
