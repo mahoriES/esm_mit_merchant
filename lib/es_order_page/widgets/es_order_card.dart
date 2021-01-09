@@ -10,7 +10,6 @@ import 'package:foore/es_order_page/es_order_details.dart';
 import 'package:foore/services/sizeconfig.dart';
 import 'package:foore/utils/utils.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'custom_expansion_tile.dart';

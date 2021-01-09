@@ -243,7 +243,8 @@ class OrdersAlertDialogs {
               }
 
               return AlertDialog(
-                title: Text(AppTranslations.of(context).text('orders_page_assign_order_popup_title')),
+                title: Text(AppTranslations.of(context)
+                    .text('orders_page_assign_order_popup_title')),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: snapshot.data.agents
@@ -404,15 +405,15 @@ class _CompleteOrderDialog extends StatefulWidget {
 }
 
 class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
-  String radioValue;
+  bool isPaymentCompleted;
+
+  get isShowPaymentConfirmationChecbox =>
+      widget.order?.paymentInfo?.status != EsOrderPaymentStatus.SUCCESS;
+
   @override
   void initState() {
-    debugPrint('initially ${widget.order.dPaymentStatus}');
-    if (widget.order.dPaymentStatus == EsOrderPaymentStatus.APPROVED ||
-        widget.order.dPaymentStatus == EsOrderPaymentStatus.REJECTED) {
-      radioValue = widget.order.dPaymentStatus;
-    } else
-      radioValue = "NA";
+    isPaymentCompleted =
+        widget.order?.paymentInfo?.status == EsOrderPaymentStatus.SUCCESS;
     super.initState();
   }
 
@@ -439,75 +440,50 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
       scrollable: true,
       title: Text(AppTranslations.of(context)
           .text('orders_page_complete_order_popup_title')),
-      content: Column(
+      content: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          RichText(
-            text: TextSpan(
-              text: 'Did you receive the payment of ',
-              style: Theme.of(context).textTheme.subtitle1,
-              children: <TextSpan>[
-                TextSpan(
-                  text: '${widget.order.dOrderTotal} ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+          if (isShowPaymentConfirmationChecbox)
+            Checkbox(
+                value: isPaymentCompleted,
+                onChanged: (isSelected) {
+                  setState(() {
+                    isPaymentCompleted = isSelected;
+                  });
+                }),
+          if (isShowPaymentConfirmationChecbox)
+            Expanded(
+              child: RichText(
+                softWrap: true,
+                text: TextSpan(
+                  text: 'I have received the COD payment of ',
+                  style: Theme.of(context).textTheme.subtitle1,
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: '${widget.order.dOrderTotal} ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text: 'for order ',
+                    ),
+                    TextSpan(
+                      text: ' #${widget.order.orderShortNumber}',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
-                TextSpan(
-                  text: 'for order ',
-                ),
-                TextSpan(
-                  text: ' #${widget.order.orderShortNumber}',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
+              ),
             ),
-          ),
-          ListTile(
-            leading: Radio(
-              value: EsOrderPaymentStatus.APPROVED,
-              visualDensity: VisualDensity.compact,
-              groupValue: radioValue,
-              onChanged: (v) {
-                setState(() {
-                  radioValue = v;
-                });
-              },
+          if (!isShowPaymentConfirmationChecbox)
+            Expanded(
+              child: Text('Do you want to mark this order as Completed?'),
             ),
-            title: Text(AppTranslations.of(context)
-                .text('orders_page_complete_order_popup_option_yes')),
-            contentPadding: EdgeInsets.zero,
-          ),
-          ListTile(
-            leading: Radio(
-              value: EsOrderPaymentStatus.REJECTED,
-              visualDensity: VisualDensity.compact,
-              groupValue: radioValue,
-              onChanged: (v) {
-                setState(() {
-                  radioValue = v;
-                });
-              },
-            ),
-            title: Text(AppTranslations.of(context)
-                .text('orders_page_complete_order_popup_option_no')),
-            contentPadding: EdgeInsets.zero,
-          ),
-          ListTile(
-            leading: Radio(
-              value: "NA",
-              visualDensity: VisualDensity.compact,
-              groupValue: radioValue,
-              onChanged: (v) {
-                setState(() {
-                  radioValue = v;
-                });
-              },
-            ),
-            title: Text(AppTranslations.of(context)
-                .text('orders_page_complete_order_popup_option_dont_know')),
-            contentPadding: EdgeInsets.zero,
-          ),
         ],
       ),
       actions: <Widget>[
+        SizedBox(
+          width: 8.0,
+        ),
         RaisedButton(
           color: Theme.of(context).errorColor,
           child: Text(
@@ -525,29 +501,33 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
           child: Text(
               AppTranslations.of(context).text('orders_page_mark_completed')),
           color: Theme.of(context).primaryColor,
-          onPressed: () async {
-            if (radioValue != widget.order.dPaymentStatus &&
-                radioValue != "NA") {
-              widget.esOrdersBloc.updateOrderPaymentStatus(
-                widget.order.orderId,
-                radioValue,
-                (a) {
-                  _markAsCompleted();
-                },
-                (error) {
-                  Navigator.of(widget.dialogContext, rootNavigator: true)
-                      .pop(false);
-                  showDialog(
-                    context: widget.dialogContext,
-                    builder: (context) =>
-                        ResponseDialogue(error ?? 'something went wrong'),
-                  );
-                },
-              );
-            } else
-              _markAsCompleted();
-          },
+          onPressed: isPaymentCompleted
+              ? () async {
+                  if (isShowPaymentConfirmationChecbox) {
+                    widget.esOrdersBloc.updateOrderPaymentStatus(
+                      widget.order.orderId,
+                      EsOrderPaymentStatus.APPROVED,
+                      (EsOrder updtedOrder) {
+                        _markAsCompleted();
+                      },
+                      (error) {
+                        Navigator.of(widget.dialogContext, rootNavigator: true)
+                            .pop(false);
+                        showDialog(
+                          context: widget.dialogContext,
+                          builder: (context) =>
+                              ResponseDialogue(error ?? 'something went wrong'),
+                        );
+                      },
+                    );
+                  } else
+                    _markAsCompleted();
+                }
+              : null,
         ),
+        SizedBox(
+          width: 8.0,
+        )
       ],
     );
   }
