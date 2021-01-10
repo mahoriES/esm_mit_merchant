@@ -673,7 +673,7 @@ class PaymentStatusRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Removed Merchant Updated status for this check.
-    return esOrder.orderStatus == esOrder.orderStatus
+    return esOrder.orderStatus == EsOrderStatus.CREATED
         ? Container()
         : Row(
             children: <Widget>[

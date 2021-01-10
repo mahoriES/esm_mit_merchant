@@ -551,20 +551,20 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                         businessInfo.notificationEmails,
                         this.esBusinessProfileBloc.deleteNotificationEmail,
                         addNotificationEmail),
-                    getHeaderWithSwitchWidget(
-                        AppTranslations.of(context).text("profile_page_sms_notifications"),
-                        businessInfo.notificationPhoneStatus,
-                        this
-                            .esBusinessProfileBloc
-                            .updateNotificationPhoneStatus),
-                    getChipTextListWidget(
-                        "+ " +
-                        AppTranslations.of(context).text("profile_page_add_phone"),
-                        businessInfo.notificationPhones,
-                        this
-                            .esBusinessProfileBloc
-                            .deleteNotificationPhoneWithNumber,
-                        addNotificationPhone),
+                    // getHeaderWithSwitchWidget(
+                    //     AppTranslations.of(context).text("profile_page_sms_notifications"),
+                    //     businessInfo.notificationPhoneStatus,
+                    //     this
+                    //         .esBusinessProfileBloc
+                    //         .updateNotificationPhoneStatus),
+                    // getChipTextListWidget(
+                    //     "+ " +
+                    //     AppTranslations.of(context).text("profile_page_add_phone"),
+                    //     businessInfo.notificationPhones,
+                    //     this
+                    //         .esBusinessProfileBloc
+                    //         .deleteNotificationPhoneWithNumber,
+                    //     addNotificationPhone),
                     //SizedBox(height: 120),
                   ],
                 );
