@@ -50,28 +50,6 @@ class EsOrderPaymentStatus {
   static const INITIATED = 'INITIATED';
   static const APPROVED = 'APPROVED';
   static const REJECTED = 'REJECTED';
-
-  // Deprecated
-  static String getDisplayablePaymentString(
-      BuildContext context, String paymentStatus) {
-    String paymentString =
-        AppTranslations.of(context).text('orders_page_payemnt_pending');
-    switch (paymentStatus) {
-      case EsOrderPaymentStatus.INITIATED:
-        paymentString =
-            AppTranslations.of(context).text('orders_page_customer_paid');
-        break;
-      case EsOrderPaymentStatus.APPROVED:
-        paymentString =
-            AppTranslations.of(context).text('orders_page_payment_approved');
-        break;
-      case EsOrderPaymentStatus.REJECTED:
-        paymentString =
-            AppTranslations.of(context).text('orders_page_payment_rejected');
-        break;
-    }
-    return paymentString;
-  }
 }
 
 class EsGetOrdersResponse {

@@ -579,95 +579,71 @@ class PaymentStatusRow extends StatelessWidget {
 
   IconData get paymentStatusIcon {
     final EsOrderPaymentInfo paymentInfo = esOrder.paymentInfo;
-    IconData paymentStatusIcon = Icons.access_time;
     switch (paymentInfo.paymentStatus) {
       // Old statuses
       case EsOrderPaymentStatus.INITIATED:
-        paymentStatusIcon = Icons.new_releases;
-
-        break;
+        return Icons.new_releases;
       case EsOrderPaymentStatus.APPROVED:
-        paymentStatusIcon = Icons.done;
-        break;
+        return Icons.done;
       case EsOrderPaymentStatus.REJECTED:
-        paymentStatusIcon = Icons.cancel;
-        break;
+        return Icons.cancel;
       // New statuses
       case EsOrderPaymentStatus.SUCCESS:
-        paymentStatusIcon = Icons.done;
-        break;
+        return Icons.done;
       case EsOrderPaymentStatus.FAIL:
-        paymentStatusIcon = Icons.warning;
-        break;
+        return Icons.warning;
       case EsOrderPaymentStatus.REFUNDED:
-        paymentStatusIcon = Icons.undo;
-        break;
+        return Icons.undo;
     }
-    return paymentStatusIcon;
+    return Icons.access_time;
   }
 
   Color getPaymentStatusIconColor(BuildContext context) {
     final EsOrderPaymentInfo paymentInfo = esOrder.paymentInfo;
-    Color paymentStatusIconColor = Theme.of(context).errorColor;
     switch (paymentInfo.paymentStatus) {
       // Old statuses
       case EsOrderPaymentStatus.INITIATED:
-        paymentStatusIconColor = Colors.orange;
-
-        break;
+        return Colors.orange;
       case EsOrderPaymentStatus.APPROVED:
-        paymentStatusIconColor = Theme.of(context).primaryColor;
-        break;
+        return Theme.of(context).primaryColor;
       case EsOrderPaymentStatus.REJECTED:
-        paymentStatusIconColor = Theme.of(context).errorColor;
-        break;
+        return Theme.of(context).errorColor;
       // New statuses
       case EsOrderPaymentStatus.SUCCESS:
-        paymentStatusIconColor = Colors.green;
-        break;
+        return Colors.green;
       case EsOrderPaymentStatus.FAIL:
-        paymentStatusIconColor = Theme.of(context).errorColor;
-        break;
+        return Theme.of(context).errorColor;
       case EsOrderPaymentStatus.REFUNDED:
-        paymentStatusIconColor = Colors.orange;
-        break;
+        return Colors.orange;
     }
-    return paymentStatusIconColor;
+    return Theme.of(context).errorColor;
   }
 
   String getDisplayablePaymentString(BuildContext context) {
     final EsOrderPaymentInfo paymentInfo = esOrder.paymentInfo;
-    String paymentString =
-        AppTranslations.of(context).text('orders_page_payemnt_pending');
     switch (paymentInfo.paymentStatus) {
       // Old statuses
       case EsOrderPaymentStatus.INITIATED:
-        paymentString =
-            AppTranslations.of(context).text('orders_page_customer_paid');
-        break;
+        return AppTranslations.of(context).text('orders_page_customer_paid');
+
       case EsOrderPaymentStatus.APPROVED:
-        paymentString =
-            AppTranslations.of(context).text('orders_page_payment_approved');
-        break;
+        return AppTranslations.of(context).text('orders_page_payment_approved');
+
       case EsOrderPaymentStatus.REJECTED:
-        paymentString =
-            AppTranslations.of(context).text('orders_page_payment_rejected');
-        break;
+        return AppTranslations.of(context).text('orders_page_payment_rejected');
+
       // New statuses
       // Todo: Add translations.
       case EsOrderPaymentStatus.SUCCESS:
-        paymentString =
-            'Paid ${paymentInfo.dAmount} using ${paymentInfo.dPaymentMadeVia}';
-        break;
+        return 'Paid ${paymentInfo.dAmount} using ${paymentInfo.dPaymentMadeVia}';
+
       case EsOrderPaymentStatus.FAIL:
-        paymentString = 'Payment Failed';
-        break;
+        return 'Payment Failed';
+
       case EsOrderPaymentStatus.REFUNDED:
-        paymentString =
-            'Refunded ${paymentInfo.dAmount} at ${paymentInfo.dTransactionTime}';
-        break;
+        return 'Refunded ${paymentInfo.dAmount} at ${paymentInfo.dTransactionTime}';
     }
-    return paymentString;
+    return AppTranslations.of(context).text('orders_page_payemnt_pending');
   }
 
   @override
