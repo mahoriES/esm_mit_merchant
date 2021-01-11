@@ -21,7 +21,6 @@ class EsOrderCard extends StatefulWidget {
   final Function() onMarkCompleted;
   final Function({bool popOnCompletion}) onCancel;
   final Function() onAssign;
-  final Function(String) onUpdatePaymentStatus;
   final Function(UpdateOrderPayload, {bool popOnCompletion}) onUpdateOrder;
   EsOrderCard(
     this.esOrder, {
@@ -30,7 +29,6 @@ class EsOrderCard extends StatefulWidget {
     @required this.onMarkCompleted,
     @required this.onCancel,
     @required this.onAssign,
-    @required this.onUpdatePaymentStatus,
     @required this.onUpdateOrder,
   });
 
@@ -148,8 +146,6 @@ class _EsOrderCardState extends State<EsOrderCard> {
                     ///// Order Payment status.
                     ////////////////////////////////////
                     PaymentStatusRow(
-                      onClick: (order, newStatus) =>
-                          widget.onUpdatePaymentStatus(newStatus),
                       esOrder: widget.esOrder,
                     ),
                     SizedBox(height: 12.toHeight),
@@ -572,10 +568,9 @@ class _CardExpandedView extends StatelessWidget {
 }
 
 class PaymentStatusRow extends StatelessWidget {
-  final Function(EsOrder, String) onClick;
   final EsOrder esOrder;
 
-  const PaymentStatusRow({this.esOrder, this.onClick});
+  const PaymentStatusRow({this.esOrder});
 
   IconData get paymentStatusIcon {
     final EsOrderPaymentInfo paymentInfo = esOrder.paymentInfo;

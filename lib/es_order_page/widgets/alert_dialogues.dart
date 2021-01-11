@@ -293,53 +293,6 @@ class OrdersAlertDialogs {
     );
   }
 
-  static showUpdateStatusAlertDialog({
-    @required String newStatus,
-    @required EsOrder order,
-    @required EsOrdersBloc esOrdersBloc,
-    @required BuildContext context,
-  }) async {
-    return await _showDialogCommon(
-      context: context,
-      esOrdersBloc: esOrdersBloc,
-      alertDialog: AlertDialog(
-        title: Container(),
-        content: Text(
-          sprintf(
-              AppTranslations.of(context)
-                  .text('orders_page_order_payment_status_update_popup_title'),
-              [newStatus]),
-        ),
-        actions: <Widget>[
-          RaisedButton(
-            color: Theme.of(context).errorColor,
-            child: Text(AppTranslations.of(context).text('orders_page_cancel')),
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop(false);
-            },
-          ),
-          RaisedButton(
-            child: Text(newStatus),
-            color: Theme.of(context).primaryColor,
-            onPressed: () {
-              esOrdersBloc.updateOrderPaymentStatus(order.orderId, newStatus,
-                  (a) {
-                Navigator.of(context, rootNavigator: true).pop(true);
-              }, (error) {
-                Navigator.of(context, rootNavigator: true).pop(false);
-                showDialog(
-                  context: context,
-                  builder: (context) =>
-                      ResponseDialogue(error ?? 'something went wrong'),
-                );
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
   static showUpdateOrderAlertDialog({
     @required EsOrder order,
     @required EsOrdersBloc esOrdersBloc,

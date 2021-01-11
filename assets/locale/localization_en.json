@@ -250,7 +250,6 @@
 	"orders_page_update_popup_title": "Do you want to update this order ?",
 	"orders_page_ready_for_pickup_popup_title": "Do you want to mark this order as Ready for pickup?",
 	"orders_page_not_have_delivery_partners": "You do not have any delivery partners. Please contact us if you need help onboarding delivery partners",
-	"orders_page_order_payment_status_update_popup_title": "'Do you want to update payment status of order to %s?'",
 	"orders_page_accept": "Accept",
 	"orders_page_no_items_added_error": "Add atleast 1 item to confirm this.",
 	"orders_page_customer_items_due_error": "Please Accept/Decline the list items first",
