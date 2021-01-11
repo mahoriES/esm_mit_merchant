@@ -409,7 +409,8 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
               child: RichText(
                 softWrap: true,
                 text: TextSpan(
-                  text: 'I have received the COD payment of ',
+                  text: AppTranslations.of(context)
+                      .text('orders_page_payment_confimation_cod_1'),
                   style: Theme.of(context).textTheme.subtitle1,
                   children: <TextSpan>[
                     TextSpan(
@@ -417,7 +418,8 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     TextSpan(
-                      text: 'for order ',
+                      text: AppTranslations.of(context)
+                          .text('orders_page_payment_confimation_cod_2'),
                     ),
                     TextSpan(
                       text: ' #${widget.order.orderShortNumber}',
@@ -429,7 +431,10 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
             ),
           if (!isShowPaymentConfirmationChecbox)
             Expanded(
-              child: Text('Do you want to mark this order as Completed?'),
+              child: Text(
+                AppTranslations.of(context)
+                    .text('orders_page_complete_confirmation_message'),
+              ),
             ),
         ],
       ),

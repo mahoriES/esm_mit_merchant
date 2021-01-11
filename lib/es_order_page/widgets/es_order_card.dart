@@ -11,6 +11,7 @@ import 'package:foore/services/sizeconfig.dart';
 import 'package:foore/utils/utils.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
+import 'package:sprintf/sprintf.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'custom_expansion_tile.dart';
 
@@ -628,15 +629,16 @@ class PaymentStatusRow extends StatelessWidget {
         return AppTranslations.of(context).text('orders_page_payment_rejected');
 
       // New statuses
-      // Todo: Add translations.
       case EsOrderPaymentStatus.SUCCESS:
-        return 'Paid ${paymentInfo.dAmount} using ${paymentInfo.dPaymentMadeVia}';
-
+        return sprintf(
+            AppTranslations.of(context).text('orders_page_payment_success'),
+            [paymentInfo.dAmount, paymentInfo.dPaymentMadeVia]);
       case EsOrderPaymentStatus.FAIL:
-        return 'Payment Failed';
-
+        return AppTranslations.of(context).text('orders_page_payment_failed');
       case EsOrderPaymentStatus.REFUNDED:
-        return 'Refunded ${paymentInfo.dAmount} at ${paymentInfo.dTransactionTime}';
+        return sprintf(
+            AppTranslations.of(context).text('orders_page_payment_refunded'),
+            [paymentInfo.dAmount, paymentInfo.dTransactionTime]);
     }
     return AppTranslations.of(context).text('orders_page_payemnt_pending');
   }
