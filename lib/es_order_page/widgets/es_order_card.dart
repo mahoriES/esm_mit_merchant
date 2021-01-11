@@ -11,6 +11,7 @@ import 'package:foore/services/sizeconfig.dart';
 import 'package:foore/utils/utils.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
+import 'package:sprintf/sprintf.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'custom_expansion_tile.dart';
 
@@ -21,7 +22,6 @@ class EsOrderCard extends StatefulWidget {
   final Function() onMarkCompleted;
   final Function({bool popOnCompletion}) onCancel;
   final Function() onAssign;
-  final Function(String) onUpdatePaymentStatus;
   final Function(UpdateOrderPayload, {bool popOnCompletion}) onUpdateOrder;
   EsOrderCard(
     this.esOrder, {
@@ -30,7 +30,6 @@ class EsOrderCard extends StatefulWidget {
     @required this.onMarkCompleted,
     @required this.onCancel,
     @required this.onAssign,
-    @required this.onUpdatePaymentStatus,
     @required this.onUpdateOrder,
   });
 
@@ -145,6 +144,14 @@ class _EsOrderCardState extends State<EsOrderCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ////////////////////////////////////
+                    ///// Order Payment status.
+                    ////////////////////////////////////
+                    PaymentStatusRow(
+                      esOrder: widget.esOrder,
+                    ),
+                    SizedBox(height: 12.toHeight),
+
+                    ////////////////////////////////////
                     ///// Order Number and status.
                     ////////////////////////////////////
                     Row(
@@ -207,17 +214,6 @@ class _EsOrderCardState extends State<EsOrderCard> {
                           .textTheme
                           .subtitle1
                           .copyWith(color: Theme.of(context).primaryColor),
-                    ),
-                    SizedBox(height: 6.toHeight),
-
-                    ////////////////////////////////////
-                    ///// Order Payment status.
-                    ////////////////////////////////////
-                    UpiPaymentRow(
-                      buildContext: context,
-                      onClick: (order, newStatus) =>
-                          widget.onUpdatePaymentStatus(newStatus),
-                      esOrder: widget.esOrder,
                     ),
                     SizedBox(height: 15.toHeight),
 
@@ -292,41 +288,42 @@ class _EsOrderCardState extends State<EsOrderCard> {
                           SizedBox(width: 10.toWidth),
                           Flexible(
                             child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.esOrder.dDeliveryType(context),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2
-                                    .copyWith(
-                                      color:
-                                          ListTileTheme.of(context).textColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                              Text(
-                                widget.esOrder.deliveryAddress.prettyAddress !=
-                                        null
-                                    ? widget
-                                        .esOrder.deliveryAddress.prettyAddress
-                                    : '',
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2
-                                    .copyWith(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .caption
-                                          .color,
-                                    ),
-                              ),
-                            ],
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.esOrder.dDeliveryType(context),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2
+                                      .copyWith(
+                                        color:
+                                            ListTileTheme.of(context).textColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                Text(
+                                  widget.esOrder.deliveryAddress
+                                              .prettyAddress !=
+                                          null
+                                      ? widget
+                                          .esOrder.deliveryAddress.prettyAddress
+                                      : '',
+                                  maxLines: 4,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2
+                                      .copyWith(
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .caption
+                                            .color,
+                                      ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
                         ],
                       ),
                       SizedBox(height: 4.toHeight),
@@ -571,139 +568,99 @@ class _CardExpandedView extends StatelessWidget {
   }
 }
 
-class UpiPaymentRow extends StatelessWidget {
-  final Function(EsOrder, String) onClick;
+class PaymentStatusRow extends StatelessWidget {
   final EsOrder esOrder;
-  final BuildContext buildContext;
 
-  const UpiPaymentRow({this.esOrder, this.onClick, this.buildContext});
+  const PaymentStatusRow({this.esOrder});
 
-  Widget getForStatusPending(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Icon(Icons.access_time, size: 16),
-        SizedBox(width: 4),
-        Text(
-          EsOrderPaymentStatus.getDisplayablePaymentString(
-              context, esOrder.dPaymentStatus),
-          style: Theme.of(buildContext).textTheme.subtitle2.copyWith(
-                color: ListTileTheme.of(buildContext).textColor,
-              ),
-        ),
-        Flexible(child: Container()),
-        InkWell(
-            onTap: () {
-              onClick(esOrder, EsOrderPaymentStatus.APPROVED);
-            },
-            child: Text(
-              AppTranslations.of(context).text('orders_page_mark_paid'),
-              style: TextStyle(
-                decoration: TextDecoration.underline,
-                color: Theme.of(buildContext).primaryColor,
-              ),
-            )),
-      ],
-    );
+  IconData get paymentStatusIcon {
+    final EsOrderPaymentInfo paymentInfo = esOrder.paymentInfo;
+    switch (paymentInfo.paymentStatus) {
+      // Old statuses
+      case EsOrderPaymentStatus.INITIATED:
+        return Icons.new_releases;
+      case EsOrderPaymentStatus.APPROVED:
+        return Icons.done;
+      case EsOrderPaymentStatus.REJECTED:
+        return Icons.cancel;
+      // New statuses
+      case EsOrderPaymentStatus.SUCCESS:
+        return Icons.done;
+      case EsOrderPaymentStatus.FAIL:
+        return Icons.warning;
+      case EsOrderPaymentStatus.REFUNDED:
+        return Icons.undo;
+    }
+    return Icons.access_time;
   }
 
-  Widget getForStatusInitiated(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Icon(Icons.new_releases, size: 16, color: Colors.orange),
-        SizedBox(width: 4),
-        Text(
-          EsOrderPaymentStatus.getDisplayablePaymentString(
-              context, esOrder.dPaymentStatus),
-          style: Theme.of(buildContext).textTheme.subtitle2.copyWith(
-                color: ListTileTheme.of(buildContext).textColor,
-              ),
-        ),
-        Flexible(child: Container()),
-        InkWell(
-            onTap: () {
-              onClick(esOrder, EsOrderPaymentStatus.APPROVED);
-            },
-            child: Text(
-              AppTranslations.of(context).text('orders_page_approve_payment'),
-              style: TextStyle(
-                decoration: TextDecoration.underline,
-                color: Theme.of(buildContext).primaryColor,
-              ),
-            )),
-      ],
-    );
+  Color getPaymentStatusIconColor(BuildContext context) {
+    final EsOrderPaymentInfo paymentInfo = esOrder.paymentInfo;
+    switch (paymentInfo.paymentStatus) {
+      // Old statuses
+      case EsOrderPaymentStatus.INITIATED:
+        return Colors.orange;
+      case EsOrderPaymentStatus.APPROVED:
+        return Theme.of(context).primaryColor;
+      case EsOrderPaymentStatus.REJECTED:
+        return Theme.of(context).errorColor;
+      // New statuses
+      case EsOrderPaymentStatus.SUCCESS:
+        return Colors.green;
+      case EsOrderPaymentStatus.FAIL:
+        return Theme.of(context).errorColor;
+      case EsOrderPaymentStatus.REFUNDED:
+        return Colors.orange;
+    }
+    return Theme.of(context).errorColor;
   }
 
-  Widget getForStatusApproved(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Icon(Icons.done, size: 16, color: Theme.of(buildContext).primaryColor),
-        SizedBox(width: 4),
-        Text(
-          EsOrderPaymentStatus.getDisplayablePaymentString(
-              context, esOrder.dPaymentStatus),
-          style: Theme.of(buildContext).textTheme.subtitle2.copyWith(
-                color: ListTileTheme.of(buildContext).textColor,
-              ),
-        ),
-        Flexible(child: Container()),
-        InkWell(
-            onTap: () {
-              onClick(esOrder, EsOrderPaymentStatus.REJECTED);
-            },
-            child: Text(
-              AppTranslations.of(context).text('orders_page_reject_payment'),
-              style: TextStyle(
-                decoration: TextDecoration.underline,
-                color: Theme.of(buildContext).errorColor,
-              ),
-            )),
-      ],
-    );
-  }
+  String getDisplayablePaymentString(BuildContext context) {
+    final EsOrderPaymentInfo paymentInfo = esOrder.paymentInfo;
+    switch (paymentInfo.paymentStatus) {
+      // Old statuses
+      case EsOrderPaymentStatus.INITIATED:
+        return AppTranslations.of(context).text('orders_page_customer_paid');
 
-  Widget getForStatusRejected(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Icon(Icons.cancel, size: 16, color: Theme.of(buildContext).errorColor),
-        SizedBox(width: 4),
-        Text(
-          EsOrderPaymentStatus.getDisplayablePaymentString(
-              context, esOrder.dPaymentStatus),
-          style: Theme.of(buildContext).textTheme.subtitle2.copyWith(
-                color: ListTileTheme.of(buildContext).textColor,
-              ),
-        ),
-        Flexible(child: Container()),
-        InkWell(
-            onTap: () {
-              onClick(esOrder, EsOrderPaymentStatus.APPROVED);
-            },
-            child: Text(
-              AppTranslations.of(context).text('orders_page_approve_payment'),
-              style: TextStyle(
-                decoration: TextDecoration.underline,
-                color: Theme.of(buildContext).primaryColor,
-              ),
-            )),
-      ],
-    );
+      case EsOrderPaymentStatus.APPROVED:
+        return AppTranslations.of(context).text('orders_page_payment_approved');
+
+      case EsOrderPaymentStatus.REJECTED:
+        return AppTranslations.of(context).text('orders_page_payment_rejected');
+
+      // New statuses
+      case EsOrderPaymentStatus.SUCCESS:
+        return sprintf(
+            AppTranslations.of(context).text('orders_page_payment_success'),
+            [paymentInfo.dAmount, paymentInfo.dPaymentMadeVia]);
+      case EsOrderPaymentStatus.FAIL:
+        return AppTranslations.of(context).text('orders_page_payment_failed');
+      case EsOrderPaymentStatus.REFUNDED:
+        return sprintf(
+            AppTranslations.of(context).text('orders_page_payment_refunded'),
+            [paymentInfo.dAmount, paymentInfo.dTransactionTime]);
+    }
+    return AppTranslations.of(context).text('orders_page_payemnt_pending');
   }
 
   @override
   Widget build(BuildContext context) {
-    return [EsOrderStatus.CREATED, EsOrderStatus.MERCHANT_UPDATED]
-            .contains(esOrder.orderStatus)
+    // Removed Merchant Updated status for this check.
+    return esOrder.orderStatus == EsOrderStatus.CREATED
         ? Container()
-        : Container(
-            padding: EdgeInsets.only(top: 8),
-            child: esOrder.dPaymentStatus == EsOrderPaymentStatus.PENDING
-                ? getForStatusPending(context)
-                : esOrder.dPaymentStatus == EsOrderPaymentStatus.INITIATED
-                    ? getForStatusInitiated(context)
-                    : esOrder.dPaymentStatus == EsOrderPaymentStatus.APPROVED
-                        ? getForStatusApproved(context)
-                        : getForStatusRejected(context),
+        : Row(
+            children: <Widget>[
+              Icon(
+                paymentStatusIcon,
+                size: 16,
+                color: getPaymentStatusIconColor(context),
+              ),
+              SizedBox(width: 4),
+              Text(
+                getDisplayablePaymentString(context),
+                style: Theme.of(context).textTheme.subtitle2,
+              ),
+            ],
           );
   }
 }

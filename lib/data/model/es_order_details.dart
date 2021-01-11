@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:foore/data/model/es_orders.dart';
 
@@ -33,7 +32,6 @@ class UpdateOrderPayload {
     }
     return data;
   }
-
 }
 
 class AdditionalChargesDetails {
@@ -53,7 +51,6 @@ class AdditionalChargesDetails {
     data['name'] = this.chargeName;
     return data;
   }
-
 }
 
 class UpdateOrderItems {
@@ -107,7 +104,7 @@ class EsOrderDetailsResponse {
   String created;
   String modified;
   Rating rating;
-  PaymentInfo paymentInfo;
+  EsOrderPaymentInfo paymentInfo;
 
   EsOrderDetailsResponse(
       {this.orderId,
@@ -254,7 +251,7 @@ class EsOrderDetailsResponse {
     rating =
         json['rating'] != null ? new Rating.fromJson(json['rating']) : null;
     paymentInfo = json['payment_info'] != null
-        ? new PaymentInfo.fromJson(json['payment_info'])
+        ? new EsOrderPaymentInfo.fromJson(json['payment_info'])
         : null;
   }
 
@@ -469,7 +466,6 @@ class FreeFormItems {
   }
 }
 
-
 class OrderTrail {
   String eventName;
   SkuCharges eventInfo;
@@ -511,28 +507,6 @@ class Rating {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['rating_value'] = this.ratingValue;
     data['rating_comment'] = this.ratingComment;
-    return data;
-  }
-}
-
-class PaymentInfo {
-  String upi;
-  String status;
-  var dt;
-
-  PaymentInfo({this.upi, this.status, this.dt});
-
-  PaymentInfo.fromJson(Map<String, dynamic> json) {
-    upi = json['upi'];
-    status = json['status'];
-    dt = json['dt'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['upi'] = this.upi;
-    data['status'] = this.status;
-    data['dt'] = this.dt;
     return data;
   }
 }

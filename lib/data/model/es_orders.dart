@@ -31,31 +31,25 @@ class EsOrderStatus {
 }
 
 class EsOrderPaymentStatus {
+  ///   The payment status of the order. Can have following possible values
+  ///   I) PENDING : Payment not done
+  ///   II) SUCCESS : Payment succeded. Could be online or COD.
+  ///   III) FAIL : Online payment failed
+  ///   IV) REFUNDED : Money refunded
+  ///
   static const PENDING = 'PENDING';
+  static const SUCCESS = 'SUCCESS';
+  static const FAIL = 'FAIL';
+  static const REFUNDED = 'REFUNDED';
+
+  ///   Old Statuses:
+  ///   I) INITIATED : Customer marked paid
+  ///   II) APPROVED : Merchant approved payment
+  ///   III) REJECTED : Merchant rejected the payment claim
+  ///
   static const INITIATED = 'INITIATED';
   static const APPROVED = 'APPROVED';
   static const REJECTED = 'REJECTED';
-
-  static String getDisplayablePaymentString(
-      BuildContext context, String paymentStatus) {
-    String paymentString =
-        AppTranslations.of(context).text('orders_page_payemnt_pending');
-    switch (paymentStatus) {
-      case EsOrderPaymentStatus.INITIATED:
-        paymentString =
-            AppTranslations.of(context).text('orders_page_customer_paid');
-        break;
-      case EsOrderPaymentStatus.APPROVED:
-        paymentString =
-            AppTranslations.of(context).text('orders_page_payment_approved');
-        break;
-      case EsOrderPaymentStatus.REJECTED:
-        paymentString =
-            AppTranslations.of(context).text('orders_page_payment_rejected');
-        break;
-    }
-    return paymentString;
-  }
 }
 
 class EsGetOrdersResponse {
@@ -169,40 +163,52 @@ class EsOrder {
   }
 
   String dStatusString(BuildContext context) {
-    String statusString = AppTranslations.of(context).text('orders_page_order_status_unknown');
+    String statusString =
+        AppTranslations.of(context).text('orders_page_order_status_unknown');
     switch (this.orderStatus) {
       case EsOrderStatus.CREATED:
-        statusString = AppTranslations.of(context).text('orders_page_order_status_new');
+        statusString =
+            AppTranslations.of(context).text('orders_page_order_status_new');
         break;
       case EsOrderStatus.COMPLETED:
-        statusString = AppTranslations.of(context).text('orders_page_order_status_complete');
+        statusString = AppTranslations.of(context)
+            .text('orders_page_order_status_complete');
         break;
       case EsOrderStatus.MERCHANT_ACCEPTED:
-        statusString = AppTranslations.of(context).text('orders_page_order_status_preparing');
+        statusString = AppTranslations.of(context)
+            .text('orders_page_order_status_preparing');
         break;
       case EsOrderStatus.MERCHANT_CANCELLED:
-        statusString = AppTranslations.of(context).text('orders_page_order_status_merchant_cancelled');
+        statusString = AppTranslations.of(context)
+            .text('orders_page_order_status_merchant_cancelled');
         break;
       case EsOrderStatus.READY_FOR_PICKUP:
-        statusString = AppTranslations.of(context).text('orders_page_order_status_ready');
+        statusString =
+            AppTranslations.of(context).text('orders_page_order_status_ready');
         break;
       case EsOrderStatus.REQUESTING_TO_DA:
-        statusString = AppTranslations.of(context).text('orders_page_order_status_searching_agent');
+        statusString = AppTranslations.of(context)
+            .text('orders_page_order_status_searching_agent');
         break;
       case EsOrderStatus.ASSIGNED_TO_DA:
-        statusString = AppTranslations.of(context).text('orders_page_order_status_agent_assigned');
+        statusString = AppTranslations.of(context)
+            .text('orders_page_order_status_agent_assigned');
         break;
       case EsOrderStatus.CUSTOMER_CANCELLED:
-        statusString = AppTranslations.of(context).text('orders_page_order_status_customer_cancelled');
+        statusString = AppTranslations.of(context)
+            .text('orders_page_order_status_customer_cancelled');
         break;
       case EsOrderStatus.MERCHANT_UPDATED:
-        statusString = AppTranslations.of(context).text('orders_page_order_status_awaiting_customer_confirmation');
+        statusString = AppTranslations.of(context)
+            .text('orders_page_order_status_awaiting_customer_confirmation');
         break;
       case EsOrderStatus.PICKED_UP_BY_DA:
-        statusString = AppTranslations.of(context).text('orders_page_order_status_delivering');
+        statusString = AppTranslations.of(context)
+            .text('orders_page_order_status_delivering');
         break;
       case EsOrderStatus.READY_FOR_PICKUP:
-        statusString = AppTranslations.of(context).text('orders_page_order_status_waiting_pickup');
+        statusString = AppTranslations.of(context)
+            .text('orders_page_order_status_waiting_pickup');
         break;
       default:
     }
@@ -570,13 +576,72 @@ class EsOrderItem {
 }
 
 class EsOrderPaymentInfo {
+  String upi;
+
+  /// The payment status of the order. Can have following possible values
+  ///   I) PENDING : Payment not done
+  ///   II) SUCCESS : Payment succeded. Could be online or COD.
+  ///   III) FAIL : Online payment failed
+  ///   IV) REFUNDED : Money refunded
+  ///
+  ///  Old Statuses:
+  ///   I) INITIATED : Customer marked paid
+  ///   II) APPROVED : Merchant approved payment
+  ///   III) REJECTED : Merchant rejected the payment claim
+  ///
   String paymentStatus;
   String lastUpdated;
 
-  EsOrderPaymentInfo({this.paymentStatus, this.lastUpdated});
+  String get dTransactionTime {
+    if (this.lastUpdated != null) {
+      final lastInteractionDate = DateTime.parse(this.lastUpdated).toLocal();
+      final formatter = new DateFormat(' d MMM, hh:mm a');
+      String timeText = formatter.format(lastInteractionDate);
+      return timeText;
+    }
+    return '';
+  }
 
-  EsOrderPaymentInfo.fromJson(Map<String, dynamic> inputJson) {
-    paymentStatus = inputJson['status'];
-    lastUpdated = inputJson['dt'];
+  /// A string containing info regarding the source of the payment
+  /// e.g. Direct UPI, Deutsche bank, PayTM, OlaMoney etc.
+  ///
+  String paymentMadeVia;
+
+  String get dPaymentMadeVia {
+    return paymentMadeVia != null ? paymentMadeVia : '';
+  }
+
+  /// Amount paid via the [paymentMadeVia] channel in paise. This may be different
+  /// than the order total billed amount
+  ///
+  int amount;
+
+  String get dAmount {
+    return amount != null
+        ? NumberFormat.simpleCurrency(locale: 'en_IN').format(amount / 100)
+        : '';
+  }
+
+  EsOrderPaymentInfo(
+      {this.upi,
+      this.paymentStatus,
+      this.lastUpdated,
+      this.paymentMadeVia,
+      this.amount});
+  EsOrderPaymentInfo.fromJson(Map<String, dynamic> json) {
+    upi = json['upi'];
+    paymentStatus = json['status'];
+    lastUpdated = json['dt'];
+    amount = json['amount'];
+    paymentMadeVia = json['via'];
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['upi'] = this.upi;
+    data['status'] = this.paymentStatus;
+    data['dt'] = this.lastUpdated;
+    data['via'] = paymentMadeVia;
+    data['amount'] = amount;
+    return data;
   }
 }

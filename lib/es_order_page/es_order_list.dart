@@ -78,21 +78,6 @@ class _EsOrderListState extends State<EsOrderList> {
       }
     }
 
-    updatePaymentStatus(
-      EsOrder order,
-      String newStatus,
-    ) async {
-      var isAccepted = await OrdersAlertDialogs.showUpdateStatusAlertDialog(
-        order: order,
-        esOrdersBloc: esOrdersBloc,
-        context: context,
-        newStatus: newStatus,
-      );
-      if (isAccepted == true) {
-        esOrdersBloc.resetDataState();
-      }
-    }
-
     updateOrder(
       EsOrder order,
       UpdateOrderPayload body, {
@@ -192,11 +177,6 @@ class _EsOrderListState extends State<EsOrderList> {
                             popScreenAfterCompletion: popOnCompletion ?? false,
                           ),
                           onAssign: () => assignItem(ordersList[index]),
-                          onUpdatePaymentStatus: (newStatus) =>
-                              updatePaymentStatus(
-                            ordersList[index],
-                            newStatus,
-                          ),
                           onUpdateOrder: (body, {bool popOnCompletion}) =>
                               updateOrder(
                             ordersList[index],

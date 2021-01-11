@@ -249,7 +249,6 @@
 	"orders_page_update_popup_title": "మార్క్ పూర్తయింది",
 	"orders_page_ready_for_pickup_popup_title": "మీరు ఈ ఆర్డర్‌ను పికప్ కోసం సిద్ధంగా ఉన్నట్లు గుర్తించాలనుకుంటున్నారా?",
 	"orders_page_not_have_delivery_partners": "మీకు డెలివరీ భాగస్వాములు లేరు. మీకు ఆన్‌బోర్డింగ్ డెలివరీ భాగస్వాములకు సహాయం అవసరమైతే దయచేసి మమ్మల్ని సంప్రదించండి",
-	"orders_page_order_payment_status_update_popup_title": "మీరు ఆర్డర్ యొక్క చెల్లింపు స్థితిని %s కు నవీకరించాలనుకుంటున్నారా?",
 	"orders_page_accept": "అంగీకరించు",
 	"orders_page_no_items_added_error": "దీన్ని నిర్ధారించడానికి కనీసం 1 అంశాన్ని జోడించండి.",
 	"orders_page_customer_items_due_error": "మార్క్ పూర్తయింది",

@@ -527,11 +527,11 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                     getBaseHeaderWidget(AppTranslations.of(context).text("profile_page_notice")),
                     getNoticeWidget(businessInfo),
                     EsShareLink(esBusinessProfileBloc),
-                    getHeaderWithSwitchWidget(
-                        AppTranslations.of(context).text("profile_page_upi_payment"),
-                        businessInfo.dBusinessPaymentStatus,
-                        this.esBusinessProfileBloc.updateUpiStatus),
-                    getUpiWidget(businessInfo),
+                    // getHeaderWithSwitchWidget(
+                    //     AppTranslations.of(context).text("profile_page_upi_payment"),
+                    //     businessInfo.dBusinessPaymentStatus,
+                    //     this.esBusinessProfileBloc.updateUpiStatus),
+                    // getUpiWidget(businessInfo),
                     getBaseHeaderWidget( AppTranslations.of(context).text("profile_page_support_phone")),
                     getChipTextListWidget(
                         "+ " + AppTranslations.of(context).text("profile_page_add_phone"),
@@ -551,20 +551,20 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                         businessInfo.notificationEmails,
                         this.esBusinessProfileBloc.deleteNotificationEmail,
                         addNotificationEmail),
-                    getHeaderWithSwitchWidget(
-                        AppTranslations.of(context).text("profile_page_sms_notifications"),
-                        businessInfo.notificationPhoneStatus,
-                        this
-                            .esBusinessProfileBloc
-                            .updateNotificationPhoneStatus),
-                    getChipTextListWidget(
-                        "+ " +
-                        AppTranslations.of(context).text("profile_page_add_phone"),
-                        businessInfo.notificationPhones,
-                        this
-                            .esBusinessProfileBloc
-                            .deleteNotificationPhoneWithNumber,
-                        addNotificationPhone),
+                    // getHeaderWithSwitchWidget(
+                    //     AppTranslations.of(context).text("profile_page_sms_notifications"),
+                    //     businessInfo.notificationPhoneStatus,
+                    //     this
+                    //         .esBusinessProfileBloc
+                    //         .updateNotificationPhoneStatus),
+                    // getChipTextListWidget(
+                    //     "+ " +
+                    //     AppTranslations.of(context).text("profile_page_add_phone"),
+                    //     businessInfo.notificationPhones,
+                    //     this
+                    //         .esBusinessProfileBloc
+                    //         .deleteNotificationPhoneWithNumber,
+                    //     addNotificationPhone),
                     //SizedBox(height: 120),
                   ],
                 );
