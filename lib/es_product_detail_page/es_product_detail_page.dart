@@ -204,60 +204,60 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                               ),
                             ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
-                        bottom: 4,
-                        // bottom: 8.0,
-                      ),
-                      alignment: Alignment.bottomLeft,
-                      child: Text(
-                        AppTranslations.of(context).text('products_page_unit'),
-                        style: Theme.of(context).textTheme.subtitle2,
-                      ),
-                    ),
-                    Container(
-                      child: snapshot.data.currentProduct.dUnit == ''
-                          ? Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                FlatButton(
-                                  onPressed: editUnit,
-                                  child: Text(
-                                    AppTranslations.of(context)
-                                        .text('products_page_add_unit'),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Text(
-                                      snapshot.data.currentProduct.dUnit,
-                                      overflow: TextOverflow.ellipsis,
-                                      style:
-                                          Theme.of(context).textTheme.subtitle1,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: editUnit,
-                                    icon: Icon(
-                                      Icons.edit,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                    ),
+                    // Container(
+                    //   padding: const EdgeInsets.only(
+                    //     top: 24.0,
+                    //     left: 20,
+                    //     right: 20,
+                    //     bottom: 4,
+                    //     // bottom: 8.0,
+                    //   ),
+                    //   alignment: Alignment.bottomLeft,
+                    //   child: Text(
+                    //     AppTranslations.of(context).text('products_page_unit'),
+                    //     style: Theme.of(context).textTheme.subtitle2,
+                    //   ),
+                    // ),
+                    // Container(
+                    //   child: snapshot.data.currentProduct.dUnit == ''
+                    //       ? Row(
+                    //           crossAxisAlignment: CrossAxisAlignment.start,
+                    //           children: <Widget>[
+                    //             FlatButton(
+                    //               onPressed: editUnit,
+                    //               child: Text(
+                    //                 AppTranslations.of(context)
+                    //                     .text('products_page_add_unit'),
+                    //                 overflow: TextOverflow.ellipsis,
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         )
+                    //       : Padding(
+                    //           padding:
+                    //               const EdgeInsets.symmetric(horizontal: 20),
+                    //           child: Row(
+                    //             crossAxisAlignment: CrossAxisAlignment.center,
+                    //             children: <Widget>[
+                    //               Expanded(
+                    //                 child: Text(
+                    //                   snapshot.data.currentProduct.dUnit,
+                    //                   overflow: TextOverflow.ellipsis,
+                    //                   style:
+                    //                       Theme.of(context).textTheme.subtitle1,
+                    //                 ),
+                    //               ),
+                    //               IconButton(
+                    //                 onPressed: editUnit,
+                    //                 icon: Icon(
+                    //                   Icons.edit,
+                    //                   color: Theme.of(context).primaryColor,
+                    //                 ),
+                    //               )
+                    //             ],
+                    //           ),
+                    //         ),
+                    // ),
 //////////////////////////////////////////////////
                     Container(
                       padding: const EdgeInsets.only(
