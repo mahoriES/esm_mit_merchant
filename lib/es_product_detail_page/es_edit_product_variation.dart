@@ -149,6 +149,89 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                         ),
                       ),
                     ),
+                    //////////////////////
+                    ///
+                    ///
+                    ///
+                    ///
+                    ///
+                    ///
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                        vertical: 16.0,
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      // decoration: BoxDecoration(
+                      //   border: Border.all(
+                      //     width: 1,
+                      //     color: Colors.black26,
+                      //   ),
+                      // ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: AppTranslations.of(context)
+                                        .text('products_page_price') +
+                                    ' (eg. 120.0)',
+                              ),
+                              // controller:
+                              //     snapshot.data.getPreSelectedSKU(key).quantity,
+                              validator: (text) {
+                                return text.length == 0
+                                    ? AppTranslations.of(context)
+                                        .text('error_messages_required')
+                                    : null;
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              padding: EdgeInsets.all(4.0),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 1,
+                                  color: Colors.black38,
+                                ),
+                              ),
+                              child: DropdownButton(
+                                underline: SizedBox.shrink(),
+                                // isDense: true,
+                                isExpanded: true,
+                                value: '',
+                                items: List.generate(
+                                  1,
+                                  (index) => DropdownMenuItem(
+                                    value: '',
+                                    child: Text('Kg'),
+                                  ),
+                                ),
+                                onChanged: (String value) {},
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    //////////////
+                    ///
+                    ///
+                    ///
+                    ///
+                    ///
+                    ///
+                    ///
+                    ///
+                    ///
+
                     Padding(
                       padding: const EdgeInsets.only(
                         top: 24.0,
