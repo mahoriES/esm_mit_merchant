@@ -6,6 +6,7 @@ import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
 import 'package:foore/data/model/es_business.dart';
+import 'package:foore/es_circles/es_circle_picker_view.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:provider/provider.dart';
 
@@ -143,56 +144,62 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
                         left: 20,
                         right: 20,
                       ),
-                      child: TextFormField(
-                        controller: createBusinessBloc.circleEditController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: AppTranslations.of(context).text('create_business_page_circle'),
+                      child: InkWell(onTap: () {
+                        Navigator.pushNamed(context, CirclePickerView.routeName);
+                      },
+                        child: IgnorePointer(
+                          child: TextFormField(
+                            controller: createBusinessBloc.circleEditController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: AppTranslations.of(context).text('create_business_page_circle'),
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    InkWell(
-                      onTap: () async {},
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          vertical: 16.0,
-                          horizontal: 16.0,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.blue.withOpacity(0.1),
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              child: Text(
-                                AppTranslations.of(context).text('create_business_page_get_in_touch_to_get_circle_code'),
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                ),
-                                softWrap: true,
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(),
-                            ),
-                            Container(
-                              margin: EdgeInsets.all(1.0),
-                              height: 20,
-                              width: 20,
-                              child: Image(
-                                image: AssetImage('assets/whatsapp.png'),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
+//                    const SizedBox(height: 20),
+//                    InkWell(
+//                      onTap: () async {},
+//                      child: Container(
+//                        margin: EdgeInsets.symmetric(
+//                          horizontal: 16.0,
+//                        ),
+//                        padding: EdgeInsets.symmetric(
+//                          vertical: 16.0,
+//                          horizontal: 16.0,
+//                        ),
+//                        decoration: BoxDecoration(
+//                          borderRadius: BorderRadius.circular(8),
+//                          color: Colors.blue.withOpacity(0.1),
+//                        ),
+//                        child: Row(
+//                          children: <Widget>[
+//                            Container(
+//                              child: Text(
+//                                AppTranslations.of(context).text('create_business_page_get_in_touch_to_get_circle_code'),
+//                                overflow: TextOverflow.ellipsis,
+//                                style: TextStyle(
+//                                  color: Colors.blue,
+//                                ),
+//                                softWrap: true,
+//                              ),
+//                            ),
+//                            Expanded(
+//                              child: Container(),
+//                            ),
+//                            Container(
+//                              margin: EdgeInsets.all(1.0),
+//                              height: 20,
+//                              width: 20,
+//                              child: Image(
+//                                image: AssetImage('assets/whatsapp.png'),
+//                              ),
+//                            ),
+//                          ],
+//                        ),
+//                      ),
+//                    )
                   ],
                 ),
               );

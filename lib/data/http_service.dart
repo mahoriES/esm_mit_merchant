@@ -144,7 +144,7 @@ class HttpService {
   }
 
   // eSamudaay
-  Future<http.Response> esGet(path) async {
+  Future<http.Response> esGet(path, {Map<String, dynamic> queryParams}) async {
     esdyPrint.debug("esGet: " + path);
     final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
     esdyPrint.debug("esGet: " + esJwtToken);
@@ -154,6 +154,8 @@ class HttpService {
         'Accept': 'application/json',
         'Authorization': 'JWT $esJwtToken'
       };
+
+      final uri = Uri.http(esApiBaseUrl, path, queryParams);
 
       final httpResponse =
           await http.get(esApiBaseUrl + path, headers: requestHeaders);
