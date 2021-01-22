@@ -5,6 +5,7 @@ import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
 import 'package:foore/data/bloc/es_create_merchant_profile.dart';
 import 'package:foore/data/bloc/es_orders.dart';
+import 'package:foore/data/bloc/es_select_circle.dart';
 import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_address_picker_view/search_view/search_view.dart';
@@ -12,6 +13,7 @@ import 'package:foore/es_business_guard/es_businesses_guard.dart';
 import 'package:foore/es_category_page/es_add_subcategory.dart';
 import 'package:foore/es_category_page/es_subcategory_page.dart';
 import 'package:foore/es_circles/es_circle_picker_view.dart';
+import 'package:foore/es_circles/es_circle_search.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/es_login_page/es_login_page.dart';
 import 'package:foore/es_order_page/es_order_details.dart';
@@ -330,9 +332,18 @@ class AppRouter {
           builder: (context) => SearchAddressView(),
         );
         break;
-//      case CirclePickerView.routeName:
-//        return MaterialPageRoute(builder: (context)=> CirclePickerView());
-//        break;
+      case CirclePickerView.routeName:
+        return MaterialPageRoute(
+            builder: (context) => Provider<EsSelectCircleBloc>(
+                  create: (context) => EsSelectCircleBloc(httpServiceBloc),
+                  dispose: (context, bloc) => bloc.dispose(),
+              child: CirclePickerView(),
+                ));
+        break;
+      case CircleSearchView.routeName:
+        return MaterialPageRoute(
+            builder: (context) => CircleSearchView(), settings: settings);
+        break;
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

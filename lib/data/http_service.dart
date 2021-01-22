@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/environments/environment.dart';
 import 'package:http/http.dart' as http;
@@ -155,10 +156,10 @@ class HttpService {
         'Authorization': 'JWT $esJwtToken'
       };
 
-      final uri = Uri.http(esApiBaseUrl, path, queryParams);
+      String queryString = '?' + Uri(queryParameters: queryParams).query;
 
       final httpResponse =
-          await http.get(esApiBaseUrl + path, headers: requestHeaders);
+          await http.get(esApiBaseUrl + path + queryString, headers: requestHeaders);
 
       print(httpResponse.request.url.toString());
       print(httpResponse.statusCode);

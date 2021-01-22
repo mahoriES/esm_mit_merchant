@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
+import 'package:circles/themes/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
@@ -133,73 +134,64 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
                         controller: createBusinessBloc.nameEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: AppTranslations.of(context).text('create_business_page_business_name'),
+                          labelText: AppTranslations.of(context)
+                              .text('create_business_page_business_name'),
                         ),
                       ),
                     ),
                     const SizedBox(height: 20),
                     Padding(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: InkWell(onTap: () {
-                        Navigator.pushNamed(context, CirclePickerView.routeName);
-                      },
-                        child: IgnorePointer(
-                          child: TextFormField(
-                            controller: createBusinessBloc.circleEditController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: AppTranslations.of(context).text('create_business_page_circle'),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 65,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  snapshot.data.selectedCircle?.clusterName ??
+                                      'No Circle Selected',
+                                  style: CustomTheme.of(context)
+                                      .textStyles
+                                      .sectionHeading2,
+                                ),
+                                if (snapshot.data.selectedCircle != null) ...[
+                                  const SizedBox(height: 5,),
+                                  Text(
+                                    snapshot.data.selectedCircle?.description,
+                                    style: CustomTheme.of(context)
+                                        .textStyles
+                                        .body2Faded,
+                                  ),
+                                ],
+                              ],
                             ),
                           ),
-                        ),
+                          Container(
+                            width: 0.3,
+                            height: 20,
+                            color: Colors.grey,
+                          ),
+                          Expanded(
+                            flex: 35,
+                            child: FlatButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: () async {
+                                final selectedCircle =
+                                    await Navigator.pushNamed(
+                                        context, CirclePickerView.routeName);
+                                createBusinessBloc
+                                    .handleCircleSelection(selectedCircle);
+                              },
+                              child: Text(snapshot.data.selectedCircle == null
+                                  ? 'Select Circle'
+                                  : 'Change Circle'),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-//                    const SizedBox(height: 20),
-//                    InkWell(
-//                      onTap: () async {},
-//                      child: Container(
-//                        margin: EdgeInsets.symmetric(
-//                          horizontal: 16.0,
-//                        ),
-//                        padding: EdgeInsets.symmetric(
-//                          vertical: 16.0,
-//                          horizontal: 16.0,
-//                        ),
-//                        decoration: BoxDecoration(
-//                          borderRadius: BorderRadius.circular(8),
-//                          color: Colors.blue.withOpacity(0.1),
-//                        ),
-//                        child: Row(
-//                          children: <Widget>[
-//                            Container(
-//                              child: Text(
-//                                AppTranslations.of(context).text('create_business_page_get_in_touch_to_get_circle_code'),
-//                                overflow: TextOverflow.ellipsis,
-//                                style: TextStyle(
-//                                  color: Colors.blue,
-//                                ),
-//                                softWrap: true,
-//                              ),
-//                            ),
-//                            Expanded(
-//                              child: Container(),
-//                            ),
-//                            Container(
-//                              margin: EdgeInsets.all(1.0),
-//                              height: 20,
-//                              width: 20,
-//                              child: Image(
-//                                image: AssetImage('assets/whatsapp.png'),
-//                              ),
-//                            ),
-//                          ],
-//                        ),
-//                      ),
-//                    )
+                    )
                   ],
                 ),
               );
@@ -212,8 +204,9 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
               return Container();
             }
             return FoSubmitButton(
-              text: AppTranslations.of(context).text('create_business_page_save'),
-              onPressed: () {
+              text:
+                  AppTranslations.of(context).text('create_business_page_save'),
+              onPressed: (snapshot.data.selectedCircle == null) ? null : () {
                 if (this._formKey.currentState.validate()) {
                   confirmBusinessAlert(
                       createBusinessBloc.nameEditController.text);

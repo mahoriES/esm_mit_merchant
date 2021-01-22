@@ -78,6 +78,9 @@ dependencies:
 
   app_settings: ^4.0.4
 
+  circles:
+    path: circles/
+
 dependency_overrides:
   provider: ^3.1.0
 
@@ -104,6 +107,8 @@ flutter:
     - assets/english-share.png
     - assets/sms-code.png
     - assets/promotion-banner.png
+    - assets/circle_tile_placeholder.png
+    - assets/location-pointer.png
     - assets/locale/localization_hi.json
     - assets/locale/localization_kn.json
     # - assets/locale/localization_ml.json

@@ -18,6 +18,7 @@ import 'package:foore/router.dart';
 import 'data/bloc/app_translations_bloc.dart';
 import 'data/bloc/auth.dart';
 import 'data/http_service.dart';
+import 'package:circles/themes/custom_theme.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -127,20 +128,22 @@ class _ReviewAppState extends State<ReviewApp>
           if (!snapshot.hasData) {
             return Container();
           }
-          return MaterialApp(
-            title: 'Foore',
-            debugShowCheckedModeBanner: false,
-            initialRoute: AppRouter.homeRoute,
-            onGenerateRoute: router.routeGenerator,
-            navigatorKey: NavigationHandler.navigatorKey,
-            navigatorObservers: [NavigationHandler.routeObserver],
-            localizationsDelegates: [
-              snapshot.data.localeDelegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-            ],
-            supportedLocales: AppTranslationsBloc.supportedLocales(),
-            theme: FooreLightTheme.themeData,
+          return CustomTheme(initialThemeType: THEME_TYPES.LIGHT,
+            child: MaterialApp(
+              title: 'Foore',
+              debugShowCheckedModeBanner: false,
+              initialRoute: AppRouter.homeRoute,
+              onGenerateRoute: router.routeGenerator,
+              navigatorKey: NavigationHandler.navigatorKey,
+              navigatorObservers: [NavigationHandler.routeObserver],
+              localizationsDelegates: [
+                snapshot.data.localeDelegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              supportedLocales: AppTranslationsBloc.supportedLocales(),
+              theme: FooreLightTheme.themeData,
+            ),
           );
         });
   }
