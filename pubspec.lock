@@ -69,7 +69,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: a641d73e4f360c5b41192ac3142660af5238072f
+      resolved-ref: c836d355476c7ae43f933675788311208fdbd349
       url: "https://kaustubh-pandey@bitbucket.org/ese1/esm_comp_circle.git"
     source: git
     version: "0.0.2"

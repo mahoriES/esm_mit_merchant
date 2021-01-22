@@ -1,5 +1,6 @@
 import 'package:circles/secret_circle_sheet_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_select_circle.dart';
 import 'package:foore/data/model/es_clusters.dart';
@@ -28,6 +29,14 @@ class _CirclePickerViewState extends State<CirclePickerView> {
     _esSelectCircleBloc.getTrendingCircles();
     _esSelectCircleBloc.getNearbyCircles();
     onAddCallback = (circleCode) {
+      ///
+      ///This condition check won't be actually required as the bottom sheet doesn't close
+      ///if text field is empty, but still an additional check is okay!
+      ///
+      if (circleCode.isEmpty) {
+        Fluttertoast.showToast(msg: "Please enter a valid code!");
+        return;
+      }
       Navigator.pop(context, EsCluster(clusterCode: circleCode,
           clusterId: '',
           clusterName: circleCode,
