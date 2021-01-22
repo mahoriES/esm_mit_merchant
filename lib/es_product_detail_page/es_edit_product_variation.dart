@@ -97,6 +97,7 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
         title: Text(
           widget.currentSku != null
               ? AppTranslations.of(context).text('products_page_edit') +
+                  ' ' +
                   widget.currentSku.skuCode
               : AppTranslations.of(context).text('products_page_add_variation'),
         ),
@@ -114,107 +115,116 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                 child: ListView(
                   children: <Widget>[
                     const SizedBox(height: 20),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(
-                    //     top: 24.0,
-                    //     left: 20,
-                    //     right: 20,
-                    //   ),
-                    //   child: TextFormField(
-                    //     enabled: widget.currentSku == null,
-                    //     controller:
-                    //         widget.esEditProductBloc.skuCodeEditController,
-                    //     decoration: InputDecoration(
-                    //       border: OutlineInputBorder(),
-                    //       labelText: 'Sku code',
-                    //     ),
-                    //   ),
-                    // ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        controller:
-                            widget.esEditProductBloc.skuPriceEditController,
-                        validator: ValidationService().validateDouble,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: AppTranslations.of(context)
-                                  .text('products_page_price') +
-                              ' (eg. 120.0)',
-                        ),
-                      ),
-                    ),
                     //////////////////////
-                    ///
-                    ///
-                    ///
-                    ///
-                    ///
-                    ///
                     Container(
                       margin: EdgeInsets.symmetric(
                         horizontal: 12.0,
                         vertical: 16.0,
                       ),
                       padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      // decoration: BoxDecoration(
-                      //   border: Border.all(
-                      //     width: 1,
-                      //     color: Colors.black26,
-                      //   ),
-                      // ),
                       child: Row(
                         children: [
                           Expanded(
                             flex: 3,
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: AppTranslations.of(context)
-                                        .text('products_page_price') +
-                                    ' (eg. 120.0)',
-                              ),
-                              // controller:
-                              //     snapshot.data.getPreSelectedSKU(key).quantity,
-                              validator: (text) {
-                                return text.length == 0
-                                    ? AppTranslations.of(context)
-                                        .text('error_messages_required')
-                                    : null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                            flex: 1,
                             child: Container(
-                              padding: EdgeInsets.all(4.0),
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   width: 1,
-                                  color: Colors.black38,
+                                  color: Colors.black26,
                                 ),
                               ),
-                              child: DropdownButton(
-                                underline: SizedBox.shrink(),
-                                // isDense: true,
-                                isExpanded: true,
-                                value: '',
-                                items: List.generate(
-                                  1,
-                                  (index) => DropdownMenuItem(
-                                    value: '',
-                                    child: Text('Kg'),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: TextFormField(
+                                      controller: widget.esEditProductBloc
+                                          .skuVariationValueEditController,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        border: InputBorder.none,
+                                      ),
+                                      validator: (text) {
+                                        return text.length == 0
+                                            ? AppTranslations.of(context)
+                                                .text('error_messages_required')
+                                            : null;
+                                      },
+                                    ),
                                   ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      child: DropdownButton(
+                                        underline: SizedBox.shrink(),
+                                        // isDense: true,
+                                        isExpanded: true,
+                                        value: 'Kg',
+                                        items: [
+                                          DropdownMenuItem(
+                                            value: 'Kg',
+                                            child: Text('Kg'),
+                                          ),
+                                        ],
+                                        onChanged: (String value) {},
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 24.0,
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Container(
+                              // padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 1,
+                                  color: Colors.black26,
                                 ),
-                                onChanged: (String value) {},
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 10,
+                                      horizontal: 12,
+                                    ),
+                                    color: Colors.black12,
+                                    child: Text(
+                                      '₹',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: TextFormField(
+                                        controller: widget.esEditProductBloc
+                                            .skuPriceEditController,
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          border: InputBorder.none,
+                                        ),
+                                        validator: (text) {
+                                          if (double.tryParse(text) == null) {
+                                            return AppTranslations.of(context)
+                                                .text(
+                                                    'orders_page_invalid_price');
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -222,42 +232,11 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                       ),
                     ),
                     //////////////
-                    ///
-                    ///
-                    ///
-                    ///
-                    ///
-                    ///
-                    ///
-                    ///
-                    ///
-
                     Padding(
                       padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: TextFormField(
-                        controller: widget
-                            .esEditProductBloc.skuVariationValueEditController,
-                        validator: ValidationService().validateDouble,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: AppTranslations.of(context)
-                                  .text('products_page_variation') +
-                              ' (eg. 500gm)',
-                          suffix: Text(
-                              widget.esEditProductBloc.unitEditController.text),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
+                        top: 10.0,
+                        left: 16.0,
+                        right: 0,
                       ),
                       child: SwitchListTile(
                         value: this.isActive,
@@ -272,9 +251,9 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
+                        top: 10.0,
+                        left: 16.0,
+                        right: 0,
                       ),
                       child: SwitchListTile(
                         value: this.inStock,
