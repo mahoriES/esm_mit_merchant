@@ -19,6 +19,7 @@ class EsCreateBusinessBloc {
     this._subjectEsCreateBusinessState =
         new BehaviorSubject<EsCreateBusinessState>.seeded(
             _esCreateBusinessStateState);
+    nameEditController.addListener(() {_updateState();});
   }
 
   Observable<EsCreateBusinessState> get createBusinessObservable =>

@@ -16,15 +16,19 @@ class _CircleSearchViewState extends State<CircleSearchView> {
 
   @override
   void initState() {
-//    _esSelectCircleBloc =
-//        ModalRoute.of(context).settings.arguments;
+
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
+  void didChangeDependencies() {
     _esSelectCircleBloc =
         ModalRoute.of(context).settings.arguments;
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: StreamBuilder<EsSelectCircleState>(
@@ -47,7 +51,7 @@ class _CircleSearchViewState extends State<CircleSearchView> {
                         _esSelectCircleBloc.circleSearchTextFieldController,
                     autofocus: true,
                     decoration: InputDecoration(
-                      hintText: ('circle.search'),
+                      hintText: ('Search for circle'),
                       hintStyle: CustomTheme.of(context)
                           .themeData
                           .textTheme

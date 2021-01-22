@@ -79,7 +79,11 @@ dependencies:
   app_settings: ^4.0.4
 
   circles:
-    path: circles/
+    git:
+      url: https://kaustubh-pandey@bitbucket.org/ese1/esm_comp_circle.git
+
+#  circles:
+#    path: circles/
 
 dependency_overrides:
   provider: ^3.1.0

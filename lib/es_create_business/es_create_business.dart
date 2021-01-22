@@ -157,7 +157,9 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
                                       .sectionHeading2,
                                 ),
                                 if (snapshot.data.selectedCircle != null) ...[
-                                  const SizedBox(height: 5,),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
                                   Text(
                                     snapshot.data.selectedCircle?.description,
                                     style: CustomTheme.of(context)
@@ -206,12 +208,15 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
             return FoSubmitButton(
               text:
                   AppTranslations.of(context).text('create_business_page_save'),
-              onPressed: (snapshot.data.selectedCircle == null) ? null : () {
-                if (this._formKey.currentState.validate()) {
-                  confirmBusinessAlert(
-                      createBusinessBloc.nameEditController.text);
-                }
-              },
+              onPressed: (snapshot.data.selectedCircle == null ||
+                      createBusinessBloc.nameEditController.text.isEmpty)
+                  ? null
+                  : () {
+                      if (this._formKey.currentState.validate()) {
+                        confirmBusinessAlert(
+                            createBusinessBloc.nameEditController.text);
+                      }
+                    },
               isLoading: snapshot.data.isSubmitting,
             );
           }),
