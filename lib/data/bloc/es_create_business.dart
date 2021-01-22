@@ -10,7 +10,6 @@ class EsCreateBusinessBloc {
   EsCreateBusinessState _esCreateBusinessStateState =
       new EsCreateBusinessState();
   final nameEditController = TextEditingController();
-  final circleEditController = TextEditingController();
   final HttpService httpService;
 
   BehaviorSubject<EsCreateBusinessState> _subjectEsCreateBusinessState;

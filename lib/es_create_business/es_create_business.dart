@@ -103,8 +103,6 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
 
   @override
   Widget build(BuildContext context) {
-    // final createBusinessBloc = Provider.of<EsCreateBusinessBloc>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -151,7 +149,7 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
                               children: [
                                 Text(
                                   snapshot.data.selectedCircle?.clusterName ??
-                                      'No Circle Selected',
+                                      AppTranslations.of(context).text('no_circle_selected_msg'),
                                   style: CustomTheme.of(context)
                                       .textStyles
                                       .sectionHeading2,
@@ -187,8 +185,8 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
                                     .handleCircleSelection(selectedCircle);
                               },
                               child: Text(snapshot.data.selectedCircle == null
-                                  ? 'Select Circle'
-                                  : 'Change Circle'),
+                                  ? AppTranslations.of(context).text('select_circle_action')
+                                  : AppTranslations.of(context).text('change_circle_action')),
                             ),
                           ),
                         ],

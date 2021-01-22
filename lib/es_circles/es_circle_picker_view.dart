@@ -1,5 +1,6 @@
 import 'package:circles/secret_circle_sheet_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_select_circle.dart';
 import 'package:foore/data/model/es_clusters.dart';
 import 'package:foore/es_circles/es_circle_search.dart';
@@ -74,7 +75,7 @@ class _CirclePickerViewState extends State<CirclePickerView> {
                           arguments: _esSelectCircleBloc);
                     }),
                     TrendingCirclesCarouselView(
-                      trendingCirclesLabelLocalisedString: "Trending Circles",
+                      trendingCirclesLabelLocalisedString: AppTranslations.of(context).text('trending_circles'),
                       onTap: _esSelectCircleBloc.setCirclesAsSelected,
                       trendingCirclesList:
                       snapshot.data?.trendingCircles?.toCircleTileList() ??
@@ -93,24 +94,24 @@ class _CirclePickerViewState extends State<CirclePickerView> {
                           ?.toCircleTileList() ??
                           [],
                       suggestedCircleLabelLocalisedString:
-                      "Suggested Circles",
-                      turnOnLocationLocalisedString: "Turn Location On",
+                      AppTranslations.of(context).text('suggested_circles'),
+                      turnOnLocationLocalisedString: AppTranslations.of(context).text('turn_on_location'),
                       circleLocationLocalisedString:
-                      "Turn on your device's location to get suggestions for Circles near you",
+                      AppTranslations.of(context).text('turn_on_location_msg'),
                       locationPointerImagePath: locationPointerImage,
                       nearbyCircleLabelLocalisedString:
-                      "Based on your current location",
+                      AppTranslations.of(context).text('based_on_current_location'),
                     ),
                     CircleInfoFooter(
                         onTapCallBack: () =>
                             showSecretCircleAdderDialog(context, onAddCallback),
                         isAdvancedUser: () =>
                             _esSelectCircleBloc.isAdvancedUser(),
-                        circleBrandingLocalisedText: "eSamudaay Circles",
+                        circleBrandingLocalisedText: AppTranslations.of(context).text('esamudaay_circles'),
                         circleInfo1LocalisedText:
-                        "A 'Circle' is a community of shop owners, restaurants and merchants that serve in a locality",
+                        AppTranslations.of(context).text('circle_info_1'),
                         circleInfo2LocalisedText:
-                        "You can add a circle by turning on your location or searching for a specific circle",
+                        AppTranslations.of(context).text('circle_info_2'),
                         setCurrentUserAsAdvancedCallback: () =>
                             _esSelectCircleBloc.setCurrentUserAsAdvanced()),
                   ],
@@ -130,7 +131,7 @@ class _CirclePickerViewState extends State<CirclePickerView> {
             alignment: Alignment.bottomCenter,
             child: SecretCircleBottomSheet(
               onAddCircle: onAddCallback,
-              circleEnterCodeLocalisedString: "Enter Circle Code",
+              circleEnterCodeLocalisedString: AppTranslations.of(context).text('enter_circle_code'),
             ),
           );
         });
@@ -259,7 +260,7 @@ class CirclesSearchBar extends StatelessWidget {
           child: IgnorePointer(
             child: TextField(
               decoration: InputDecoration(
-                hintText: "Search for a Circle",
+                hintText: AppTranslations.of(context).text("circle_search_action_hint"),
                 hintStyle: CustomTheme
                     .of(context)
                     .themeData

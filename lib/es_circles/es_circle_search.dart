@@ -1,6 +1,7 @@
 import 'package:circles/circles.dart';
 import 'package:circles/themes/custom_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_select_circle.dart';
 import 'package:foore/es_circles/es_circle_picker_view.dart';
 
@@ -13,12 +14,6 @@ class CircleSearchView extends StatefulWidget {
 
 class _CircleSearchViewState extends State<CircleSearchView> {
   EsSelectCircleBloc _esSelectCircleBloc;
-
-  @override
-  void initState() {
-
-    super.initState();
-  }
 
   @override
   void didChangeDependencies() {
@@ -51,7 +46,7 @@ class _CircleSearchViewState extends State<CircleSearchView> {
                         _esSelectCircleBloc.circleSearchTextFieldController,
                     autofocus: true,
                     decoration: InputDecoration(
-                      hintText: ('Search for circle'),
+                      hintText: AppTranslations.of(context).text('circle_search_action_hint'),
                       hintStyle: CustomTheme.of(context)
                           .themeData
                           .textTheme
@@ -117,8 +112,7 @@ class _CircleSearchViewState extends State<CircleSearchView> {
 
   Widget get circleInfoProviderWidget => Padding(
         padding: const EdgeInsets.only(top: 70, left: 20, right: 20),
-        child: Text(
-          "Try searching for a Circle by typing in your city name. For e.g. Udupi, Chandigarh.",
+        child: Text(AppTranslations.of(context).text("circle_search_hint"),
           style: CustomTheme.of(context).textStyles.sectionHeading1.copyWith(
               color: CustomTheme.of(context).colors.disabledAreaColor),
           textAlign: TextAlign.center,
