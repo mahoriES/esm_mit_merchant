@@ -6,6 +6,7 @@ import 'package:foore/data/bloc/auth.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'dart:io';
+
 // ignore: implementation_imports
 import 'package:http_parser/src/media_type.dart';
 import 'dart:async';
@@ -156,10 +157,12 @@ class HttpService {
         'Authorization': 'JWT $esJwtToken'
       };
 
-      String queryString = '?' + Uri(queryParameters: queryParams).query;
+      String queryString = queryParams != null
+          ? '?' + Uri(queryParameters: queryParams).query
+          : '';
 
-      final httpResponse =
-          await http.get(esApiBaseUrl + path + queryString, headers: requestHeaders);
+      final httpResponse = await http.get(esApiBaseUrl + path + queryString,
+          headers: requestHeaders);
 
       print(httpResponse.request.url.toString());
       print(httpResponse.statusCode);

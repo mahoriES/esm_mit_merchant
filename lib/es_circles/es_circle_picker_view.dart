@@ -48,86 +48,81 @@ class _CirclePickerViewState extends State<CirclePickerView> {
   @override
   Widget build(BuildContext context) {
     const locationPointerImage = "assets/location-pointer.png";
-    return Theme(
-      data: CustomTheme
-          .of(context)
-          .themeData,
-      child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        appBar: CircleTopBannerView(),
-        floatingActionButton: StreamBuilder<EsSelectCircleState>(
-            stream: _esSelectCircleBloc.selectCircleObservable,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return SizedBox.shrink();
-              return Opacity(
-                opacity: snapshot.data.selectedCircle == null ? 0.0 : 1.0,
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-                    Navigator.pop(context, snapshot.data.selectedCircle);
-                  },
-                  label: Text(
-                      'Select ${snapshot.data.selectedCircle?.clusterName ??
-                          ''}'),
-                ),
-              );
-            }),
-        body: StreamBuilder<EsSelectCircleState>(
-            stream: _esSelectCircleBloc.selectCircleObservable,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return SizedBox.shrink();
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    CirclesSearchBar(onTap: () {
-                      Navigator.of(context).pushNamed(
-                          CircleSearchView.routeName,
-                          arguments: _esSelectCircleBloc);
-                    }),
-                    TrendingCirclesCarouselView(
-                      trendingCirclesLabelLocalisedString: AppTranslations.of(context).text('trending_circles'),
-                      onTap: _esSelectCircleBloc.setCirclesAsSelected,
-                      trendingCirclesList:
-                      snapshot.data?.trendingCircles?.toCircleTileList() ??
-                          [],
-                    ),
-                    snapshot.data.nearbyCirclesLoading == LoadingStatus.LOADING
-                        ? const CirclesLoadingIndicator()
-                        : SuggestedNearbyCirclesView(
-                      onSelectCircle:
-                      _esSelectCircleBloc.setCirclesAsSelected,
-                      onTapLocationAction: () {
-                        _esSelectCircleBloc.onTapLocationAction();
-                      },
-                      isLocationDisabled: !snapshot.data.locationEnabled,
-                      suggestedCirclesList: snapshot.data?.nearbyCircles
-                          ?.toCircleTileList() ??
-                          [],
-                      suggestedCircleLabelLocalisedString:
-                      AppTranslations.of(context).text('suggested_circles'),
-                      turnOnLocationLocalisedString: AppTranslations.of(context).text('turn_on_location'),
-                      circleLocationLocalisedString:
-                      AppTranslations.of(context).text('turn_on_location_msg'),
-                      locationPointerImagePath: locationPointerImage,
-                      nearbyCircleLabelLocalisedString:
-                      AppTranslations.of(context).text('based_on_current_location'),
-                    ),
-                    CircleInfoFooter(
-                        onTapCallBack: () =>
-                            showSecretCircleAdderDialog(context, onAddCallback),
-                        isAdvancedUser: () =>
-                            _esSelectCircleBloc.isAdvancedUser(),
-                        circleBrandingLocalisedText: AppTranslations.of(context).text('esamudaay_circles'),
-                        circleInfo1LocalisedText:
-                        AppTranslations.of(context).text('circle_info_1'),
-                        circleInfo2LocalisedText:
-                        AppTranslations.of(context).text('circle_info_2'),
-                        setCurrentUserAsAdvancedCallback: () =>
-                            _esSelectCircleBloc.setCurrentUserAsAdvanced()),
-                  ],
-                ),
-              );
-            }),
-      ),
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      appBar: CircleTopBannerView(),
+      floatingActionButton: StreamBuilder<EsSelectCircleState>(
+          stream: _esSelectCircleBloc.selectCircleObservable,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return SizedBox.shrink();
+            return Opacity(
+              opacity: snapshot.data.selectedCircle == null ? 0.0 : 1.0,
+              child: FloatingActionButton.extended(
+                onPressed: () {
+                  Navigator.pop(context, snapshot.data.selectedCircle);
+                },
+                label: Text(
+                    'Select ${snapshot.data.selectedCircle?.clusterName ??
+                        ''}'),
+              ),
+            );
+          }),
+      body: StreamBuilder<EsSelectCircleState>(
+          stream: _esSelectCircleBloc.selectCircleObservable,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return SizedBox.shrink();
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  CirclesSearchBar(onTap: () {
+                    Navigator.of(context).pushNamed(
+                        CircleSearchView.routeName,
+                        arguments: _esSelectCircleBloc);
+                  }),
+                  TrendingCirclesCarouselView(
+                    trendingCirclesLabelLocalisedString: AppTranslations.of(context).text('trending_circles'),
+                    onTap: _esSelectCircleBloc.setCirclesAsSelected,
+                    trendingCirclesList:
+                    snapshot.data?.trendingCircles?.toCircleTileList() ??
+                        [],
+                  ),
+                  snapshot.data.nearbyCirclesLoading == LoadingStatus.LOADING
+                      ? const CirclesLoadingIndicator()
+                      : SuggestedNearbyCirclesView(
+                    onSelectCircle:
+                    _esSelectCircleBloc.setCirclesAsSelected,
+                    onTapLocationAction: () {
+                      _esSelectCircleBloc.onTapLocationAction();
+                    },
+                    isLocationDisabled: !snapshot.data.locationEnabled,
+                    suggestedCirclesList: snapshot.data?.nearbyCircles
+                        ?.toCircleTileList() ??
+                        [],
+                    suggestedCircleLabelLocalisedString:
+                    AppTranslations.of(context).text('suggested_circles'),
+                    turnOnLocationLocalisedString: AppTranslations.of(context).text('turn_on_location'),
+                    circleLocationLocalisedString:
+                    AppTranslations.of(context).text('turn_on_location_msg'),
+                    locationPointerImagePath: locationPointerImage,
+                    nearbyCircleLabelLocalisedString:
+                    AppTranslations.of(context).text('based_on_current_location'),
+                  ),
+                  CircleInfoFooter(
+                      onTapCallBack: () =>
+                          showSecretCircleAdderDialog(context, onAddCallback),
+                      isAdvancedUser: () =>
+                          _esSelectCircleBloc.isAdvancedUser(),
+                      circleBrandingLocalisedText: AppTranslations.of(context).text('esamudaay_circles'),
+                      circleInfo1LocalisedText:
+                      AppTranslations.of(context).text('circle_info_1'),
+                      circleInfo2LocalisedText:
+                      AppTranslations.of(context).text('circle_info_2'),
+                      setCurrentUserAsAdvancedCallback: () =>
+                          _esSelectCircleBloc.setCurrentUserAsAdvanced()),
+                ],
+              ),
+            );
+          }),
     );
   }
 
