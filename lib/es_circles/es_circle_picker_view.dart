@@ -20,7 +20,20 @@ class CirclePickerView extends StatefulWidget {
 class _CirclePickerViewState extends State<CirclePickerView> {
   EsSelectCircleBloc _esSelectCircleBloc;
 
-  Function onAddCallback;
+  void onAddCallback(String circleCode) {
+    ///
+    ///This condition check won't be actually required as the bottom sheet doesn't close
+    ///if text field is empty, but still an additional check is okay!
+    ///
+    if (circleCode.isEmpty) {
+      Fluttertoast.showToast(msg: "Please enter a valid code!");
+      return;
+    }
+    Navigator.pop(context, EsCluster(clusterCode: circleCode,
+        clusterId: '',
+        clusterName: circleCode,
+        description: 'Circle added via Code'));
+  }
 
   @override
   void initState() {
@@ -28,20 +41,6 @@ class _CirclePickerViewState extends State<CirclePickerView> {
         Provider.of<EsSelectCircleBloc>(context, listen: false);
     _esSelectCircleBloc.getTrendingCircles();
     _esSelectCircleBloc.getNearbyCircles();
-    onAddCallback = (circleCode) {
-      ///
-      ///This condition check won't be actually required as the bottom sheet doesn't close
-      ///if text field is empty, but still an additional check is okay!
-      ///
-      if (circleCode.isEmpty) {
-        Fluttertoast.showToast(msg: "Please enter a valid code!");
-        return;
-      }
-      Navigator.pop(context, EsCluster(clusterCode: circleCode,
-          clusterId: '',
-          clusterName: circleCode,
-          description: 'Circle added via Code'));
-    };
     super.initState();
   }
 
