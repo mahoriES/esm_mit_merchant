@@ -103,122 +103,124 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          AppTranslations.of(context).text('create_business_page_title'),
+    return CustomTheme(initialThemeType: THEME_TYPES.LIGHT,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AppTranslations.of(context).text('create_business_page_title'),
+          ),
         ),
-      ),
-      body: Form(
-        key: _formKey,
-        onWillPop: _onWillPop,
-        child: StreamBuilder<EsCreateBusinessState>(
+        body: Form(
+          key: _formKey,
+          onWillPop: _onWillPop,
+          child: StreamBuilder<EsCreateBusinessState>(
+              stream: createBusinessBloc.createBusinessObservable,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container();
+                }
+                return Scrollbar(
+                  child: ListView(
+                    children: <Widget>[
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 24.0,
+                          left: 20,
+                          right: 20,
+                        ),
+                        child: TextFormField(
+                          controller: createBusinessBloc.nameEditController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: AppTranslations.of(context)
+                                .text('create_business_page_business_name'),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 65,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    snapshot.data.selectedCircle?.clusterName ??
+                                        AppTranslations.of(context).text('no_circle_selected_msg'),
+                                    style: CustomTheme.of(context)
+                                        .textStyles
+                                        .sectionHeading2,
+                                  ),
+                                  if (snapshot.data.selectedCircle != null) ...[
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      snapshot.data.selectedCircle?.description,
+                                      style: CustomTheme.of(context)
+                                          .textStyles
+                                          .body2Faded,
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                            Container(
+                              width: 0.3,
+                              height: 20,
+                              color: Colors.grey,
+                            ),
+                            Expanded(
+                              flex: 35,
+                              child: FlatButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: () async {
+                                  final selectedCircle =
+                                      await Navigator.pushNamed(
+                                          context, CirclePickerView.routeName);
+                                  createBusinessBloc
+                                      .handleCircleSelection(selectedCircle);
+                                },
+                                child: Text(snapshot.data.selectedCircle == null
+                                    ? AppTranslations.of(context).text('select_circle_action')
+                                    : AppTranslations.of(context).text('change_circle_action')),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              }),
+        ),
+        floatingActionButton: StreamBuilder<EsCreateBusinessState>(
             stream: createBusinessBloc.createBusinessObservable,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Container();
               }
-              return Scrollbar(
-                child: ListView(
-                  children: <Widget>[
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: TextFormField(
-                        controller: createBusinessBloc.nameEditController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: AppTranslations.of(context)
-                              .text('create_business_page_business_name'),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 65,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  snapshot.data.selectedCircle?.clusterName ??
-                                      AppTranslations.of(context).text('no_circle_selected_msg'),
-                                  style: CustomTheme.of(context)
-                                      .textStyles
-                                      .sectionHeading2,
-                                ),
-                                if (snapshot.data.selectedCircle != null) ...[
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    snapshot.data.selectedCircle?.description,
-                                    style: CustomTheme.of(context)
-                                        .textStyles
-                                        .body2Faded,
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                          Container(
-                            width: 0.3,
-                            height: 20,
-                            color: Colors.grey,
-                          ),
-                          Expanded(
-                            flex: 35,
-                            child: FlatButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () async {
-                                final selectedCircle =
-                                    await Navigator.pushNamed(
-                                        context, CirclePickerView.routeName);
-                                createBusinessBloc
-                                    .handleCircleSelection(selectedCircle);
-                              },
-                              child: Text(snapshot.data.selectedCircle == null
-                                  ? AppTranslations.of(context).text('select_circle_action')
-                                  : AppTranslations.of(context).text('change_circle_action')),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+              return FoSubmitButton(
+                text:
+                    AppTranslations.of(context).text('create_business_page_save'),
+                onPressed: (snapshot.data.selectedCircle == null ||
+                        createBusinessBloc.nameEditController.text.isEmpty)
+                    ? null
+                    : () {
+                        if (this._formKey.currentState.validate()) {
+                          confirmBusinessAlert(
+                              createBusinessBloc.nameEditController.text);
+                        }
+                      },
+                isLoading: snapshot.data.isSubmitting,
               );
             }),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
-      floatingActionButton: StreamBuilder<EsCreateBusinessState>(
-          stream: createBusinessBloc.createBusinessObservable,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Container();
-            }
-            return FoSubmitButton(
-              text:
-                  AppTranslations.of(context).text('create_business_page_save'),
-              onPressed: (snapshot.data.selectedCircle == null ||
-                      createBusinessBloc.nameEditController.text.isEmpty)
-                  ? null
-                  : () {
-                      if (this._formKey.currentState.validate()) {
-                        confirmBusinessAlert(
-                            createBusinessBloc.nameEditController.text);
-                      }
-                    },
-              isLoading: snapshot.data.isSubmitting,
-            );
-          }),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
