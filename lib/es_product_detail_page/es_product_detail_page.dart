@@ -7,7 +7,6 @@ import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_category_page/es_category_page.dart';
 import 'package:provider/provider.dart';
-
 import 'es_edit_product_image_list.dart';
 import 'es_edit_product_name.dart';
 import 'es_edit_product_unit.dart';
@@ -126,6 +125,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
     }
 
     editSku(EsSku sku) async {
+      print(sku.toJson());
       await Navigator.of(context).push(MaterialPageRoute(
           builder: (context) =>
               EsEditProductVariationPage(esEditProductBloc, sku)));
@@ -146,258 +146,236 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
             return Form(
               key: _formKey,
               onWillPop: _onWillPop,
-              child: Scrollbar(
-                child: ListView(
-                  children: <Widget>[
-                    EsEditProductImageList(esEditProductBloc),
-                    Container(
-                      padding: const EdgeInsets.only(
-                        top: 20.0,
-                        left: 20,
-                        right: 20,
-                        bottom: 4,
-                        // bottom: 8.0,
-                      ),
-                      alignment: Alignment.bottomLeft,
-                      child: Text(
-                        AppTranslations.of(context).text('products_page_name'),
-                        style: Theme.of(context).textTheme.subtitle2,
-                      ),
-                    ),
-                    Container(
-                      child: snapshot.data.currentProduct.dProductName == ''
-                          ? Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                FlatButton(
-                                  onPressed: editName,
-                                  child: Text(
-                                    AppTranslations.of(context)
-                                        .text('products_page_add_name'),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Text(
-                                      snapshot.data.currentProduct.dProductName,
-                                      overflow: TextOverflow.ellipsis,
-                                      style:
-                                          Theme.of(context).textTheme.subtitle1,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: editName,
-                                    icon: Icon(
-                                      Icons.edit,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                    ),
-                    // Container(
-                    //   padding: const EdgeInsets.only(
-                    //     top: 24.0,
-                    //     left: 20,
-                    //     right: 20,
-                    //     bottom: 4,
-                    //     // bottom: 8.0,
-                    //   ),
-                    //   alignment: Alignment.bottomLeft,
-                    //   child: Text(
-                    //     AppTranslations.of(context).text('products_page_unit'),
-                    //     style: Theme.of(context).textTheme.subtitle2,
-                    //   ),
-                    // ),
-                    // Container(
-                    //   child: snapshot.data.currentProduct.dUnit == ''
-                    //       ? Row(
-                    //           crossAxisAlignment: CrossAxisAlignment.start,
-                    //           children: <Widget>[
-                    //             FlatButton(
-                    //               onPressed: editUnit,
-                    //               child: Text(
-                    //                 AppTranslations.of(context)
-                    //                     .text('products_page_add_unit'),
-                    //                 overflow: TextOverflow.ellipsis,
-                    //               ),
-                    //             ),
-                    //           ],
-                    //         )
-                    //       : Padding(
-                    //           padding:
-                    //               const EdgeInsets.symmetric(horizontal: 20),
-                    //           child: Row(
-                    //             crossAxisAlignment: CrossAxisAlignment.center,
-                    //             children: <Widget>[
-                    //               Expanded(
-                    //                 child: Text(
-                    //                   snapshot.data.currentProduct.dUnit,
-                    //                   overflow: TextOverflow.ellipsis,
-                    //                   style:
-                    //                       Theme.of(context).textTheme.subtitle1,
-                    //                 ),
-                    //               ),
-                    //               IconButton(
-                    //                 onPressed: editUnit,
-                    //                 icon: Icon(
-                    //                   Icons.edit,
-                    //                   color: Theme.of(context).primaryColor,
-                    //                 ),
-                    //               )
-                    //             ],
-                    //           ),
-                    //         ),
-                    // ),
-//////////////////////////////////////////////////
-                    Container(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
-                        bottom: 8,
-                        // bottom: 8.0,
-                      ),
-                      alignment: Alignment.bottomLeft,
-                      child: Text(
-                        AppTranslations.of(context)
-                            .text('products_page_categories'),
-                        style: Theme.of(context).textTheme.subtitle2,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
+              child: ListView(
+                children: <Widget>[
+                  SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 14, right: 20),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        if (snapshot.data.categories.length > 0) ...[
                           Expanded(
-                            child: Wrap(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: List.generate(
-                                  snapshot.data.categories.length + 1, (index) {
-                                if (index == snapshot.data.categories.length) {
-                                  return InkWell(
-                                    onTap: () {
-                                      addCategory(snapshot.data.categories
-                                          .map((e) => e.categoryId)
-                                          .toList());
-                                    },
-                                    child: Chip(
-                                      backgroundColor:
-                                          Theme.of(context).primaryColor,
-                                      avatar: Icon(
-                                        Icons.add,
-                                        color: Colors.white,
+                                  snapshot.data.categories.length, (index) {
+                                final category =
+                                    snapshot.data.categories[index];
+                                final parentCategory = snapshot.data
+                                    .getCategoryById(category.parentCategoryId);
+                                return Chip(
+                                  backgroundColor:
+                                      Colors.black.withOpacity(0.05),
+                                  onDeleted: () {
+                                    removeCategory(category);
+                                  },
+                                  label: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Flexible(
+                                        flex: 1,
+                                        child: Container(
+                                          child: parentCategory.dCategoryName !=
+                                                  null
+                                              ? Text(
+                                                  parentCategory
+                                                          .dCategoryName ??
+                                                      '',
+                                                  overflow: TextOverflow.fade,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .subtitle1
+                                                      .copyWith(
+                                                        color: ListTileTheme.of(
+                                                                context)
+                                                            .textColor,
+                                                      ),
+                                                )
+                                              : null,
+                                        ),
                                       ),
-                                      label: Text(
-                                        AppTranslations.of(context)
-                                            .text('products_page_add_category'),
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .caption
-                                            .copyWith(color: Colors.white),
+                                      Icon(Icons.chevron_right),
+                                      Flexible(
+                                        flex: 1,
+                                        child: Container(
+                                          child: Text(
+                                            category.dCategoryName ?? '',
+                                            overflow: TextOverflow.fade,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1
+                                                .copyWith(
+                                                  color:
+                                                      ListTileTheme.of(context)
+                                                          .textColor,
+                                                ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                }
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Chip(
-                                    onDeleted: () {
-                                      removeCategory(
-                                          snapshot.data.categories[index]);
-                                    },
-                                    label: Text(
-                                      snapshot
-                                          .data.categories[index].dCategoryName,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                                    ],
                                   ),
                                 );
                               }),
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Divider(
-                      //height: 8,
-                      thickness: 4,
-                      //color: Colors.blue,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(
-                        top: 16.0,
-                        left: 20,
-                        right: 20,
-                        bottom: 8,
-                        // bottom: 8.0,
-                      ),
-                      alignment: Alignment.bottomLeft,
-                      child: Text(
-                        AppTranslations.of(context)
-                            .text('products_page_variations'),
-                        style: Theme.of(context).textTheme.subtitle2,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(
-                        top: 10.0,
-                        left: 20,
-                        right: 20,
-                        bottom: 8,
-                        // bottom: 8.0,
-                      ),
-                      // alignment: Alignment.bottomLeft,
-                      child: Table(
-                        children: List.generate(
-                            snapshot.data.currentProduct.skus != null
-                                ? widget.currentProduct.skus.length + 1
-                                : 0, (index) {
-                          if (snapshot.data.currentProduct.skus == null ||
-                              widget.currentProduct.skus.length == index) {
-                            return TableRow(children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  FlatButton(
-                                    onPressed: () {
-                                      addSku(esEditProductBloc);
-                                    },
-                                    child: Text(
-                                      '+ ' +
-                                          AppTranslations.of(context).text(
-                                              'products_page_add_variation'),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ]);
-                          }
-
-                          return TableRow(children: [
-                            VariationCard(
-                              snapshot.data.currentProduct.skus[index],
-                              esEditProductBloc,
-                              editSku,
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              addCategory(snapshot.data.categories
+                                  .map((e) => e.categoryId)
+                                  .toList());
+                            },
+                            icon: Icon(
+                              Icons.add,
+                              color: Theme.of(context).primaryColor,
                             ),
-                          ]);
-                        }),
-                      ),
+                          ),
+                        ],
+                        if (snapshot.data.categories.length == 0)
+                          Chip(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            avatar: Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            ),
+                            label: Text(
+                              AppTranslations.of(context)
+                                  .text('products_page_add_category'),
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .caption
+                                  .copyWith(color: Colors.white),
+                            ),
+                          ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(
+                      top: 16.0,
+                      left: 20,
+                      right: 20,
+                      bottom: 4,
+                      // bottom: 8.0,
+                    ),
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      AppTranslations.of(context).text('products_page_name'),
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                  ),
+                  Container(
+                    child: snapshot.data.currentProduct.dProductName == ''
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              FlatButton(
+                                onPressed: editName,
+                                child: Text(
+                                  AppTranslations.of(context)
+                                      .text('products_page_add_name'),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Text(
+                                    snapshot.data.currentProduct.dProductName,
+                                    overflow: TextOverflow.ellipsis,
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: editName,
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                  ),
+                  SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.only(
+                      top: 16.0,
+                      left: 20,
+                      right: 20,
+                      bottom: 8,
+                    ),
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      AppTranslations.of(context)
+                          .text('products_page_variations'),
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(
+                      top: 4.0,
+                      left: 20,
+                      right: 20,
+                      bottom: 8,
+                    ),
+                    child: Column(
+                      children: List.generate(
+                          snapshot.data.currentProduct.skus != null
+                              ? widget.currentProduct.skus.length + 1
+                              : 0, (index) {
+                        if (snapshot.data.currentProduct.skus == null ||
+                            widget.currentProduct.skus.length == index) {
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  addSku(esEditProductBloc);
+                                },
+                                child: Text(
+                                  '+ ' +
+                                      AppTranslations.of(context)
+                                          .text('products_page_add_variation'),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        return VariationCard(
+                          snapshot.data.currentProduct.skus[index],
+                          esEditProductBloc,
+                          editSku,
+                        );
+                      }),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(
+                      top: 16.0,
+                      left: 20,
+                      right: 20,
+                      bottom: 8,
+                      // bottom: 8.0,
+                    ),
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      'Product images',
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  EsEditProductImageList(esEditProductBloc),
+                  SizedBox(height: 16),
+                ],
               ),
             );
           }),
@@ -418,68 +396,136 @@ class VariationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-        top: 20,
-        bottom: 10,
-        right: 20,
-        left: 20,
-      ),
-      margin: EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(border: Border.all(color: Colors.black12)),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                (sku.variationValue != null) && sku.variationValue.isNotEmpty
-                    ? Text(sku.dBasePrice + " (" + sku.variationValue + ")")
-                    : Text(sku.dBasePrice),
-                SizedBox(height: 4),
+    return Padding(
+      padding: const EdgeInsets.only(top: 12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                'SKU: ' + sku.dSkuCode,
+                style: Theme.of(context).textTheme.caption,
+              ),
+              SizedBox(
+                width: 4.0,
+              ),
+              if (!sku.isActive)
                 Text(
-                  sku.skuCode,
-                  style: Theme.of(context).textTheme.subtitle2,
+                  '(Inactive)',
+                  style: Theme.of(context).textTheme.caption.copyWith(
+                      color:
+                          Theme.of(context).colorScheme.error.withOpacity(0.8)),
                 ),
-                SizedBox(height: 4),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      sku.inStock
-                          ? AppTranslations.of(context)
-                              .text('products_page_in_stock')
-                          : AppTranslations.of(context)
-                              .text('products_page_not_in_stock'),
-                      style: TextStyle(
-                          color: sku.inStock
-                              ? Colors.green[400]
-                              : Colors.red[400]),
-                    ),
-                    SizedBox(width: 16),
-                    Text(
-                      sku.isActive
-                          ? AppTranslations.of(context)
-                              .text('products_page_is_active')
-                          : AppTranslations.of(context)
-                              .text('products_page_not_active'),
-                      style: TextStyle(
-                          color: sku.isActive
-                              ? Colors.green[400]
-                              : Colors.red[400]),
+            ],
+          ),
+          SizedBox(
+            height: 4.0,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Container(
+                height: 72.0,
+                padding: EdgeInsets.symmetric(horizontal: 12.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black12),
+                ),
+                child: Row(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            'In Stock',
+                            style: Theme.of(context).textTheme.caption,
+                          ),
+                        ),
+                        Switch(
+                          value: sku.inStock,
+                          onChanged: (updatedVal) {
+                            esEditProductBloc.editSkuStock(
+                                sku.skuId, updatedVal);
+                          },
+                        ),
+                      ],
                     ),
                   ],
-                )
-              ],
-            ),
+                ),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              Flexible(
+                flex: 2,
+                child: Container(
+                  height: 72.0,
+                  padding: EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black12),
+                  ),
+                  child: Center(child: Text(sku.variationValue ?? '')),
+                ),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              Flexible(
+                flex: 3,
+                child: Container(
+                  height: 72.0,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black12),
+                  ),
+                  child: Center(
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 72.0,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                          ),
+                          color: Colors.black12,
+                          child: Center(
+                            child: Text(
+                              '₹',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: Text(
+                              sku.dBasePriceWithoutRupeeSymbol.toString(),
+                              softWrap: true,
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              IconButton(
+                  color: Theme.of(context).primaryColor,
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    this.onSkuClick(this.sku);
+                  })
+            ],
           ),
-          IconButton(
-              color: Theme.of(context).primaryColor,
-              icon: Icon(Icons.edit),
-              onPressed: () {
-                this.onSkuClick(this.sku);
-              })
         ],
       ),
     );

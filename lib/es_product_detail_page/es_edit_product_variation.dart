@@ -5,7 +5,6 @@ import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
-import 'package:foore/services/validation.dart';
 
 class EsEditProductVariationPage extends StatefulWidget {
   final EsEditProductBloc esEditProductBloc;
@@ -160,14 +159,16 @@ class EsEditProductVariationPageState extends State<EsEditProductVariationPage>
                                         underline: SizedBox.shrink(),
                                         // isDense: true,
                                         isExpanded: true,
-                                        value: 'Kg',
-                                        items: [
-                                          DropdownMenuItem(
-                                            value: 'Kg',
-                                            child: Text('Kg'),
-                                          ),
-                                        ],
-                                        onChanged: (String value) {},
+                                        value: widget.esEditProductBloc
+                                            .unitEditController.text,
+                                        items: snapshot.data.unitsList
+                                            .map((unit) => DropdownMenuItem(
+                                                value: unit, child: Text(unit)))
+                                            .toList(),
+                                        onChanged: (String value) {
+                                          widget.esEditProductBloc
+                                              .setSelectedUnit(value);
+                                        },
                                       ),
                                     ),
                                   ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
@@ -39,13 +40,21 @@ class EsEditProductBloc {
     shortDescriptionEditController.text = product?.dProductDescription;
     longDescriptionEditController.text = product?.dProductLongDescription;
     displayLine1EditController.text = product?.dLine1;
-    unitEditController.text = product?.dUnit;
+    // unitEditController.text = product?.dUnit;
   }
 
   updateControllersForSku(EsSku sku) {
-    // skuCodeEditController.text = sku.skuCode;
+    final unit = sku?.properties?.quant?.unit ?? '';
+    final quantity = sku?.properties?.quant?.val?.toString() ?? '1';
+    if (!_esEditProductState.unitsList.contains(unit)) {
+      _esEditProductState.addNewEntryToUnitsList(unit);
+    }
     skuPriceEditController.text = (sku.basePrice / 100).toString();
-    skuVariationValueEditController.text = sku.variationValue;
+    print('Quantity is::');
+    print(quantity);
+    skuVariationValueEditController.text = quantity;
+    unitEditController.text = unit;
+    this._updateState();
   }
 
   addProduct(Function onAddProductSuccess) {
@@ -243,8 +252,12 @@ class EsEditProductBloc {
   editCurrentSku(int skuId, bool inStock, bool isActive, onSuccess, onFail) {
     var payload = AddSkuPayload(
         basePrice: (double.parse(skuPriceEditController.text) * 100).toInt(),
-        variationValue:
-            "${skuVariationValueEditController.text} ${unitEditController.text}",
+        properties: SKUProperties(
+          quant: SKUQuant(
+            unit: unitEditController.text,
+            val: skuVariationValueEditController.text,
+          ),
+        ),
         inStock: inStock,
         isActive: isActive);
     this._esEditProductState.isSubmitting = true;
@@ -267,10 +280,8 @@ class EsEditProductBloc {
         this._esEditProductState.isSubmitting = false;
         this._esEditProductState.isSubmitFailed = false;
         this._esEditProductState.isSubmitSuccess = true;
-        var updatedSku = EsSku.fromJson(json.decode(httpResponse.body));
-
+        final updatedSku = EsSku.fromJson(json.decode(httpResponse.body));
         this._esEditProductState.currentProduct.updateSku(updatedSku);
-
         onSuccess();
       } else {
         this._esEditProductState.isSubmitting = false;
@@ -280,11 +291,39 @@ class EsEditProductBloc {
       }
       this._updateState();
     }).catchError((onError) {
-      print(onError.toString());
       this._esEditProductState.isSubmitting = false;
       this._esEditProductState.isSubmitFailed = true;
       this._esEditProductState.isSubmitSuccess = false;
       onFail();
+      this._updateState();
+    });
+  }
+
+  editSkuStock(int skuId, bool inStock) {
+    final payload = AddSkuPayload(
+      inStock: inStock,
+    );
+    this._esEditProductState.currentProduct.setInStockForSku(skuId, inStock);
+    this._updateState();
+    final payloadString = json.encode(payload.toJson());
+    this
+        .httpService
+        .esPatch(
+            EsApiPaths.updateSku(this.esBusinessesBloc.getSelectedBusinessId(),
+                this._esEditProductState.currentProductId, skuId),
+            payloadString)
+        .then((httpResponse) {
+      if (httpResponse.statusCode != 200) {
+        Fluttertoast.showToast(msg: 'Failed to update product variation.');
+        this
+            ._esEditProductState
+            .currentProduct
+            .setInStockForSku(skuId, !inStock);
+      }
+      this._updateState();
+    }).catchError((onError) {
+      Fluttertoast.showToast(msg: 'Failed to update product variation.');
+      this._esEditProductState.currentProduct.setInStockForSku(skuId, !inStock);
       this._updateState();
     });
   }
@@ -327,34 +366,59 @@ class EsEditProductBloc {
     });
   }
 
-  getCategories() {
+  getCategories() async {
     this._esEditProductState.isLoading = true;
     this._esEditProductState.response = null;
     this._esEditProductState.categories = List<EsCategory>();
     this._updateState();
-    httpService
-        .esGet(EsApiPaths.getCategoriesForProduct(
-            this.esBusinessesBloc.getSelectedBusinessId(),
-            this._esEditProductState.currentProduct.productId.toString()))
-        .then((httpResponse) {
-      if (httpResponse.statusCode == 200) {
-        this._esEditProductState.isLoadingFailed = false;
-        this._esEditProductState.isLoading = false;
-        this._esEditProductState.response =
-            EsGetCategoriesForProductResponse.fromJson(
-                json.decode(httpResponse.body));
-        this._esEditProductState.categories =
-            this._esEditProductState.response.categories;
-      } else {
+    if (await getAllCategories()) {
+      httpService
+          .esGet(EsApiPaths.getCategoriesForProduct(
+              this.esBusinessesBloc.getSelectedBusinessId(),
+              this._esEditProductState.currentProduct.productId.toString()))
+          .then((httpResponse) {
+        if (httpResponse.statusCode == 200) {
+          this._esEditProductState.isLoadingFailed = false;
+          this._esEditProductState.isLoading = false;
+          this._esEditProductState.response =
+              EsGetCategoriesForProductResponse.fromJson(
+                  json.decode(httpResponse.body));
+          this._esEditProductState.categories =
+              this._esEditProductState.response.categories;
+        } else {
+          this._esEditProductState.isLoadingFailed = true;
+          this._esEditProductState.isLoading = false;
+        }
+        this._updateState();
+      }).catchError((onError) {
         this._esEditProductState.isLoadingFailed = true;
         this._esEditProductState.isLoading = false;
-      }
-      this._updateState();
-    }).catchError((onError) {
+        this._updateState();
+      });
+    } else {
       this._esEditProductState.isLoadingFailed = true;
       this._esEditProductState.isLoading = false;
       this._updateState();
-    });
+    }
+  }
+
+  Future<bool> getAllCategories() async {
+    if (this._esEditProductState.allCategoriesResponse != null) {
+      return true;
+    }
+    try {
+      final httpResponse = await httpService.esGet(
+        EsApiPaths.getCategories(this.esBusinessesBloc.getSelectedBusinessId()),
+      );
+      if (httpResponse.statusCode == 200) {
+        this._esEditProductState.allCategoriesResponse =
+            EsGetCategoriesResponse.fromJson(json.decode(httpResponse.body));
+        return true;
+      }
+      return false;
+    } catch (err) {
+      return false;
+    }
   }
 
   Future<bool> updateSku(int skuId, payloadString) async {
@@ -433,6 +497,11 @@ class EsEditProductBloc {
 
   setIsSubmitting(bool isSubmitting) {
     this._esEditProductState.isSubmitting = isSubmitting;
+    this._updateState();
+  }
+
+  setSelectedUnit(String unit) {
+    this.unitEditController.text = unit;
     this._updateState();
   }
 
@@ -638,10 +707,30 @@ class EsEditProductState {
   bool isSubmitSuccess = false;
   bool isSubmitFailed = false;
 
+  final List<String> unitsList = [
+    "Piece",
+    "Serving",
+    "Kg",
+    "Gm",
+    "Litre",
+    "Ml",
+    "Dozen",
+    "ft",
+    "meter",
+    "sq. ft.",
+    ""
+  ];
+
+  addNewEntryToUnitsList(String unit) {
+    if (unit != null) unitsList.insert(0, unit);
+  }
+
   // Only used for creating product.
   List<EsImage> uploadedImages = List<EsImage>();
 
   List<EsUploadableFile> uploadingImages = List<EsUploadableFile>();
+
+  EsGetCategoriesResponse allCategoriesResponse;
 
   List<EsCategory> categories = List<EsCategory>();
   EsGetCategoriesForProductResponse response;
@@ -656,6 +745,15 @@ class EsEditProductState {
   bool get isNewProduct => currentProduct == null;
 
   bool get isNewSku => currentSku == null;
+
+  EsCategory getCategoryById(int categoryId) {
+    if (allCategoriesResponse == null) {
+      return null;
+    }
+    return allCategoriesResponse.categories.firstWhere(
+        (element) => element.categoryId == categoryId,
+        orElse: () => null);
+  }
 
   EsEditProductState();
 }

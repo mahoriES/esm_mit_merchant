@@ -197,6 +197,7 @@ class EsProduct {
         currentSku.inStock = updatedSku.inStock;
         currentSku.isActive = updatedSku.isActive;
         currentSku.variationValue = updatedSku.variationValue;
+        currentSku.properties = updatedSku.properties;
 
         break;
       }
@@ -350,6 +351,16 @@ class EsSku {
   int basePrice;
   Map<String, dynamic> variationOptions;
   String variationValue;
+  SKUProperties properties;
+
+  get dBasePriceWithoutRupeeSymbol {
+    if (basePrice != null) {
+      // return NumberFormat.simpleCurrency(locale: 'en_IN').format(basePrice / 100);
+      return NumberFormat.currency(locale: 'en_IN', symbol: '')
+          .format(basePrice / 100);
+    }
+    return '0.00';
+  }
 
   get dBasePrice {
     if (basePrice != null) {
@@ -384,6 +395,7 @@ class EsSku {
       this.inStock,
       this.charges,
       this.basePrice,
+      this.properties,
       this.variationOptions});
 
   EsSku.fromJson(Map<String, dynamic> json) {
@@ -401,6 +413,9 @@ class EsSku {
         variationValue = variationOptions.values.toList()[0];
       }
     }
+    properties = json['properties'] != null
+        ? new SKUProperties.fromJson(json['properties'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -415,6 +430,9 @@ class EsSku {
       //variation_options['variation_options'] = this.variationValue;
       //data['variation_options'] = variation_options;
       data['variation_options'] = {'Weight': this.variationValue};
+    }
+    if (this.properties != null) {
+      data['properties'] = this.properties.toJson();
     }
     return data;
   }
