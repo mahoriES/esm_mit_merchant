@@ -242,11 +242,13 @@ class EsOrder {
   get dIsShowInDelivry {
     return this.orderStatus == EsOrderStatus.PICKED_UP_BY_DA ||
         this.orderStatus == EsOrderStatus.READY_FOR_PICKUP ||
+        this.orderStatus == EsOrderStatus.ASSIGNED_TO_DA ||
         this.orderStatus == EsOrderStatus.REQUESTING_TO_DA;
   }
 
   get isDeliveryAssigned {
     return this.orderStatus == EsOrderStatus.PICKED_UP_BY_DA ||
+        this.orderStatus == EsOrderStatus.ASSIGNED_TO_DA ||
         this.orderStatus == EsOrderStatus.REQUESTING_TO_DA;
   }
 
