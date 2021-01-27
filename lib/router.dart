@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
+import 'package:foore/data/bloc/es_business_categories.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
 import 'package:foore/data/bloc/es_create_merchant_profile.dart';
@@ -8,6 +9,7 @@ import 'package:foore/data/bloc/es_orders.dart';
 import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_address_picker_view/search_view/search_view.dart';
+import 'package:foore/es_business_categories/es_business_categories_view.dart';
 import 'package:foore/es_business_guard/es_businesses_guard.dart';
 import 'package:foore/es_category_page/es_add_subcategory.dart';
 import 'package:foore/es_category_page/es_subcategory_page.dart';
@@ -82,6 +84,14 @@ class AppRouter {
     print(settings.name);
     this.authBloc.foAnalytics.setCurrentScreen(settings.name);
     switch (settings.name) {
+      case BusinessCategoriesPickerView.routeName:
+        return MaterialPageRoute(
+            builder: (context) => Provider<EsBusinessCategoriesBloc>(
+                  create: (context) =>
+                      EsBusinessCategoriesBloc(httpServiceBloc),
+                  dispose: (context, bloc) => bloc.dispose(),
+              child: BusinessCategoriesPickerView(),),settings: settings);
+        break;
       case HomePage.routeName:
         return MaterialPageRoute(
           builder: (context) => AuthGuard(

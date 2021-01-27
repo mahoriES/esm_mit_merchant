@@ -315,6 +315,15 @@ class EsBusinessCategory {
     data['name'] = this.name;
   }
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is EsBusinessCategory &&
+          runtimeType == other.runtimeType &&
+          bcat == other.bcat;
+
+  @override
+  int get hashCode => bcat.hashCode;
 }
 
 class EsAddress {
@@ -437,6 +446,7 @@ class EsUpdateBusinessPayload {
   List<String> notificationPhones;
   bool notifyViaPhone;
   bool notifyViaEmail;
+  List<int> businessCategories;
 
   EsUpdateBusinessPayload(
       {this.businessId,
@@ -450,6 +460,7 @@ class EsUpdateBusinessPayload {
       this.hasDelivery,
       this.cluster,
       this.description,
+      this.businessCategories,
       this.notice,
       this.upiAddress,
       this.upiStatus,
@@ -472,6 +483,12 @@ class EsUpdateBusinessPayload {
       images = new List<EsImages>();
       json['images'].forEach((v) {
         images.add(new EsImages.fromJson(v));
+      });
+    }
+    if (json['bcats'] != null && json['bcats'] is List) {
+      businessCategories = List<int>();
+      json['bcats']?.forEach((json){
+        businessCategories.add(EsBusinessCategory.fromJson(json).bcat);
       });
     }
     phones = json['phones'].cast<String>();
@@ -499,6 +516,10 @@ class EsUpdateBusinessPayload {
 
     if (this.isOpen != null) {
       data['is_open'] = this.isOpen;
+    }
+
+    if (this.businessCategories != null) {
+      data['bcats'] = this.businessCategories;
     }
 
     if (this.address != null) {
