@@ -76,6 +76,11 @@ dependencies:
 
   google_maps_flutter: ^1.0.6
 
+  esamudaay_themes:
+    git: "git@bitbucket.org:ese1/esm_comp_themes.git"
+  esamudaay_app_update:
+    git: "git@bitbucket.org:ese1/esm_comp_appupdate.git"
+
 dependency_overrides:
   provider: ^3.1.0
 

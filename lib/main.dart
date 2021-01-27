@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:after_layout/after_layout.dart';
+import 'package:esamudaay_app_update/app_update_service.dart';
+import 'package:esamudaay_themes/esamudaay_themes.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
@@ -19,13 +21,16 @@ import 'data/bloc/app_translations_bloc.dart';
 import 'data/bloc/auth.dart';
 import 'data/http_service.dart';
 
-void main() {
+void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, //top bar color
     statusBarIconBrightness: Brightness.dark, //top bar icons
   ));
 
   WidgetsFlutterBinding.ensureInitialized();
+
+  //pass 'isTesting : true' here to get isUpdateAvailable = true for testing purpose.
+  await AppUpdateService.checkAppUpdateAvailability(isTesting: true);
 
   runZonedGuarded(() async {
     runApp(
@@ -127,20 +132,23 @@ class _ReviewAppState extends State<ReviewApp>
           if (!snapshot.hasData) {
             return Container();
           }
-          return MaterialApp(
-            title: 'Foore',
-            debugShowCheckedModeBanner: false,
-            initialRoute: AppRouter.homeRoute,
-            onGenerateRoute: router.routeGenerator,
-            navigatorKey: NavigationHandler.navigatorKey,
-            navigatorObservers: [NavigationHandler.routeObserver],
-            localizationsDelegates: [
-              snapshot.data.localeDelegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-            ],
-            supportedLocales: AppTranslationsBloc.supportedLocales(),
-            theme: FooreLightTheme.themeData,
+          return EsamudaayTheme(
+            initialThemeType: THEME_TYPES.MERCHANT_APP_PRIMARY_THEME,
+            child: MaterialApp(
+              title: 'Foore',
+              debugShowCheckedModeBanner: false,
+              initialRoute: AppRouter.homeRoute,
+              onGenerateRoute: router.routeGenerator,
+              navigatorKey: NavigationHandler.navigatorKey,
+              navigatorObservers: [NavigationHandler.routeObserver],
+              localizationsDelegates: [
+                snapshot.data.localeDelegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              supportedLocales: AppTranslationsBloc.supportedLocales(),
+              theme: FooreLightTheme.themeData,
+            ),
           );
         });
   }

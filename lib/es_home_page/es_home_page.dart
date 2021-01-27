@@ -1,7 +1,12 @@
+import 'package:esamudaay_app_update/app_update_banner.dart';
+import 'package:esamudaay_app_update/app_update_service.dart';
+import 'package:esamudaay_themes/esamudaay_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/app_translations.dart';
 import 'package:foore/auth_guard/auth_guard.dart';
 import 'package:foore/data/bloc/people.dart';
+import 'package:foore/data/constants/image_path_constants.dart';
+import 'package:foore/data/constants/string_constants.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/es_business_profile/es_business_profile.dart';
 import 'package:foore/es_order_page/es_order_page.dart';
@@ -26,6 +31,47 @@ class EsHomePage extends StatefulWidget {
 
 class _EsHomePageState extends State<EsHomePage> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    // If user reached the home screen via login :
+    //    1. If appUpdate is available then user must have already seen the prompt and selected later, so 'isSelectedLater = true' already.
+    //    2. If appUpdate is not available then 'isSelectedLater = false' by default.
+    // If home-screen is the launch screen then 'isSelectedLater = false' by default.
+
+    // If isSelectedLater is false then show app update prompt to user.
+    // if update is not available, showUpdateDialog will return null;
+    // otherwise user will have to either update the app or
+    // select later (if flexible update is allowed).
+
+    if (!AppUpdateService.isSelectedLater) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        AppUpdateService.showUpdateDialog(
+          context: context,
+          title: AppTranslations.of(context).text('app_update.title'),
+          message: AppTranslations.of(context).text('app_update.popup_msg'),
+          laterButtonText: AppTranslations.of(context).text('app_update.later'),
+          updateButtonText:
+              AppTranslations.of(context).text('app_update.update'),
+          customThemeData: EsamudaayTheme.of(context),
+          packageName: StringConstants.packageName,
+          logoImage: Image.asset(
+            ImagePathConstants.appLogo,
+            height: 42,
+            fit: BoxFit.contain,
+          ),
+        ).then((value) {
+          // If user selects later option then rebuild the screen to show persistent app upadet banner at bottom
+          // using setState here instead of redux because this will be called only once in whole App lifecycle.
+          if (AppUpdateService.isSelectedLater) {
+            setState(() {});
+          }
+        });
+      });
+    }
+
+    super.initState();
+  }
 
   final List<IconData> icons = [
     Icons.store,
@@ -103,22 +149,37 @@ class _EsHomePageState extends State<EsHomePage> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: List.generate(
-          title.length,
-          (index) => BottomNavigationBarItem(
-            icon: Icon(icons[index]),
-            title: Text(
-              title[index],
+      bottomNavigationBar: Column(
+        children: [
+          AppUpdateService.isSelectedLater
+              ? AppUpdateBanner(
+                  updateMessage:
+                      AppTranslations.of(context).text('app_update.banner_msg'),
+                  updateButtonText: AppTranslations.of(context)
+                      .text('app_update.update')
+                      .toUpperCase(),
+                  customThemeData: EsamudaayTheme.of(context),
+                  packageName: StringConstants.packageName,
+                )
+              : SizedBox.shrink(),
+          BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            items: List.generate(
+              title.length,
+              (index) => BottomNavigationBarItem(
+                icon: Icon(icons[index]),
+                title: Text(
+                  title[index],
+                ),
+              ),
             ),
+            currentIndex: _selectedIndex,
+            selectedItemColor: Theme.of(context).primaryColor,
+            unselectedItemColor: Colors.grey[600],
+            showUnselectedLabels: true,
+            onTap: _onItemTapped,
           ),
-        ),
-        currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Colors.grey[600],
-        showUnselectedLabels: true,
-        onTap: _onItemTapped,
+        ],
       ),
     );
   }
