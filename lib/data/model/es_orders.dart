@@ -30,6 +30,10 @@ class EsOrderStatus {
   static const ALL_ORDERS = 'ALL_ORDERS';
 }
 
+class OrderTrailEvents {
+  static const DA_REQUEST_SENT = 'DA_REQUEST_SENT';
+}
+
 class EsOrderPaymentStatus {
   ///   The payment status of the order. Can have following possible values
   ///   I) PENDING : Payment not done
@@ -238,6 +242,11 @@ class EsOrder {
   get dIsShowInDelivry {
     return this.orderStatus == EsOrderStatus.PICKED_UP_BY_DA ||
         this.orderStatus == EsOrderStatus.READY_FOR_PICKUP ||
+        this.orderStatus == EsOrderStatus.REQUESTING_TO_DA;
+  }
+
+  get isDeliveryAssigned {
+    return this.orderStatus == EsOrderStatus.PICKED_UP_BY_DA ||
         this.orderStatus == EsOrderStatus.REQUESTING_TO_DA;
   }
 

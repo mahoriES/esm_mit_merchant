@@ -118,7 +118,7 @@ class EsOrdersBloc {
     }
     this._esOrdersState.orderDetailsFetchingStatus[orderId] = DataState.LOADING;
     this._updateState();
-    this
+    await this
         .httpService
         .esGet(EsApiPaths.getOrderDetail(orderId))
         .then((httpResponse) async {

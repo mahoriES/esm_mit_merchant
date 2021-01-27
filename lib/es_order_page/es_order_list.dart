@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/app_colors.dart';
 import 'package:foore/data/bloc/es_orders.dart';
 import 'package:foore/data/model/es_order_details.dart';
@@ -6,6 +7,7 @@ import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/es_order_page/widgets/alert_dialogues.dart';
 import 'package:foore/services/sizeconfig.dart';
 import 'package:foore/widgets/empty_list.dart';
+import 'package:foore/widgets/loading_dialog.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 import '../app_translations.dart';
@@ -95,13 +97,52 @@ class _EsOrderListState extends State<EsOrderList> {
       }
     }
 
-    markCompleted(EsOrder order) async {
-      var isAccepted = await OrdersAlertDialogs.showCompleteAlertDialog(
+    markCompleted(EsOrder order, EsOrdersState data) async {
+      bool _isMerchantallowedToCompleteOrder;
+
+      // If order is already assigned to DA,
+      // fetch order details to access order_trail data.
+      // check if delivery assignment was done less than 30 mins ago.
+      // If yes, then merchant should not be allowed to complete order.
+      if (order.isDeliveryAssigned) {
+        LoadingDialog.show();
+        await esOrdersBloc.getOrderDetails(order.orderId);
+        LoadingDialog.hide();
+
+        // If order_details is not fetched successfully then show error toast
+        // and halt the process here only.
+        if (data.orderDetailsFetchingStatus[order.orderId] !=
+            DataState.SUCCESS) {
+          Fluttertoast.showToast(
+            msg: AppTranslations.of(context)
+                .text("generic_something_went_wrong"),
+          );
+          return;
+        }
+        // If order_details is fetched successfully
+        // set _isMerchantallowedToCompleteOrder according to order_trail data.
+        else {
+          _isMerchantallowedToCompleteOrder =
+              data.orderDetails[order.orderId].isMerchantallowedToCompleteOrder;
+        }
+      }
+      // If order is not assigned to DA yet or order is SELF_PICKUP type then
+      // merchant should be allowed to complete the order.
+      else {
+        _isMerchantallowedToCompleteOrder = true;
+      }
+
+      // show Complete order prompt.
+      var isCompleted = await OrdersAlertDialogs.showCompleteAlertDialog(
         order: order,
         esOrdersBloc: esOrdersBloc,
         context: context,
+        isMerchantallowedToCompleteOrder: _isMerchantallowedToCompleteOrder,
       );
-      if (isAccepted == true) {
+
+      // if merchant selected mark_as_complete
+      // then refresh the orders data.
+      if (isCompleted == true) {
         esOrdersBloc.resetDataState();
       }
     }
@@ -132,7 +173,8 @@ class _EsOrderListState extends State<EsOrderList> {
 
         if (ordersList.isEmpty) {
           return EmptyList(
-            titleText: AppTranslations.of(context).text("orders_page_no_orders_found"),
+            titleText:
+                AppTranslations.of(context).text("orders_page_no_orders_found"),
             subtitleText: "",
           );
         }
@@ -171,7 +213,7 @@ class _EsOrderListState extends State<EsOrderList> {
                           ),
                           onMarkReady: () => markReady(ordersList[index]),
                           onMarkCompleted: () =>
-                              markCompleted(ordersList[index]),
+                              markCompleted(ordersList[index], snapshot.data),
                           onCancel: ({bool popOnCompletion}) => cancelItem(
                             ordersList[index],
                             popScreenAfterCompletion: popOnCompletion ?? false,

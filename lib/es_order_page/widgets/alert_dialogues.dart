@@ -132,12 +132,18 @@ class OrdersAlertDialogs {
     @required EsOrder order,
     @required EsOrdersBloc esOrdersBloc,
     @required BuildContext context,
+    @required bool isMerchantallowedToCompleteOrder,
   }) async {
     return _showDialogCommon(
       esOrdersBloc: esOrdersBloc,
       context: context,
       alertDialog: Center(
-        child: _CompleteOrderDialog(order, esOrdersBloc, context),
+        child: _CompleteOrderDialog(
+          order,
+          esOrdersBloc,
+          context,
+          isMerchantallowedToCompleteOrder,
+        ),
       ),
     );
   }
@@ -347,10 +353,12 @@ class _CompleteOrderDialog extends StatefulWidget {
   final EsOrder order;
   final EsOrdersBloc esOrdersBloc;
   final BuildContext dialogContext;
+  final bool isMerchantallowedToCompleteOrder;
   _CompleteOrderDialog(
     this.order,
     this.esOrdersBloc,
     this.dialogContext,
+    this.isMerchantallowedToCompleteOrder,
   );
 
   @override
@@ -393,51 +401,59 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
       scrollable: true,
       title: Text(AppTranslations.of(context)
           .text('orders_page_complete_order_popup_title')),
-      content: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (isShowPaymentConfirmationChecbox)
-            Checkbox(
-                value: isPaymentCompleted,
-                onChanged: (isSelected) {
-                  setState(() {
-                    isPaymentCompleted = isSelected;
-                  });
-                }),
-          if (isShowPaymentConfirmationChecbox)
-            Expanded(
-              child: RichText(
-                softWrap: true,
-                text: TextSpan(
-                  text: AppTranslations.of(context)
-                      .text('orders_page_payment_confimation_cod_1'),
-                  style: Theme.of(context).textTheme.subtitle1,
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: '${widget.order.dOrderTotal} ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(
-                      text: AppTranslations.of(context)
-                          .text('orders_page_payment_confimation_cod_2'),
-                    ),
-                    TextSpan(
-                      text: ' #${widget.order.orderShortNumber}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          if (!isShowPaymentConfirmationChecbox)
-            Expanded(
+      content: !widget.isMerchantallowedToCompleteOrder
+          ? Flexible(
               child: Text(
                 AppTranslations.of(context)
-                    .text('orders_page_complete_confirmation_message'),
+                    .text('orders_page_rectrict_complete_order_message'),
+                style: Theme.of(context).textTheme.subtitle1,
               ),
+            )
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (isShowPaymentConfirmationChecbox)
+                  Checkbox(
+                      value: isPaymentCompleted,
+                      onChanged: (isSelected) {
+                        setState(() {
+                          isPaymentCompleted = isSelected;
+                        });
+                      }),
+                if (isShowPaymentConfirmationChecbox)
+                  Expanded(
+                    child: RichText(
+                      softWrap: true,
+                      text: TextSpan(
+                        text: AppTranslations.of(context)
+                            .text('orders_page_payment_confimation_cod_1'),
+                        style: Theme.of(context).textTheme.subtitle1,
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: '${widget.order.dOrderTotal} ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(
+                            text: AppTranslations.of(context)
+                                .text('orders_page_payment_confimation_cod_2'),
+                          ),
+                          TextSpan(
+                            text: ' #${widget.order.orderShortNumber}',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                if (!isShowPaymentConfirmationChecbox)
+                  Expanded(
+                    child: Text(
+                      AppTranslations.of(context)
+                          .text('orders_page_complete_confirmation_message'),
+                    ),
+                  ),
+              ],
             ),
-        ],
-      ),
       actions: <Widget>[
         SizedBox(
           width: 8.0,
@@ -459,7 +475,8 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
           child: Text(
               AppTranslations.of(context).text('orders_page_mark_completed')),
           color: Theme.of(context).primaryColor,
-          onPressed: isPaymentCompleted
+          onPressed: isPaymentCompleted &&
+                  widget.isMerchantallowedToCompleteOrder
               ? () async {
                   if (isShowPaymentConfirmationChecbox) {
                     widget.esOrdersBloc.updateOrderPaymentStatus(

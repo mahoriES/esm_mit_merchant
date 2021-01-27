@@ -282,6 +282,7 @@
 	"orders_page_could_not_open_maps": "மாப்ஸ் திறக்க முடியவில்லை",
 	"orders_page_sure_add_item_to_the_order": "நீங்கள் நிச்சயமாக %s ஐ வரிசையில் சேர்க்க விரும்புகிறீர்களா?",
 	"orders_page_sure_remove_item_from_the_order": "ஆர்டரிலிருந்து %s ஐ அகற்ற விரும்புகிறீர்களா? ''",
+	"orders_page_rectrict_complete_order_message": "The delivery agent should be processing this order now, please try after sometime!",
 	
 
 	"products_page_no_products_found": "தயாரிப்புகள் எதுவும் கிடைக்கவில்லை",

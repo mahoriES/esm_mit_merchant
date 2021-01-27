@@ -136,6 +136,30 @@ class EsOrderDetailsResponse {
       this.rating,
       this.paymentInfo});
 
+  // Merchant should not be able to mark order as completed
+  // If the delivery assignment was done less than 30 mins ago.
+  bool get isMerchantallowedToCompleteOrder {
+    bool b = false;
+
+    for (final event in this.orderTrail) {
+      if (event.eventName == OrderTrailEvents.DA_REQUEST_SENT) {
+        try {
+          DateTime _time = DateTime.parse(event.created).toLocal();
+          int duration = DateTime.now().difference(_time).inMinutes;
+          debugPrint("duration in minutes => $duration");
+          if (duration > 30) {
+            b = true;
+            break;
+          }
+        } catch (e) {
+          b = false;
+        }
+      }
+    }
+
+    return b;
+  }
+
   EsOrderDetailsResponse.fromJson(
     Map<String, dynamic> json, {
     bool divideUnitPriceBy100 = true,
