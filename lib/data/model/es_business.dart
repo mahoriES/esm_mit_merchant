@@ -1,4 +1,5 @@
 import 'es_clusters.dart';
+import 'es_video_models/es_video_list.dart';
 
 class EsCreateBusinessPayload {
   String businessName;
@@ -63,6 +64,7 @@ class EsBusinessInfo {
   EsTiming timing;
   List<EsImages> images;
   List<String> phones;
+  List<EsBusinessCategory> businessCategories;
   bool hasDelivery;
   EsCluster cluster;
   EsBusinessPaymentInfo paymentInfo;
@@ -196,6 +198,12 @@ class EsBusinessInfo {
     return List<String>();
   }
 
+  List<String> get businessCategoriesNamesList {
+    if (businessCategories != null && businessCategories.isNotEmpty)
+      return businessCategories.map((e) => e.name).toList();
+    return List<String>();
+  }
+
   EsBusinessInfo(
       {this.businessId,
       this.businessName,
@@ -208,6 +216,7 @@ class EsBusinessInfo {
       this.description,
       this.phones,
       this.hasDelivery,
+      this.businessCategories,
       this.cluster,
       this.paymentInfo,
       this.notificationInfo});
@@ -231,7 +240,12 @@ class EsBusinessInfo {
         images.add(new EsImages.fromJson(v));
       });
     }
-
+    if (json['bcats'] != null && json['bcats'] is List) {
+      businessCategories = List<EsBusinessCategory>();
+      json['bcats']?.forEach((json){
+        businessCategories.add(EsBusinessCategory.fromJson(json));
+      });
+    }
     phones = json['phones'].cast<String>();
     hasDelivery = json['has_delivery'];
     cluster = json['cluster'] != null
@@ -268,11 +282,39 @@ class EsBusinessInfo {
     if (this.images != null) {
       data['images'] = this.images.map((v) => v.toJson()).toList();
     }
+    if (this.businessCategories != null) {
+      data['bcats'] = this.businessCategories.map((e) => e.toJson()).toList();
+    }
     if (this.paymentInfo != null) {
       data['payment_info'] = this.paymentInfo.toJson();
     }
     return data;
   }
+}
+
+class EsBusinessCategory {
+  int bcat;
+  bool isActive;
+  String name;
+  String description;
+  Photo image;
+
+  EsBusinessCategory.fromJson(Map<String, dynamic> json) {
+    bcat = json['bcat'];
+    isActive = json['is_active'];
+    name = json['name'];
+    description = json['description'];
+    if (json['image'] != null && json['image'] is Map) {
+      image = Photo.fromJson(json['image']);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['bcat'] = this.bcat;
+    data['name'] = this.name;
+  }
+
 }
 
 class EsAddress {

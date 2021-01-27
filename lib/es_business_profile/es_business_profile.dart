@@ -155,7 +155,7 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
               inputText,
               overflow: TextOverflow.ellipsis,
             ),
-            onDeleted: () {
+            onDeleted: onDelete == null ? null : () {
               onDelete(inputText);
             },
           ),
@@ -166,7 +166,8 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
   }
 
   Widget getChipTextListWidget(
-      String label, List<String> textList, Function onDelete, Function onAdd) {
+      String label, List<String> textList, Function onDelete, Function onAdd,
+      IconData icon) {
     return Container(
       child: textList.length == 0
           ? Row(
@@ -194,7 +195,7 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                   IconButton(
                     onPressed: onAdd,
                     icon: Icon(
-                      Icons.add,
+                      icon,
                       color: Theme.of(context).primaryColor,
                     ),
                   )
@@ -206,7 +207,13 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
 
   Widget getPhoneWidget(EsBusinessInfo businessInfo) {
     return getChipTextListWidget("+ "+AppTranslations.of(context).text("profile_page_add_phone"), businessInfo.dPhones,
-        this.esBusinessProfileBloc.deletePhoneWithNumber, addPhone);
+        this.esBusinessProfileBloc.deletePhoneWithNumber, addPhone, Icons.add);
+  }
+
+  Widget getBusinessCategoriesWidget(EsBusinessInfo businessInfo) {
+    return getChipTextListWidget("+ "+AppTranslations.of(context)
+        .text("profile_page_add_bcats"), businessInfo
+        .businessCategoriesNamesList, null, (){}, Icons.edit);
   }
 
   Widget getHeaderWithSwitchWidget(
@@ -522,6 +529,8 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                     getBusinessNameWidget(businessInfo),
                     getBaseHeaderWidget(AppTranslations.of(context).text("profile_page_description")),
                     getDescriptionWidget(businessInfo),
+                    getBaseHeaderWidget(AppTranslations.of(context).text("profile_page_bcats")),
+                    getBusinessCategoriesWidget(businessInfo),
                     getBaseHeaderWidget(AppTranslations.of(context).text("profile_page_address")),
                     getAddressWidget(businessInfo),
                     getBaseHeaderWidget(AppTranslations.of(context).text("profile_page_notice")),
@@ -537,9 +546,8 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                         "+ " + AppTranslations.of(context).text("profile_page_add_phone"),
                         businessInfo.dPhones,
                         this.esBusinessProfileBloc.deletePhoneWithNumber,
-                        addPhone),
+                        addPhone, Icons.add),
                     Divider(thickness: 2),
-
                     getHeaderWithSwitchWidget(
                         AppTranslations.of(context).text("profile_page_email_notifications"),
                         businessInfo.notificationEmailStatus,
@@ -550,22 +558,7 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                         "+ " + AppTranslations.of(context).text("profile_page_add_email"),
                         businessInfo.notificationEmails,
                         this.esBusinessProfileBloc.deleteNotificationEmail,
-                        addNotificationEmail),
-                    // getHeaderWithSwitchWidget(
-                    //     AppTranslations.of(context).text("profile_page_sms_notifications"),
-                    //     businessInfo.notificationPhoneStatus,
-                    //     this
-                    //         .esBusinessProfileBloc
-                    //         .updateNotificationPhoneStatus),
-                    // getChipTextListWidget(
-                    //     "+ " +
-                    //     AppTranslations.of(context).text("profile_page_add_phone"),
-                    //     businessInfo.notificationPhones,
-                    //     this
-                    //         .esBusinessProfileBloc
-                    //         .deleteNotificationPhoneWithNumber,
-                    //     addNotificationPhone),
-                    //SizedBox(height: 120),
+                        addNotificationEmail, Icons.add),
                   ],
                 );
               },
