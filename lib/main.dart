@@ -130,7 +130,7 @@ class _ReviewAppState extends State<ReviewApp>
         stream: appTranslationsBloc.appTranslationsStateObservable,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Container();
+            return SizedBox.shrink();
           }
           return EsamudaayTheme(
             initialThemeType: THEME_TYPES.MERCHANT_APP_PRIMARY_THEME,

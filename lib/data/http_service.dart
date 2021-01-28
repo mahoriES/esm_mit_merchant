@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/analytics.dart';
 import 'package:foore/environments/environment.dart';
 import 'package:http/http.dart' as http;
@@ -5,6 +6,7 @@ import 'package:foore/data/bloc/auth.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'dart:io';
+
 // ignore: implementation_imports
 import 'package:http_parser/src/media_type.dart';
 import 'dart:async';
@@ -144,7 +146,7 @@ class HttpService {
   }
 
   // eSamudaay
-  Future<http.Response> esGet(path) async {
+  Future<http.Response> esGet(path, {Map<String, dynamic> queryParams}) async {
     esdyPrint.debug("esGet: " + path);
     final esJwtToken = this._authBloc.authState.esMerchantJwtToken;
     esdyPrint.debug("esGet: " + esJwtToken);
@@ -155,8 +157,12 @@ class HttpService {
         'Authorization': 'JWT $esJwtToken'
       };
 
-      final httpResponse =
-          await http.get(esApiBaseUrl + path, headers: requestHeaders);
+      String queryString = queryParams != null
+          ? '?' + Uri(queryParameters: queryParams).query
+          : '';
+
+      final httpResponse = await http.get(esApiBaseUrl + path + queryString,
+          headers: requestHeaders);
 
       print(httpResponse.request.url.toString());
       print(httpResponse.statusCode);
