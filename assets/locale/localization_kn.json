@@ -355,5 +355,11 @@
 	"category_page_sub_category_name": "ఉప వర్గం పేరు",
 	"category_page_select_a_category": "ఒక వర్గాన్ని ఎంచుకొనుము",
 	"category_page_no_categories_found": "వర్గాలు కనుగొనబడలేదు",
-	"category_page_no_categories_found_message": "క్రొత్త వర్గాలను జోడించడానికి 'వర్గాన్ని జోడించు' నొక్కండి’"
+	"category_page_no_categories_found_message": "క్రొత్త వర్గాలను జోడించడానికి 'వర్గాన్ని జోడించు' నొక్కండి’",
+
+	"app_update_title": "ಆ್ಯಪ್ಲಿಕೇಶನ್ ಅಪ್ಡೇಟ್ ಲಭ್ಯವಿದೆ",
+	"app_update_banner_msg": "ಹೊಸ ವೈಶಿಷ್ಟ್ಯಗಳು ಮತ್ತು ಕೊಡುಗೆಗಳೊಂದಿಗೆ ಇಸಮುದಾಯವು ಹೆಚ್ಚು ಆಸಕ್ತಿಕರವಾಗಿದೆ. ಈಗಲೇ ಅಪ್ಡೇಟ್ ಮಾಡಿ !!",
+	"app_update_popup_msg": "ನಾವು ನಿಮಗಾಗಿ ವಿನ್ಯಾಸಗೊಳಿಸಿರುವ ಹೊಸ ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ಅನುಭವಿಸಲು ಇದೀಗ ಆ್ಯಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಅಪ್ಡೇಟ್ ಮಾಡಿ !",
+	"app_update_action": "ಅಪ್ಡೇಟ್ ಮಾಡಿ",
+	"app_update_later": "ನಂತರ"
 }

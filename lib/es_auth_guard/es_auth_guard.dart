@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/app_update_bloc.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/logo_page/logo_page.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +38,10 @@ class _EsAuthGuardState extends State<EsAuthGuard> {
   void initState() {
     super.initState();
     currentWidget = LogoPage();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<EsAppUpdateBloc>(context, listen: false)
+          .checkForUpdate(context);
+    });
   }
 
   @override
