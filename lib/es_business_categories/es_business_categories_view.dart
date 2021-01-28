@@ -18,12 +18,19 @@ class _BusinessCategoriesPickerViewState
   EsBusinessCategoriesBloc _esBusinessCategoriesBloc;
   List<EsBusinessCategory> _selectedBusinessCategories;
   List<EsBusinessCategory> _duplicateSelectedBusinessCategories;
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     _esBusinessCategoriesBloc =
         Provider.of<EsBusinessCategoriesBloc>(context, listen: false);
     _esBusinessCategoriesBloc.getBusinessCategories();
+    _scrollController..addListener(() {
+      debugPrint('Scrolling....');
+      if(_scrollController.position.pixels/_scrollController.position.maxScrollExtent > 0.70){
+        _esBusinessCategoriesBloc.getBusinessCategories();
+      }
+    });
     super.initState();
   }
 
@@ -31,13 +38,12 @@ class _BusinessCategoriesPickerViewState
   void didChangeDependencies() {
     _selectedBusinessCategories =
         ModalRoute.of(context)?.settings?.arguments ?? <EsBusinessCategory>[];
-    _duplicateSelectedBusinessCategories = List.from(_selectedBusinessCategories);
+    _duplicateSelectedBusinessCategories =
+        List.from(_selectedBusinessCategories);
     super.didChangeDependencies();
   }
 
   void onDone() {
-//    Navigator.pop(context, _selectedBusinessCategories);
-//    return;
     if (_selectedBusinessCategories.length ==
         _duplicateSelectedBusinessCategories.length) {
       _duplicateSelectedBusinessCategories?.forEach((element) {
@@ -87,6 +93,7 @@ class _BusinessCategoriesPickerViewState
         builder: (context, snapshot) {
           if (!snapshot.hasData) return SizedBox.shrink();
           return SingleChildScrollView(
+            controller: _scrollController,
             child: Column(
               children: [
                 const SizedBox(
@@ -134,7 +141,8 @@ class _BusinessCategoriesPickerViewState
                               else
                                 _selectedBusinessCategories.removeWhere(
                                     (element) => element.bcat == e.bcat);
-                              setState(() {});
+                              _esBusinessCategoriesBloc
+                                  .updateCategorySelections();
                             },
                           ),
                         )

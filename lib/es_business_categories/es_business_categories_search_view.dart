@@ -91,7 +91,8 @@ class _BusinessCategoriesSearchViewState
                               else
                                 widget._selectedBusinessCategories.removeWhere(
                                     (element) => element.bcat == e.bcat);
-                              setState(() {});
+                              widget._esBusinessCategoriesBloc
+                                  .updateCategorySelections();
                             },
                           ),
                         )

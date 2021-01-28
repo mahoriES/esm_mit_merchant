@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
+import 'package:foore/environments/environment.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EsBusinessCategoriesBloc {
@@ -26,13 +27,15 @@ class EsBusinessCategoriesBloc {
   }
 
   void getBusinessCategories() async {
+    if (this._esBusinessCategoriesState.businessCategoriesLoading) return;
     if (this._esBusinessCategoriesState.currentBusinessCategoryResponseModel !=
             null &&
         this._esBusinessCategoriesState.currentNextUrl == null) return;
     this._esBusinessCategoriesState.businessCategoriesLoading = true;
-    _updateState();
+    if (this._esBusinessCategoriesState.currentBusinessCategoryResponseModel == null)
+      _updateState();
     final response = await this.httpService.esGet(
-        this._esBusinessCategoriesState.currentNextUrl ??
+        this._esBusinessCategoriesState.currentNextUrl?.substring(Environment.esApiUrl.toString().length) ??
             EsApiPaths.getBusinessCategories);
     if (response.statusCode == 200 || response.statusCode == 201) {
       final jsonDecodedResponse = jsonDecode(response.body);
@@ -47,10 +50,14 @@ class EsBusinessCategoriesBloc {
       this._esBusinessCategoriesState.currentNextUrl = responseModel.next;
       this._esBusinessCategoriesState.currentPreviousUrl =
           responseModel.previous;
-      this._esBusinessCategoriesState.businessCategories =
+      this._esBusinessCategoriesState.businessCategories +=
           responseModel.businessCategories;
     }
     this._esBusinessCategoriesState.businessCategoriesLoading = false;
+    _updateState();
+  }
+
+  void updateCategorySelections() {
     _updateState();
   }
 
