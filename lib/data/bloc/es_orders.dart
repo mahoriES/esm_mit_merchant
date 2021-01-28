@@ -6,6 +6,7 @@ import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
+import 'package:foore/widgets/loading_dialog.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EsOrdersBloc {
@@ -329,6 +330,40 @@ class EsOrdersBloc {
       this._esOrdersState.submittingStatus = DataState.FAILED;
       this._updateState();
     });
+  }
+
+  Future<bool> checkIfMerchantIsAllowedToCompleteOrder(
+      EsOrder order, EsOrdersState data) async {
+    bool _isMerchantallowedToCompleteOrder;
+
+    // If order is already assigned to DA,
+    // fetch order details to access order_trail data.
+    // check if delivery assignment was done less than 30 mins ago.
+    // If yes, then merchant should not be allowed to complete order.
+    if (order.isDeliveryAssigned) {
+      LoadingDialog.show();
+      await this.getOrderDetails(order.orderId);
+      LoadingDialog.hide();
+
+      // If order_details is not fetched successfully then show error toast
+      // and halt the process here only.
+      if (data.orderDetailsFetchingStatus[order.orderId] != DataState.SUCCESS) {
+        return null;
+      }
+      // If order_details is fetched successfully
+      // set _isMerchantallowedToCompleteOrder according to order_trail data.
+      else {
+        _isMerchantallowedToCompleteOrder =
+            data.orderDetails[order.orderId].isMerchantallowedToCompleteOrder;
+      }
+    }
+    // If order is not assigned to DA yet or order is SELF_PICKUP type then
+    // merchant should be allowed to complete the order.
+    else {
+      _isMerchantallowedToCompleteOrder = true;
+    }
+
+    return _isMerchantallowedToCompleteOrder;
   }
 
   getDeliveryAgents() {

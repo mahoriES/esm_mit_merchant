@@ -402,13 +402,11 @@ class __CompleteOrderDialogState extends State<_CompleteOrderDialog> {
       title: Text(AppTranslations.of(context)
           .text('orders_page_complete_order_popup_title')),
       content: !widget.isMerchantallowedToCompleteOrder
-          ? Flexible(
-              child: Text(
-                AppTranslations.of(context)
-                    .text('orders_page_rectrict_complete_order_message'),
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-            )
+          ? Text(
+            AppTranslations.of(context)
+                .text('orders_page_rectrict_complete_order_message'),
+            style: Theme.of(context).textTheme.subtitle1,
+          )
           : Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

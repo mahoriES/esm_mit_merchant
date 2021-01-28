@@ -98,38 +98,16 @@ class _EsOrderListState extends State<EsOrderList> {
     }
 
     markCompleted(EsOrder order, EsOrdersState data) async {
-      bool _isMerchantallowedToCompleteOrder;
+      bool _isMerchantallowedToCompleteOrder = await esOrdersBloc
+          .checkIfMerchantIsAllowedToCompleteOrder(order, data);
 
-      // If order is already assigned to DA,
-      // fetch order details to access order_trail data.
-      // check if delivery assignment was done less than 30 mins ago.
-      // If yes, then merchant should not be allowed to complete order.
-      if (order.isDeliveryAssigned) {
-        LoadingDialog.show();
-        await esOrdersBloc.getOrderDetails(order.orderId);
-        LoadingDialog.hide();
-
-        // If order_details is not fetched successfully then show error toast
-        // and halt the process here only.
-        if (data.orderDetailsFetchingStatus[order.orderId] !=
-            DataState.SUCCESS) {
-          Fluttertoast.showToast(
-            msg: AppTranslations.of(context)
-                .text("generic_something_went_wrong"),
-          );
-          return;
-        }
-        // If order_details is fetched successfully
-        // set _isMerchantallowedToCompleteOrder according to order_trail data.
-        else {
-          _isMerchantallowedToCompleteOrder =
-              data.orderDetails[order.orderId].isMerchantallowedToCompleteOrder;
-        }
-      }
-      // If order is not assigned to DA yet or order is SELF_PICKUP type then
-      // merchant should be allowed to complete the order.
-      else {
-        _isMerchantallowedToCompleteOrder = true;
+      // If order_details is not fetched successfully then show error toast
+      // and halt the process here only.
+      if (_isMerchantallowedToCompleteOrder == null) {
+        Fluttertoast.showToast(
+          msg: AppTranslations.of(context).text("generic_something_went_wrong"),
+        );
+        return;
       }
 
       // show Complete order prompt.
