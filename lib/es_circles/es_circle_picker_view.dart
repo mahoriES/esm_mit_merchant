@@ -46,6 +46,7 @@ class _CirclePickerViewState extends State<CirclePickerView> {
 
   @override
   Widget build(BuildContext context) {
+    if (SizeConfig().screenWidth == null) SizeConfig().init(context);
     const locationPointerImage = "assets/location-pointer.png";
     return CustomTheme(initialThemeType: THEME_TYPES.LIGHT,
       child: Scaffold(
