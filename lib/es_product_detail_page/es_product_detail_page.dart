@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/app_translations.dart';
+import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/data/model/es_product.dart';
@@ -251,72 +252,19 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ],
                     ),
                   ),
-                  Container(
+                  Padding(
                     padding: const EdgeInsets.only(
-                      top: 16.0,
+                      top: 24.0,
                       left: 20,
                       right: 20,
-                      bottom: 4,
-                      // bottom: 8.0,
                     ),
-                    alignment: Alignment.bottomLeft,
-                    child: Text(
-                      AppTranslations.of(context).text('products_page_name'),
-                      style: Theme.of(context).textTheme.subtitle2,
-                    ),
-                  ),
-                  Container(
-                    child: snapshot.data.currentProduct.dProductName == ''
-                        ? Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              FlatButton(
-                                onPressed: editName,
-                                child: Text(
-                                  AppTranslations.of(context)
-                                      .text('products_page_add_name'),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Expanded(
-                                  child: Text(
-                                    snapshot.data.currentProduct.dProductName,
-                                    overflow: TextOverflow.ellipsis,
-                                    style:
-                                        Theme.of(context).textTheme.subtitle1,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: editName,
-                                  icon: Icon(
-                                    Icons.edit,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                  ),
-                  SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.only(
-                      top: 16.0,
-                      left: 20,
-                      right: 20,
-                      bottom: 8,
-                    ),
-                    alignment: Alignment.bottomLeft,
-                    child: Text(
-                      AppTranslations.of(context)
-                          .text('products_page_variations'),
-                      style: Theme.of(context).textTheme.subtitle2,
+                    child: TextFormField(
+                      controller: esEditProductBloc.nameEditController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: AppTranslations.of(context)
+                            .text('products_page_name'),
+                      ),
                     ),
                   ),
                   Container(
@@ -328,17 +276,15 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                     ),
                     child: Column(
                       children: List.generate(
-                          snapshot.data.currentProduct.skus != null
-                              ? widget.currentProduct.skus.length + 1
-                              : 0, (index) {
-                        if (snapshot.data.currentProduct.skus == null ||
-                            widget.currentProduct.skus.length == index) {
+                          widget.currentProduct.dActiveSkus.length + 1,
+                          (index) {
+                        if (widget.currentProduct.dActiveSkus.length == index) {
                           return Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               FlatButton(
                                 onPressed: () {
-                                  addSku(esEditProductBloc);
+                                  showRestoreVariationsModel(context);
                                 },
                                 child: Text(
                                   '+ ' +
@@ -351,7 +297,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                           );
                         }
                         return VariationCard(
-                          snapshot.data.currentProduct.skus[index],
+                          snapshot.data.currentProduct.dActiveSkus[index],
                           esEditProductBloc,
                           editSku,
                         );
@@ -379,6 +325,261 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
               ),
             );
           }),
+    );
+  }
+
+  showRestoreVariationsModel(BuildContext context) {
+    final esEditProductBloc = Provider.of<EsEditProductBloc>(context);
+    final _formKey = GlobalKey<FormState>();
+
+    onSuccess() {
+      Navigator.of(context).pop();
+    }
+
+    onFail() {
+      // this._showFailedAlertDialog();
+    }
+
+    submit() {
+      if (this._formKey.currentState.validate()) {
+        esEditProductBloc.addSkuToProduct(true, false, onSuccess, onFail);
+      }
+    }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return StreamBuilder<EsEditProductState>(
+          stream: esEditProductBloc.esEditProductStateObservable,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Container();
+            }
+            return DraggableScrollableSheet(
+              initialChildSize:
+                  snapshot.data.currentProduct.dInactiveActiveSkus.length > 0
+                      ? 0.4
+                      : 0.25,
+              minChildSize: 0.25,
+              maxChildSize: 0.9,
+              builder: (context, scrollController) {
+                return Container(
+                  color: Colors.white,
+                  child: Stack(
+                    children: [
+                      ListView.builder(
+                        controller: scrollController,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 20.0),
+                        itemCount: snapshot.data.currentProduct
+                                .dInactiveActiveSkus.length +
+                            1,
+                        itemBuilder: (context, index) {
+                          if (index == 0) {
+                            return Form(
+                              key: _formKey,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 16.0,
+                                  ),
+                                  Text(
+                                    'Add Variation',
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1,
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                      vertical: 16.0,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 3,
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8.0),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                width: 1,
+                                                color: Colors.black26,
+                                              ),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: TextFormField(
+                                                    controller: esEditProductBloc
+                                                        .skuVariationValueEditController,
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      border: InputBorder.none,
+                                                    ),
+                                                    validator: (text) {
+                                                      return text.length == 0
+                                                          ? AppTranslations.of(
+                                                                  context)
+                                                              .text(
+                                                                  'error_messages_required')
+                                                          : null;
+                                                    },
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    child: DropdownButton(
+                                                      underline:
+                                                          SizedBox.shrink(),
+                                                      // isDense: true,
+                                                      isExpanded: true,
+                                                      value: esEditProductBloc
+                                                          .unitEditController
+                                                          .text,
+                                                      items: snapshot
+                                                          .data.unitsList
+                                                          .map((unit) =>
+                                                              DropdownMenuItem(
+                                                                  value: unit,
+                                                                  child: Text(
+                                                                      unit)))
+                                                          .toList(),
+                                                      onChanged:
+                                                          (String value) {
+                                                        esEditProductBloc
+                                                            .setSelectedUnit(
+                                                                value);
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 12.0,
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                            // padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                width: 1,
+                                                color: Colors.black26,
+                                              ),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: 10,
+                                                    horizontal: 12,
+                                                  ),
+                                                  color: Colors.black12,
+                                                  child: Text(
+                                                    '₹',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 8.0),
+                                                    child: TextFormField(
+                                                      controller: esEditProductBloc
+                                                          .skuPriceEditController,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        isDense: true,
+                                                        border:
+                                                            InputBorder.none,
+                                                      ),
+                                                      validator: (text) {
+                                                        if (double.tryParse(
+                                                                text) ==
+                                                            null) {
+                                                          return AppTranslations
+                                                                  .of(context)
+                                                              .text(
+                                                                  'orders_page_invalid_price');
+                                                        }
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 12.0,
+                                        ),
+                                        RaisedButton(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 16.0,
+                                          ),
+                                          onPressed: submit,
+                                          child: Text('Add'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else if (index == 1) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 24.0,
+                                ),
+                                Text('Restore deleted variations'),
+                                RestoreVariationCard(
+                                  snapshot.data.currentProduct
+                                      .dInactiveActiveSkus[index],
+                                  esEditProductBloc,
+                                  (a) {},
+                                ),
+                              ],
+                            );
+                          } else
+                            return RestoreVariationCard(
+                              snapshot.data.currentProduct
+                                  .dInactiveActiveSkus[index],
+                              esEditProductBloc,
+                              (a) {},
+                            );
+                        },
+                      ),
+                      Positioned(
+                        right: 8.0,
+                        top: 8.0,
+                        child: IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 }
@@ -519,11 +720,119 @@ class VariationCard extends StatelessWidget {
                 width: 10.0,
               ),
               IconButton(
-                  color: Theme.of(context).primaryColor,
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    this.onSkuClick(this.sku);
-                  })
+                color: Theme.of(context).colorScheme.onSurface,
+                icon: Icon(Icons.cancel),
+                onPressed: () {
+                  this.onSkuClick(this.sku);
+                },
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class RestoreVariationCard extends StatelessWidget {
+  final EsSku sku;
+  final EsEditProductBloc esEditProductBloc;
+  final Function(EsSku sku) onSkuClick;
+  const RestoreVariationCard(
+    this.sku,
+    this.esEditProductBloc,
+    this.onSkuClick, {
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                'SKU: ' + sku.dSkuCode,
+                style: Theme.of(context).textTheme.caption,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 4.0,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Flexible(
+                flex: 2,
+                child: Container(
+                  height: 50.0,
+                  padding: EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black12),
+                  ),
+                  child: Center(child: Text(sku.variationValue ?? '')),
+                ),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              Flexible(
+                flex: 3,
+                child: Container(
+                  height: 50.0,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black12),
+                  ),
+                  child: Center(
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 72.0,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                          ),
+                          color: Colors.black12,
+                          child: Center(
+                            child: Text(
+                              '₹',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: Text(
+                              sku.dBasePriceWithoutRupeeSymbol.toString(),
+                              softWrap: true,
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              IconButton(
+                color: Theme.of(context).colorScheme.onSurface,
+                icon: Icon(Icons.replay),
+                onPressed: () {
+                  this.onSkuClick(this.sku);
+                },
+              )
             ],
           ),
         ],

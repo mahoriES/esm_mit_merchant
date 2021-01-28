@@ -239,6 +239,20 @@ class EsProduct {
     return '';
   }
 
+  List<EsSku> get dActiveSkus {
+    if (skus == null) {
+      return [];
+    }
+    return skus.where((element) => element.isActive).toList();
+  }
+
+  List<EsSku> get dInactiveActiveSkus {
+    if (skus == null) {
+      return [];
+    }
+    return skus.where((element) => !element.isActive).toList();
+  }
+
   String get dPrice {
     if (skus.length > 0) {
       return skus[0].basePrice != null
