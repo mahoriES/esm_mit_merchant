@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/app_update_bloc.dart';
 import 'package:foore/data/bloc/auth.dart';
@@ -30,7 +31,7 @@ class EsAuthGuard extends StatefulWidget {
   }
 }
 
-class _EsAuthGuardState extends State<EsAuthGuard> {
+class _EsAuthGuardState extends State<EsAuthGuard> with AfterLayoutMixin {
   Widget currentWidget;
   StreamSubscription<AuthState> _subscription;
 
@@ -38,10 +39,12 @@ class _EsAuthGuardState extends State<EsAuthGuard> {
   void initState() {
     super.initState();
     currentWidget = LogoPage();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<EsAppUpdateBloc>(context, listen: false)
-          .checkForUpdate(context);
-    });
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    Provider.of<EsAppUpdateBloc>(context, listen: false)
+        .checkForUpdate(context);
   }
 
   @override

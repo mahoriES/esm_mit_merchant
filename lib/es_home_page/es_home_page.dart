@@ -32,11 +32,6 @@ class EsHomePage extends StatefulWidget {
 class _EsHomePageState extends State<EsHomePage> {
   int _selectedIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   final List<IconData> icons = [
     Icons.store,
     Icons.shopping_basket,
