@@ -125,7 +125,7 @@ class _ReviewAppState extends State<ReviewApp>
         stream: appTranslationsBloc.appTranslationsStateObservable,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Container();
+            return SizedBox.shrink();
           }
           return MaterialApp(
             title: 'Foore',

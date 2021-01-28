@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.7+2"
+  app_settings:
+    dependency: "direct main"
+    description:
+      name: app_settings
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.4"
   async:
     dependency: transitive
     description:
@@ -57,6 +64,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.10"
+  circles:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: c836d355476c7ae43f933675788311208fdbd349
+      url: "https://kaustubh-pandey@bitbucket.org/ese1/esm_comp_circle.git"
+    source: git
+    version: "0.0.2"
   clock:
     dependency: transitive
     description:

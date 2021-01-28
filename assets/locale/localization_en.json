@@ -121,7 +121,7 @@
     "create_business_page_business_name": "Business name",
     "create_business_page_circle": "Circle",
     "create_business_page_get_in_touch_to_get_circle_code": "Get in touch with us to get Circle code",
-	"create_business_page_save": "save",
+	"create_business_page_save": "Create",
  
 	"generic_save": "save",
 	"generic_confirm": "Confirm",
@@ -375,5 +375,20 @@
 	"address_page_search_location": "Search Location",
 	"address_page_select_location": "Select Location",
 	"address_page_confirm_location": "Confirm Location",
-	"address_page_invalid_address": "Invalid Address"
+	"address_page_invalid_address": "Invalid Address",
+
+	"circle_search_hint": "Try searching for a Circle by typing in your city name. For e.g. Udupi, Chandigarh.",
+	"circle_search_action_hint": "Search for circle",
+	"no_circle_selected_msg": "No Circle Selected",
+	"select_circle_action": "Select Circle",
+	"change_circle_action": "Change Circle",
+	"enter_circle_code": "Enter Circle Code",
+	"esamudaay_circles": "eSamudaay Circles",
+	"trending_circles": "Trending Circles",
+	"suggested_circles": "Suggested Circles",
+	"turn_on_location": "Turn Location On",
+	"turn_on_location_msg": "Turn on your device's location to get suggestions for Circles near you",
+	"based_on_current_location": "Based on your current location",
+	"circle_info_1": "A 'Circle' is a community of shop owners, restaurants and merchants that serve in a locality",
+	"circle_info_2": "You can add a circle by turning on your location or searching for a specific circle"
 }

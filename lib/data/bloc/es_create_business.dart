@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
+import 'package:foore/data/model/es_clusters.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EsCreateBusinessBloc {
   EsCreateBusinessState _esCreateBusinessStateState =
       new EsCreateBusinessState();
   final nameEditController = TextEditingController();
-  final circleEditController = TextEditingController();
   final HttpService httpService;
 
   BehaviorSubject<EsCreateBusinessState> _subjectEsCreateBusinessState;
@@ -18,6 +18,7 @@ class EsCreateBusinessBloc {
     this._subjectEsCreateBusinessState =
         new BehaviorSubject<EsCreateBusinessState>.seeded(
             _esCreateBusinessStateState);
+    nameEditController.addListener(() {_updateState();});
   }
 
   Observable<EsCreateBusinessState> get createBusinessObservable =>
@@ -30,7 +31,7 @@ class EsCreateBusinessBloc {
     this._updateState();
     var payload = new EsCreateBusinessPayload(
       businessName: this.nameEditController.text,
-      clusterCode: this.circleEditController.text,
+      clusterCode: _esCreateBusinessStateState.selectedCircle.clusterCode,
     );
     var payloadString = json.encode(payload.toJson());
     this
@@ -62,6 +63,12 @@ class EsCreateBusinessBloc {
     });
   }
 
+  void handleCircleSelection(EsCluster selectedCircle) {
+    if (selectedCircle == null) return;
+    this._esCreateBusinessStateState.selectedCircle = selectedCircle;
+    _updateState();
+  }
+
   setIsSubmitting(bool isSubmitting) {
     this._esCreateBusinessStateState.isSubmitting = isSubmitting;
     this._updateState();
@@ -85,10 +92,12 @@ class EsCreateBusinessState {
   bool isSubmitting;
   bool isSubmitSuccess;
   bool isSubmitFailed;
+  EsCluster selectedCircle;
 
   EsCreateBusinessState() {
     this.isSubmitting = false;
     this.isSubmitFailed = false;
     this.isSubmitSuccess = false;
+    this.selectedCircle = null;
   }
 }
