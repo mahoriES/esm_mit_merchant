@@ -4,18 +4,29 @@ import 'es_video_models/es_video_list.dart';
 class EsCreateBusinessPayload {
   String businessName;
   String clusterCode;
+  List<int> businessCategories;
 
-  EsCreateBusinessPayload({this.businessName, this.clusterCode});
+  EsCreateBusinessPayload(
+      {this.businessName, this.clusterCode, this.businessCategories});
 
   EsCreateBusinessPayload.fromJson(Map<String, dynamic> json) {
     businessName = json['business_name'];
     clusterCode = json['cluster_code'];
+    if (json['bcats'] != null && json['bcats'] is List) {
+      businessCategories = List<int>();
+      json['bcats']?.forEach((json) {
+        businessCategories.add(EsBusinessCategory.fromJson(json).bcat);
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['business_name'] = this.businessName;
     data['cluster_code'] = this.clusterCode;
+    if (this.businessCategories != null) {
+      data['bcats'] = this.businessCategories;
+    }
     return data;
   }
 }
@@ -242,7 +253,7 @@ class EsBusinessInfo {
     }
     if (json['bcats'] != null && json['bcats'] is List) {
       businessCategories = List<EsBusinessCategory>();
-      json['bcats']?.forEach((json){
+      json['bcats']?.forEach((json) {
         businessCategories.add(EsBusinessCategory.fromJson(json));
       });
     }
@@ -487,7 +498,7 @@ class EsUpdateBusinessPayload {
     }
     if (json['bcats'] != null && json['bcats'] is List) {
       businessCategories = List<int>();
-      json['bcats']?.forEach((json){
+      json['bcats']?.forEach((json) {
         businessCategories.add(EsBusinessCategory.fromJson(json).bcat);
       });
     }
@@ -663,6 +674,7 @@ class EsBusinessNotificationInfo {
   List<String> notificationPhones;
   bool notifyViaEmail;
   bool notifyViaPhone;
+
   EsBusinessNotificationInfo(
       {this.notificationEmails,
       this.notificationPhones,
