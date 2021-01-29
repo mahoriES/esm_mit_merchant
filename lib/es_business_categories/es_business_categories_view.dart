@@ -127,26 +127,26 @@ class _BusinessCategoriesPickerViewState
                       padding: EdgeInsets.all(30),
                       child: const CircularProgressIndicator()),
                 if (!snapshot.data.businessCategoriesLoading)
-                  ListView(
+                  ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    children: snapshot.data.businessCategories
-                        .map(
-                          (e) => CheckboxListTile(
-                            title: Text(e.name),
-                            value: isCategorySelected(e.bcat),
-                            onChanged: (bool added) {
-                              if (added)
-                                _selectedBusinessCategories.add(e);
-                              else
-                                _selectedBusinessCategories.removeWhere(
+                    itemCount: snapshot.data.businessCategories.length,
+                    itemBuilder: (context, index) {
+                      final e = snapshot.data.businessCategories[index];
+                      return CheckboxListTile(
+                        title: Text(e.name),
+                        value: isCategorySelected(e.bcat),
+                        onChanged: (bool added) {
+                          if (added)
+                            _selectedBusinessCategories.add(e);
+                          else
+                            _selectedBusinessCategories.removeWhere(
                                     (element) => element.bcat == e.bcat);
-                              _esBusinessCategoriesBloc
-                                  .updateCategorySelections();
-                            },
-                          ),
-                        )
-                        .toList(),
+                          _esBusinessCategoriesBloc
+                              .updateCategorySelections();
+                        },
+                      );
+                    },
                   ),
               ],
             ),

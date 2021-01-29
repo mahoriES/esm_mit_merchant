@@ -31,6 +31,25 @@ class EsCreateBusinessPayload {
   }
 }
 
+class BusinessCategoriesResponseModel {
+  int count;
+  String next;
+  String previous;
+  List<EsBusinessCategory> businessCategories;
+
+  BusinessCategoriesResponseModel.fromJson(Map<String, dynamic> json) {
+    count = json['count'];
+    next = json['next'];
+    previous = json['previous'];
+    if (json['results'] != null) {
+      businessCategories = [];
+      json['results']?.forEach((json) {
+        businessCategories.add(EsBusinessCategory.fromJson(json));
+      });
+    }
+  }
+}
+
 class EsGetBusinessesResponse {
   int count;
   String next;

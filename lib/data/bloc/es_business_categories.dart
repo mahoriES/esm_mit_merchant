@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
-import 'package:foore/environments/environment.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EsBusinessCategoriesBloc {
@@ -32,11 +31,13 @@ class EsBusinessCategoriesBloc {
             null &&
         this._esBusinessCategoriesState.currentNextUrl == null) return;
     this._esBusinessCategoriesState.businessCategoriesLoading = true;
-    if (this._esBusinessCategoriesState.currentBusinessCategoryResponseModel == null)
-      _updateState();
-    final response = await this.httpService.esGet(
-        this._esBusinessCategoriesState.currentNextUrl?.substring(Environment.esApiUrl.toString().length) ??
-            EsApiPaths.getBusinessCategories);
+    if (this._esBusinessCategoriesState.currentBusinessCategoryResponseModel ==
+        null) _updateState();
+    final response = this._esBusinessCategoriesState.currentNextUrl == null
+        ? await this.httpService.esGet(EsApiPaths.getBusinessCategories)
+        : await this
+            .httpService
+            .esGetUrl(this._esBusinessCategoriesState.currentNextUrl);
     if (response.statusCode == 200 || response.statusCode == 201) {
       final jsonDecodedResponse = jsonDecode(response.body);
       final responseModel =
@@ -112,24 +113,5 @@ class EsBusinessCategoriesState {
     currentBusinessCategoryResponseModel = null;
     currentNextUrl = null;
     currentPreviousUrl = null;
-  }
-}
-
-class BusinessCategoriesResponseModel {
-  int count;
-  String next;
-  String previous;
-  List<EsBusinessCategory> businessCategories;
-
-  BusinessCategoriesResponseModel.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
-    next = json['next'];
-    previous = json['previous'];
-    if (json['results'] != null) {
-      businessCategories = [];
-      json['results']?.forEach((json) {
-        businessCategories.add(EsBusinessCategory.fromJson(json));
-      });
-    }
   }
 }

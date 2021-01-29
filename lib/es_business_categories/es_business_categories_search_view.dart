@@ -77,26 +77,28 @@ class _BusinessCategoriesSearchViewState
                       padding: const EdgeInsets.all(30),
                       child: const CircularProgressIndicator()),
                 if (!snapshot.data.businessCategoriesLoading)
-                  ListView(
+                  ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    children: snapshot.data.searchResultsBusinessCategories
-                        .map(
-                          (e) => CheckboxListTile(
-                            title: Text(e.name),
-                            value: isCategorySelected(e.bcat),
-                            onChanged: (bool added) {
-                              if (added)
-                                widget._selectedBusinessCategories.add(e);
-                              else
-                                widget._selectedBusinessCategories.removeWhere(
+                    itemCount: snapshot.data.searchResultsBusinessCategories
+                        .length,
+                    itemBuilder: (context, index) {
+                      final e = snapshot.data
+                          .searchResultsBusinessCategories[index];
+                      return CheckboxListTile(
+                        title: Text(e.name),
+                        value: isCategorySelected(e.bcat),
+                        onChanged: (bool added) {
+                          if (added)
+                            widget._selectedBusinessCategories.add(e);
+                          else
+                            widget._selectedBusinessCategories.removeWhere(
                                     (element) => element.bcat == e.bcat);
-                              widget._esBusinessCategoriesBloc
-                                  .updateCategorySelections();
-                            },
-                          ),
-                        )
-                        .toList(),
+                          widget._esBusinessCategoriesBloc
+                              .updateCategorySelections();
+                        },
+                      );
+                    },
                   ),
               ],
             ),
