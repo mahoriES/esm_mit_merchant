@@ -390,5 +390,11 @@
 	"turn_on_location_msg": "Turn on your device's location to get suggestions for Circles near you",
 	"based_on_current_location": "Based on your current location",
 	"circle_info_1": "A 'Circle' is a community of shop owners, restaurants and merchants that serve in a locality",
-	"circle_info_2": "You can add a circle by turning on your location or searching for a specific circle"
+	"circle_info_2": "You can add a circle by turning on your location or searching for a specific circle",
+
+	"app_update_title": "App Update Available",
+	"app_update_banner_msg": "eSamudaay just got more interesting with new features and offers. Update Now!!",
+	"app_update_popup_msg": "Update the app now to experience new features we have designed for you!",
+	"app_update_action": "Update",
+	"app_update_later": "Later"
 }

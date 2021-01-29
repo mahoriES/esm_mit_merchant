@@ -27,6 +27,7 @@ import 'package:foore/setting_page/settting_page.dart';
 import 'package:foore/shopping_page/shopping_page.dart';
 import 'package:provider/provider.dart';
 import 'auth_guard/auth_guard.dart';
+import 'data/bloc/app_update_bloc.dart';
 import 'data/bloc/es_edit_product.dart';
 import 'data/bloc/onboarding.dart';
 import 'data/bloc/people.dart';
@@ -186,34 +187,38 @@ class AppRouter {
         break;
       case homeRoute:
         return MaterialPageRoute(
-          builder: (context) => EsAuthGuard(
-            unauthenticatedPage: ShoppingPage(),
-            noMerchantProfilePage: Provider(
-              builder: (context) =>
-                  EsCreateMerchantProfileBloc(httpServiceBloc, authBloc),
-              dispose: (context, value) => value.dispose(),
-              child: EsCreateMerchantProfilePage(),
-            ),
-            child: EsBusinessesGuard(
-              createBusinessRequiredHandler: esCreateBusinessRequiredHandler,
-              child: MultiProvider(
-                providers: [
-                  Provider<PeopleBloc>(
-                    builder: (context) => PeopleBloc(httpServiceBloc),
-                    dispose: (context, value) => value.dispose(),
-                  ),
-                  Provider<EsVideoBloc>(
-                    builder: (context) =>
-                        EsVideoBloc(httpServiceBloc, esBusinessesBloc),
-                    dispose: (context, value) => value.dispose(),
-                  ),
-                  Provider<EsOrdersBloc>(
-                    create: (context) =>
-                        EsOrdersBloc(httpServiceBloc, esBusinessesBloc),
-                    dispose: (context, value) => value.dispose(),
-                  ),
-                ],
-                child: EsHomePage(httpServiceBloc),
+          builder: (context) => Provider(
+            create: (context) => EsAppUpdateBloc(),
+            dispose: (context, value) => value.dispose(),
+            child: EsAuthGuard(
+              unauthenticatedPage: ShoppingPage(),
+              noMerchantProfilePage: Provider(
+                builder: (context) =>
+                    EsCreateMerchantProfileBloc(httpServiceBloc, authBloc),
+                dispose: (context, value) => value.dispose(),
+                child: EsCreateMerchantProfilePage(),
+              ),
+              child: EsBusinessesGuard(
+                createBusinessRequiredHandler: esCreateBusinessRequiredHandler,
+                child: MultiProvider(
+                  providers: [
+                    Provider<PeopleBloc>(
+                      builder: (context) => PeopleBloc(httpServiceBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
+                    Provider<EsVideoBloc>(
+                      builder: (context) =>
+                          EsVideoBloc(httpServiceBloc, esBusinessesBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
+                    Provider<EsOrdersBloc>(
+                      create: (context) =>
+                          EsOrdersBloc(httpServiceBloc, esBusinessesBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
+                  ],
+                  child: EsHomePage(httpServiceBloc),
+                ),
               ),
             ),
           ),

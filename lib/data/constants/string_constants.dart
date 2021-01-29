@@ -8,4 +8,6 @@ class StringConstants {
       "Order - " + orderNumber + " with " + businessName;
 
   static const googleApiKey = "AIzaSyBGRrg0YVy9U3SUF34GoAeGbUP_s5RAYAY";
+
+  static const packageName = 'in.foore.mobile';
 }

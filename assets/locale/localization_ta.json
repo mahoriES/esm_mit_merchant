@@ -345,5 +345,11 @@
 	"category_page_sub_category_name": "துணை வகை பெயர்",
 	"category_page_select_a_category": "ஓர் வகையறாவை தேர்ந்தெடு",
 	"category_page_no_categories_found": "எந்த வகைகளும் காணப்படவில்லை",
-	"category_page_no_categories_found_message": "புதிய வகைகளைச் சேர்க்க 'வகையைச் சேர்' என்பதை அழுத்தவும்"
+	"category_page_no_categories_found_message": "புதிய வகைகளைச் சேர்க்க 'வகையைச் சேர்' என்பதை அழுத்தவும்",
+
+	"app_update_title": "பயன்பாட்டு புதுப்பிப்பு கிடைக்கிறது",
+	"app_update_banner_msg": "புதிய அம்சங்கள் மற்றும் சலுகைகளுடன் eSamudaay மிகவும் சுவாரஸ்யமானது. இப்பொழுது மேம்படுத்துங்கள்!!",
+	"app_update_popup_msg": "நாங்கள் உங்களுக்காக வடிவமைத்த புதிய அம்சங்களை அனுபவிக்க இப்போது பயன்பாட்டைப் புதுப்பிக்கவும்!",
+	"app_update_action": "புதுப்பிப்பு",
+	"app_update_later": "பிறகு"
 }
