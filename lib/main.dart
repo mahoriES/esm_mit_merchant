@@ -30,7 +30,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   //pass 'isTesting : true' here to get isUpdateAvailable = true for testing purpose.
-  await AppUpdateService.checkAppUpdateAvailability(isTesting: true);
+  await AppUpdateService.checkAppUpdateAvailability();
 
   runZonedGuarded(() async {
     runApp(

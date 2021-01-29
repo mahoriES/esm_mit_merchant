@@ -119,18 +119,18 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: "93882e0eacc372aa70ade598b85b0d9c8153710e"
+      ref: "v0.0.1"
+      resolved-ref: b75dc8d04b8fb7dd1d5c49fb858a5bc96880c995
       url: "https://anushka_agrawal@bitbucket.org/ese1/esm_comp_appupdate.git"
     source: git
-    version: "0.0.1"
+    version: "0.0.1+2"
   esamudaay_themes:
-    dependency: transitive
+    dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
+      ref: "v0.0.1"
       resolved-ref: "311ad6fbc1906a94380f7be641e1706f529846bb"
-      url: "git@bitbucket.org:ese1/esm_comp_themes.git"
+      url: "https://anushka_agrawal@bitbucket.org/ese1/esm_comp_themes.git"
     source: git
     version: "0.0.1"
   esys_flutter_share:
