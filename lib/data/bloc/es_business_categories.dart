@@ -58,8 +58,23 @@ class EsBusinessCategoriesBloc {
     _updateState();
   }
 
-  void updateCategorySelections() {
+  void updateCategorySelections(EsBusinessCategory esBusinessCategory,bool added) {
+    if (added)
+      _esBusinessCategoriesState.selectedBusinessCategories
+          .add(esBusinessCategory);
+    else
+      _esBusinessCategoriesState.selectedBusinessCategories
+        .removeWhere((element) => element.bcat == esBusinessCategory.bcat);
     _updateState();
+  }
+
+  List<EsBusinessCategory> get selectedCategories => this
+      ._esBusinessCategoriesState.selectedBusinessCategories;
+
+  set selectedBusinessCategories(
+      List<EsBusinessCategory> selectedBusinessCategories) {
+    this._esBusinessCategoriesState.selectedBusinessCategories =
+        selectedBusinessCategories;
   }
 
   void getSearchResultsForBusinessCategoriesByQuery() async {
@@ -97,6 +112,7 @@ class EsBusinessCategoriesBloc {
 class EsBusinessCategoriesState {
   List<EsBusinessCategory> businessCategories;
   List<EsBusinessCategory> searchResultsBusinessCategories;
+  List<EsBusinessCategory> selectedBusinessCategories;
   BusinessCategoriesResponseModel currentBusinessCategoryResponseModel;
   List<BusinessCategoriesResponseModel> businessCategoryResponseModels;
   bool businessCategoriesLoading;
@@ -106,6 +122,7 @@ class EsBusinessCategoriesState {
 
   EsBusinessCategoriesState() {
     businessCategories = [];
+    selectedBusinessCategories = [];
     searchResultsBusinessCategories = [];
     businessCategoriesLoading = false;
     searchResultsLoading = false;

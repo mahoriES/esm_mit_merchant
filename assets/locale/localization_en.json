@@ -391,5 +391,10 @@
 	"turn_on_location_msg": "Turn on your device's location to get suggestions for Circles near you",
 	"based_on_current_location": "Based on your current location",
 	"circle_info_1": "A 'Circle' is a community of shop owners, restaurants and merchants that serve in a locality",
-	"circle_info_2": "You can add a circle by turning on your location or searching for a specific circle"
+	"circle_info_2": "You can add a circle by turning on your location or searching for a specific circle",
+
+	"done_category": "Done",
+	"search_category": "Search Category..",
+	"search_business_category": "Search Business Categories",
+	"business_categories": "Business Categories"
 }

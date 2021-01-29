@@ -129,7 +129,8 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
     debugPrint('Over here to add/edit categories');
     final categories = await Navigator.of(context).pushNamed(
         BusinessCategoriesPickerView.routeName,
-        arguments: this.esBusinessProfileBloc.selectedBusinessCategories);
+        arguments: List<EsBusinessCategory>.from(this.esBusinessProfileBloc
+            .selectedBusinessCategories));
     if (categories == null) return;
     this.esBusinessProfileBloc.updateBusinessCategories(
         (categories as List<EsBusinessCategory>).map((e) => e.bcat).toList(),

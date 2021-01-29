@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_business_categories.dart';
-import 'package:foore/data/model/es_business.dart';
 
 class BusinessCategoriesSearchView extends StatefulWidget {
   final EsBusinessCategoriesBloc _esBusinessCategoriesBloc;
-  final List<EsBusinessCategory> _selectedBusinessCategories;
 
-  BusinessCategoriesSearchView(
-      this._esBusinessCategoriesBloc, this._selectedBusinessCategories);
+  BusinessCategoriesSearchView(this._esBusinessCategoriesBloc);
 
   @override
   _BusinessCategoriesSearchViewState createState() =>
@@ -27,7 +24,7 @@ class _BusinessCategoriesSearchViewState
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Search Business Categories',
+          AppTranslations.of(context).text("search_business_category"),
           style: Theme.of(context)
               .textTheme
               .subtitle1
@@ -58,7 +55,8 @@ class _BusinessCategoriesSearchViewState
                         .searchCategoryTextfieldController,
                     autofocus: true,
                     decoration: InputDecoration(
-                      hintText: "Search category..",
+                      hintText: AppTranslations.of(context)
+                          .text("search_category"),
                       prefixIcon: Icon(Icons.search),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.grey),
@@ -89,13 +87,8 @@ class _BusinessCategoriesSearchViewState
                         title: Text(e.name),
                         value: isCategorySelected(e.bcat),
                         onChanged: (bool added) {
-                          if (added)
-                            widget._selectedBusinessCategories.add(e);
-                          else
-                            widget._selectedBusinessCategories.removeWhere(
-                                    (element) => element.bcat == e.bcat);
                           widget._esBusinessCategoriesBloc
-                              .updateCategorySelections();
+                              .updateCategorySelections(e, added);
                         },
                       );
                     },
@@ -109,8 +102,8 @@ class _BusinessCategoriesSearchViewState
   }
 
   bool isCategorySelected(int bcat) {
-    if (widget._selectedBusinessCategories.isNotEmpty &&
-        widget._selectedBusinessCategories
+    if (widget._esBusinessCategoriesBloc.selectedCategories.isNotEmpty &&
+        widget._esBusinessCategoriesBloc.selectedCategories
                 .indexWhere((element) => element.bcat == bcat) >
             -1) return true;
     return false;

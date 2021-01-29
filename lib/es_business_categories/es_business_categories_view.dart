@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_business_categories.dart';
 import 'package:foore/data/model/es_business.dart';
@@ -18,7 +19,7 @@ class _BusinessCategoriesPickerViewState
   EsBusinessCategoriesBloc _esBusinessCategoriesBloc;
   List<EsBusinessCategory> _selectedBusinessCategories;
   List<EsBusinessCategory> _duplicateSelectedBusinessCategories;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -26,12 +27,18 @@ class _BusinessCategoriesPickerViewState
         Provider.of<EsBusinessCategoriesBloc>(context, listen: false);
     _esBusinessCategoriesBloc.getBusinessCategories();
     _scrollController..addListener(() {
-      debugPrint('Scrolling....');
-      if(_scrollController.position.pixels/_scrollController.position.maxScrollExtent > 0.70){
+      if(_scrollController.position.pixels / _scrollController
+          .position.maxScrollExtent > 0.70){
         _esBusinessCategoriesBloc.getBusinessCategories();
       }
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -40,26 +47,28 @@ class _BusinessCategoriesPickerViewState
         ModalRoute.of(context)?.settings?.arguments ?? <EsBusinessCategory>[];
     _duplicateSelectedBusinessCategories =
         List.from(_selectedBusinessCategories);
+    _esBusinessCategoriesBloc.selectedBusinessCategories =
+        _selectedBusinessCategories;
     super.didChangeDependencies();
   }
 
   void onDone() {
-    if (_selectedBusinessCategories.length ==
+    if (_esBusinessCategoriesBloc.selectedCategories.length ==
         _duplicateSelectedBusinessCategories.length) {
       _duplicateSelectedBusinessCategories?.forEach((element) {
-        if (!_selectedBusinessCategories.contains(element))
-          Navigator.pop(context, _selectedBusinessCategories);
+        if (!_esBusinessCategoriesBloc.selectedCategories.contains(element))
+          Navigator.pop(context, _esBusinessCategoriesBloc.selectedCategories);
         return;
       });
       Navigator.pop(context, null);
     } else
-      Navigator.pop(context, _selectedBusinessCategories);
+      Navigator.pop(context, _esBusinessCategoriesBloc.selectedCategories);
   }
 
   void navigateToCategorySearchScreen() {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => BusinessCategoriesSearchView(
-            _esBusinessCategoriesBloc, _selectedBusinessCategories)));
+            _esBusinessCategoriesBloc)));
   }
 
   @override
@@ -69,10 +78,10 @@ class _BusinessCategoriesPickerViewState
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           color: Colors.white,
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, null),
         ),
         title: Text(
-          'Business Categories',
+          AppTranslations.of(context).text("business_categories"),
           style: Theme.of(context)
               .textTheme
               .subtitle1
@@ -82,7 +91,7 @@ class _BusinessCategoriesPickerViewState
         elevation: 3,
       ),
       floatingActionButton: FoSubmitButton(
-        text: "Done",
+        text: AppTranslations.of(context).text("done_category"),
         onPressed: () {
           onDone();
         },
@@ -106,7 +115,8 @@ class _BusinessCategoriesPickerViewState
                     child: IgnorePointer(
                       child: TextField(
                         decoration: InputDecoration(
-                          hintText: 'Search Business Categories',
+                          hintText: AppTranslations.of(context)
+                              .text("search_business_category"),
                           prefixIcon: Icon(
                             Icons.search_rounded,
                             color: Colors.black,
@@ -137,13 +147,8 @@ class _BusinessCategoriesPickerViewState
                         title: Text(e.name),
                         value: isCategorySelected(e.bcat),
                         onChanged: (bool added) {
-                          if (added)
-                            _selectedBusinessCategories.add(e);
-                          else
-                            _selectedBusinessCategories.removeWhere(
-                                    (element) => element.bcat == e.bcat);
                           _esBusinessCategoriesBloc
-                              .updateCategorySelections();
+                              .updateCategorySelections(e, added);
                         },
                       );
                     },
@@ -157,8 +162,8 @@ class _BusinessCategoriesPickerViewState
   }
 
   bool isCategorySelected(int bcat) {
-    if (_selectedBusinessCategories.isNotEmpty &&
-        _selectedBusinessCategories
+    if (_esBusinessCategoriesBloc.selectedCategories.isNotEmpty &&
+        _esBusinessCategoriesBloc.selectedCategories
                 .indexWhere((element) => element.bcat == bcat) >
             -1) return true;
     return false;
