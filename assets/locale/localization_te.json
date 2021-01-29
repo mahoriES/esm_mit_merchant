@@ -281,6 +281,7 @@
 	"orders_page_could_not_open_maps": "మ్యాప్‌లను తెరవడం సాధ్యం కాలేదు",
 	"orders_page_sure_add_item_to_the_order": "మీరు ఆర్డర్‌కు %s ని జోడించాలనుకుంటున్నారా?",
 	"orders_page_sure_remove_item_from_the_order": "మీరు ఖచ్చితంగా ఆర్డర్ నుండి %s  ను తొలగించాలనుకుంటున్నారా? ",
+	"orders_page_rectrict_complete_order_message": "The delivery agent should be processing this order now, please try after sometime!",
 	
 
 	"products_page_no_products_found": "ఉత్పత్తులు కనుగొనబడలేదు",

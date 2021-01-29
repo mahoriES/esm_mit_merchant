@@ -296,7 +296,7 @@
 	"orders_page_order_status_awaiting_customer_confirmation": "ग्राहक की पुष्टि का इंतजार कर रहे",
 	"orders_page_order_status_delivering": "डिलीवरी कर रहे",
 	"orders_page_order_status_waiting_pickup": "पिकअप का इंतजार है",
-	
+	"orders_page_rectrict_complete_order_message": "The delivery agent should be processing this order now, please try after sometime!",
 
 	"products_page_no_products_found": "कोई प्रोडक्ट नहीं मिला",
 	"products_page_no_products_found_description": "नए प्रोडक्ट को जोड़ने के लिए 'आइटम जोड़ें",

@@ -293,6 +293,7 @@
 	"orders_page_order_status_awaiting_customer_confirmation": "ವ್ಯಾಪಾರಿಯ ಆದೇಶಕ್ಕಾಗಿ ಕಾಯುತ್ತಿದ್ದೇವೆ",
 	"orders_page_order_status_delivering": "ವಿತರಣೆಯಾಗುತ್ತಿದೆ",
 	"orders_page_order_status_waiting_pickup": "ಪಿಕಪ್ ಕಾಯಲಾಗುತ್ತಿದೆ",
+	"orders_page_rectrict_complete_order_message": "The delivery agent should be processing this order now, please try after sometime!",
 	
 
 	"products_page_no_products_found": "ಯಾವುದೇ ಉತ್ಪನ್ನಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
