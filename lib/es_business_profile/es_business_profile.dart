@@ -20,13 +20,8 @@ class EsBusinessProfile extends StatefulWidget {
   _EsBusinessProfileState createState() => _EsBusinessProfileState();
 }
 
-class _EsBusinessProfileState extends State<EsBusinessProfile> {
+class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetMixin{
   EsBusinessProfileBloc esBusinessProfileBloc;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
 
   @override
   void dispose() {
@@ -173,70 +168,6 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
             .of(context)
             .textTheme
             .subtitle2,
-      ),
-    );
-  }
-
-  List<Widget> getTextChips(List<String> inputTextList, Function onDelete) {
-    List<Widget> widgets = List<Widget>();
-    for (String inputText in inputTextList) {
-      widgets.add(
-        Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: Chip(
-            label: Text(
-              inputText,
-              overflow: TextOverflow.ellipsis,
-            ),
-            onDeleted: onDelete == null
-                ? null
-                : () {
-              onDelete(inputText);
-            },
-          ),
-        ),
-      );
-    }
-    return widgets;
-  }
-
-  Widget getChipTextListWidget(String label, List<String> textList,
-      Function onDelete, Function onAdd, IconData icon) {
-    return Container(
-      child: textList.length == 0
-          ? Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          FlatButton(
-            onPressed: onAdd,
-            child: Text(
-              label,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      )
-          : Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Wrap(
-                children: getTextChips(textList, onDelete),
-              ),
-            ),
-            IconButton(
-              onPressed: onAdd,
-              icon: Icon(
-                icon,
-                color: Theme
-                    .of(context)
-                    .primaryColor,
-              ),
-            )
-          ],
-        ),
       ),
     );
   }
@@ -662,5 +593,70 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
         ),
       ),
     );
+  }
+}
+
+mixin ChipsWidgetMixin<T extends StatefulWidget> on State<T> {
+
+  Widget getChipTextListWidget(String label, List<String> textList,
+      Function onDelete, Function onAdd, IconData icon) {
+    return Container(
+      child: textList.length == 0
+          ? Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          FlatButton(
+            onPressed: onAdd,
+            child: Text(
+              label,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      )
+          : Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: Wrap(
+                children: getTextChips(textList, onDelete),
+              ),
+            ),
+            IconButton(
+              onPressed: onAdd,
+              icon: Icon(
+                icon,
+                color: Theme.of(context).primaryColor,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<Widget> getTextChips(List<String> inputTextList, Function onDelete) {
+    List<Widget> widgets = List<Widget>();
+    for (String inputText in inputTextList) {
+      widgets.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: Chip(
+            label: Text(
+              inputText,
+              overflow: TextOverflow.ellipsis,
+            ),
+            onDeleted: onDelete == null
+                ? null
+                : () {
+              onDelete(inputText);
+            },
+          ),
+        ),
+      );
+    }
+    return widgets;
   }
 }

@@ -8,6 +8,7 @@ import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:foore/es_business_categories/es_business_categories_view.dart';
+import 'package:foore/es_business_profile/es_business_profile.dart';
 import 'package:foore/es_circles/es_circle_picker_view.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,7 @@ class EsCreateBusinessPage extends StatefulWidget {
 }
 
 class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
-    with AfterLayoutMixin<EsCreateBusinessPage>, CommonWidgetMixin {
+    with ChipsWidgetMixin {
   final _formKey = GlobalKey<FormState>();
   EsCreateBusinessBloc createBusinessBloc;
 
@@ -75,12 +76,6 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
         );
       },
     );
-  }
-
-  @override
-  void afterFirstLayout(BuildContext context) {
-    // final createBusinessBloc = Provider.of<EsCreateBusinessBloc>(context);
-    // createBusinessBloc.getData();
   }
 
   Future<bool> _onWillPop() async {
@@ -263,70 +258,5 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
         null,
         addOrEditBusinessCategories,
         Icons.edit);
-  }
-}
-
-mixin CommonWidgetMixin<T extends StatefulWidget> on State<T> {
-
-  Widget getChipTextListWidget(String label, List<String> textList,
-      Function onDelete, Function onAdd, IconData icon) {
-    return Container(
-      child: textList.length == 0
-          ? Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                FlatButton(
-                  onPressed: onAdd,
-                  child: Text(
-                    label,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            )
-          : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Wrap(
-                      children: getTextChips(textList, onDelete),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: onAdd,
-                    icon: Icon(
-                      icon,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  )
-                ],
-              ),
-            ),
-    );
-  }
-
-  List<Widget> getTextChips(List<String> inputTextList, Function onDelete) {
-    List<Widget> widgets = List<Widget>();
-    for (String inputText in inputTextList) {
-      widgets.add(
-        Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: Chip(
-            label: Text(
-              inputText,
-              overflow: TextOverflow.ellipsis,
-            ),
-            onDeleted: onDelete == null
-                ? null
-                : () {
-                    onDelete(inputText);
-                  },
-          ),
-        ),
-      );
-    }
-    return widgets;
   }
 }
