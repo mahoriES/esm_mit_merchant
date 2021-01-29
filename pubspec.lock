@@ -121,11 +121,11 @@ packages:
       path: "."
       ref: HEAD
       resolved-ref: "93882e0eacc372aa70ade598b85b0d9c8153710e"
-      url: "git@bitbucket.org:ese1/esm_comp_appupdate.git"
+      url: "https://anushka_agrawal@bitbucket.org/ese1/esm_comp_appupdate.git"
     source: git
     version: "0.0.1"
   esamudaay_themes:
-    dependency: "direct main"
+    dependency: transitive
     description:
       path: "."
       ref: HEAD
