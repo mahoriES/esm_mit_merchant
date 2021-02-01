@@ -398,6 +398,8 @@
 	"search_category": "Search Category..",
 	"search_business_category": "Search Business Categories",
 	"business_categories": "Business Categories",
+	"categories_updation_failed": "Categories updation failed. Please try again!",
+	"categories_updated_success": "Categories updated successfully!",
 
 	"app_update_title": "App Update Available",
 	"app_update_banner_msg": "eSamudaay just got more interesting with new features and offers. Update Now!!",

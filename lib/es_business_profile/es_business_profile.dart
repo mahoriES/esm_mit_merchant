@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/data/bloc/es_address_bloc.dart';
 import 'package:foore/data/bloc/es_business_profile.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
@@ -134,7 +135,11 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
     if (categories == null) return;
     this.esBusinessProfileBloc.updateBusinessCategories(
         (categories as List<EsBusinessCategory>).map((e) => e.bcat).toList(),
-        null, null);
+        (){Fluttertoast.showToast(msg: AppTranslations
+            .of(context).text("categories_updated_success"),);},
+            (){Fluttertoast.showToast(
+                msg: AppTranslations
+                    .of(context).text("categories_updation_failed"),);});
   }
 
   addNotice() async {
