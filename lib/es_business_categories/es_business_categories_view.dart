@@ -26,12 +26,14 @@ class _BusinessCategoriesPickerViewState
     _esBusinessCategoriesBloc =
         Provider.of<EsBusinessCategoriesBloc>(context, listen: false);
     _esBusinessCategoriesBloc.getBusinessCategories();
-    _scrollController..addListener(() {
-      if(_scrollController.position.pixels / _scrollController
-          .position.maxScrollExtent > 0.70){
-        _esBusinessCategoriesBloc.getBusinessCategories();
-      }
-    });
+    _scrollController
+      ..addListener(() {
+        if (_scrollController.position.pixels /
+                _scrollController.position.maxScrollExtent >
+            0.70) {
+          _esBusinessCategoriesBloc.getBusinessCategories();
+        }
+      });
     super.initState();
   }
 
@@ -67,8 +69,8 @@ class _BusinessCategoriesPickerViewState
 
   void navigateToCategorySearchScreen() {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => BusinessCategoriesSearchView(
-            _esBusinessCategoriesBloc)));
+        builder: (context) =>
+            BusinessCategoriesSearchView(_esBusinessCategoriesBloc)));
   }
 
   @override
@@ -147,8 +149,8 @@ class _BusinessCategoriesPickerViewState
                         title: Text(e.name),
                         value: isCategorySelected(e.bcat),
                         onChanged: (bool added) {
-                          _esBusinessCategoriesBloc
-                              .updateCategorySelections(e, added);
+                          _esBusinessCategoriesBloc.updateCategorySelections(
+                              e, added);
                         },
                       );
                     },

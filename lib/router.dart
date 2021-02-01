@@ -94,7 +94,9 @@ class AppRouter {
                   create: (context) =>
                       EsBusinessCategoriesBloc(httpServiceBloc),
                   dispose: (context, bloc) => bloc.dispose(),
-              child: BusinessCategoriesPickerView(),),settings: settings);
+                  child: BusinessCategoriesPickerView(),
+                ),
+            settings: settings);
         break;
       case HomePage.routeName:
         return MaterialPageRoute(
@@ -352,7 +354,7 @@ class AppRouter {
             builder: (context) => Provider<EsSelectCircleBloc>(
                   create: (context) => EsSelectCircleBloc(httpServiceBloc),
                   dispose: (context, bloc) => bloc.dispose(),
-              child: CirclePickerView(),
+                  child: CirclePickerView(),
                 ));
         break;
       case CircleSearchView.routeName:

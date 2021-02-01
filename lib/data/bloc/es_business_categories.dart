@@ -58,18 +58,19 @@ class EsBusinessCategoriesBloc {
     _updateState();
   }
 
-  void updateCategorySelections(EsBusinessCategory esBusinessCategory,bool added) {
+  void updateCategorySelections(
+      EsBusinessCategory esBusinessCategory, bool added) {
     if (added)
       _esBusinessCategoriesState.selectedBusinessCategories
           .add(esBusinessCategory);
     else
       _esBusinessCategoriesState.selectedBusinessCategories
-        .removeWhere((element) => element.bcat == esBusinessCategory.bcat);
+          .removeWhere((element) => element.bcat == esBusinessCategory.bcat);
     _updateState();
   }
 
-  List<EsBusinessCategory> get selectedCategories => this
-      ._esBusinessCategoriesState.selectedBusinessCategories;
+  List<EsBusinessCategory> get selectedCategories =>
+      this._esBusinessCategoriesState.selectedBusinessCategories;
 
   set selectedBusinessCategories(
       List<EsBusinessCategory> selectedBusinessCategories) {

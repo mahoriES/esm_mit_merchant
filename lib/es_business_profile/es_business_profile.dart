@@ -21,7 +21,8 @@ class EsBusinessProfile extends StatefulWidget {
   _EsBusinessProfileState createState() => _EsBusinessProfileState();
 }
 
-class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetMixin{
+class _EsBusinessProfileState extends State<EsBusinessProfile>
+    with ChipsWidgetMixin {
   EsBusinessProfileBloc esBusinessProfileBloc;
 
   @override
@@ -32,21 +33,19 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
 
   editName() async {
     await Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
-            EsEditBaseTextPage(
-                this.esBusinessProfileBloc,
-                AppTranslations.of(context)
-                    .text("profile_page_update_business_name"),
-                AppTranslations.of(context).text("profile_page_business_name"),
-                this.esBusinessProfileBloc.nameEditController,
-                this.esBusinessProfileBloc.updateName,
-                64)));
+        builder: (context) => EsEditBaseTextPage(
+            this.esBusinessProfileBloc,
+            AppTranslations.of(context)
+                .text("profile_page_update_business_name"),
+            AppTranslations.of(context).text("profile_page_business_name"),
+            this.esBusinessProfileBloc.nameEditController,
+            this.esBusinessProfileBloc.updateName,
+            64)));
   }
 
   addNotificationPhone() async {
     await Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
-        new EsEditBaseTextPage(
+        builder: (context) => new EsEditBaseTextPage(
             this.esBusinessProfileBloc,
             AppTranslations.of(context)
                 .text("profile_page_add_notification_phone"),
@@ -59,8 +58,7 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
 
   addNotificationEmail() async {
     await Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
-        new EsEditBaseTextPage(
+        builder: (context) => new EsEditBaseTextPage(
             this.esBusinessProfileBloc,
             AppTranslations.of(context)
                 .text("profile_page_add_notification_email"),
@@ -72,29 +70,26 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
 
   editUpiAddress() async {
     await Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
-            EsEditBaseTextPage(
-                this.esBusinessProfileBloc,
-                AppTranslations.of(context).text("profile_page_update_upi_id"),
-                AppTranslations.of(context).text("profile_page_upi_id"),
-                this.esBusinessProfileBloc.upiAddressEditController,
-                this.esBusinessProfileBloc.updateUpiAddress,
-                127)));
+        builder: (context) => EsEditBaseTextPage(
+            this.esBusinessProfileBloc,
+            AppTranslations.of(context).text("profile_page_update_upi_id"),
+            AppTranslations.of(context).text("profile_page_upi_id"),
+            this.esBusinessProfileBloc.upiAddressEditController,
+            this.esBusinessProfileBloc.updateUpiAddress,
+            127)));
   }
 
   addPhone() async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) =>
-            EsEditBaseTextPage(
-                this.esBusinessProfileBloc,
-                AppTranslations.of(context).text(
-                    "profile_page_add_mobile_number"),
-                AppTranslations.of(context)
-                    .text("profile_page_10_digit_Mobile_number"),
-                this.esBusinessProfileBloc.phoneNumberEditingControllers,
-                this.esBusinessProfileBloc.addPhone,
-                10),
+        builder: (context) => EsEditBaseTextPage(
+            this.esBusinessProfileBloc,
+            AppTranslations.of(context).text("profile_page_add_mobile_number"),
+            AppTranslations.of(context)
+                .text("profile_page_10_digit_Mobile_number"),
+            this.esBusinessProfileBloc.phoneNumberEditingControllers,
+            this.esBusinessProfileBloc.addPhone,
+            10),
       ),
     );
   }
@@ -102,26 +97,25 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
   addAddress() async {
     await Navigator.of(context)
         .push(MaterialPageRoute(
-        builder: (context) =>
-            EsEditBusinessAddressPage(this.esBusinessProfileBloc)))
+            builder: (context) =>
+                EsEditBusinessAddressPage(this.esBusinessProfileBloc)))
         .then(
           (value) => Provider.of<EsAddressBloc>(context).reset(),
-    );
+        );
   }
 
   addDescription() async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) =>
-            EsEditBaseTextPage(
-                this.esBusinessProfileBloc,
-                AppTranslations.of(context)
-                    .text("profile_page_update_business_description"),
-                AppTranslations.of(context)
-                    .text("profile_page_business_description"),
-                this.esBusinessProfileBloc.descriptionEditController,
-                this.esBusinessProfileBloc.updateDescription,
-                512),
+        builder: (context) => EsEditBaseTextPage(
+            this.esBusinessProfileBloc,
+            AppTranslations.of(context)
+                .text("profile_page_update_business_description"),
+            AppTranslations.of(context)
+                .text("profile_page_business_description"),
+            this.esBusinessProfileBloc.descriptionEditController,
+            this.esBusinessProfileBloc.updateDescription,
+            512),
       ),
     );
   }
@@ -130,31 +124,34 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
     debugPrint('Over here to add/edit categories');
     final categories = await Navigator.of(context).pushNamed(
         BusinessCategoriesPickerView.routeName,
-        arguments: List<EsBusinessCategory>.from(this.esBusinessProfileBloc
-            .selectedBusinessCategories));
+        arguments: List<EsBusinessCategory>.from(
+            this.esBusinessProfileBloc.selectedBusinessCategories));
     if (categories == null) return;
     this.esBusinessProfileBloc.updateBusinessCategories(
         (categories as List<EsBusinessCategory>).map((e) => e.bcat).toList(),
-        (){Fluttertoast.showToast(msg: AppTranslations
-            .of(context).text("categories_updated_success"),);},
-            (){Fluttertoast.showToast(
-                msg: AppTranslations
-                    .of(context).text("categories_updation_failed"),);});
+        () {
+      Fluttertoast.showToast(
+        msg: AppTranslations.of(context).text("categories_updated_success"),
+      );
+    }, () {
+      Fluttertoast.showToast(
+        msg: AppTranslations.of(context).text("categories_updation_failed"),
+      );
+    });
   }
 
   addNotice() async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) =>
-            EsEditBaseTextPage(
-                this.esBusinessProfileBloc,
-                AppTranslations.of(context)
-                    .text("profile_page_update_business_notice"),
-                AppTranslations.of(context)
-                    .text('profile_page_update_business_notice_label'),
-                this.esBusinessProfileBloc.noticeEditController,
-                this.esBusinessProfileBloc.updateNotice,
-                127),
+        builder: (context) => EsEditBaseTextPage(
+            this.esBusinessProfileBloc,
+            AppTranslations.of(context)
+                .text("profile_page_update_business_notice"),
+            AppTranslations.of(context)
+                .text('profile_page_update_business_notice_label'),
+            this.esBusinessProfileBloc.noticeEditController,
+            this.esBusinessProfileBloc.updateNotice,
+            127),
       ),
     );
   }
@@ -170,10 +167,7 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
       alignment: Alignment.bottomLeft,
       child: Text(
         headerName,
-        style: Theme
-            .of(context)
-            .textTheme
-            .subtitle2,
+        style: Theme.of(context).textTheme.subtitle2,
       ),
     );
   }
@@ -191,12 +185,13 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
     return getChipTextListWidget(
         "+ " + AppTranslations.of(context).text("profile_page_add_bcats"),
         businessInfo.businessCategoriesNamesList,
-        null, addOrEditBusinessCategories,
+        null,
+        addOrEditBusinessCategories,
         Icons.edit);
   }
 
-  Widget getHeaderWithSwitchWidget(String label, bool switchValue,
-      Function onUpdate) {
+  Widget getHeaderWithSwitchWidget(
+      String label, bool switchValue, Function onUpdate) {
     return Container(
       padding: const EdgeInsets.only(
         //top: 24.0,
@@ -210,10 +205,7 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
           Expanded(
             child: Text(
               label,
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .subtitle2,
+              style: Theme.of(context).textTheme.subtitle2,
             ),
           ),
           Switch(
@@ -230,46 +222,41 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
     return Container(
       child: businessInfo.dBusinessPaymentUpiAddress == ''
           ? Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          FlatButton(
-            onPressed: editUpiAddress,
-            child: Text(
-              "+ " +
-                  AppTranslations.of(context)
-                      .text("profile_page_add_upi_id"),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      )
-          : Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                businessInfo.dBusinessPaymentUpiAddress,
-                overflow: TextOverflow.ellipsis,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .subtitle1,
-              ),
-            ),
-            IconButton(
-              onPressed: editUpiAddress,
-              icon: Icon(
-                Icons.edit,
-                color: Theme
-                    .of(context)
-                    .primaryColor,
-              ),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: editUpiAddress,
+                  child: Text(
+                    "+ " +
+                        AppTranslations.of(context)
+                            .text("profile_page_add_upi_id"),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             )
-          ],
-        ),
-      ),
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      businessInfo.dBusinessPaymentUpiAddress,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: editUpiAddress,
+                    icon: Icon(
+                      Icons.edit,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  )
+                ],
+              ),
+            ),
     );
   }
 
@@ -277,45 +264,40 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
     return Container(
       child: businessInfo.dBusinessName == ''
           ? Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          FlatButton(
-            onPressed: editName,
-            child: Text(
-              AppTranslations.of(context)
-                  .text('profile_page_button_add_business_name'),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      )
-          : Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                businessInfo.dBusinessName,
-                overflow: TextOverflow.ellipsis,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .subtitle1,
-              ),
-            ),
-            IconButton(
-              onPressed: editName,
-              icon: Icon(
-                Icons.edit,
-                color: Theme
-                    .of(context)
-                    .primaryColor,
-              ),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: editName,
+                  child: Text(
+                    AppTranslations.of(context)
+                        .text('profile_page_button_add_business_name'),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             )
-          ],
-        ),
-      ),
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      businessInfo.dBusinessName,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: editName,
+                    icon: Icon(
+                      Icons.edit,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  )
+                ],
+              ),
+            ),
     );
   }
 
@@ -323,46 +305,41 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
     return Container(
       child: businessInfo.dBusinessPrettyAddress == ''
           ? Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          FlatButton(
-            onPressed: addAddress,
-            child: Text(
-              "+ " +
-                  AppTranslations.of(context)
-                      .text("profile_page_add_address"),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      )
-          : Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                businessInfo.dBusinessPrettyAddress,
-                overflow: TextOverflow.ellipsis,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .subtitle1,
-              ),
-            ),
-            IconButton(
-              onPressed: addAddress,
-              icon: Icon(
-                Icons.edit,
-                color: Theme
-                    .of(context)
-                    .primaryColor,
-              ),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: addAddress,
+                  child: Text(
+                    "+ " +
+                        AppTranslations.of(context)
+                            .text("profile_page_add_address"),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             )
-          ],
-        ),
-      ),
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      businessInfo.dBusinessPrettyAddress,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: addAddress,
+                    icon: Icon(
+                      Icons.edit,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  )
+                ],
+              ),
+            ),
     );
   }
 
@@ -370,46 +347,41 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
     return Container(
       child: businessInfo.dBusinessDescription == ''
           ? Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          FlatButton(
-            onPressed: addDescription,
-            child: Text(
-              "+ " +
-                  AppTranslations.of(context)
-                      .text("profile_page_add_description"),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      )
-          : Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                businessInfo.dBusinessDescription,
-                overflow: TextOverflow.ellipsis,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .subtitle1,
-              ),
-            ),
-            IconButton(
-              onPressed: addDescription,
-              icon: Icon(
-                Icons.edit,
-                color: Theme
-                    .of(context)
-                    .primaryColor,
-              ),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: addDescription,
+                  child: Text(
+                    "+ " +
+                        AppTranslations.of(context)
+                            .text("profile_page_add_description"),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             )
-          ],
-        ),
-      ),
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      businessInfo.dBusinessDescription,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: addDescription,
+                    icon: Icon(
+                      Icons.edit,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  )
+                ],
+              ),
+            ),
     );
   }
 
@@ -417,46 +389,41 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
     return Container(
       child: businessInfo.dBusinessNotice == ''
           ? Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          FlatButton(
-            onPressed: addNotice,
-            child: Text(
-              "+ " +
-                  AppTranslations.of(context)
-                      .text("profile_page_add_notice"),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      )
-          : Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                businessInfo.dBusinessNotice,
-                overflow: TextOverflow.ellipsis,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .subtitle1,
-              ),
-            ),
-            IconButton(
-              onPressed: addNotice,
-              icon: Icon(
-                Icons.edit,
-                color: Theme
-                    .of(context)
-                    .primaryColor,
-              ),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: addNotice,
+                  child: Text(
+                    "+ " +
+                        AppTranslations.of(context)
+                            .text("profile_page_add_notice"),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             )
-          ],
-        ),
-      ),
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      businessInfo.dBusinessNotice,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: addNotice,
+                    icon: Icon(
+                      Icons.edit,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  )
+                ],
+              ),
+            ),
     );
   }
 
@@ -603,43 +570,42 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> with ChipsWidgetM
 }
 
 mixin ChipsWidgetMixin<T extends StatefulWidget> on State<T> {
-
   Widget getChipTextListWidget(String label, List<String> textList,
       Function onDelete, Function onAdd, IconData icon) {
     return Container(
       child: textList.length == 0
           ? Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          FlatButton(
-            onPressed: onAdd,
-            child: Text(
-              label,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      )
-          : Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Wrap(
-                children: getTextChips(textList, onDelete),
-              ),
-            ),
-            IconButton(
-              onPressed: onAdd,
-              icon: Icon(
-                icon,
-                color: Theme.of(context).primaryColor,
-              ),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: onAdd,
+                  child: Text(
+                    label,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             )
-          ],
-        ),
-      ),
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Wrap(
+                      children: getTextChips(textList, onDelete),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: onAdd,
+                    icon: Icon(
+                      icon,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  )
+                ],
+              ),
+            ),
     );
   }
 
@@ -657,8 +623,8 @@ mixin ChipsWidgetMixin<T extends StatefulWidget> on State<T> {
             onDeleted: onDelete == null
                 ? null
                 : () {
-              onDelete(inputText);
-            },
+                    onDelete(inputText);
+                  },
           ),
         ),
       );

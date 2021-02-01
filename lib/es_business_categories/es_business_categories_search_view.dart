@@ -55,8 +55,8 @@ class _BusinessCategoriesSearchViewState
                         .searchCategoryTextfieldController,
                     autofocus: true,
                     decoration: InputDecoration(
-                      hintText: AppTranslations.of(context)
-                          .text("search_category"),
+                      hintText:
+                          AppTranslations.of(context).text("search_category"),
                       prefixIcon: Icon(Icons.search),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.grey),
@@ -78,11 +78,11 @@ class _BusinessCategoriesSearchViewState
                   ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: snapshot.data.searchResultsBusinessCategories
-                        .length,
+                    itemCount:
+                        snapshot.data.searchResultsBusinessCategories.length,
                     itemBuilder: (context, index) {
-                      final e = snapshot.data
-                          .searchResultsBusinessCategories[index];
+                      final e =
+                          snapshot.data.searchResultsBusinessCategories[index];
                       return CheckboxListTile(
                         title: Text(e.name),
                         value: isCategorySelected(e.bcat),
