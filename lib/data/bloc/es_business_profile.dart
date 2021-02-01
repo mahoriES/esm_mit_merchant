@@ -77,6 +77,9 @@ class EsBusinessProfileBloc {
   Observable<EsBusinessProfileState> get createBusinessObservable =>
       _subjectEsBusinessProfileState.stream;
 
+  List<EsBusinessCategory> get selectedBusinessCategories =>
+      _esBusinessProfileState.selectedBusinessInfo.businessCategories;
+
   createShareLink() async {
     _esBusinessProfileState.isCreatingLink = true;
     _updateState();
@@ -323,6 +326,15 @@ class EsBusinessProfileBloc {
     this.updateBusiness(payload, onSuccess, onFail);
   }
 
+  updateBusinessCategories(
+    List<int> bcats,
+    onSuccess,
+    onFail,
+  ) {
+    final payload = EsUpdateBusinessPayload(businessCategories: bcats);
+    this.updateBusiness(payload, onSuccess, onFail);
+  }
+
   updateUpiAddress(onSuccess, onFail) {
     var payload =
         EsUpdateBusinessPayload(upiAddress: this.upiAddressEditController.text);
@@ -401,6 +413,15 @@ class EsBusinessProfileBloc {
     if (this.subscription != null) {
       this.subscription.cancel();
     }
+    nameEditController.dispose();
+    addressEditController.dispose();
+    descriptionEditController.dispose();
+    upiAddressEditController.dispose();
+    cityEditController.dispose();
+    phoneNumberEditingControllers.dispose();
+    noticeEditController.dispose();
+    notificationEmailEditingControllers.dispose();
+    notificationPhoneEditingControllers.dispose();
   }
 
   Future<File> _pickImageFromGallery() async {

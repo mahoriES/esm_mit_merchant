@@ -7,6 +7,7 @@ class EsApiPaths {
   static const getClusters = 'clusters/';
 
   static const getBusinesses = 'businesses/';
+  static const getBusinessCategories = getBusinesses+'bcats';
   static const postCreateBusiness = 'businesses/';
   static final postMarkBusinessOpen =
       (String businessId) => 'businesses/$businessId/open';
