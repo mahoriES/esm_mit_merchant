@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
@@ -76,6 +78,9 @@ class EsBusinessProfileBloc {
 
   Observable<EsBusinessProfileState> get createBusinessObservable =>
       _subjectEsBusinessProfileState.stream;
+
+  String get getBusinessAdress =>
+      _esBusinessProfileState.selectedBusinessInfo.dBusinessAddressWithDetails;
 
   createShareLink() async {
     _esBusinessProfileState.isCreatingLink = true;
@@ -213,8 +218,12 @@ class EsBusinessProfileBloc {
     }
   }
 
-  addAddress(EsAddressPayload payload, Function onUpdateBusinessSuccess,
-      Function onUpdateError) async {
+  addAddress(
+    EsAddressPayload payload,
+    Function onUpdateBusinessSuccess,
+    Function onUpdateError,
+    BuildContext context,
+  ) async {
     if (payload != null) {
       payload.addressName =
           this._esBusinessProfileState.selectedBusinessInfo.businessName;
@@ -242,6 +251,8 @@ class EsBusinessProfileBloc {
         if (onUpdateBusinessSuccess != null) {
           onUpdateBusinessSuccess();
         }
+        Fluttertoast.showToast(
+            msg: AppTranslations.of(context).text("address_updated_message"));
       } else {
         if (onUpdateError != null) {
           onUpdateError();

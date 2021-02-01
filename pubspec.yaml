@@ -76,6 +76,8 @@ dependencies:
 
   google_maps_flutter: ^1.0.6
 
+  flutter_typeahead: ^2.0.0
+
   esamudaay_app_update:
     git:
       url: https://anushka_agrawal@bitbucket.org/ese1/esm_comp_appupdate.git

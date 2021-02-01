@@ -98,6 +98,17 @@ class EsBusinessInfo {
     return '';
   }
 
+  String get dBusinessAddressWithDetails {
+    if (address != null) {
+      return (address?.geoAddr?.house ?? "") +
+          "\n" +
+          (address?.prettyAddress ?? "") +
+          "\n" +
+          (address?.geoAddr?.landmark ?? "");
+    }
+    return "";
+  }
+
   get dBusinessNotApproved {
     return status == 1;
   }

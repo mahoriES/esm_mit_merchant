@@ -48,6 +48,36 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage> {
     );
   }
 
+  _showDiscardChangesAlert() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content:
+              Text(AppTranslations.of(context).text('address_discard_message')),
+          actions: <Widget>[
+            FlatButton(
+              child:
+                  Text(AppTranslations.of(context).text('generic_cancel')),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child:
+                  Text(AppTranslations.of(context).text('generic_discard')),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     esAddressBloc = Provider.of<EsAddressBloc>(context, listen: false);
@@ -67,23 +97,16 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage> {
     }
 
     submit(
-      bool isAddressUpdated,
       bool isUpdatedAddressValid,
       EsAddressPayload addressPayload,
     ) {
-      if (isAddressUpdated) {
-        if (isUpdatedAddressValid) {
-          widget.esBusinessProfileBloc.addAddress(
-            addressPayload,
-            onSuccess,
-            onFail,
-          );
-        } else {
-          Fluttertoast.showToast(
-            msg: AppTranslations.of(context)
-                .text("address_page_invalid_address"),
-          );
-        }
+      if (isUpdatedAddressValid) {
+        widget.esBusinessProfileBloc
+            .addAddress(addressPayload, onSuccess, onFail, context);
+      } else {
+        Fluttertoast.showToast(
+          msg: AppTranslations.of(context).text("address_page_invalid_address"),
+        );
       }
     }
 
@@ -91,6 +114,7 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage> {
       await Navigator.push(
         context,
         MaterialPageRoute(
+          settings: RouteSettings(name: "/AddressView"),
           builder: (context) => AddNewAddressView(),
         ),
       );
@@ -98,34 +122,51 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage> {
 
     return StreamBuilder<EsAddressState>(
       stream: esAddressBloc.esAddressStateObservable,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Container();
+      builder: (context, addressBlocStream) {
+        if (!addressBlocStream.hasData) {
+          return SizedBox.shrink();
         }
 
         addressTextController.text =
-            snapshot.data.selectedAddressRequest?.prettyAddress ??
-                widget.esBusinessProfileBloc.addressEditController.text;
+            addressBlocStream.data.selectedAddressRequest == null
+                ? widget.esBusinessProfileBloc.getBusinessAdress
+                : addressBlocStream.data.formattedAddressWithDeatails;
 
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              AppTranslations.of(context)
-                  .text('profile_page_update_business_address'),
-            ),
-          ),
-          body: Scrollbar(
-            child: ListView(
-              children: <Widget>[
-                const SizedBox(height: 20),
-                Padding(
+        return StreamBuilder<EsBusinessProfileState>(
+          stream: widget.esBusinessProfileBloc.createBusinessObservable,
+          builder: (context, businessBlocStream) {
+            if (!businessBlocStream.hasData) {
+              return SizedBox.shrink();
+            }
+
+            return WillPopScope(
+              onWillPop: () async {
+                if (addressBlocStream.data.isAddressUpdated) {
+                  _showDiscardChangesAlert();
+                  return Future.value(false);
+                } else
+                  return Future.value(true);
+              },
+              child: Scaffold(
+                appBar: AppBar(
+                  title: Text(
+                    AppTranslations.of(context)
+                        .text('profile_page_update_business_address'),
+                  ),
+                ),
+                body: Padding(
                   padding: const EdgeInsets.only(
-                    top: 24.0,
+                    top: 24,
                     left: 20,
                     right: 20,
                   ),
                   child: GestureDetector(
-                    onTap: () => navigateToMap(),
+                    onTap: () => businessBlocStream.data.isSubmitting
+                        ? Fluttertoast.showToast(
+                            msg: AppTranslations.of(context)
+                                .text('address_updating_message'),
+                          )
+                        : navigateToMap(),
                     child: TextFormField(
                       controller: addressTextController,
                       decoration: InputDecoration(
@@ -133,27 +174,31 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage> {
                         border: OutlineInputBorder(),
                         labelText: AppTranslations.of(context)
                             .text('profile_page_address'),
+                        suffixIcon: Icon(
+                          Icons.edit,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
-                      maxLines: 5,
+                      maxLines: null,
                       minLines: 1,
                       enabled: false,
                     ),
                   ),
                 ),
-              ],
-            ),
-          ),
-          floatingActionButton: FoSubmitButton(
-            text: AppTranslations.of(context).text('generic_save'),
-            onPressed: () => submit(
-              snapshot.data.isAddressUpdated,
-              snapshot.data.isSelectedAddressValid,
-              snapshot.data.selectedAddressRequest,
-            ),
-            isLoading: snapshot.data.addressStatus == LaodingStatus.LOADING,
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
+                floatingActionButton: FoSubmitButton(
+                  text: AppTranslations.of(context).text('generic_save'),
+                  isEnabled: addressBlocStream.data.isAddressUpdated,
+                  onPressed: () => submit(
+                    addressBlocStream.data.isSelectedAddressValid,
+                    addressBlocStream.data.selectedAddressRequest,
+                  ),
+                  isLoading: businessBlocStream.data.isSubmitting,
+                ),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerFloat,
+              ),
+            );
+          },
         );
       },
     );
