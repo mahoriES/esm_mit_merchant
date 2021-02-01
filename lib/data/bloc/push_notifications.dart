@@ -33,10 +33,11 @@ class PushNotifications {
     esdyPrint.debug("displayLocalNotification >>");
     //TODO: Android Channel information
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        AnnoyingChannel.CONST_ID,
+        "",
         AnnoyingChannel.CONST_NAME,
         AnnoyingChannel.CONST_DESCRIPTION,
-        importance: Importance.Max,
+        importance: Importance.High,
+        playSound: false,
         priority: Priority.High);
     var platformChannelSpecifics =
         NotificationDetails(androidPlatformChannelSpecifics, null);
