@@ -11,4 +11,10 @@ class StringConstants {
   //"AIzaSyBGRrg0YVy9U3SUF34GoAeGbUP_s5RAYAY";
 
   static const packageName = 'in.foore.mobile';
+
+  static const List<String> placeDetailFields = [
+    "address_component",
+    "formatted_address",
+    "geometry",
+  ];
 }

@@ -58,15 +58,13 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage> {
               Text(AppTranslations.of(context).text('address_discard_message')),
           actions: <Widget>[
             FlatButton(
-              child:
-                  Text(AppTranslations.of(context).text('generic_cancel')),
+              child: Text(AppTranslations.of(context).text('generic_cancel')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
-              child:
-                  Text(AppTranslations.of(context).text('generic_discard')),
+              child: Text(AppTranslations.of(context).text('generic_discard')),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
@@ -111,37 +109,31 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage> {
     }
 
     navigateToMap() async {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          settings: RouteSettings(name: "/AddressView"),
-          builder: (context) => AddNewAddressView(),
-        ),
-      );
+      await Navigator.pushNamed(context, AddNewAddressView.routeName);
     }
 
     return StreamBuilder<EsAddressState>(
       stream: esAddressBloc.esAddressStateObservable,
-      builder: (context, addressBlocStream) {
-        if (!addressBlocStream.hasData) {
+      builder: (context, addressSnapshot) {
+        if (!addressSnapshot.hasData) {
           return SizedBox.shrink();
         }
 
         addressTextController.text =
-            addressBlocStream.data.selectedAddressRequest == null
+            addressSnapshot.data.selectedAddressRequest == null
                 ? widget.esBusinessProfileBloc.getBusinessAdress
-                : addressBlocStream.data.formattedAddressWithDeatails;
+                : addressSnapshot.data.formattedAddressWithDeatails;
 
         return StreamBuilder<EsBusinessProfileState>(
           stream: widget.esBusinessProfileBloc.createBusinessObservable,
-          builder: (context, businessBlocStream) {
-            if (!businessBlocStream.hasData) {
+          builder: (context, businessSnapshot) {
+            if (!businessSnapshot.hasData) {
               return SizedBox.shrink();
             }
 
             return WillPopScope(
               onWillPop: () async {
-                if (addressBlocStream.data.isAddressUpdated) {
+                if (addressSnapshot.data.isAddressUpdated) {
                   _showDiscardChangesAlert();
                   return Future.value(false);
                 } else
@@ -161,7 +153,7 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage> {
                     right: 20,
                   ),
                   child: GestureDetector(
-                    onTap: () => businessBlocStream.data.isSubmitting
+                    onTap: () => businessSnapshot.data.isSubmitting
                         ? Fluttertoast.showToast(
                             msg: AppTranslations.of(context)
                                 .text('address_updating_message'),
@@ -187,12 +179,12 @@ class EsEditBusinessAddressPageState extends State<EsEditBusinessAddressPage> {
                 ),
                 floatingActionButton: FoSubmitButton(
                   text: AppTranslations.of(context).text('generic_save'),
-                  isEnabled: addressBlocStream.data.isAddressUpdated,
+                  isEnabled: addressSnapshot.data.isAddressUpdated,
                   onPressed: () => submit(
-                    addressBlocStream.data.isSelectedAddressValid,
-                    addressBlocStream.data.selectedAddressRequest,
+                    addressSnapshot.data.isSelectedAddressValid,
+                    addressSnapshot.data.selectedAddressRequest,
                   ),
-                  isLoading: businessBlocStream.data.isSubmitting,
+                  isLoading: businessSnapshot.data.isSubmitting,
                 ),
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.centerFloat,

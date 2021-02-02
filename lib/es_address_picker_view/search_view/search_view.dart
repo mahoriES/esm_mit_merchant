@@ -3,6 +3,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:foore/app_colors.dart';
 import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_address_bloc.dart';
+import 'package:foore/es_address_picker_view/add_new_address_view.dart/add_new_address_view.dart';
 import 'package:foore/services/sizeconfig.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +47,7 @@ class _SearchAddressViewState extends State<SearchAddressView> {
           if (snapshot.data.suggestionsStatus == LaodingStatus.SUCCESS) {
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
               _esAddressBloc.resetSearchDetails();
-              Navigator.popUntil(context, ModalRoute.withName("/AddressView"));
+              Navigator.pop(context);
             });
           }
 
@@ -75,7 +76,7 @@ class _SearchAddressViewState extends State<SearchAddressView> {
                   },
                   itemBuilder: (context, Prediction suggestion) {
                     return ListTile(
-                      title: Text(suggestion.description),
+                      title: Text(suggestion?.description ?? ""),
                     );
                   },
                 ),

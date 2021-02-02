@@ -148,7 +148,7 @@ class EsAddressBloc {
               .getDetailsByPlaceId(
         placeId,
         sessionToken: esAddressState.sessionToken,
-        fields: ["address_component", "formatted_address", "geometry"],
+        fields: StringConstants.placeDetailFields,
       );
 
       if (placesDetailsResponse.isOkay) {

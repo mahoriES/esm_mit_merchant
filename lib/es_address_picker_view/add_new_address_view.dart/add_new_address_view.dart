@@ -4,6 +4,7 @@ import 'package:foore/es_address_picker_view/add_new_address_view.dart/widgets/c
 import 'package:foore/es_address_picker_view/add_new_address_view.dart/widgets/google_map_view.dart';
 
 class AddNewAddressView extends StatefulWidget {
+  static const String routeName = "/AddressView";
   AddNewAddressView({Key key}) : super(key: key);
 
   @override
