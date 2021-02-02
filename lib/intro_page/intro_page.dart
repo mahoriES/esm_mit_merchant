@@ -3,10 +3,14 @@ import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/data/bloc/login.dart';
+import 'package:foore/environments/environment.dart';
 import 'package:foore/language_selection_page/language_selection_page.dart';
 import 'package:foore/login_page/login_page.dart';
+import 'package:foore/services/sizeconfig.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../app_translations.dart';
 
@@ -128,87 +132,122 @@ class _IntroPageState extends State<IntroPage>
                         ),
                       ],
                     ),
-                    Expanded(
-                      flex: 5,
-                      child: Container(),
-                    ),
-                    Center(
-                      child: Stack(
-                        children: <Widget>[
-                          Opacity(
-                            opacity: snapshot.data.isLoading ? 0.5 : 1.0,
-                            child: Container(
-                              margin:
-                                  EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 30.0),
-                              child: RaisedButton(
-                                  padding: EdgeInsets.all(0.0),
-                                  color: const Color(0xFF4285F4),
-                                  onPressed: () {
-                                    //print("introLogin onPressed");
-                                    loginBloc.signInWithGoogle(context);
-                                  },
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Container(
-                                        color: Colors.white,
-                                        margin: EdgeInsets.all(1.0),
-                                        padding: EdgeInsets.all(4.0),
-                                        child: Image.asset(
-                                          'assets/google-icon.png',
-                                          height: 48.0,
-                                        ),
-                                      ),
-                                      Container(
-                                          color: const Color(0xFF4285F4),
-                                          padding: EdgeInsets.only(
-                                            left: 15.0,
-                                            right: 15.0,
-                                            top: 20.0,
-                                            bottom: 20.0,
-                                          ),
-                                          child: new Text(
-                                            AppTranslations.of(context).text(
-                                                "intro_page_button_google"),
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          )),
-                                    ],
-                                  )),
+
+                    ///Commented out this code since something is broken on
+                    ///Foore backend preventing login with Google. So once that
+                    ///gets fixed we'll make this live
+//                    Center(
+//                      child: Stack(
+//                        children: <Widget>[
+//                          Opacity(
+//                            opacity: snapshot.data.isLoading ? 0.5 : 1.0,
+//                            child: Container(
+//                              margin:
+//                                  EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 30.0),
+//                              child: RaisedButton(
+//                                  padding: EdgeInsets.all(0.0),
+//                                  color: const Color(0xFF4285F4),
+//                                  onPressed: () {
+//                                    loginBloc.signInWithGoogle(context);
+//                                  },
+//                                  child: Row(
+//                                    mainAxisSize: MainAxisSize.min,
+//                                    children: <Widget>[
+//                                      Container(
+//                                        color: Colors.white,
+//                                        margin: EdgeInsets.all(1.0),
+//                                        padding: EdgeInsets.all(4.0),
+//                                        child: Image.asset(
+//                                          'assets/google-icon.png',
+//                                          height: 48.0,
+//                                        ),
+//                                      ),
+//                                      Container(
+//                                          color: const Color(0xFF4285F4),
+//                                          padding: EdgeInsets.only(
+//                                            left: 15.0,
+//                                            right: 15.0,
+//                                            top: 20.0,
+//                                            bottom: 20.0,
+//                                          ),
+//                                          child: new Text(
+//                                            AppTranslations.of(context).text(
+//                                                "intro_page_button_google"),
+//                                            style: TextStyle(
+//                                              color: Colors.white,
+//                                            ),
+//                                          )),
+//                                    ],
+//                                  )),
+//                            ),
+//                          ),
+//                          Positioned(
+//                            left: 130.0,
+//                            top: 8.0,
+//                            child: snapshot.data.isLoading
+//                                ? CircularProgressIndicator(
+//                                    backgroundColor: Colors.white,
+//                                  )
+//                                : Container(),
+//                          ),
+//                        ],
+//                      ),
+//                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30),
+                      child: Center(
+                        child: RaisedButton(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          onPressed: () {
+                            if (!snapshot.data.isLoading) {
+                              Navigator.of(context)
+                                  .pushNamed(LoginPage.routeName);
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "Error launching URL!");
+                            }
+                          },
+                          color: Colors.blue,
+                          child: Container(
+                            width: SizeConfig().screenWidth * 0.6,
+                            child: Text(
+                              AppTranslations.of(context)
+                                  .text("intro_page_button_login"),
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                          Positioned(
-                            left: 130.0,
-                            top: 8.0,
-                            child: snapshot.data.isLoading
-                                ? CircularProgressIndicator(
-                                    backgroundColor: Colors.white,
-                                  )
-                                : Container(),
-                          ),
-                        ],
-                      ),
-                    ),
-                    FlatButton(
-                      onPressed: () {
-                        if (!snapshot.data.isLoading) {
-                          Navigator.of(context).pushNamed(LoginPage.routeName);
-                        }
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        child: Text(
-                          AppTranslations.of(context)
-                              .text("intro_page_button_login"),
-                          style: Theme.of(context).textTheme.button.copyWith(
-                                decoration: TextDecoration.underline,
-                              ),
-                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Center(
+                      child: OutlineButton(
+                        borderSide: BorderSide(color: Colors.blue),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        onPressed: () async {
+                          if (await canLaunch(Environment.fooreSignUpUrl))
+                            await launch(Environment.fooreSignUpUrl);
+                        },
+                        child: Container(
+                          width: SizeConfig().screenWidth * 0.6,
+                          child: Text(
+                            AppTranslations.of(context)
+                                .text("intro_page_button_signup"),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

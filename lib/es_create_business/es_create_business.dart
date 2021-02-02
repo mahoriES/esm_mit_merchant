@@ -7,6 +7,8 @@ import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
 import 'package:foore/data/model/es_business.dart';
+import 'package:foore/es_business_categories/es_business_categories_view.dart';
+import 'package:foore/es_business_profile/es_business_profile.dart';
 import 'package:foore/es_circles/es_circle_picker_view.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +23,7 @@ class EsCreateBusinessPage extends StatefulWidget {
 }
 
 class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
-    with AfterLayoutMixin<EsCreateBusinessPage> {
+    with ChipsWidgetMixin {
   final _formKey = GlobalKey<FormState>();
   EsCreateBusinessBloc createBusinessBloc;
 
@@ -76,12 +78,6 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
     );
   }
 
-  @override
-  void afterFirstLayout(BuildContext context) {
-    // final createBusinessBloc = Provider.of<EsCreateBusinessBloc>(context);
-    // createBusinessBloc.getData();
-  }
-
   Future<bool> _onWillPop() async {
     Navigator.pop(context);
     return false;
@@ -101,9 +97,19 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
     Navigator.of(context).pushNamed(EsHomePage.routeName);
   }
 
+  addOrEditBusinessCategories() async {
+    debugPrint('Over here to add/edit categories');
+    final categories = await Navigator.of(context).pushNamed(
+        BusinessCategoriesPickerView.routeName,
+        arguments: createBusinessBloc.selectedBusinessCategories);
+    if (categories == null) return;
+    createBusinessBloc.handleBusinessCategorySelection(categories);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return CustomTheme(initialThemeType: THEME_TYPES.LIGHT,
+    return CustomTheme(
+      initialThemeType: THEME_TYPES.LIGHT,
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -150,7 +156,8 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
                                 children: [
                                   Text(
                                     snapshot.data.selectedCircle?.clusterName ??
-                                        AppTranslations.of(context).text('no_circle_selected_msg'),
+                                        AppTranslations.of(context)
+                                            .text('no_circle_selected_msg'),
                                     style: CustomTheme.of(context)
                                         .textStyles
                                         .sectionHeading2,
@@ -186,13 +193,32 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
                                       .handleCircleSelection(selectedCircle);
                                 },
                                 child: Text(snapshot.data.selectedCircle == null
-                                    ? AppTranslations.of(context).text('select_circle_action')
-                                    : AppTranslations.of(context).text('change_circle_action')),
+                                    ? AppTranslations.of(context)
+                                        .text('select_circle_action')
+                                    : AppTranslations.of(context)
+                                        .text('change_circle_action')),
                               ),
                             ),
                           ],
                         ),
-                      )
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(
+                          top: 12.0,
+                          left: 20,
+                          right: 20,
+                        ),
+                        alignment: Alignment.bottomLeft,
+                        child: Text(
+                          AppTranslations.of(context)
+                              .text("profile_page_bcats"),
+                          style: Theme.of(context).textTheme.subtitle1,
+                        ),
+                      ),
+                      getBusinessCategoriesWidget(snapshot
+                          .data.businessCategories
+                          .map((e) => e.name)
+                          .toList()),
                     ],
                   ),
                 );
@@ -205,10 +231,11 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
                 return Container();
               }
               return FoSubmitButton(
-                text:
-                    AppTranslations.of(context).text('create_business_page_save'),
+                text: AppTranslations.of(context)
+                    .text('create_business_page_save'),
                 onPressed: (snapshot.data.selectedCircle == null ||
-                        createBusinessBloc.nameEditController.text.isEmpty)
+                        createBusinessBloc.nameEditController.text.isEmpty ||
+                        snapshot.data.businessCategories.isEmpty)
                     ? null
                     : () {
                         if (this._formKey.currentState.validate()) {
@@ -222,5 +249,14 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
+  }
+
+  Widget getBusinessCategoriesWidget(List<String> businessCategoriesNamesList) {
+    return getChipTextListWidget(
+        "+ " + AppTranslations.of(context).text("profile_page_add_bcats"),
+        businessCategoriesNamesList,
+        null,
+        addOrEditBusinessCategories,
+        Icons.edit);
   }
 }

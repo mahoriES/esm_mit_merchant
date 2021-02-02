@@ -12,6 +12,8 @@ class Environment {
 
   static get esTPID => '5d730376-72ed-478c-8d5e-1a3a6aee9815';
 
+  static get fooreSignUpUrl => "https://www.app.foore.in/signup/";
+
   static Future<String> get version async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     return packageInfo.version;

@@ -18,7 +18,9 @@ class EsCreateBusinessBloc {
     this._subjectEsCreateBusinessState =
         new BehaviorSubject<EsCreateBusinessState>.seeded(
             _esCreateBusinessStateState);
-    nameEditController.addListener(() {_updateState();});
+    nameEditController.addListener(() {
+      _updateState();
+    });
   }
 
   Observable<EsCreateBusinessState> get createBusinessObservable =>
@@ -30,9 +32,11 @@ class EsCreateBusinessBloc {
     this._esCreateBusinessStateState.isSubmitSuccess = false;
     this._updateState();
     var payload = new EsCreateBusinessPayload(
-      businessName: this.nameEditController.text,
-      clusterCode: _esCreateBusinessStateState.selectedCircle.clusterCode,
-    );
+        businessName: this.nameEditController.text,
+        clusterCode: _esCreateBusinessStateState.selectedCircle.clusterCode,
+        businessCategories: _esCreateBusinessStateState.businessCategories
+            .map((e) => e.bcat)
+            .toList());
     var payloadString = json.encode(payload.toJson());
     this
         .httpService
@@ -69,10 +73,19 @@ class EsCreateBusinessBloc {
     _updateState();
   }
 
+  void handleBusinessCategorySelection(
+      List<EsBusinessCategory> businessCategories) {
+    this._esCreateBusinessStateState.businessCategories = businessCategories;
+    _updateState();
+  }
+
   setIsSubmitting(bool isSubmitting) {
     this._esCreateBusinessStateState.isSubmitting = isSubmitting;
     this._updateState();
   }
+
+  List<EsBusinessCategory> get selectedBusinessCategories =>
+      _esCreateBusinessStateState.businessCategories;
 
   _updateState() {
     if (!this._subjectEsCreateBusinessState.isClosed) {
@@ -93,11 +106,13 @@ class EsCreateBusinessState {
   bool isSubmitSuccess;
   bool isSubmitFailed;
   EsCluster selectedCircle;
+  List<EsBusinessCategory> businessCategories;
 
   EsCreateBusinessState() {
     this.isSubmitting = false;
     this.isSubmitFailed = false;
     this.isSubmitSuccess = false;
     this.selectedCircle = null;
+    this.businessCategories = [];
   }
 }
