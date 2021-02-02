@@ -30,6 +30,7 @@ class _SearchAddressViewState extends State<SearchAddressView> {
   Widget build(BuildContext context) {
     EsAddressBloc _esAddressBloc =
         Provider.of<EsAddressBloc>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
