@@ -18,25 +18,18 @@ class SearchAddressView extends StatefulWidget {
 }
 
 class _SearchAddressViewState extends State<SearchAddressView> {
-  EsAddressBloc _esAddressBloc;
-  TextEditingController addressController;
-
-  @override
-  void initState() {
-    _esAddressBloc = Provider.of<EsAddressBloc>(context, listen: false);
-    addressController = new TextEditingController();
-    super.initState();
-  }
+  TextEditingController addressController = new TextEditingController();
 
   @override
   void dispose() {
-    _esAddressBloc.resetSearchDetails();
     addressController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    EsAddressBloc _esAddressBloc =
+        Provider.of<EsAddressBloc>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -51,6 +44,7 @@ class _SearchAddressViewState extends State<SearchAddressView> {
 
           if (snapshot.data.suggestionsStatus == LaodingStatus.SUCCESS) {
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              _esAddressBloc.resetSearchDetails();
               Navigator.popUntil(context, ModalRoute.withName("/AddressView"));
             });
           }

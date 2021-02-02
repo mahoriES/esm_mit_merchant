@@ -148,6 +148,7 @@ class EsAddressBloc {
               .getDetailsByPlaceId(
         placeId,
         sessionToken: esAddressState.sessionToken,
+        fields: ["address_component", "formatted_address", "geometry"],
       );
 
       if (placesDetailsResponse.isOkay) {
@@ -212,10 +213,10 @@ class EsAddressState {
 
   String get formattedAddressWithDeatails {
     return (selectedAddressRequest?.geoAddr?.house ?? "") +
+        ", " +
+        (selectedAddressRequest?.geoAddr?.landmark ?? "") +
         "\n" +
-        (selectedAddressRequest?.prettyAddress ?? "") +
-        "\n" +
-        (selectedAddressRequest?.geoAddr?.landmark ?? "");
+        (selectedAddressRequest?.prettyAddress ?? "");
   }
 
   bool get isLocationNull =>

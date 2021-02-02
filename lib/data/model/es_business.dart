@@ -101,10 +101,10 @@ class EsBusinessInfo {
   String get dBusinessAddressWithDetails {
     if (address != null) {
       return (address?.geoAddr?.house ?? "") +
+          ", " +
+          (address?.geoAddr?.landmark ?? "") +
           "\n" +
-          (address?.prettyAddress ?? "") +
-          "\n" +
-          (address?.geoAddr?.landmark ?? "");
+          (address?.prettyAddress ?? "");
     }
     return "";
   }

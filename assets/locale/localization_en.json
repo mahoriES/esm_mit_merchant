@@ -380,7 +380,7 @@
 	"address_over_query_error": "Over query limit. Please try after some time.",
 	"address_updated_message": "Address Updated Successfully",
 	"address_updating_message": "Updating Address ...",
-	"address_discard_message":"The address has been modified. Your changes will be discarded. Do you want to discard the changes ?",
+	"address_discard_message":"The address has been modified. Your changes will be discarded if you continue. Do you want to discard the changes ?",
 
 	"circle_search_hint": "Try searching for a Circle by typing in your city name. For e.g. Udupi, Chandigarh.",
 	"circle_search_action_hint": "Search for circle",

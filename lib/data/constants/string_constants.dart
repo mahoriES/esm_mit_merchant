@@ -7,7 +7,8 @@ class StringConstants {
   static final whatsAppMessage = (String orderNumber, String businessName) =>
       "Order - " + orderNumber + " with " + businessName;
 
-  static const googleApiKey = "AIzaSyBGRrg0YVy9U3SUF34GoAeGbUP_s5RAYAY";
+  static const googleApiKey = "AIzaSyBB3evmCD80JI78jt5r70WgBgxCSAK2voY";
+  //"AIzaSyBGRrg0YVy9U3SUF34GoAeGbUP_s5RAYAY";
 
   static const packageName = 'in.foore.mobile';
 }
