@@ -2,7 +2,7 @@ import 'package:package_info/package_info.dart';
 
 class Environment {
   //Set False for Staging build
-  static get isProd => true;
+  static get isProd => false;
 
   static get apiUrl =>
       isProd ? EnvironmentProd._apiUrl : EnvironmentPreprod._apiUrl;
