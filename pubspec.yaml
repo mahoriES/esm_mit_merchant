@@ -1,7 +1,7 @@
 name: foore
 description: Foore mobile app
 
-version: 0.5.1+99
+version: 0.5.3+112
 
 environment:
   sdk: ">=2.8.0 <3.0.0"
@@ -75,6 +75,8 @@ dependencies:
   google_maps_webservice: ^0.0.18
 
   google_maps_flutter: ^1.0.6
+
+  flutter_typeahead: ^2.0.0
 
   esamudaay_app_update:
     git:

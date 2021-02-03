@@ -9,6 +9,7 @@ import 'package:foore/data/bloc/es_orders.dart';
 import 'package:foore/data/bloc/es_select_circle.dart';
 import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/data/model/es_product.dart';
+import 'package:foore/es_address_picker_view/add_new_address_view.dart/add_new_address_view.dart';
 import 'package:foore/es_address_picker_view/search_view/search_view.dart';
 import 'package:foore/es_business_categories/es_business_categories_view.dart';
 import 'package:foore/es_business_guard/es_businesses_guard.dart';
@@ -347,6 +348,11 @@ class AppRouter {
       case SearchAddressView.routeName:
         return MaterialPageRoute(
           builder: (context) => SearchAddressView(),
+        );
+        break;
+      case AddNewAddressView.routeName:
+        return MaterialPageRoute(
+          builder: (context) => AddNewAddressView(),
         );
         break;
       case CirclePickerView.routeName:

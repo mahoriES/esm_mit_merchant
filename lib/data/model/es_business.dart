@@ -130,6 +130,17 @@ class EsBusinessInfo {
     return '';
   }
 
+  String get dBusinessAddressWithDetails {
+    if (address != null) {
+      return (address?.geoAddr?.house ?? "") +
+          ", " +
+          (address?.geoAddr?.landmark ?? "") +
+          "\n" +
+          (address?.prettyAddress ?? "");
+    }
+    return "";
+  }
+
   get dBusinessNotApproved {
     return status == 1;
   }

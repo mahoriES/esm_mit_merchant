@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:foore/app_translations.dart';
 import 'package:foore/data/constants/string_constants.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:geocoder/geocoder.dart';
@@ -87,7 +88,6 @@ class EsAddressBloc {
 
   resetSearchDetails() {
     esAddressState.suggestionsStatus = LaodingStatus.IDLE;
-    esAddressState.placesSearchResponse = null;
     _updateState();
   }
 
@@ -107,35 +107,48 @@ class EsAddressBloc {
     _updateState();
   }
 
-  getSuggestions(String input) async {
+  Future<List<Prediction>> getSuggestions(
+    String input,
+    BuildContext context,
+  ) async {
+    if (input.isEmpty) return null;
     try {
       final PlacesAutocompleteResponse geocodingResponse =
           await new GoogleMapsPlaces(apiKey: StringConstants.googleApiKey)
               .autocomplete(
         input,
         sessionToken: esAddressState.sessionToken,
-        types: ["address"],
         components: [Component("country", "in")],
       );
 
       if (geocodingResponse.isOkay || geocodingResponse.hasNoResults) {
-        esAddressState.placesSearchResponse = geocodingResponse;
+        return geocodingResponse?.predictions ?? List<Prediction>();
+      } else if (geocodingResponse.isOverQueryLimit) {
+        Fluttertoast.showToast(
+          msg: AppTranslations.of(context).text("address_over_query_error"),
+        );
       } else {
         throw Exception();
       }
     } catch (e) {
-      Fluttertoast.showToast(msg: "Some Error Occured");
+      Fluttertoast.showToast(
+        msg: AppTranslations.of(context).text("generic_something_went_wrong"),
+      );
     }
-    _updateState();
+    return null;
   }
 
   getPlaceDetails(String placeId) async {
     try {
+      esAddressState.suggestionsStatus = LaodingStatus.LOADING;
+      _updateState();
+
       final PlacesDetailsResponse placesDetailsResponse =
           await new GoogleMapsPlaces(apiKey: StringConstants.googleApiKey)
               .getDetailsByPlaceId(
         placeId,
         sessionToken: esAddressState.sessionToken,
+        fields: StringConstants.placeDetailFields,
       );
 
       if (placesDetailsResponse.isOkay) {
@@ -190,7 +203,6 @@ class EsAddressState {
   LaodingStatus addressStatus;
   LaodingStatus suggestionsStatus;
   EsAddressPayload selectedAddressRequest;
-  PlacesAutocompleteResponse placesSearchResponse;
   String sessionToken;
   String prettyAddress;
   LatLng locationPoints;
@@ -198,6 +210,14 @@ class EsAddressState {
   String city;
   TextEditingController houseNumberController;
   TextEditingController landMarkController;
+
+  String get formattedAddressWithDeatails {
+    return (selectedAddressRequest?.geoAddr?.house ?? "") +
+        ", " +
+        (selectedAddressRequest?.geoAddr?.landmark ?? "") +
+        "\n" +
+        (selectedAddressRequest?.prettyAddress ?? "");
+  }
 
   bool get isLocationNull =>
       locationPoints?.latitude == null || locationPoints?.longitude == null;
@@ -214,7 +234,6 @@ class EsAddressState {
     this.addressStatus = LaodingStatus.IDLE;
     this.suggestionsStatus = LaodingStatus.IDLE;
     this.selectedAddressRequest = null;
-    placesSearchResponse = null;
     sessionToken = new Uuid().v4();
     prettyAddress = "";
     locationPoints = null;

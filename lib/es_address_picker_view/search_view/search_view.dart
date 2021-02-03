@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:foore/app_colors.dart';
 import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_address_bloc.dart';
+import 'package:foore/es_address_picker_view/add_new_address_view.dart/add_new_address_view.dart';
 import 'package:foore/services/sizeconfig.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:provider/provider.dart';
 
 class SearchAddressView extends StatefulWidget {
@@ -16,6 +19,14 @@ class SearchAddressView extends StatefulWidget {
 }
 
 class _SearchAddressViewState extends State<SearchAddressView> {
+  TextEditingController addressController = new TextEditingController();
+
+  @override
+  void dispose() {
+    addressController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     EsAddressBloc _esAddressBloc =
@@ -35,8 +46,8 @@ class _SearchAddressViewState extends State<SearchAddressView> {
 
           if (snapshot.data.suggestionsStatus == LaodingStatus.SUCCESS) {
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              Navigator.pop(context);
               _esAddressBloc.resetSearchDetails();
+              Navigator.pop(context);
             });
           }
 
@@ -45,60 +56,30 @@ class _SearchAddressViewState extends State<SearchAddressView> {
                 horizontal: 12.toWidth, vertical: 12.toHeight),
             child: Column(
               children: [
-                TextFormField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: AppColors.placeHolderColor,
+                TypeAheadField<Prediction>(
+                  textFieldConfiguration: TextFieldConfiguration(
+                    controller: addressController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppColors.placeHolderColor,
+                        ),
                       ),
+                      prefixIcon: Icon(Icons.search),
+                      contentPadding: EdgeInsets.zero,
                     ),
-                    prefixIcon: Icon(Icons.search),
-                    contentPadding: EdgeInsets.zero,
                   ),
-                  onChanged: (input) async {
-                    if (input.trim() != "" &&
-                        snapshot.data.suggestionsStatus !=
-                            LaodingStatus.LOADING) {
-                      _esAddressBloc.getSuggestions(input);
-                    }
+                  suggestionsCallback: (input) async =>
+                      await _esAddressBloc.getSuggestions(input, context),
+                  onSuggestionSelected: (Prediction suggestion) async {
+                    await _esAddressBloc.getPlaceDetails(suggestion.placeId);
+                  },
+                  itemBuilder: (context, Prediction suggestion) {
+                    return ListTile(
+                      title: Text(suggestion?.description ?? ""),
+                    );
                   },
                 ),
-                SizedBox(height: 12.toHeight),
-                if (snapshot.data.suggestionsStatus !=
-                    LaodingStatus.LOADING) ...[
-                  ListView.builder(
-                    itemCount: snapshot
-                            .data.placesSearchResponse?.predictions?.length ??
-                        0,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return Material(
-                        type: MaterialType.transparency,
-                        child: InkWell(
-                          onTap: () => _esAddressBloc.getPlaceDetails(
-                            snapshot.data.placesSearchResponse
-                                ?.predictions[index].placeId,
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12.toWidth,
-                              vertical: 12.toHeight,
-                            ),
-                            child: Text(
-                              ((snapshot.data.placesSearchResponse?.predictions
-                                              ?.length ??
-                                          0) >
-                                      index)
-                                  ? snapshot.data.placesSearchResponse
-                                      ?.predictions[index]?.description
-                                  : "",
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ]
               ],
             ),
           );
