@@ -3,13 +3,13 @@ import 'package:foore/app_translations.dart';
 import 'package:foore/auth_guard/auth_guard.dart';
 import 'package:foore/data/bloc/people.dart';
 import 'package:foore/data/http_service.dart';
+import 'package:foore/es_business_catalogue_page/es_business_catalogue_page.dart';
 import 'package:foore/es_business_profile/es_business_profile.dart';
 import 'package:foore/es_order_page/es_order_page.dart';
 import 'package:foore/home_page/app_drawer.dart';
 import 'package:foore/home_page/home_page.dart';
 import 'package:foore/intro_page/intro_page.dart';
 import 'package:foore/es_video_page/es_video_page.dart';
-import 'package:foore/menu_page/menu_page.dart';
 import 'package:foore/onboarding_guard/onboarding_guard.dart';
 import 'package:foore/router.dart';
 import 'package:foore/services/sizeconfig.dart';
@@ -58,7 +58,7 @@ class _EsHomePageState extends State<EsHomePage> {
     final List<Widget> _widgetOptions = <Widget>[
       EsBusinessProfile(),
       EsOrderPage(),
-      MenuPage(),
+      EsBusinessCataloguePage(),
       EsVideoPage(),
       AuthGuard(
         unauthenticatedPage: IntroPage(),

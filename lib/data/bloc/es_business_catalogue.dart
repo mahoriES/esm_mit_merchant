@@ -40,7 +40,12 @@ class EsBusinessCatalogueBloc {
             ._esBusinessCatalogueState
             ._categoriesResponse
             .categories
-            .map((e) => e.categoryId);
+            .map((e) => e.categoryId)
+            .toList();
+        if (this._esBusinessCatalogueState._categoryIdsList.length > 0) {
+          this._esBusinessCatalogueState._selectedParentCategoryId =
+              this._esBusinessCatalogueState._categoryIdsList[0];
+        }
         _esBusinessCatalogueState._categoriesMap = this
             ._esBusinessCatalogueState
             ._categoriesResponse
@@ -66,20 +71,28 @@ class EsBusinessCatalogueBloc {
     });
   }
 
+  selectParentCategory(int parentCategoryId) {
+    _esBusinessCatalogueState._selectedParentCategoryId = parentCategoryId;
+    this._updateState();
+  }
+
   // Fetches the Products list under a child category
-  getProductsList(int categoryId) async {
-    final childCategory = _esBusinessCatalogueState._categoriesMap[categoryId];
+  getProductsList(int subCategoryId) async {
+    final childCategory =
+        _esBusinessCatalogueState._categoriesMap[subCategoryId];
     if (childCategory != null) {
-      _esBusinessCatalogueState._productsLoadingStatusMap[categoryId] =
+      if (_esBusinessCatalogueState._productsLoadingStatusMap[subCategoryId] ==
+          DataState.SUCCESS) return;
+      _esBusinessCatalogueState._productsLoadingStatusMap[subCategoryId] =
           DataState.LOADING;
       _updateState();
       try {
         final httpResponse = await httpService.esGet(
             EsApiPaths.getProductsForCategory(
-                this.esBusinessesBloc.getSelectedBusinessId(), categoryId));
+                this.esBusinessesBloc.getSelectedBusinessId(), subCategoryId));
         final productsResponse =
             EsGetProductsResponse.fromJson(json.decode(httpResponse.body));
-        _esBusinessCatalogueState._productsUnderChildCateoryMap[categoryId] =
+        _esBusinessCatalogueState._productsUnderChildCateoryMap[subCategoryId] =
             ListOfIdsUnderParent(
           productsResponse.count,
           productsResponse.next,
@@ -99,11 +112,11 @@ class EsBusinessCatalogueBloc {
             return previousValue;
           },
         );
-        _esBusinessCatalogueState._productsLoadingStatusMap[categoryId] =
+        _esBusinessCatalogueState._productsLoadingStatusMap[subCategoryId] =
             DataState.SUCCESS;
         _updateState();
       } catch (_) {
-        _esBusinessCatalogueState._productsLoadingStatusMap[categoryId] =
+        _esBusinessCatalogueState._productsLoadingStatusMap[subCategoryId] =
             DataState.FAILED;
         _updateState();
       }
@@ -158,6 +171,14 @@ class EsBusinessCatalogueBloc {
     }
   }
 
+  expandProduct(int productId, bool isExpanded) {
+    final product = _esBusinessCatalogueState._productsMap[productId];
+    if (product != null) {
+      product.isExpanded = isExpanded;
+      _updateState();
+    }
+  }
+
   Observable<EsBusinessCatalogueState> get esOrdersStateObservable =>
       _subjectProductsCatalogueState.stream;
 
@@ -190,15 +211,23 @@ class EsBusinessCatalogueState {
   Map<int, EsCategory> _categoriesMap = new Map();
 
   List<EsCategory> get categoryList =>
-      _categoryIdsList.map((e) => _categoriesMap[e]);
+      _categoryIdsList.map((e) => _categoriesMap[e]).toList();
 
   List<EsCategory> get parentCategories => categoryList
       .where((element) => element.parentCategoryId == null)
       .toList();
 
-  List<EsCategory> getSubCategories(int parentCategoryId) {
+  int _selectedParentCategoryId;
+
+  bool getIsParentCategorySelected(int id) {
+    return _selectedParentCategoryId == id;
+  }
+
+  List<EsCategory> get subCategories {
+    if (_selectedParentCategoryId == null) return [];
     return categoryList
-        .where((element) => element.parentCategoryId == parentCategoryId)
+        .where(
+            (element) => element.parentCategoryId == _selectedParentCategoryId)
         .toList();
   }
 
@@ -212,27 +241,28 @@ class EsBusinessCatalogueState {
   Map<int, ListOfIdsUnderParent> _productsUnderChildCateoryMap = Map();
   Map<int, DataState> _productsLoadingStatusMap = Map();
 
-  bool getIsShowLoadingNextPageForProducts(int childMasterId) {
-    return _productsUnderChildCateoryMap[childMasterId]?.isLoadingMore == true;
+  bool getIsShowLoadingNextPageForProducts(int childCategoryId) {
+    return _productsUnderChildCateoryMap[childCategoryId]?.isLoadingMore == true;
   }
 
-  bool getIsShowNextPageForProducts(int childMasterId) {
-    return getIsShowLoadingNextPageForProducts(childMasterId)
+  bool getIsShowNextPageForProducts(int childCategoryId) {
+    return getIsShowLoadingNextPageForProducts(childCategoryId)
         ? false
-        : _productsUnderChildCateoryMap[childMasterId]?.nextPageUrl != null;
+        : _productsUnderChildCateoryMap[childCategoryId]?.nextPageUrl != null;
   }
 
-  DataState getProductsLoadingStatus(int childMasterId) {
-    if (_productsLoadingStatusMap[childMasterId] == null) {
+  DataState getProductsLoadingStatus(int childCategoryId) {
+    if (_productsLoadingStatusMap[childCategoryId] == null) {
       return DataState.IDLE;
     }
-    return _productsLoadingStatusMap[childMasterId];
+    return _productsLoadingStatusMap[childCategoryId];
   }
 
   List<EsBusinessCatalogueProduct> getProductListForSubCategory(
-    int childMasterId,
+    int childCategoryId,
   ) {
-    return _productsUnderChildCateoryMap[childMasterId]
+    if (_productsUnderChildCateoryMap[childCategoryId] == null) return [];
+    return _productsUnderChildCateoryMap[childCategoryId]
         .ids
         .map((e) => _productsMap[e])
         .toList();

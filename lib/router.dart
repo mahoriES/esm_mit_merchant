@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
+import 'package:foore/data/bloc/es_business_catalogue.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
 import 'package:foore/data/bloc/es_create_merchant_profile.dart';
@@ -31,6 +32,7 @@ import 'data/http_service.dart';
 import 'data/model/feedback.dart';
 import 'data/model/unirson.dart';
 import 'es_auth_guard/es_auth_guard.dart';
+import 'es_business_catalogue_page/es_business_catalogue_page.dart';
 import 'es_category_page/es_add_category.dart';
 import 'es_category_page/es_category_page.dart';
 import 'es_create_business/es_create_business.dart';
@@ -235,6 +237,15 @@ class AppRouter {
             builder: (context) => OnboardingBloc(httpServiceBloc),
             dispose: (context, value) => value.dispose(),
             child: MenuPage(),
+          ),
+        );
+        break;
+      case EsBusinessCataloguePage.routeName:
+        return MaterialPageRoute(
+          builder: (context) => Provider<EsBusinessCatalogueBloc>(
+            create: (context) => EsBusinessCatalogueBloc(httpServiceBloc, esBusinessesBloc),
+            dispose: (context, value) => value.dispose(),
+            child: EsBusinessCataloguePage(),
           ),
         );
         break;
