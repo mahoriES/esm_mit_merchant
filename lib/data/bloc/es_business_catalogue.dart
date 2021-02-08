@@ -242,13 +242,24 @@ class EsBusinessCatalogueState {
   Map<int, DataState> _productsLoadingStatusMap = Map();
 
   bool getIsShowLoadingNextPageForProducts(int childCategoryId) {
-    return _productsUnderChildCateoryMap[childCategoryId]?.isLoadingMore == true;
+    return _productsUnderChildCateoryMap[childCategoryId]?.isLoadingMore ==
+        true;
   }
 
   bool getIsShowNextPageForProducts(int childCategoryId) {
     return getIsShowLoadingNextPageForProducts(childCategoryId)
         ? false
         : _productsUnderChildCateoryMap[childCategoryId]?.nextPageUrl != null;
+  }
+
+  String getNumberOfProducts(int childCategoryId) {
+    if (getProductsLoadingStatus(childCategoryId) == DataState.SUCCESS) {
+      return ' (' +
+          (_productsUnderChildCateoryMap[childCategoryId]?.count?.toString() ??
+              '0') +
+          ')';
+    }
+    return '';
   }
 
   DataState getProductsLoadingStatus(int childCategoryId) {

@@ -8,7 +8,11 @@ import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/data/model/es_product_catalogue.dart';
+import 'package:foore/widgets/empty_list.dart';
+import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
+
+import '../app_translations.dart';
 
 class EsBusinessCataloguePage extends StatefulWidget {
   static const routeName = '/business_catalogue';
@@ -43,6 +47,23 @@ class _EsBusinessCataloguePageState extends State<EsBusinessCataloguePage> {
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Container();
+              }
+              if (snapshot.data.categoriesLoadingStatus == DataState.LOADING) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.data.categoriesLoadingStatus ==
+                  DataState.FAILED) {
+                return SomethingWentWrong(
+                  onRetry: this.esBusinessCatalogueBloc.getCategories,
+                );
+              } else if (snapshot.data.parentCategories.length == 0) {
+                return EmptyList(
+                  titleText: AppTranslations.of(context)
+                      .text('products_page_no_products_found'),
+                  subtitleText: AppTranslations.of(context)
+                      .text('products_page_no_products_found_description'),
+                );
               }
               return SafeArea(
                 child: Row(
@@ -147,7 +168,9 @@ class SubCategory extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                subCategory.categoryName,
+                subCategory.categoryName +
+                    snapshot.data
+                        .getNumberOfProducts(this.subCategory.categoryId),
                 style: Theme.of(context).textTheme.subtitle1.copyWith(
                       color: Theme.of(context).primaryColorDark,
                     ),
