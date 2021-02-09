@@ -4,6 +4,7 @@ import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_product.dart';
+import 'package:foore/data/model/es_product_catalogue.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EsProductsBloc {
@@ -43,6 +44,15 @@ class EsProductsBloc {
         this._esProductsState.response =
             EsGetProductsResponse.fromJson(json.decode(httpResponse.body));
         this._esProductsState.items = this._esProductsState.response.results;
+        this._esProductsState.products =
+            this._esProductsState.response.results.map(
+          (element) {
+            return EsBusinessCatalogueProduct(
+              product: element,
+              isExpanded: false,
+            );
+          },
+        ).toList();
       } else {
         this._esProductsState.isLoadingFailed = true;
         this._esProductsState.isLoading = false;
@@ -76,6 +86,20 @@ class EsProductsBloc {
             ._esProductsState
             .items
             .addAll(this._esProductsState.response.results);
+        this._esProductsState.products = this
+            ._esProductsState
+            .response
+            .results
+            .fold<List<EsBusinessCatalogueProduct>>(
+          this._esProductsState.products,
+          (previousValue, element) {
+            previousValue.add(EsBusinessCatalogueProduct(
+              product: element,
+              isExpanded: false,
+            ));
+            return previousValue;
+          },
+        );
         this._esProductsState.isLoadingMoreFailed = false;
         this._esProductsState.isLoadingMore = false;
       } else {
@@ -99,12 +123,26 @@ class EsProductsBloc {
   dispose() {
     this._subjectEsProductsState.close();
   }
+
+  expandProduct(int productId, bool isExpanded) {
+    _esProductsState.products = _esProductsState.products.map((e) {
+      if (e.product.productId == productId) {
+        e.isExpanded = isExpanded;
+      }
+      return e;
+    }).toList();
+    _updateState();
+  }
 }
 
 class EsProductsState {
   bool isLoading = false;
   EsGetProductsResponse response;
   List<EsProduct> items = new List<EsProduct>();
+
+  List<EsBusinessCatalogueProduct> products =
+      new List<EsBusinessCatalogueProduct>();
+
   bool isLoadingFailed = false;
   bool isLoadingMore;
   bool isLoadingMoreFailed;
