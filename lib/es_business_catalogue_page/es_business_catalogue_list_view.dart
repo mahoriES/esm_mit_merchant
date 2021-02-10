@@ -8,7 +8,12 @@ import 'package:foore/data/bloc/es_products.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/data/model/es_product_catalogue.dart';
+import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
+import 'package:foore/widgets/empty_list.dart';
+import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
+
+import '../app_translations.dart';
 
 class EsBusinessCatalogueListView extends StatefulWidget {
   EsBusinessCatalogueListView({Key key}) : super(key: key);
@@ -38,7 +43,25 @@ class _EsBusinessCatalogueListViewState
       child: StreamBuilder<EsProductsState>(
           stream: this.esBusinessCatalogueBloc.esProductStateObservable,
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return Container();
+            if (!snapshot.hasData) {
+              return Container();
+            }
+            if (snapshot.data.isLoading) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.data.isLoadingFailed) {
+              return SomethingWentWrong(
+                onRetry: this.esBusinessCatalogueBloc.getProductsFromSearch,
+              );
+            } else if (snapshot.data.products.length == 0) {
+              return EmptyList(
+                titleText: AppTranslations.of(context)
+                    .text('products_page_no_products_found'),
+                subtitleText: AppTranslations.of(context)
+                    .text('products_page_no_products_found_description'),
+              );
+            }
             return NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification scrollInfo) {
                 if (scrollInfo.metrics.pixels ==
@@ -51,6 +74,24 @@ class _EsBusinessCatalogueListViewState
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
                 itemCount: snapshot.data.products.length,
                 itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'All Products' +
+                                snapshot.data.getNumberOfProducts(),
+                            style:
+                                Theme.of(context).textTheme.subtitle1.copyWith(
+                                      color: Theme.of(context).primaryColorDark,
+                                    ),
+                          ),
+                        ),
+                        Product(snapshot.data.products[index]),
+                      ],
+                    );
+                  }
                   return Product(snapshot.data.products[index]);
                 },
               ),
@@ -70,12 +111,24 @@ class Product extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final esBusinessCatalogueBloc = Provider.of<EsProductsBloc>(context);
+    viewItem() async {
+      EsProductDetailPageParam esProductDetailPageParam =
+          EsProductDetailPageParam(
+              currentProduct: businessCatalogueProduct.product,
+              openSkuAddUpfront: false);
+      var result = await Navigator.of(context).pushNamed(
+          EsProductDetailPage.routeName,
+          arguments: esProductDetailPageParam);
+      esBusinessCatalogueBloc.getProductsFromSearch();
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Material(
           elevation: 2.0,
           child: ListTile(
+            onTap: viewItem,
             contentPadding: EdgeInsets.all(8.0),
             dense: true,
             leading: Material(

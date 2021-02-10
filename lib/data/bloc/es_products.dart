@@ -143,6 +143,13 @@ class EsProductsState {
   List<EsBusinessCatalogueProduct> products =
       new List<EsBusinessCatalogueProduct>();
 
+  getNumberOfProducts() {
+    if (response == null) {
+      return '';
+    }
+    return ' (${response.count})';
+  }
+
   bool isLoadingFailed = false;
   bool isLoadingMore;
   bool isLoadingMoreFailed;

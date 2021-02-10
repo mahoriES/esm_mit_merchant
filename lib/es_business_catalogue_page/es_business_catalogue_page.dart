@@ -13,7 +13,7 @@ class EsBusinessCataloguePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<String> tabTitles = [
       'Categories',
-      'Products',
+      'List View',
     ];
     return Scaffold(
       body: SafeArea(
@@ -23,18 +23,21 @@ class EsBusinessCataloguePage extends StatelessWidget {
             children: <Widget>[
               Container(
                 child: TabBar(
-                    isScrollable: true,
-                    tabs: List.generate(
-                      tabTitles.length,
-                      (index) => Tab(
-                        child: Text(
-                          tabTitles[index],
-                          style: TextStyle(
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ),
-                    )),
+                  isScrollable: false,
+                  labelColor: Colors.blue,
+                  unselectedLabelColor: Colors.black26,
+                  indicatorColor: Colors.transparent,
+                  tabs: [
+                    Tab(
+                      icon: Icon(Icons.apps),
+                      child: Text(tabTitles[0]),
+                    ),
+                    Tab(
+                      icon: Icon(Icons.list),
+                      child: Text(tabTitles[1]),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 10.toHeight),
               Divider(

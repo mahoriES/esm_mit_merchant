@@ -8,6 +8,7 @@ import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/data/model/es_product_catalogue.dart';
+import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
 import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
@@ -221,12 +222,24 @@ class Product extends StatelessWidget {
   Widget build(BuildContext context) {
     final esBusinessCatalogueBloc =
         Provider.of<EsBusinessCatalogueBloc>(context);
+    viewItem() async {
+      EsProductDetailPageParam esProductDetailPageParam =
+          EsProductDetailPageParam(
+              currentProduct: businessCatalogueProduct.product,
+              openSkuAddUpfront: false);
+      var result = await Navigator.of(context).pushNamed(
+          EsProductDetailPage.routeName,
+          arguments: esProductDetailPageParam);
+      esBusinessCatalogueBloc.getCategories();
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Material(
           elevation: 2.0,
           child: ListTile(
+            onTap: viewItem,
             contentPadding: EdgeInsets.all(8.0),
             dense: true,
             leading: Material(

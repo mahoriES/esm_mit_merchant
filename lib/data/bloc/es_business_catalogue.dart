@@ -200,6 +200,8 @@ class EsBusinessCatalogueBloc {
     this._subjectProductsCatalogueState.close();
     this.searchController.dispose();
   }
+
+  void getProductsFromSearch() {}
 }
 
 class EsBusinessCatalogueState {
