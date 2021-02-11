@@ -5,6 +5,7 @@ import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../shared_preferences_service.dart';
 import 'auth.dart';
 
 class EsBusinessesBloc {
@@ -44,12 +45,24 @@ class EsBusinessesBloc {
     this._esBusinessesState.isLoadingFailed = false;
     this._esBusinessesState.businesses = [];
     this._updateState();
-    _httpService.esGet(EsApiPaths.getBusinesses).then((httpResponse) {
+    _httpService.esGet(EsApiPaths.getBusinesses).then((httpResponse) async {
       if (httpResponse.statusCode == 200) {
         this._esBusinessesState.isLoading = false;
         this._esBusinessesState.isLoadingFailed = false;
-        this._esBusinessesState.setBusinessesResponse(
-            EsGetBusinessesResponse.fromJson(json.decode(httpResponse.body)));
+        final selectedBusinessIdFromSharedPref =
+            await SharedPreferencesService.getSelectedBusinessId();
+        final businessesResponse =
+            EsGetBusinessesResponse.fromJson(json.decode(httpResponse.body));
+        this._esBusinessesState.setBusinessesResponse(businessesResponse);
+        if (businessesResponse.results.length > 0) {
+          final selectedBusinessFromSharedPrefIndex = businessesResponse.results
+              .indexWhere((element) =>
+                  selectedBusinessIdFromSharedPref == element.businessId);
+          setSelectedBusiness(businessesResponse.results[
+              selectedBusinessFromSharedPrefIndex > -1
+                  ? selectedBusinessFromSharedPrefIndex
+                  : 0]);
+        }
       } else {
         this._esBusinessesState.isLoadingFailed = true;
         this._esBusinessesState.isLoading = false;
@@ -70,6 +83,7 @@ class EsBusinessesBloc {
     esdyPrint('setSelectedBusiness');
     this._esBusinessesState.selectedBusiness = businessInfo;
     this._updateState();
+    SharedPreferencesService.setSelectedBusinessId(businessInfo.businessId);
   }
 
   updateSelectedBusiness(EsBusinessInfo businessInfo) {
@@ -142,9 +156,5 @@ class EsBusinessesState {
   setBusinessesResponse(EsGetBusinessesResponse response) {
     this.businessesResponse = response;
     this.businesses = response.results;
-    if (this.businesses.length > 0) {
-      selectedBusiness = this.businesses[0];
-      esdyPrint(selectedBusiness.businessId);
-    }
   }
 }
