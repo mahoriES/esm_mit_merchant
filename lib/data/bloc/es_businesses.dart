@@ -58,10 +58,17 @@ class EsBusinessesBloc {
           final selectedBusinessFromSharedPrefIndex = businessesResponse.results
               .indexWhere((element) =>
                   selectedBusinessIdFromSharedPref == element.businessId);
-          setSelectedBusiness(businessesResponse.results[
-              selectedBusinessFromSharedPrefIndex > -1
-                  ? selectedBusinessFromSharedPrefIndex
-                  : 0]);
+          final firstApprovedBusinessIndex = businessesResponse.results
+              .indexWhere((element) => !element.dBusinessNotApproved);
+          if (selectedBusinessFromSharedPrefIndex > -1) {
+            setSelectedBusiness(businessesResponse
+                .results[selectedBusinessFromSharedPrefIndex]);
+          } else if (firstApprovedBusinessIndex > -1) {
+            setSelectedBusiness(businessesResponse
+                .results[selectedBusinessFromSharedPrefIndex]);
+          } else {
+            setSelectedBusiness(businessesResponse.results[0]);
+          }
         }
       } else {
         this._esBusinessesState.isLoadingFailed = true;
