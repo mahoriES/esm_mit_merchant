@@ -65,7 +65,7 @@ class EsBusinessesBloc {
                 .results[selectedBusinessFromSharedPrefIndex]);
           } else if (firstApprovedBusinessIndex > -1) {
             setSelectedBusiness(businessesResponse
-                .results[selectedBusinessFromSharedPrefIndex]);
+                .results[firstApprovedBusinessIndex]);
           } else {
             setSelectedBusiness(businessesResponse.results[0]);
           }

@@ -13,7 +13,7 @@ class SharedPreferencesService {
     try {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
-      businessId = sharedPreferences.getString(SELECTED_BUSINESS_ID) ?? false;
+      businessId = sharedPreferences.getString(SELECTED_BUSINESS_ID);
     } catch (exception) {}
     return businessId;
   }
