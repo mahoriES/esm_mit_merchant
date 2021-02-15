@@ -61,7 +61,7 @@ class _EsBusinessCatalogueTreeViewState
             } else if (snapshot.data.parentCategories.length == 0) {
               return EmptyList(
                   titleText: AppTranslations.of(context)
-                      .text('products_page_no_products_found'));
+                      .text('business_catalogue_page_no_categories'));
             }
             return SafeArea(
               child: Row(
@@ -91,16 +91,24 @@ class _EsBusinessCatalogueTreeViewState
                   ),
                   Flexible(
                     flex: 17,
-                    child: ListView.builder(
-                      padding: EdgeInsets.only(bottom: 72.0),
-                      itemCount: snapshot.data.subCategories.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return _SubCategory(
-                          snapshot.data.subCategories[index],
-                        );
-                      },
-                    ),
+                    child: snapshot.data.subCategories.length == 0
+                        ? Container(
+                            height: MediaQuery.of(context).size.height,
+                            width: 500,
+                            child: EmptyList(
+                                titleText: AppTranslations.of(context)
+                                    .text('business_catalogue_page_no_sub_categories')),
+                          )
+                        : ListView.builder(
+                            padding: EdgeInsets.only(bottom: 72.0),
+                            itemCount: snapshot.data.subCategories.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return _SubCategory(
+                                snapshot.data.subCategories[index],
+                              );
+                            },
+                          ),
                   ),
                   const SizedBox(
                     width: 8.0,
@@ -174,6 +182,10 @@ class _SubCategory extends StatelessWidget {
                     ),
               ),
             ),
+            if (snapshot.data
+                    .getProductsLoadingStatus(this.subCategory.categoryId) ==
+                DataState.LOADING)
+              CircularProgressIndicator(),
             ...snapshot.data
                 .getProductListForSubCategory(subCategory.categoryId)
                 .map((e) => _Product(e))
@@ -191,7 +203,8 @@ class _SubCategory extends StatelessWidget {
                     width: double.infinity,
                     padding: EdgeInsets.all(8),
                     child: Text(
-                      'See more items',
+                      AppTranslations.of(context)
+                          .text('business_catalogue_page_see_more_products'),
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.caption.copyWith(
                             color: Theme.of(context).primaryColorDark,
@@ -200,6 +213,9 @@ class _SubCategory extends StatelessWidget {
                   ),
                 ),
               ),
+            if (snapshot.data.getIsShowLoadingNextPageForProducts(
+                this.subCategory.categoryId))
+              CircularProgressIndicator(),
             const SizedBox(
               height: 12.0,
             ),
@@ -338,184 +354,46 @@ class _Sku extends StatelessWidget {
       child: Material(
         elevation: 1.0,
         borderRadius: BorderRadius.circular(6.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 4,
-              child: Container(
-                padding: EdgeInsets.all(16),
-                margin: EdgeInsets.only(bottom: 2),
-                child: Text(
-                  sku.dVariationValue,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 4,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    sku.dVariationValue,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
-            ),
-            Container(
-              color: Colors.black12,
-              height: 16.0,
-              width: 1.0,
-            ),
-            Expanded(
-              flex: 3,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12),
-                margin: EdgeInsets.only(bottom: 2),
-                child: Text(
-                  sku.dBasePrice,
-                  textAlign: TextAlign.right,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyText1.copyWith(
-                        color: Theme.of(context).primaryColorDark,
-                      ),
+              Container(
+                color: Colors.black12,
+                height: 16.0,
+                width: 1.0,
+              ),
+              Expanded(
+                flex: 3,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    sku.dBasePrice,
+                    textAlign: TextAlign.right,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyText1.copyWith(
+                          color: Theme.of(context).primaryColorDark,
+                        ),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
-
-// class _Product extends StatelessWidget {
-//   final EsBusinessCatalogueProduct businessCatalogueProduct;
-//   const _Product(
-//     this.businessCatalogueProduct, {
-//     Key key,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final esBusinessCatalogueBloc =
-//         Provider.of<EsBusinessCatalogueBloc>(context);
-//     viewItem() async {
-//       EsProductDetailPageParam esProductDetailPageParam =
-//           EsProductDetailPageParam(
-//               currentProduct: businessCatalogueProduct.product,
-//               openSkuAddUpfront: false);
-//       await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
-//           arguments: esProductDetailPageParam);
-//       esBusinessCatalogueBloc.getCategories();
-//     }
-
-//     return Column(
-//       mainAxisAlignment: MainAxisAlignment.start,
-//       children: [
-//         Material(
-//           elevation: 2.0,
-//           child: ListTile(
-//             onTap: viewItem,
-//             contentPadding: EdgeInsets.all(8.0),
-//             dense: true,
-//             leading: Material(
-//               elevation: 1.0,
-//               borderRadius: BorderRadius.circular(4.0),
-//               child: ClipRRect(
-//                 borderRadius: BorderRadius.circular(4.0),
-//                 child: Container(
-//                   height: 60,
-//                   width: 60,
-//                   child: CachedNetworkImage(
-//                     imageUrl: businessCatalogueProduct.product.dPhotoUrl ?? '',
-//                     fit: BoxFit.fill,
-//                     errorWidget: (_, __, ___) => Container(),
-//                     placeholder: (_, __) => Container(),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//             title: Text(businessCatalogueProduct.product.dProductName),
-//             trailing: InkWell(
-//               onTap: () {
-//                 esBusinessCatalogueBloc.expandProduct(
-//                     businessCatalogueProduct.product.productId,
-//                     !businessCatalogueProduct.isExpanded);
-//               },
-//               child: Container(
-//                 height: 28.0,
-//                 width: 32.0,
-//                 child: Row(
-//                   children: [
-//                     Container(
-//                       color: Colors.black12,
-//                       height: 16.0,
-//                       width: 1.0,
-//                     ),
-//                     Expanded(
-//                       child: Container(),
-//                     ),
-//                     Transform.rotate(
-//                       angle: businessCatalogueProduct.isExpanded ? pi / 2 : 0,
-//                       child: Icon(Icons.chevron_right),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ),
-//         SizedBox(
-//           height: 8.0,
-//         ),
-//         if (businessCatalogueProduct.isExpanded)
-//           ...businessCatalogueProduct.product.skus.map((e) => _Sku(e)).toList(),
-//       ],
-//     );
-//   }
-// }
-
-// class _Sku extends StatelessWidget {
-//   final EsSku sku;
-//   const _Sku(
-//     this.sku, {
-//     Key key,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.only(left: 28.0, bottom: 8.0),
-//       child: Material(
-//         elevation: 2.0,
-//         child: Row(
-//           children: [
-//             Expanded(
-//               flex: 4,
-//               child: Container(
-//                 padding: EdgeInsets.all(12),
-//                 margin: EdgeInsets.only(bottom: 2),
-//                 child: Text(
-//                   sku.variationValue,
-//                   maxLines: 1,
-//                   overflow: TextOverflow.ellipsis,
-//                 ),
-//               ),
-//             ),
-//             Container(
-//               color: Colors.black12,
-//               height: 16.0,
-//               width: 1.0,
-//             ),
-//             Expanded(
-//               flex: 3,
-//               child: Container(
-//                 padding: EdgeInsets.all(12),
-//                 margin: EdgeInsets.only(bottom: 2),
-//                 child: Text(
-//                   sku.dBasePrice,
-//                   textAlign: TextAlign.right,
-//                   maxLines: 1,
-//                   overflow: TextOverflow.ellipsis,
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

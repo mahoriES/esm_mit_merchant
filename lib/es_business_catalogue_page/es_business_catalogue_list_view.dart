@@ -40,12 +40,15 @@ class _EsBusinessCatalogueListViewState
   String getTile(BuildContext context) {
     switch (widget.filter) {
       case ProductFilters.outOfStock:
-        return 'Out of Stock';
+        return AppTranslations.of(context)
+            .text('business_catalogue_page_out_of_stock');
       case ProductFilters.spotlights:
-        return 'Sportlights';
+        return AppTranslations.of(context)
+            .text('business_catalogue_page_sport_lights');
       case ProductFilters.listView:
       default:
-        return 'All Products';
+        return AppTranslations.of(context)
+            .text('business_catalogue_page_all_products');
     }
   }
 
@@ -123,7 +126,8 @@ class _EsBusinessCatalogueListViewState
                                 PopupMenuItem(
                                   value: ProductSorting.recentlyUpdatedAcending,
                                   child: Text(
-                                    'Recently Updated',
+                                    AppTranslations.of(context).text(
+                                        'business_catalogue_page_recently_updated'),
                                     style: TextStyle(
                                         color: snapshot.data.selectedSorting ==
                                                 ProductSorting
@@ -135,7 +139,8 @@ class _EsBusinessCatalogueListViewState
                                 PopupMenuItem(
                                   value: ProductSorting.alphabaticallyAcending,
                                   child: Text(
-                                    'A - Z',
+                                    AppTranslations.of(context)
+                                        .text('business_catalogue_page_a_to_z'),
                                     style: TextStyle(
                                         color: snapshot.data.selectedSorting ==
                                                 ProductSorting
@@ -147,7 +152,8 @@ class _EsBusinessCatalogueListViewState
                                 PopupMenuItem(
                                   value: ProductSorting.ratingDecending,
                                   child: Text(
-                                    'Rating (High to Low)',
+                                    AppTranslations.of(context).text(
+                                        'business_catalogue_page_rating_high_to_low'),
                                     style: TextStyle(
                                         color: snapshot.data.selectedSorting ==
                                                 ProductSorting.ratingDecending
@@ -298,47 +304,48 @@ class _Sku extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 60.0, bottom: 8.0),
+      padding: const EdgeInsets.only(left: 40.0, bottom: 8.0),
       child: Material(
         elevation: 1.0,
         borderRadius: BorderRadius.circular(6.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 4,
-              child: Container(
-                padding: EdgeInsets.all(16),
-                margin: EdgeInsets.only(bottom: 2),
-                child: Text(
-                  sku.dVariationValue,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 4,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    sku.dVariationValue,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
-            ),
-            Container(
-              color: Colors.black12,
-              height: 16.0,
-              width: 1.0,
-            ),
-            Expanded(
-              flex: 3,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                margin: const EdgeInsets.only(bottom: 2),
-                child: Text(
-                  sku.dBasePrice,
-                  textAlign: TextAlign.right,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyText1.copyWith(
-                        color: Theme.of(context).primaryColorDark,
-                      ),
+              Container(
+                color: Colors.black12,
+                height: 16.0,
+                width: 1.0,
+              ),
+              Expanded(
+                flex: 3,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    sku.dBasePrice,
+                    textAlign: TextAlign.right,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyText1.copyWith(
+                          color: Theme.of(context).primaryColorDark,
+                        ),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

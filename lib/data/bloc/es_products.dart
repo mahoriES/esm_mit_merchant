@@ -5,7 +5,6 @@ import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/data/model/es_product_catalogue.dart';
-import 'package:foore/es_business_catalogue_page/es_business_catalogue_list_view.dart';
 import 'package:foore/utils/utils.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -60,7 +59,7 @@ class EsProductsBloc {
         queryParameters.addAll({'sort_by': 'product_name'});
         break;
       case ProductSorting.ratingDecending:
-        queryParameters.addAll({'sort_by': 'rating_val'});
+        queryParameters.addAll({'sort_by': '-rating_val'});
         break;
     }
     final query = Utils.makeQuery(queryParameters);
