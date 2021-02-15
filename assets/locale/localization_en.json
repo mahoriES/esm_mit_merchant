@@ -38,7 +38,8 @@
 	"reply_page_reply_validation": "Please keep the length less than 4000 characters.",
 	"reply_page_reply_label": "Enter your reply here. Keep it less than 4000 characters. Leave empty to delete existing reply.",
 	"language_selection_page_change_language": "Select language",
-	"intro_page_button_login": "Login with Company Email",
+	"intro_page_button_login": "Login",
+	"intro_page_button_signup": "Sign Up",
 	"intro_page_button_google": "Continue with Google",
 	"onboarding_page_title": "My Google Business Locations",
 	"onboarding_page_no_location_message": "You don't have any Google Business Locations.\n\nA Google Business Location is required to proceed with Foore.",
@@ -121,7 +122,7 @@
     "create_business_page_business_name": "Business name",
     "create_business_page_circle": "Circle",
     "create_business_page_get_in_touch_to_get_circle_code": "Get in touch with us to get Circle code",
-	"create_business_page_save": "save",
+	"create_business_page_save": "Create",
  
 	"generic_save": "save",
 	"generic_confirm": "Confirm",
@@ -134,6 +135,7 @@
 	"generic_please_check_internet_connection": "Please check your internet connection and try again.",
 	"generic_submit_failed": "Submit failed",
 	"generic_please_please_try_again": "Please try again..",
+	"generic_discard": "Discard",
  
 	"merchant_profile_page_title": "Create profile",
 	"merchant_profile_page_name": "Name",
@@ -173,6 +175,8 @@
 	"profile_page_add_address": "Add Address",
 	"profile_page_notice": "Notice",
 	"profile_page_add_notice": "Add Notice",
+	"profile_page_bcats": "Business Categories",
+	"profile_page_add_bcats": "Add Business Categories",
 	"profile_page_store_Link": "Store Link",
 	"profile_page_share_your_store_link": "Share Your Store Link",
 	"profile_page_link_description": "Let your customers checkout your store directly through this link",
@@ -302,6 +306,7 @@
 	"orders_page_order_status_awaiting_customer_confirmation": "Awaiting customer\nconfirmation",
 	"orders_page_order_status_delivering": "Delivering",
 	"orders_page_order_status_waiting_pickup": "Waiting pickup",
+	"orders_page_rectrict_complete_order_message": "The delivery agent should be processing this order now, please try after sometime!",
 	
 	"products_page_no_products_found": "No products found",
 	"products_page_no_products_found_description": "Press 'Add item' to add new products",
@@ -375,6 +380,38 @@
 	"address_page_select_location": "Select Location",
 	"address_page_confirm_location": "Confirm Location",
 	"address_page_invalid_address": "Invalid Address",
+	"address_over_query_error": "Over query limit. Please try after some time.",
+	"address_updated_message": "Address Updated Successfully",
+	"address_updating_message": "Updating Address ...",
+	"address_discard_message":"The address has been modified. Your changes will be discarded if you continue. Do you want to discard the changes ?",
+
+	"circle_search_hint": "Try searching for a Circle by typing in your city name. For e.g. Udupi, Chandigarh.",
+	"circle_search_action_hint": "Search for circle",
+	"no_circle_selected_msg": "No Circle Selected",
+	"select_circle_action": "Select Circle",
+	"change_circle_action": "Change Circle",
+	"enter_circle_code": "Enter Circle Code",
+	"esamudaay_circles": "eSamudaay Circles",
+	"trending_circles": "Trending Circles",
+	"suggested_circles": "Suggested Circles",
+	"turn_on_location": "Turn Location On",
+	"turn_on_location_msg": "Turn on your device's location to get suggestions for Circles near you",
+	"based_on_current_location": "Based on your current location",
+	"circle_info_1": "A 'Circle' is a community of shop owners, restaurants and merchants that serve in a locality",
+	"circle_info_2": "You can add a circle by turning on your location or searching for a specific circle",
+
+	"done_category": "Done",
+	"search_category": "Search Category..",
+	"search_business_category": "Search Business Categories",
+	"business_categories": "Business Categories",
+	"categories_updation_failed": "Categories updation failed. Please try again!",
+	"categories_updated_success": "Categories updated successfully!",
+
+	"app_update_title": "App Update Available",
+	"app_update_banner_msg": "eSamudaay just got more interesting with new features and offers. Update Now!!",
+	"app_update_popup_msg": "Update the app now to experience new features we have designed for you!",
+	"app_update_action": "Update",
+	"app_update_later": "Later",
 
 	"business_catalogue_page_see_more_products": "See more products",
 	"business_catalogue_page_no_categories": "No categories found",
@@ -387,4 +424,5 @@
 	"business_catalogue_page_recently_updated": "Recently Updated",
 	"business_catalogue_page_a_to_z": "A - Z",
 	"business_catalogue_page_rating_high_to_low": "Rating (High to Low)"
+
 }

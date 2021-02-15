@@ -1,17 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
+import 'package:foore/data/bloc/es_business_categories.dart';
 import 'package:foore/data/bloc/es_business_catalogue.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
 import 'package:foore/data/bloc/es_create_merchant_profile.dart';
 import 'package:foore/data/bloc/es_orders.dart';
+import 'package:foore/data/bloc/es_select_circle.dart';
 import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/data/model/es_product.dart';
+import 'package:foore/es_address_picker_view/add_new_address_view.dart/add_new_address_view.dart';
 import 'package:foore/es_address_picker_view/search_view/search_view.dart';
+import 'package:foore/es_business_categories/es_business_categories_view.dart';
 import 'package:foore/es_business_guard/es_businesses_guard.dart';
 import 'package:foore/es_category_page/es_add_subcategory.dart';
 import 'package:foore/es_category_page/es_subcategory_page.dart';
+import 'package:foore/es_circles/es_circle_picker_view.dart';
+import 'package:foore/es_circles/es_circle_search.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/es_login_page/es_login_page.dart';
 import 'package:foore/es_order_page/es_order_details.dart';
@@ -25,6 +31,7 @@ import 'package:foore/setting_page/settting_page.dart';
 import 'package:foore/shopping_page/shopping_page.dart';
 import 'package:provider/provider.dart';
 import 'auth_guard/auth_guard.dart';
+import 'data/bloc/app_update_bloc.dart';
 import 'data/bloc/es_edit_product.dart';
 import 'data/bloc/onboarding.dart';
 import 'data/bloc/people.dart';
@@ -84,6 +91,16 @@ class AppRouter {
     print(settings.name);
     this.authBloc.foAnalytics.setCurrentScreen(settings.name);
     switch (settings.name) {
+      case BusinessCategoriesPickerView.routeName:
+        return MaterialPageRoute(
+            builder: (context) => Provider<EsBusinessCategoriesBloc>(
+                  create: (context) =>
+                      EsBusinessCategoriesBloc(httpServiceBloc),
+                  dispose: (context, bloc) => bloc.dispose(),
+                  child: BusinessCategoriesPickerView(),
+                ),
+            settings: settings);
+        break;
       case HomePage.routeName:
         return MaterialPageRoute(
           builder: (context) => AuthGuard(
@@ -185,34 +202,38 @@ class AppRouter {
         break;
       case homeRoute:
         return MaterialPageRoute(
-          builder: (context) => EsAuthGuard(
-            unauthenticatedPage: ShoppingPage(),
-            noMerchantProfilePage: Provider(
-              builder: (context) =>
-                  EsCreateMerchantProfileBloc(httpServiceBloc, authBloc),
-              dispose: (context, value) => value.dispose(),
-              child: EsCreateMerchantProfilePage(),
-            ),
-            child: EsBusinessesGuard(
-              createBusinessRequiredHandler: esCreateBusinessRequiredHandler,
-              child: MultiProvider(
-                providers: [
-                  Provider<PeopleBloc>(
-                    builder: (context) => PeopleBloc(httpServiceBloc),
-                    dispose: (context, value) => value.dispose(),
-                  ),
-                  Provider<EsVideoBloc>(
-                    builder: (context) =>
-                        EsVideoBloc(httpServiceBloc, esBusinessesBloc),
-                    dispose: (context, value) => value.dispose(),
-                  ),
-                  Provider<EsOrdersBloc>(
-                    create: (context) =>
-                        EsOrdersBloc(httpServiceBloc, esBusinessesBloc),
-                    dispose: (context, value) => value.dispose(),
-                  ),
-                ],
-                child: EsHomePage(httpServiceBloc),
+          builder: (context) => Provider(
+            create: (context) => EsAppUpdateBloc(),
+            dispose: (context, value) => value.dispose(),
+            child: EsAuthGuard(
+              unauthenticatedPage: ShoppingPage(),
+              noMerchantProfilePage: Provider(
+                builder: (context) =>
+                    EsCreateMerchantProfileBloc(httpServiceBloc, authBloc),
+                dispose: (context, value) => value.dispose(),
+                child: EsCreateMerchantProfilePage(),
+              ),
+              child: EsBusinessesGuard(
+                createBusinessRequiredHandler: esCreateBusinessRequiredHandler,
+                child: MultiProvider(
+                  providers: [
+                    Provider<PeopleBloc>(
+                      builder: (context) => PeopleBloc(httpServiceBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
+                    Provider<EsVideoBloc>(
+                      builder: (context) =>
+                          EsVideoBloc(httpServiceBloc, esBusinessesBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
+                    Provider<EsOrdersBloc>(
+                      create: (context) =>
+                          EsOrdersBloc(httpServiceBloc, esBusinessesBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
+                  ],
+                  child: EsHomePage(httpServiceBloc),
+                ),
               ),
             ),
           ),
@@ -339,6 +360,23 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => SearchAddressView(),
         );
+        break;
+      case AddNewAddressView.routeName:
+        return MaterialPageRoute(
+          builder: (context) => AddNewAddressView(),
+        );
+        break;
+      case CirclePickerView.routeName:
+        return MaterialPageRoute(
+            builder: (context) => Provider<EsSelectCircleBloc>(
+                  create: (context) => EsSelectCircleBloc(httpServiceBloc),
+                  dispose: (context, bloc) => bloc.dispose(),
+                  child: CirclePickerView(),
+                ));
+        break;
+      case CircleSearchView.routeName:
+        return MaterialPageRoute(
+            builder: (context) => CircleSearchView(), settings: settings);
         break;
       default:
         return MaterialPageRoute(

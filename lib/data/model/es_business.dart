@@ -1,21 +1,52 @@
 import 'es_clusters.dart';
+import 'es_video_models/es_video_list.dart';
 
 class EsCreateBusinessPayload {
   String businessName;
   String clusterCode;
+  List<int> businessCategories;
 
-  EsCreateBusinessPayload({this.businessName, this.clusterCode});
+  EsCreateBusinessPayload(
+      {this.businessName, this.clusterCode, this.businessCategories});
 
   EsCreateBusinessPayload.fromJson(Map<String, dynamic> json) {
     businessName = json['business_name'];
     clusterCode = json['cluster_code'];
+    if (json['bcats'] != null && json['bcats'] is List) {
+      businessCategories = List<int>();
+      json['bcats']?.forEach((json) {
+        businessCategories.add(EsBusinessCategory.fromJson(json).bcat);
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['business_name'] = this.businessName;
     data['cluster_code'] = this.clusterCode;
+    if (this.businessCategories != null) {
+      data['bcats'] = this.businessCategories;
+    }
     return data;
+  }
+}
+
+class BusinessCategoriesResponseModel {
+  int count;
+  String next;
+  String previous;
+  List<EsBusinessCategory> businessCategories;
+
+  BusinessCategoriesResponseModel.fromJson(Map<String, dynamic> json) {
+    count = json['count'];
+    next = json['next'];
+    previous = json['previous'];
+    if (json['results'] != null) {
+      businessCategories = [];
+      json['results']?.forEach((json) {
+        businessCategories.add(EsBusinessCategory.fromJson(json));
+      });
+    }
   }
 }
 
@@ -63,6 +94,7 @@ class EsBusinessInfo {
   EsTiming timing;
   List<EsImages> images;
   List<String> phones;
+  List<EsBusinessCategory> businessCategories;
   bool hasDelivery;
   EsCluster cluster;
   EsBusinessPaymentInfo paymentInfo;
@@ -96,6 +128,17 @@ class EsBusinessInfo {
       }
     }
     return '';
+  }
+
+  String get dBusinessAddressWithDetails {
+    if (address != null) {
+      return (address?.geoAddr?.house ?? "") +
+          ", " +
+          (address?.geoAddr?.landmark ?? "") +
+          "\n" +
+          (address?.prettyAddress ?? "");
+    }
+    return "";
   }
 
   get dBusinessNotApproved {
@@ -196,6 +239,12 @@ class EsBusinessInfo {
     return List<String>();
   }
 
+  List<String> get businessCategoriesNamesList {
+    if (businessCategories != null && businessCategories.isNotEmpty)
+      return businessCategories.map((e) => e.name).toList();
+    return List<String>();
+  }
+
   EsBusinessInfo(
       {this.businessId,
       this.businessName,
@@ -208,6 +257,7 @@ class EsBusinessInfo {
       this.description,
       this.phones,
       this.hasDelivery,
+      this.businessCategories,
       this.cluster,
       this.paymentInfo,
       this.notificationInfo});
@@ -231,7 +281,12 @@ class EsBusinessInfo {
         images.add(new EsImages.fromJson(v));
       });
     }
-
+    if (json['bcats'] != null && json['bcats'] is List) {
+      businessCategories = List<EsBusinessCategory>();
+      json['bcats']?.forEach((json) {
+        businessCategories.add(EsBusinessCategory.fromJson(json));
+      });
+    }
     phones = json['phones'].cast<String>();
     hasDelivery = json['has_delivery'];
     cluster = json['cluster'] != null
@@ -268,11 +323,48 @@ class EsBusinessInfo {
     if (this.images != null) {
       data['images'] = this.images.map((v) => v.toJson()).toList();
     }
+    if (this.businessCategories != null) {
+      data['bcats'] = this.businessCategories.map((e) => e.toJson()).toList();
+    }
     if (this.paymentInfo != null) {
       data['payment_info'] = this.paymentInfo.toJson();
     }
     return data;
   }
+}
+
+class EsBusinessCategory {
+  int bcat;
+  bool isActive;
+  String name;
+  String description;
+  Photo image;
+
+  EsBusinessCategory.fromJson(Map<String, dynamic> json) {
+    bcat = json['bcat'];
+    isActive = json['is_active'];
+    name = json['name'];
+    description = json['description'];
+    if (json['image'] != null && json['image'] is Map) {
+      image = Photo.fromJson(json['image']);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['bcat'] = this.bcat;
+    data['name'] = this.name;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is EsBusinessCategory &&
+          runtimeType == other.runtimeType &&
+          bcat == other.bcat;
+
+  @override
+  int get hashCode => bcat.hashCode;
 }
 
 class EsAddress {
@@ -395,6 +487,7 @@ class EsUpdateBusinessPayload {
   List<String> notificationPhones;
   bool notifyViaPhone;
   bool notifyViaEmail;
+  List<int> businessCategories;
 
   EsUpdateBusinessPayload(
       {this.businessId,
@@ -408,6 +501,7 @@ class EsUpdateBusinessPayload {
       this.hasDelivery,
       this.cluster,
       this.description,
+      this.businessCategories,
       this.notice,
       this.upiAddress,
       this.upiStatus,
@@ -430,6 +524,12 @@ class EsUpdateBusinessPayload {
       images = new List<EsImages>();
       json['images'].forEach((v) {
         images.add(new EsImages.fromJson(v));
+      });
+    }
+    if (json['bcats'] != null && json['bcats'] is List) {
+      businessCategories = List<int>();
+      json['bcats']?.forEach((json) {
+        businessCategories.add(EsBusinessCategory.fromJson(json).bcat);
       });
     }
     phones = json['phones'].cast<String>();
@@ -457,6 +557,10 @@ class EsUpdateBusinessPayload {
 
     if (this.isOpen != null) {
       data['is_open'] = this.isOpen;
+    }
+
+    if (this.businessCategories != null) {
+      data['bcats'] = this.businessCategories;
     }
 
     if (this.address != null) {
@@ -600,6 +704,7 @@ class EsBusinessNotificationInfo {
   List<String> notificationPhones;
   bool notifyViaEmail;
   bool notifyViaPhone;
+
   EsBusinessNotificationInfo(
       {this.notificationEmails,
       this.notificationPhones,

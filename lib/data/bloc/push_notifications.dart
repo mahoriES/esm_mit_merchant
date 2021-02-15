@@ -33,10 +33,16 @@ class PushNotifications {
     esdyPrint.debug("displayLocalNotification >>");
     //TODO: Android Channel information
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        AnnoyingChannel.CONST_ID,
-        AnnoyingChannel.CONST_NAME,
-        AnnoyingChannel.CONST_DESCRIPTION,
-        importance: Importance.Max,
+        LocalNotificationsChannel.CONST_ID,
+        LocalNotificationsChannel.CONST_NAME,
+        LocalNotificationsChannel.CONST_DESCRIPTION,
+        importance: Importance.High,
+        ///Muted sound as we don't need sound when app is in FOREGROUND
+        ///Annoying notifications will continue to work as usual when app is
+        ///in BACKGROUND or in TERMINATED state.
+        ///Only vibrations will occur when app is in foreground, when the
+        ///periodic notification is received.
+        playSound: false,
         priority: Priority.High);
     var platformChannelSpecifics =
         NotificationDetails(androidPlatformChannelSpecifics, null);

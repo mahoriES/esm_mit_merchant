@@ -296,7 +296,7 @@
 	"orders_page_order_status_awaiting_customer_confirmation": "ग्राहक की पुष्टि का इंतजार कर रहे",
 	"orders_page_order_status_delivering": "डिलीवरी कर रहे",
 	"orders_page_order_status_waiting_pickup": "पिकअप का इंतजार है",
-	
+	"orders_page_rectrict_complete_order_message": "The delivery agent should be processing this order now, please try after sometime!",
 
 	"products_page_no_products_found": "कोई प्रोडक्ट नहीं मिला",
 	"products_page_no_products_found_description": "नए प्रोडक्ट को जोड़ने के लिए 'आइटम जोड़ें",
@@ -358,5 +358,11 @@
 	"category_page_sub_category_name": "सब कैटेगरी का नाम",
 	"category_page_select_a_category": "एक कैटेगरी का चयन करें",
 	"category_page_no_categories_found": "कोई कैटेगरी नहीं मिलीं",
-	"category_page_no_categories_found_message": "नई कैटेगरी जोड़ने के लिए 'कैटेगरी जोड़ें' दबाएँ"
+	"category_page_no_categories_found_message": "नई कैटेगरी जोड़ने के लिए 'कैटेगरी जोड़ें' दबाएँ",
+
+	"app_update_title": "ऐप अपडेट उपलब्ध है",
+	"app_update_banner_msg": "eSamudaay नई सुविधाओं और ऑफ़र के साथ और अधिक दिलचस्प हो गया। अभी अपडेट करें !!",
+	"app_update_popup_msg": "हमारे द्वारा आपके लिए डिज़ाइन की गई नई सुविधाओं का अनुभव करने के लिए ऐप को अभी अपडेट करें!",
+	"app_update_action": "अपडेट करें",
+	"app_update_later": "बाद में"
 }

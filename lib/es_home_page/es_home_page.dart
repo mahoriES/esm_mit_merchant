@@ -1,7 +1,12 @@
+import 'package:esamudaay_app_update/app_update_banner.dart';
+import 'package:esamudaay_app_update/esamudaay_app_update.dart';
+import 'package:esamudaay_themes/esamudaay_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/app_translations.dart';
 import 'package:foore/auth_guard/auth_guard.dart';
+import 'package:foore/data/bloc/app_update_bloc.dart';
 import 'package:foore/data/bloc/people.dart';
+import 'package:foore/data/constants/string_constants.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/es_business_catalogue_page/es_business_catalogue_page.dart';
 import 'package:foore/es_business_profile/es_business_profile.dart';
@@ -103,22 +108,46 @@ class _EsHomePageState extends State<EsHomePage> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: List.generate(
-          title.length,
-          (index) => BottomNavigationBarItem(
-            icon: Icon(icons[index]),
-            title: Text(
-              title[index],
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: StreamBuilder<AppUpdateState>(
+              stream: Provider.of<EsAppUpdateBloc>(context)
+                  .esAppUpdateStateObservable,
+              builder: (context, snapshot) {
+                return (snapshot.data?.isSelectedLater ?? false)
+                    ? AppUpdateBanner(
+                        updateMessage: AppTranslations.of(context)
+                            .text('app_update_banner_msg'),
+                        updateButtonText: AppTranslations.of(context)
+                            .text('app_update_action')
+                            .toUpperCase(),
+                        customThemeData: EsamudaayTheme.of(context),
+                        packageName: StringConstants.packageName,
+                      )
+                    : SizedBox.shrink();
+              },
             ),
           ),
-        ),
-        currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Colors.grey[600],
-        showUnselectedLabels: true,
-        onTap: _onItemTapped,
+          BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            items: List.generate(
+              title.length,
+              (index) => BottomNavigationBarItem(
+                icon: Icon(icons[index]),
+                title: Text(
+                  title[index],
+                ),
+              ),
+            ),
+            currentIndex: _selectedIndex,
+            selectedItemColor: Theme.of(context).primaryColor,
+            unselectedItemColor: Colors.grey[600],
+            showUnselectedLabels: true,
+            onTap: _onItemTapped,
+          ),
+        ],
       ),
     );
   }
