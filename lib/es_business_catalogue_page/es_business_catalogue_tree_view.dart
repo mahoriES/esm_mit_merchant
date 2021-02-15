@@ -67,7 +67,7 @@ class _EsBusinessCatalogueTreeViewState
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 8.0,
                   ),
                   Flexible(
@@ -86,7 +86,7 @@ class _EsBusinessCatalogueTreeViewState
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 16.0,
                   ),
                   Flexible(
@@ -96,8 +96,8 @@ class _EsBusinessCatalogueTreeViewState
                             height: MediaQuery.of(context).size.height,
                             width: 500,
                             child: EmptyList(
-                                titleText: AppTranslations.of(context)
-                                    .text('business_catalogue_page_no_sub_categories')),
+                                titleText: AppTranslations.of(context).text(
+                                    'business_catalogue_page_no_sub_categories')),
                           )
                         : ListView.builder(
                             padding: EdgeInsets.only(bottom: 72.0),
@@ -362,7 +362,7 @@ class _Sku extends StatelessWidget {
               Expanded(
                 flex: 4,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
                     sku.dVariationValue,
                     maxLines: 1,

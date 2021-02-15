@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foore/app_colors.dart';
-import 'package:foore/data/bloc/es_products.dart';
 import 'package:foore/data/model/es_product.dart';
+import 'package:foore/data/model/es_product_catalogue.dart';
 import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
 import 'package:foore/menu_page/add_menu_item_page.dart';
 import '../app_translations.dart';

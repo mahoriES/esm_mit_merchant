@@ -8,14 +8,6 @@ import 'package:foore/data/model/es_product_catalogue.dart';
 import 'package:foore/utils/utils.dart';
 import 'package:rxdart/rxdart.dart';
 
-enum ProductFilters { listView, spotlights, outOfStock }
-
-enum ProductSorting {
-  recentlyUpdatedAcending,
-  alphabaticallyAcending,
-  ratingDecending,
-}
-
 class EsProductsBloc {
   final EsProductsState _esProductsState = new EsProductsState();
   final HttpService httpService;

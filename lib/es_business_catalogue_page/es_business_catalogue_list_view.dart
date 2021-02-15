@@ -190,7 +190,7 @@ class _Product extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final esBusinessCatalogueBloc = Provider.of<EsProductsBloc>(context);
+    final esProductBloc = Provider.of<EsProductsBloc>(context);
     viewItem() async {
       EsProductDetailPageParam esProductDetailPageParam =
           EsProductDetailPageParam(
@@ -198,7 +198,7 @@ class _Product extends StatelessWidget {
               openSkuAddUpfront: false);
       await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
           arguments: esProductDetailPageParam);
-      esBusinessCatalogueBloc.getProducts();
+      esProductBloc.getProducts();
     }
 
     return Column(
@@ -243,7 +243,7 @@ class _Product extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () {
-                    esBusinessCatalogueBloc.expandProduct(
+                    esProductBloc.expandProduct(
                         businessCatalogueProduct.product.productId,
                         !businessCatalogueProduct.isExpanded);
                   },
@@ -281,12 +281,12 @@ class _Product extends StatelessWidget {
           ),
         ),
         if (businessCatalogueProduct.isExpanded) ...[
-          SizedBox(
+          const SizedBox(
             height: 8.0,
           ),
           ...businessCatalogueProduct.product.skus.map((e) => _Sku(e)).toList()
         ],
-        SizedBox(
+        const SizedBox(
           height: 16.0,
         ),
       ],

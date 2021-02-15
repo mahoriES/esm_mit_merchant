@@ -7,6 +7,14 @@ enum DataState {
   FAILED,
 }
 
+enum ProductFilters { listView, spotlights, outOfStock }
+
+enum ProductSorting {
+  recentlyUpdatedAcending,
+  alphabaticallyAcending,
+  ratingDecending,
+}
+
 class ListOfIdsUnderParent {
   int count;
   String nextPageUrl;
