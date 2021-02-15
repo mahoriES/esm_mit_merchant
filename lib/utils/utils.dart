@@ -27,4 +27,27 @@ class Utils {
 
     return displayText;
   }
+
+  static String makeQuery(Map<String, String> queryParameters) {
+    var result = StringBuffer();
+    var separator = "?";
+
+    void writeParameter(String key, String value) {
+      result.write(separator);
+      separator = "&";
+      result.write(Uri.encodeQueryComponent(key));
+      if (value != null && value.isNotEmpty) {
+        result.write("=");
+        result.write(Uri.encodeQueryComponent(value));
+      }
+    }
+
+    queryParameters.forEach((key, value) {
+      if (value == null || value is String) {
+        writeParameter(key, value);
+      }
+    });
+
+    return result.toString();
+  }
 }

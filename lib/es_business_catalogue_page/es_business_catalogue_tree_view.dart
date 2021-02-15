@@ -60,11 +60,8 @@ class _EsBusinessCatalogueTreeViewState
               );
             } else if (snapshot.data.parentCategories.length == 0) {
               return EmptyList(
-                titleText: AppTranslations.of(context)
-                    .text('products_page_no_products_found'),
-                subtitleText: AppTranslations.of(context)
-                    .text('products_page_no_products_found_description'),
-              );
+                  titleText: AppTranslations.of(context)
+                      .text('products_page_no_products_found'));
             }
             return SafeArea(
               child: Row(
@@ -74,16 +71,17 @@ class _EsBusinessCatalogueTreeViewState
                     width: 8.0,
                   ),
                   Flexible(
-                    flex: 4,
+                    flex: 6,
                     child: Material(
                       elevation: 2,
                       child: ListView.builder(
                         itemCount: snapshot.data.parentCategories.length,
                         itemBuilder: (context, index) {
-                          return ParentCategory(
-                              snapshot.data.parentCategories[index],
-                              snapshot.data.getIsParentCategorySelected(snapshot
-                                  .data.parentCategories[index].categoryId));
+                          return _ParentCategory(
+                            snapshot.data.parentCategories[index],
+                            snapshot.data.getIsParentCategorySelected(snapshot
+                                .data.parentCategories[index].categoryId),
+                          );
                         },
                       ),
                     ),
@@ -92,18 +90,19 @@ class _EsBusinessCatalogueTreeViewState
                     width: 16.0,
                   ),
                   Flexible(
-                    flex: 9,
+                    flex: 17,
                     child: ListView.builder(
+                      padding: EdgeInsets.only(bottom: 72.0),
                       itemCount: snapshot.data.subCategories.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        return SubCategory(
+                        return _SubCategory(
                           snapshot.data.subCategories[index],
                         );
                       },
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 8.0,
                   ),
                 ],
@@ -114,10 +113,10 @@ class _EsBusinessCatalogueTreeViewState
   }
 }
 
-class ParentCategory extends StatelessWidget {
+class _ParentCategory extends StatelessWidget {
   final EsCategory parentCategory;
   final bool isSelected;
-  const ParentCategory(this.parentCategory, this.isSelected, {Key key})
+  const _ParentCategory(this.parentCategory, this.isSelected, {Key key})
       : super(key: key);
 
   @override
@@ -130,8 +129,8 @@ class ParentCategory extends StatelessWidget {
       },
       child: Container(
         color: isSelected ? Colors.blue : null,
-        padding: EdgeInsets.all(12),
-        margin: EdgeInsets.only(bottom: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16.0),
+        margin: const EdgeInsets.only(bottom: 2),
         child: Text(
           parentCategory.categoryName,
           style: Theme.of(context).textTheme.bodyText2.copyWith(
@@ -145,9 +144,9 @@ class ParentCategory extends StatelessWidget {
   }
 }
 
-class SubCategory extends StatelessWidget {
+class _SubCategory extends StatelessWidget {
   final EsCategory subCategory;
-  const SubCategory(
+  const _SubCategory(
     this.subCategory, {
     Key key,
   }) : super(key: key);
@@ -165,7 +164,7 @@ class SubCategory extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0),
               child: Text(
                 subCategory.categoryName +
                     snapshot.data
@@ -177,7 +176,7 @@ class SubCategory extends StatelessWidget {
             ),
             ...snapshot.data
                 .getProductListForSubCategory(subCategory.categoryId)
-                .map((e) => Product(e))
+                .map((e) => _Product(e))
                 .toList(),
             if (snapshot.data
                 .getIsShowNextPageForProducts(subCategory.categoryId))
@@ -201,7 +200,7 @@ class SubCategory extends StatelessWidget {
                   ),
                 ),
               ),
-            SizedBox(
+            const SizedBox(
               height: 12.0,
             ),
           ],
@@ -211,9 +210,9 @@ class SubCategory extends StatelessWidget {
   }
 }
 
-class Product extends StatelessWidget {
+class _Product extends StatelessWidget {
   final EsBusinessCatalogueProduct businessCatalogueProduct;
-  const Product(
+  const _Product(
     this.businessCatalogueProduct, {
     Key key,
   }) : super(key: key);
@@ -227,8 +226,7 @@ class Product extends StatelessWidget {
           EsProductDetailPageParam(
               currentProduct: businessCatalogueProduct.product,
               openSkuAddUpfront: false);
-      var result = await Navigator.of(context).pushNamed(
-          EsProductDetailPage.routeName,
+      await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
           arguments: esProductDetailPageParam);
       esBusinessCatalogueBloc.getCategories();
     }
@@ -236,72 +234,99 @@ class Product extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Material(
-          elevation: 2.0,
-          child: ListTile(
-            onTap: viewItem,
-            contentPadding: EdgeInsets.all(8.0),
-            dense: true,
-            leading: Material(
-              elevation: 1.0,
-              borderRadius: BorderRadius.circular(4.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4.0),
-                child: Container(
-                  height: 60,
-                  width: 60,
-                  child: CachedNetworkImage(
-                    imageUrl: businessCatalogueProduct.product.dPhotoUrl ?? '',
-                    fit: BoxFit.fill,
-                    errorWidget: (_, __, ___) => Container(),
-                    placeholder: (_, __) => Container(),
+        InkWell(
+          onTap: viewItem,
+          child: Material(
+            elevation: 1.0,
+            borderRadius: BorderRadius.circular(6.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(11.0),
+                  child: Material(
+                    elevation: 1.0,
+                    borderRadius: BorderRadius.circular(6.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6.0),
+                      child: SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: CachedNetworkImage(
+                          imageUrl:
+                              businessCatalogueProduct.product.dPhotoUrl ?? '',
+                          fit: BoxFit.fill,
+                          errorWidget: (_, __, ___) => Container(),
+                          placeholder: (_, __) => Container(),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            title: Text(businessCatalogueProduct.product.dProductName),
-            trailing: InkWell(
-              onTap: () {
-                esBusinessCatalogueBloc.expandProduct(
-                    businessCatalogueProduct.product.productId,
-                    !businessCatalogueProduct.isExpanded);
-              },
-              child: Container(
-                height: 28.0,
-                width: 32.0,
-                child: Row(
-                  children: [
-                    Container(
-                      color: Colors.black12,
-                      height: 16.0,
-                      width: 1.0,
+                Expanded(
+                  child: ListTile(
+                    contentPadding: EdgeInsets.all(0.0),
+                    title: Text(
+                      businessCatalogueProduct.product.dProductName,
                     ),
-                    Expanded(
-                      child: Container(),
-                    ),
-                    Transform.rotate(
-                      angle: businessCatalogueProduct.isExpanded ? pi / 2 : 0,
-                      child: Icon(Icons.chevron_right),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                InkWell(
+                  onTap: () {
+                    esBusinessCatalogueBloc.expandProduct(
+                        businessCatalogueProduct.product.productId,
+                        !businessCatalogueProduct.isExpanded);
+                  },
+                  child: Container(
+                    height: 72.0,
+                    width: 60.0,
+                    child: Row(
+                      children: [
+                        Container(
+                          color: Colors.black12,
+                          height: 30.0,
+                          width: 1.0,
+                        ),
+                        Expanded(
+                          child: Container(),
+                        ),
+                        Transform.rotate(
+                          angle:
+                              businessCatalogueProduct.isExpanded ? pi / 2 : 0,
+                          child: Icon(
+                            Icons.chevron_right,
+                            size: 32,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
+        if (businessCatalogueProduct.isExpanded) ...[
+          SizedBox(
+            height: 8.0,
+          ),
+          ...businessCatalogueProduct.product.skus.map((e) => _Sku(e)).toList()
+        ],
         SizedBox(
-          height: 8.0,
+          height: 16.0,
         ),
-        if (businessCatalogueProduct.isExpanded)
-          ...businessCatalogueProduct.product.skus.map((e) => Sku(e)).toList(),
       ],
     );
   }
 }
 
-class Sku extends StatelessWidget {
+class _Sku extends StatelessWidget {
   final EsSku sku;
-  const Sku(
+  const _Sku(
     this.sku, {
     Key key,
   }) : super(key: key);
@@ -309,18 +334,20 @@ class Sku extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 28.0, bottom: 8.0),
+      padding: const EdgeInsets.only(left: 40.0, bottom: 8.0),
       child: Material(
-        elevation: 2.0,
+        elevation: 1.0,
+        borderRadius: BorderRadius.circular(6.0),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               flex: 4,
               child: Container(
-                padding: EdgeInsets.all(12),
+                padding: EdgeInsets.all(16),
                 margin: EdgeInsets.only(bottom: 2),
                 child: Text(
-                  sku.variationValue,
+                  sku.dVariationValue,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -334,13 +361,16 @@ class Sku extends StatelessWidget {
             Expanded(
               flex: 3,
               child: Container(
-                padding: EdgeInsets.all(12),
+                padding: EdgeInsets.symmetric(horizontal: 12),
                 margin: EdgeInsets.only(bottom: 2),
                 child: Text(
                   sku.dBasePrice,
                   textAlign: TextAlign.right,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyText1.copyWith(
+                        color: Theme.of(context).primaryColorDark,
+                      ),
                 ),
               ),
             ),
@@ -350,3 +380,142 @@ class Sku extends StatelessWidget {
     );
   }
 }
+
+// class _Product extends StatelessWidget {
+//   final EsBusinessCatalogueProduct businessCatalogueProduct;
+//   const _Product(
+//     this.businessCatalogueProduct, {
+//     Key key,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final esBusinessCatalogueBloc =
+//         Provider.of<EsBusinessCatalogueBloc>(context);
+//     viewItem() async {
+//       EsProductDetailPageParam esProductDetailPageParam =
+//           EsProductDetailPageParam(
+//               currentProduct: businessCatalogueProduct.product,
+//               openSkuAddUpfront: false);
+//       await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
+//           arguments: esProductDetailPageParam);
+//       esBusinessCatalogueBloc.getCategories();
+//     }
+
+//     return Column(
+//       mainAxisAlignment: MainAxisAlignment.start,
+//       children: [
+//         Material(
+//           elevation: 2.0,
+//           child: ListTile(
+//             onTap: viewItem,
+//             contentPadding: EdgeInsets.all(8.0),
+//             dense: true,
+//             leading: Material(
+//               elevation: 1.0,
+//               borderRadius: BorderRadius.circular(4.0),
+//               child: ClipRRect(
+//                 borderRadius: BorderRadius.circular(4.0),
+//                 child: Container(
+//                   height: 60,
+//                   width: 60,
+//                   child: CachedNetworkImage(
+//                     imageUrl: businessCatalogueProduct.product.dPhotoUrl ?? '',
+//                     fit: BoxFit.fill,
+//                     errorWidget: (_, __, ___) => Container(),
+//                     placeholder: (_, __) => Container(),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//             title: Text(businessCatalogueProduct.product.dProductName),
+//             trailing: InkWell(
+//               onTap: () {
+//                 esBusinessCatalogueBloc.expandProduct(
+//                     businessCatalogueProduct.product.productId,
+//                     !businessCatalogueProduct.isExpanded);
+//               },
+//               child: Container(
+//                 height: 28.0,
+//                 width: 32.0,
+//                 child: Row(
+//                   children: [
+//                     Container(
+//                       color: Colors.black12,
+//                       height: 16.0,
+//                       width: 1.0,
+//                     ),
+//                     Expanded(
+//                       child: Container(),
+//                     ),
+//                     Transform.rotate(
+//                       angle: businessCatalogueProduct.isExpanded ? pi / 2 : 0,
+//                       child: Icon(Icons.chevron_right),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ),
+//         SizedBox(
+//           height: 8.0,
+//         ),
+//         if (businessCatalogueProduct.isExpanded)
+//           ...businessCatalogueProduct.product.skus.map((e) => _Sku(e)).toList(),
+//       ],
+//     );
+//   }
+// }
+
+// class _Sku extends StatelessWidget {
+//   final EsSku sku;
+//   const _Sku(
+//     this.sku, {
+//     Key key,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.only(left: 28.0, bottom: 8.0),
+//       child: Material(
+//         elevation: 2.0,
+//         child: Row(
+//           children: [
+//             Expanded(
+//               flex: 4,
+//               child: Container(
+//                 padding: EdgeInsets.all(12),
+//                 margin: EdgeInsets.only(bottom: 2),
+//                 child: Text(
+//                   sku.variationValue,
+//                   maxLines: 1,
+//                   overflow: TextOverflow.ellipsis,
+//                 ),
+//               ),
+//             ),
+//             Container(
+//               color: Colors.black12,
+//               height: 16.0,
+//               width: 1.0,
+//             ),
+//             Expanded(
+//               flex: 3,
+//               child: Container(
+//                 padding: EdgeInsets.all(12),
+//                 margin: EdgeInsets.only(bottom: 2),
+//                 child: Text(
+//                   sku.dBasePrice,
+//                   textAlign: TextAlign.right,
+//                   maxLines: 1,
+//                   overflow: TextOverflow.ellipsis,
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

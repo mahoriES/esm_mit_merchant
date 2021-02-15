@@ -5,7 +5,17 @@ import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/data/model/es_product_catalogue.dart';
+import 'package:foore/es_business_catalogue_page/es_business_catalogue_list_view.dart';
+import 'package:foore/utils/utils.dart';
 import 'package:rxdart/rxdart.dart';
+
+enum ProductFilters { listView, spotlights, outOfStock }
+
+enum ProductSorting {
+  recentlyUpdatedAcending,
+  alphabaticallyAcending,
+  ratingDecending,
+}
 
 class EsProductsBloc {
   final EsProductsState _esProductsState = new EsProductsState();
@@ -18,7 +28,7 @@ class EsProductsBloc {
 
   onSearchTextChanged(TextEditingController controller) {
     this.searchText = controller.text != null ? controller.text : '';
-    this.getProductsFromSearch();
+    this.getProducts();
   }
 
   EsProductsBloc(this.httpService, this.esBusinessesBloc) {
@@ -29,14 +39,35 @@ class EsProductsBloc {
   Observable<EsProductsState> get esProductStateObservable =>
       _subjectEsProductsState.stream;
 
-  getProductsFromSearch() {
+  getProducts() {
     this._esProductsState.isLoading = true;
     this._esProductsState.response = null;
     this._updateState();
+    final Map<String, String> queryParameters = Map();
+    if (this._esProductsState.selectedFilter == ProductFilters.outOfStock) {
+      queryParameters.addAll({'in_stock': 'false'});
+    } else if (this._esProductsState.selectedFilter ==
+        ProductFilters.spotlights) {
+      queryParameters.addAll({'spotlight': 'true'});
+    }
+    switch (this._esProductsState.selectedSorting) {
+      case ProductSorting.recentlyUpdatedAcending:
+        queryParameters.addAll({
+          'sort_by': 'modified',
+        });
+        break;
+      case ProductSorting.alphabaticallyAcending:
+        queryParameters.addAll({'sort_by': 'product_name'});
+        break;
+      case ProductSorting.ratingDecending:
+        queryParameters.addAll({'sort_by': 'rating_val'});
+        break;
+    }
+    final query = Utils.makeQuery(queryParameters);
     httpService
         .esGet(EsApiPaths.getProducts(
                 this.esBusinessesBloc.getSelectedBusinessId()) +
-            '?filter=${this.searchText}')
+            query)
         .then((httpResponse) {
       if (httpResponse.statusCode == 200) {
         this._esProductsState.isLoadingFailed = false;
@@ -133,6 +164,16 @@ class EsProductsBloc {
     }).toList();
     _updateState();
   }
+
+  setSorting(ProductSorting sorting) {
+    _esProductsState.selectedSorting = sorting;
+    getProducts();
+  }
+
+  setFilter(ProductFilters filter) {
+    _esProductsState.selectedFilter = filter;
+    _updateState();
+  }
 }
 
 class EsProductsState {
@@ -142,6 +183,10 @@ class EsProductsState {
 
   List<EsBusinessCatalogueProduct> products =
       new List<EsBusinessCatalogueProduct>();
+
+  ProductFilters selectedFilter;
+
+  ProductSorting selectedSorting = ProductSorting.recentlyUpdatedAcending;
 
   getNumberOfProducts() {
     if (response == null) {
