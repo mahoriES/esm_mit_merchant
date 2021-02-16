@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
@@ -13,6 +14,7 @@ class EsBusinessCatalogueBloc {
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
   final searchController = TextEditingController();
+  StreamSubscription<EsBusinessesState> _subscription;
 
   BehaviorSubject<EsBusinessCatalogueState> _subjectBusinessCatalogueState;
 
@@ -21,9 +23,17 @@ class EsBusinessCatalogueBloc {
     this._subjectBusinessCatalogueState =
         new BehaviorSubject<EsBusinessCatalogueState>.seeded(
             _esBusinessCatalogueState);
+    this._subscription =
+        this.esBusinessesBloc.esBusinessesStateObservable.listen((event) {
+      this.resetDataState();
+    });
   }
 
   getCategories() {
+    if (this._esBusinessCatalogueState._categoriesLoadingStatus ==
+        DataState.SUCCESS) {
+      return;
+    }
     this._esBusinessCatalogueState._categoriesLoadingStatus = DataState.LOADING;
     this._esBusinessCatalogueState._categoriesResponse = null;
     this._updateState();
@@ -201,6 +211,7 @@ class EsBusinessCatalogueBloc {
   dispose() {
     this._subjectBusinessCatalogueState.close();
     this.searchController.dispose();
+    this._subscription.cancel();
   }
 }
 

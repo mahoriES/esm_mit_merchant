@@ -7,7 +7,7 @@ enum DataState {
   FAILED,
 }
 
-enum ProductFilters { listView, spotlights, outOfStock }
+enum ProductFilters { compatibitilyView, listView, spotlights, outOfStock }
 
 enum ProductSorting {
   recentlyUpdatedAcending,

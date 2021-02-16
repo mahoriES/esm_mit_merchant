@@ -33,13 +33,19 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
   }
 
   @override
+  void dispose() {
+    this.esProductsBloc.resetDataState();
+    super.dispose();
+  }
+
+  @override
   void didChangeDependencies() {
     final httpService = Provider.of<HttpService>(context);
     final businessBloc = Provider.of<EsBusinessesBloc>(context);
     if (this.esProductsBloc == null) {
       this.esProductsBloc = EsProductsBloc(httpService, businessBloc);
     }
-    this.esProductsBloc.getProducts();
+    this.esProductsBloc.getProductsFromSearch();
     super.didChangeDependencies();
   }
 
@@ -99,7 +105,7 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
         EsProductDetailPage.routeName,
         arguments: esProductDetailPageParam,
       );
-      esProductsBloc.getProducts();
+      esProductsBloc.getProductsFromSearch();
     }
 
     return Scaffold(
@@ -117,7 +123,7 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
                 debugPrint("Moving to product detail with add sku==true");
                 viewItem(product, openSkuAddUpfront: true);
               } else {
-                esProductsBloc.getProducts();
+                esProductsBloc.getProductsFromSearch();
               }
             },
           )
@@ -141,7 +147,7 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
                         );
                       } else if (snapshot.data.isLoadingFailed) {
                         return SomethingWentWrong(
-                          onRetry: this.esProductsBloc.getProducts,
+                          onRetry: this.esProductsBloc.getProductsFromSearch,
                         );
                       } else if (snapshot.data.items.length == 0) {
                         return EmptyList(

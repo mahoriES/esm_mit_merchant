@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Utils {
   static String getTimeDiffrence(String timeString) {
     DateTime createdAt = DateTime.parse(timeString).toLocal();
@@ -28,10 +30,14 @@ class Utils {
     return displayText;
   }
 
+  /// makeQuery takes queryParameters as a collection of key/value pairs and converts
+  /// into a query string.
   static String makeQuery(Map<String, String> queryParameters) {
-    var result = StringBuffer();
+    final result = StringBuffer();
     var separator = "?";
 
+    /// writeParameter takes key and value of a query parameter and converts
+    /// into a query string.
     void writeParameter(String key, String value) {
       result.write(separator);
       separator = "&";
@@ -50,4 +56,11 @@ class Utils {
 
     return result.toString();
   }
+}
+
+Widget get placeHolderImage {
+  return Image.asset(
+    'assets/category_placeholder.png',
+    fit: BoxFit.cover,
+  );
 }

@@ -122,6 +122,7 @@ flutter:
     - assets/promotion-banner.png
     - assets/circle_tile_placeholder.png
     - assets/location-pointer.png
+    - assets/category_placeholder.png
     - assets/locale/localization_hi.json
     - assets/locale/localization_kn.json
     # - assets/locale/localization_ml.json

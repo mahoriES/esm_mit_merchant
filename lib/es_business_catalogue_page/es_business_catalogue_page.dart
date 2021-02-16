@@ -54,8 +54,8 @@ class EsBusinessCataloguePage extends StatelessWidget {
                     (index) => Tab(
                       icon: tabIcons[index],
                       child: Text(
-                        tabTitles[0],
-                        style: TextStyle(fontSize: 12.0),
+                        tabTitles[index],
+                        style: TextStyle(fontSize: 11.0),
                       ),
                     ),
                   ),

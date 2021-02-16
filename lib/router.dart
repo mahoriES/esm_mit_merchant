@@ -33,6 +33,7 @@ import 'package:provider/provider.dart';
 import 'auth_guard/auth_guard.dart';
 import 'data/bloc/app_update_bloc.dart';
 import 'data/bloc/es_edit_product.dart';
+import 'data/bloc/es_products.dart';
 import 'data/bloc/onboarding.dart';
 import 'data/bloc/people.dart';
 import 'data/http_service.dart';
@@ -50,7 +51,6 @@ import 'home_page/home_page.dart';
 import 'intro_page/intro_page.dart';
 import 'login_page/login_page.dart';
 import 'menu_page/add_menu_item_page.dart';
-import 'menu_page/menu_page.dart';
 import 'onboarding_guard/onboarding_guard.dart';
 import 'onboarding_page/location_search_page.dart';
 import 'onboarding_page/location_verify.dart';
@@ -60,7 +60,7 @@ import 'unirson_check_in_page/unirson_check_in_page.dart';
 
 class AppRouter {
   static const homeRoute = '/';
-  static const testRoute = MenuPage.routeName;
+  static const testRoute = EsHomePage.routeName;
   final unauthenticatedHandler = (BuildContext context) => Navigator.of(context)
       .pushNamedAndRemoveUntil(
           IntroPage.routeName, (Route<dynamic> route) => false);
@@ -231,6 +231,16 @@ class AppRouter {
                           EsOrdersBloc(httpServiceBloc, esBusinessesBloc),
                       dispose: (context, value) => value.dispose(),
                     ),
+                    Provider<EsProductsBloc>(
+                      create: (context) =>
+                          EsProductsBloc(httpServiceBloc, esBusinessesBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
+                    Provider<EsBusinessCatalogueBloc>(
+                      create: (context) => EsBusinessCatalogueBloc(
+                          httpServiceBloc, esBusinessesBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
                   ],
                   child: EsHomePage(httpServiceBloc),
                 ),
@@ -252,19 +262,11 @@ class AppRouter {
         return EsCreateMerchantProfilePage.generateRoute(
             settings, httpServiceBloc, authBloc);
         break;
-      case MenuPage.routeName:
-        return MaterialPageRoute(
-          builder: (context) => Provider<OnboardingBloc>(
-            builder: (context) => OnboardingBloc(httpServiceBloc),
-            dispose: (context, value) => value.dispose(),
-            child: MenuPage(),
-          ),
-        );
-        break;
       case EsBusinessCataloguePage.routeName:
         return MaterialPageRoute(
           builder: (context) => Provider<EsBusinessCatalogueBloc>(
-            create: (context) => EsBusinessCatalogueBloc(httpServiceBloc, esBusinessesBloc),
+            create: (context) =>
+                EsBusinessCatalogueBloc(httpServiceBloc, esBusinessesBloc),
             dispose: (context, value) => value.dispose(),
             child: EsBusinessCataloguePage(),
           ),

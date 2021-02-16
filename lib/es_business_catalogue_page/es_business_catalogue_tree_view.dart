@@ -3,121 +3,99 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_business_catalogue.dart';
-import 'package:foore/data/bloc/es_businesses.dart';
-import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/data/model/es_product_catalogue.dart';
 import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
 import 'package:foore/services/sizeconfig.dart';
+import 'package:foore/utils/utils.dart';
 import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 
 import '../app_translations.dart';
 
-class EsBusinessCatalogueTreeView extends StatefulWidget {
-  EsBusinessCatalogueTreeView({Key key}) : super(key: key);
-
-  _EsBusinessCatalogueTreeViewState createState() =>
-      _EsBusinessCatalogueTreeViewState();
-}
-
-class _EsBusinessCatalogueTreeViewState
-    extends State<EsBusinessCatalogueTreeView> {
-  EsBusinessCatalogueBloc esBusinessCatalogueBloc;
-
-  @override
-  void didChangeDependencies() {
-    final httpService = Provider.of<HttpService>(context);
-    final businessBloc = Provider.of<EsBusinessesBloc>(context);
-    this.esBusinessCatalogueBloc =
-        EsBusinessCatalogueBloc(httpService, businessBloc);
-    this.esBusinessCatalogueBloc.getCategories();
-    super.didChangeDependencies();
-  }
+class EsBusinessCatalogueTreeView extends StatelessWidget {
+  const EsBusinessCatalogueTreeView({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Provider<EsBusinessCatalogueBloc>(
-      create: (context) => this.esBusinessCatalogueBloc,
-      dispose: (context, value) => value.dispose(),
-      child: StreamBuilder<EsBusinessCatalogueState>(
-          stream:
-              this.esBusinessCatalogueBloc.esBusinessCatalogueStateObservable,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const SizedBox.shrink();
-            }
-            if (snapshot.data.categoriesLoadingStatus == DataState.LOADING) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (snapshot.data.categoriesLoadingStatus ==
-                DataState.FAILED) {
-              return SomethingWentWrong(
-                onRetry: this.esBusinessCatalogueBloc.getCategories,
-              );
-            } else if (snapshot.data.parentCategories.length == 0) {
-              return EmptyList(
-                  titleText: AppTranslations.of(context)
-                      .text('business_catalogue_page_no_categories'));
-            }
-            return SafeArea(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    width: 8.0,
-                  ),
-                  Flexible(
-                    flex: 6,
-                    child: Material(
-                      elevation: 2,
-                      child: ListView.builder(
-                        itemCount: snapshot.data.parentCategories.length,
-                        itemBuilder: (context, index) {
-                          return _ParentCategory(
-                            snapshot.data.parentCategories[index],
-                            snapshot.data.getIsParentCategorySelected(snapshot
-                                .data.parentCategories[index].categoryId),
-                          );
-                        },
-                      ),
+    final esBusinessCatalogueBloc =
+        Provider.of<EsBusinessCatalogueBloc>(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      esBusinessCatalogueBloc.getCategories();
+    });
+    return StreamBuilder<EsBusinessCatalogueState>(
+        stream: esBusinessCatalogueBloc.esBusinessCatalogueStateObservable,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const SizedBox.shrink();
+          }
+          if (snapshot.data.categoriesLoadingStatus == DataState.LOADING) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.data.categoriesLoadingStatus ==
+              DataState.FAILED) {
+            return SomethingWentWrong(
+              onRetry: esBusinessCatalogueBloc.getCategories,
+            );
+          } else if (snapshot.data.parentCategories.length == 0) {
+            return EmptyList(
+                titleText: AppTranslations.of(context)
+                    .text('business_catalogue_page_no_categories'));
+          }
+          return SafeArea(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Flexible(
+                  flex: 6,
+                  child: Material(
+                    elevation: 2,
+                    child: ListView.builder(
+                      itemCount: snapshot.data.parentCategories.length,
+                      itemBuilder: (context, index) {
+                        return _ParentCategory(
+                          snapshot.data.parentCategories[index],
+                          snapshot.data.getIsParentCategorySelected(
+                              snapshot.data.parentCategories[index].categoryId),
+                        );
+                      },
                     ),
                   ),
-                  const SizedBox(
-                    width: 16.0,
-                  ),
-                  Flexible(
-                    flex: 17,
-                    child: snapshot.data.subCategories.length == 0
-                        ? Container(
-                            height: SizeConfig().screenHeight,
-                            width: 500,
-                            child: EmptyList(
-                                titleText: AppTranslations.of(context).text(
-                                    'business_catalogue_page_no_sub_categories')),
-                          )
-                        : ListView.builder(
-                            padding: const EdgeInsets.only(bottom: 72.0),
-                            itemCount: snapshot.data.subCategories.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return _SubCategory(
-                                snapshot.data.subCategories[index],
-                              );
-                            },
-                          ),
-                  ),
-                  const SizedBox(
-                    width: 8.0,
-                  ),
-                ],
-              ),
-            );
-          }),
-    );
+                ),
+                const SizedBox(
+                  width: 16.0,
+                ),
+                Flexible(
+                  flex: 17,
+                  child: snapshot.data.subCategories.length == 0
+                      ? Container(
+                          height: SizeConfig().screenHeight,
+                          width: 500,
+                          child: EmptyList(
+                              titleText: AppTranslations.of(context).text(
+                                  'business_catalogue_page_no_sub_categories')),
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.only(bottom: 72.0),
+                          itemCount: snapshot.data.subCategories.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return _SubCategory(
+                              snapshot.data.subCategories[index],
+                            );
+                          },
+                        ),
+                ),
+                const SizedBox(
+                  width: 8.0,
+                ),
+              ],
+            ),
+          );
+        });
   }
 }
 
@@ -272,7 +250,7 @@ class _Product extends StatelessWidget {
                           imageUrl:
                               businessCatalogueProduct.product.dPhotoUrl ?? '',
                           fit: BoxFit.fill,
-                          errorWidget: (_, __, ___) => Container(),
+                          errorWidget: (_, __, ___) => placeHolderImage,
                           placeholder: (_, __) => Container(),
                         ),
                       ),

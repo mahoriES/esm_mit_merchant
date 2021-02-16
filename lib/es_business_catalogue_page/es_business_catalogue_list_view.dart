@@ -2,43 +2,23 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_products.dart';
-import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/data/model/es_product_catalogue.dart';
 import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
+import 'package:foore/utils/utils.dart';
 import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
 
 import '../app_translations.dart';
 
-class EsBusinessCatalogueListView extends StatefulWidget {
+class EsBusinessCatalogueListView extends StatelessWidget {
   final ProductFilters filter;
-
-  EsBusinessCatalogueListView(this.filter, {Key key}) : super(key: key);
-
-  _EsBusinessCatalogueListViewState createState() =>
-      _EsBusinessCatalogueListViewState();
-}
-
-class _EsBusinessCatalogueListViewState
-    extends State<EsBusinessCatalogueListView> {
-  EsProductsBloc esBusinessCatalogueBloc;
-
-  @override
-  void didChangeDependencies() {
-    final httpService = Provider.of<HttpService>(context);
-    final businessBloc = Provider.of<EsBusinessesBloc>(context);
-    this.esBusinessCatalogueBloc = EsProductsBloc(httpService, businessBloc);
-    this.esBusinessCatalogueBloc.setFilter(widget.filter);
-    this.esBusinessCatalogueBloc.getProducts();
-    super.didChangeDependencies();
-  }
+  const EsBusinessCatalogueListView(this.filter, {Key key}) : super(key: key);
 
   String getTile(BuildContext context) {
-    switch (widget.filter) {
+    switch (filter) {
       case ProductFilters.outOfStock:
         return AppTranslations.of(context)
             .text('business_catalogue_page_out_of_stock');
@@ -54,63 +34,66 @@ class _EsBusinessCatalogueListViewState
 
   @override
   Widget build(BuildContext context) {
+    final esProductBloc = Provider.of<EsProductsBloc>(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      esProductBloc.getProducts(filter);
+    });
     final title = getTile(context);
-    return Provider<EsProductsBloc>(
-      create: (context) => this.esBusinessCatalogueBloc,
-      dispose: (context, value) => value.dispose(),
-      child: StreamBuilder<EsProductsState>(
-          stream: this.esBusinessCatalogueBloc.esProductStateObservable,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Container();
-            }
-            if (snapshot.data.isLoading) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (snapshot.data.isLoadingFailed) {
-              return SomethingWentWrong(
-                onRetry: this.esBusinessCatalogueBloc.getProducts,
-              );
-            } else if (snapshot.data.products.length == 0) {
-              return EmptyList(
-                titleText: AppTranslations.of(context)
-                    .text('products_page_no_products_found'),
-              );
-            }
-            return NotificationListener<ScrollNotification>(
-              onNotification: (ScrollNotification scrollInfo) {
-                if (scrollInfo.metrics.pixels ==
-                    scrollInfo.metrics.maxScrollExtent) {
-                  esBusinessCatalogueBloc.loadMore();
-                }
-                return false;
-              },
-              child: ListView.builder(
-                padding: const EdgeInsets.only(
-                  left: 16.0,
-                  right: 16.0,
-                  top: 16.0,
-                  bottom: 72,
-                ),
-                itemCount: snapshot.data.products.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      if (index == 0)
-                        ProductListHeaderTitle(
-                          title: title,
-                          productsState: snapshot.data,
-                          esBusinessCatalogueBloc: esBusinessCatalogueBloc,
-                        ),
-                      _Product(snapshot.data.products[index]),
-                    ],
-                  );
-                },
-              ),
+    return StreamBuilder<EsProductsState>(
+        stream: esProductBloc.esProductStateObservable,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const SizedBox.shrink();
+          }
+          if (snapshot.data.getProductsLoadingStatus(filter) ==
+              DataState.LOADING) {
+            return Center(
+              child: CircularProgressIndicator(),
             );
-          }),
-    );
+          } else if (snapshot.data.getProductsLoadingStatus(filter) ==
+              DataState.FAILED) {
+            return SomethingWentWrong(onRetry: () {
+              esProductBloc.getProducts(filter);
+            });
+          } else if (snapshot.data.getProducts(filter).length == 0) {
+            return EmptyList(
+              titleText: AppTranslations.of(context)
+                  .text('products_page_no_products_found'),
+            );
+          }
+          return NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollInfo) {
+              if (scrollInfo.metrics.pixels ==
+                  scrollInfo.metrics.maxScrollExtent) {
+                esProductBloc.loadMore(filter: filter);
+              }
+              return false;
+            },
+            child: ListView.builder(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+                top: 16.0,
+                bottom: 72,
+              ),
+              itemCount: snapshot.data.getProducts(filter).length,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    if (index == 0)
+                      ProductListHeaderTitle(
+                        title: title,
+                        productsState: snapshot.data,
+                        esBusinessCatalogueBloc: esProductBloc,
+                        filter: filter,
+                      ),
+                    _Product(filter, snapshot.data.getProducts(filter)[index]),
+                  ],
+                );
+              },
+            ),
+          );
+        });
   }
 }
 
@@ -120,11 +103,13 @@ class ProductListHeaderTitle extends StatelessWidget {
     @required this.title,
     @required this.productsState,
     @required this.esBusinessCatalogueBloc,
+    @required this.filter,
   }) : super(key: key);
 
   final String title;
   final EsProductsState productsState;
   final EsProductsBloc esBusinessCatalogueBloc;
+  final ProductFilters filter;
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +119,7 @@ class ProductListHeaderTitle extends StatelessWidget {
         children: [
           const Spacer(),
           Text(
-            title + productsState.getNumberOfProducts(),
+            title + productsState.getNumberOfProducts(filter),
             style: Theme.of(context).textTheme.headline6.copyWith(
                   color: Theme.of(context).primaryColorDark,
                 ),
@@ -145,7 +130,9 @@ class ProductListHeaderTitle extends StatelessWidget {
               Icons.sort,
               color: Theme.of(context).primaryColorDark,
             ),
-            onSelected: esBusinessCatalogueBloc.setSorting,
+            onSelected: (sorting) {
+              esBusinessCatalogueBloc.setSorting(filter, sorting);
+            },
             itemBuilder: (BuildContext context) =>
                 <PopupMenuEntry<ProductSorting>>[
               PopupMenuItem(
@@ -194,7 +181,9 @@ class ProductListHeaderTitle extends StatelessWidget {
 
 class _Product extends StatelessWidget {
   final EsBusinessCatalogueProduct businessCatalogueProduct;
+  final ProductFilters filter;
   const _Product(
+    this.filter,
     this.businessCatalogueProduct, {
     Key key,
   }) : super(key: key);
@@ -206,7 +195,7 @@ class _Product extends StatelessWidget {
             openSkuAddUpfront: false);
     await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
         arguments: esProductDetailPageParam);
-    esProductBloc.getProducts();
+    esProductBloc.getProducts(filter);
   }
 
   @override
@@ -239,7 +228,7 @@ class _Product extends StatelessWidget {
                           imageUrl:
                               businessCatalogueProduct.product.dPhotoUrl ?? '',
                           fit: BoxFit.fill,
-                          errorWidget: (_, __, ___) => Container(),
+                          errorWidget: (_, __, ___) => placeHolderImage,
                           placeholder: (_, __) => Container(),
                         ),
                       ),
@@ -257,6 +246,7 @@ class _Product extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     esProductBloc.expandProduct(
+                        filter,
                         businessCatalogueProduct.product.productId,
                         !businessCatalogueProduct.isExpanded);
                   },
