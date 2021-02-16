@@ -52,10 +52,6 @@ class EsBusinessCatalogueBloc {
             .categories
             .map((e) => e.categoryId)
             .toList();
-        if (this._esBusinessCatalogueState._categoryIdsList.length > 0) {
-          this._esBusinessCatalogueState._selectedParentCategoryId =
-              this._esBusinessCatalogueState._categoryIdsList[0];
-        }
         _esBusinessCatalogueState._categoriesMap = this
             ._esBusinessCatalogueState
             ._categoriesResponse
@@ -69,6 +65,10 @@ class EsBusinessCatalogueBloc {
             return previousValue;
           },
         );
+        if (this._esBusinessCatalogueState.parentCategories.length > 0) {
+          this._esBusinessCatalogueState._selectedParentCategoryId =
+              this._esBusinessCatalogueState.parentCategories[0].categoryId;
+        }
       } else {
         this._esBusinessCatalogueState._categoriesLoadingStatus =
             DataState.FAILED;
