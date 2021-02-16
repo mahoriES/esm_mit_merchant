@@ -14,10 +14,10 @@ class EsBusinessCataloguePage extends StatelessWidget {
   EsBusinessCataloguePage();
 
   static const List<Widget> tabIcons = [
-    Icon(Icons.apps),
-    Icon(Icons.list),
-    Icon(Icons.star),
-    Icon((Icons.outbond)),
+    ImageIcon(AssetImage('assets/icons/categories.png')),
+    ImageIcon(AssetImage('assets/icons/list-view.png')),
+    ImageIcon(AssetImage('assets/icons/spotlights.png')),
+    ImageIcon(AssetImage('assets/icons/out-of-stock.png')),
   ];
 
   @override

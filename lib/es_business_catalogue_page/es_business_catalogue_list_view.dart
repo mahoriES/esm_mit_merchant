@@ -126,9 +126,9 @@ class ProductListHeaderTitle extends StatelessWidget {
           ),
           const Spacer(),
           PopupMenuButton<ProductSorting>(
-            child: Icon(
-              Icons.sort,
-              color: Theme.of(context).primaryColorDark,
+            child: ImageIcon(
+              AssetImage('assets/icons/sort.png'),
+              color: Theme.of(context).primaryColor,
             ),
             onSelected: (sorting) {
               esBusinessCatalogueBloc.setSorting(filter, sorting);
@@ -229,7 +229,7 @@ class _Product extends StatelessWidget {
                               businessCatalogueProduct.product.dPhotoUrl ?? '',
                           fit: BoxFit.fill,
                           errorWidget: (_, __, ___) => placeHolderImage,
-                           // TODO: Update the placeholder image.
+                          // TODO: Update the placeholder image.
                           placeholder: (_, __) => Container(),
                         ),
                       ),

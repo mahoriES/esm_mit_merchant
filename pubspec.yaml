@@ -123,6 +123,13 @@ flutter:
     - assets/circle_tile_placeholder.png
     - assets/location-pointer.png
     - assets/category_placeholder.png
+    
+    - assets/icons/categories.png
+    - assets/icons/list-view.png
+    - assets/icons/spotlights.png
+    - assets/icons/out-of-stock.png
+    - assets/icons/sort.png
+    
     - assets/locale/localization_hi.json
     - assets/locale/localization_kn.json
     # - assets/locale/localization_ml.json
