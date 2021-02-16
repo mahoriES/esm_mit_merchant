@@ -44,7 +44,7 @@ class _EsBusinessCatalogueListViewState
             .text('business_catalogue_page_out_of_stock');
       case ProductFilters.spotlights:
         return AppTranslations.of(context)
-            .text('business_catalogue_page_sport_lights');
+            .text('business_catalogue_page_spotlights');
       case ProductFilters.listView:
       default:
         return AppTranslations.of(context)

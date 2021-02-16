@@ -14,11 +14,11 @@ class EsBusinessCatalogueBloc {
   final EsBusinessesBloc esBusinessesBloc;
   final searchController = TextEditingController();
 
-  BehaviorSubject<EsBusinessCatalogueState> _subjectProductsCatalogueState;
+  BehaviorSubject<EsBusinessCatalogueState> _subjectBusinessCatalogueState;
 
   EsBusinessCatalogueBloc(this.httpService, this.esBusinessesBloc) {
     _esBusinessCatalogueState = new EsBusinessCatalogueState();
-    this._subjectProductsCatalogueState =
+    this._subjectBusinessCatalogueState =
         new BehaviorSubject<EsBusinessCatalogueState>.seeded(
             _esBusinessCatalogueState);
   }
@@ -182,8 +182,8 @@ class EsBusinessCatalogueBloc {
     }
   }
 
-  Observable<EsBusinessCatalogueState> get esOrdersStateObservable =>
-      _subjectProductsCatalogueState.stream;
+  Observable<EsBusinessCatalogueState> get esBusinessCatalogueStateObservable =>
+      _subjectBusinessCatalogueState.stream;
 
   resetDataState() {
     _esBusinessCatalogueState = new EsBusinessCatalogueState();
@@ -191,20 +191,18 @@ class EsBusinessCatalogueBloc {
   }
 
   _updateState() {
-    if (!this._subjectProductsCatalogueState.isClosed) {
+    if (!this._subjectBusinessCatalogueState.isClosed) {
       this
-          ._subjectProductsCatalogueState
+          ._subjectBusinessCatalogueState
           .sink
           .add(this._esBusinessCatalogueState);
     }
   }
 
   dispose() {
-    this._subjectProductsCatalogueState.close();
+    this._subjectBusinessCatalogueState.close();
     this.searchController.dispose();
   }
-
-  void getProductsFromSearch() {}
 }
 
 class EsBusinessCatalogueState {

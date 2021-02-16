@@ -26,7 +26,7 @@ class EsBusinessCataloguePage extends StatelessWidget {
     final List<String> tabTitles = [
       AppTranslations.of(context).text('business_catalogue_page_categories'),
       AppTranslations.of(context).text('business_catalogue_page_list_view'),
-      AppTranslations.of(context).text('business_catalogue_page_sport_lights'),
+      AppTranslations.of(context).text('business_catalogue_page_spotlights'),
       AppTranslations.of(context).text('business_catalogue_page_out_of_stock')
     ];
     return Scaffold(

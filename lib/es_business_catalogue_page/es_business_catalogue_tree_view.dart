@@ -44,7 +44,7 @@ class _EsBusinessCatalogueTreeViewState
       create: (context) => this.esBusinessCatalogueBloc,
       dispose: (context, value) => value.dispose(),
       child: StreamBuilder<EsBusinessCatalogueState>(
-          stream: this.esBusinessCatalogueBloc.esOrdersStateObservable,
+          stream: this.esBusinessCatalogueBloc.esBusinessCatalogueStateObservable,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Container();
@@ -165,7 +165,7 @@ class _SubCategory extends StatelessWidget {
         Provider.of<EsBusinessCatalogueBloc>(context);
     esBusinessCatalogueBloc.getProductsList(subCategory.categoryId);
     return StreamBuilder<EsBusinessCatalogueState>(
-      stream: esBusinessCatalogueBloc.esOrdersStateObservable,
+      stream: esBusinessCatalogueBloc.esBusinessCatalogueStateObservable,
       builder: (context, snapshot) {
         if (!snapshot.hasData) return Container();
         return Column(
