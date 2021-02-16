@@ -78,7 +78,6 @@ class EsBusinessCatalogueBloc {
 
   // Fetches the Products list under a child category
   getProductsList(int subCategoryId) async {
-    print('getProductsList');
     final childCategory =
         _esBusinessCatalogueState._categoriesMap[subCategoryId];
     if (childCategory != null) {

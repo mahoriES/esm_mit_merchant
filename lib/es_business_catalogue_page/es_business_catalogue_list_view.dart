@@ -95,88 +95,99 @@ class _EsBusinessCatalogueListViewState
                 ),
                 itemCount: snapshot.data.products.length,
                 itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Container(),
-                            ),
-                            Text(
-                              title + snapshot.data.getNumberOfProducts(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6
-                                  .copyWith(
-                                    color: Theme.of(context).primaryColorDark,
-                                  ),
-                            ),
-                            Expanded(
-                              child: Container(),
-                            ),
-                            PopupMenuButton<ProductSorting>(
-                              child: Icon(
-                                Icons.sort,
-                                color: Theme.of(context).primaryColorDark,
-                              ),
-                              onSelected: esBusinessCatalogueBloc.setSorting,
-                              itemBuilder: (BuildContext context) =>
-                                  <PopupMenuEntry<ProductSorting>>[
-                                PopupMenuItem(
-                                  value: ProductSorting.recentlyUpdatedAcending,
-                                  child: Text(
-                                    AppTranslations.of(context).text(
-                                        'business_catalogue_page_recently_updated'),
-                                    style: TextStyle(
-                                        color: snapshot.data.selectedSorting ==
-                                                ProductSorting
-                                                    .recentlyUpdatedAcending
-                                            ? Colors.black87
-                                            : Colors.black26),
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  value: ProductSorting.alphabaticallyAcending,
-                                  child: Text(
-                                    AppTranslations.of(context)
-                                        .text('business_catalogue_page_a_to_z'),
-                                    style: TextStyle(
-                                        color: snapshot.data.selectedSorting ==
-                                                ProductSorting
-                                                    .alphabaticallyAcending
-                                            ? Colors.black87
-                                            : Colors.black26),
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  value: ProductSorting.ratingDecending,
-                                  child: Text(
-                                    AppTranslations.of(context).text(
-                                        'business_catalogue_page_rating_high_to_low'),
-                                    style: TextStyle(
-                                        color: snapshot.data.selectedSorting ==
-                                                ProductSorting.ratingDecending
-                                            ? Colors.black87
-                                            : Colors.black26),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
+                  return Column(
+                    children: [
+                      if (index == 0)
+                        ProductListHeaderTitle(
+                          title: title,
+                          productsState: snapshot.data,
+                          esBusinessCatalogueBloc: esBusinessCatalogueBloc,
                         ),
-                        const SizedBox(
-                          height: 19.0,
-                        ),
-                        _Product(snapshot.data.products[index]),
-                      ],
-                    );
-                  }
-                  return _Product(snapshot.data.products[index]);
+                      _Product(snapshot.data.products[index]),
+                    ],
+                  );
                 },
               ),
             );
           }),
+    );
+  }
+}
+
+class ProductListHeaderTitle extends StatelessWidget {
+  const ProductListHeaderTitle({
+    Key key,
+    @required this.title,
+    @required this.productsState,
+    @required this.esBusinessCatalogueBloc,
+  }) : super(key: key);
+
+  final String title;
+  final EsProductsState productsState;
+  final EsProductsBloc esBusinessCatalogueBloc;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 19.0),
+      child: Row(
+        children: [
+          const Spacer(),
+          Text(
+            title + productsState.getNumberOfProducts(),
+            style: Theme.of(context).textTheme.headline6.copyWith(
+                  color: Theme.of(context).primaryColorDark,
+                ),
+          ),
+          const Spacer(),
+          PopupMenuButton<ProductSorting>(
+            child: Icon(
+              Icons.sort,
+              color: Theme.of(context).primaryColorDark,
+            ),
+            onSelected: esBusinessCatalogueBloc.setSorting,
+            itemBuilder: (BuildContext context) =>
+                <PopupMenuEntry<ProductSorting>>[
+              PopupMenuItem(
+                value: ProductSorting.recentlyUpdatedAcending,
+                child: Text(
+                  AppTranslations.of(context)
+                      .text('business_catalogue_page_recently_updated'),
+                  style: TextStyle(
+                      color: productsState.selectedSorting ==
+                              ProductSorting.recentlyUpdatedAcending
+                          ? Colors.black87
+                          : Colors.black26),
+                ),
+              ),
+              PopupMenuItem(
+                value: ProductSorting.alphabaticallyAcending,
+                child: Text(
+                  AppTranslations.of(context)
+                      .text('business_catalogue_page_a_to_z'),
+                  style: TextStyle(
+                      color: productsState.selectedSorting ==
+                              ProductSorting.alphabaticallyAcending
+                          ? Colors.black87
+                          : Colors.black26),
+                ),
+              ),
+              PopupMenuItem(
+                value: ProductSorting.ratingDecending,
+                child: Text(
+                  AppTranslations.of(context)
+                      .text('business_catalogue_page_rating_high_to_low'),
+                  style: TextStyle(
+                      color: productsState.selectedSorting ==
+                              ProductSorting.ratingDecending
+                          ? Colors.black87
+                          : Colors.black26),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 }
@@ -188,24 +199,26 @@ class _Product extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
+  viewItem(EsProductsBloc esProductBloc, BuildContext context) async {
+    EsProductDetailPageParam esProductDetailPageParam =
+        EsProductDetailPageParam(
+            currentProduct: businessCatalogueProduct.product,
+            openSkuAddUpfront: false);
+    await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
+        arguments: esProductDetailPageParam);
+    esProductBloc.getProducts();
+  }
+
   @override
   Widget build(BuildContext context) {
     final esProductBloc = Provider.of<EsProductsBloc>(context);
-    viewItem() async {
-      EsProductDetailPageParam esProductDetailPageParam =
-          EsProductDetailPageParam(
-              currentProduct: businessCatalogueProduct.product,
-              openSkuAddUpfront: false);
-      await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
-          arguments: esProductDetailPageParam);
-      esProductBloc.getProducts();
-    }
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         InkWell(
-          onTap: viewItem,
+          onTap: () {
+            viewItem(esProductBloc, context);
+          },
           child: Material(
             elevation: 1.0,
             borderRadius: BorderRadius.circular(6.0),
@@ -235,7 +248,7 @@ class _Product extends StatelessWidget {
                 ),
                 Expanded(
                   child: ListTile(
-                    contentPadding: EdgeInsets.all(0.0),
+                    contentPadding: EdgeInsets.zero,
                     title: Text(
                       businessCatalogueProduct.product.dProductName,
                     ),
@@ -316,7 +329,7 @@ class _Sku extends StatelessWidget {
               Expanded(
                 flex: 4,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
                     sku.dVariationValue,
                     maxLines: 1,
@@ -332,7 +345,7 @@ class _Sku extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
                     sku.dBasePrice,
                     textAlign: TextAlign.right,

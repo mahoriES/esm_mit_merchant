@@ -13,6 +13,13 @@ class EsBusinessCataloguePage extends StatelessWidget {
 
   EsBusinessCataloguePage();
 
+  static const List<Widget> tabIcons = [
+    Icon(Icons.apps),
+    Icon(Icons.list),
+    Icon(Icons.star),
+    Icon((Icons.outbond)),
+  ];
+
   @override
   Widget build(BuildContext context) {
     viewItem(EsProduct product, {bool openSkuAddUpfront = false}) async {
@@ -29,6 +36,7 @@ class EsBusinessCataloguePage extends StatelessWidget {
       AppTranslations.of(context).text('business_catalogue_page_spotlights'),
       AppTranslations.of(context).text('business_catalogue_page_out_of_stock')
     ];
+
     return Scaffold(
       body: SafeArea(
         child: DefaultTabController(
@@ -38,39 +46,19 @@ class EsBusinessCataloguePage extends StatelessWidget {
               Container(
                 child: TabBar(
                   isScrollable: false,
-                  labelColor: Colors.blue,
+                  labelColor: Theme.of(context).primaryColor,
                   unselectedLabelColor: Colors.black26,
                   indicatorColor: Colors.transparent,
-                  tabs: [
-                    Tab(
-                      icon: Icon(Icons.apps),
+                  tabs: List.generate(
+                    tabTitles.length,
+                    (index) => Tab(
+                      icon: tabIcons[index],
                       child: Text(
                         tabTitles[0],
                         style: TextStyle(fontSize: 12.0),
                       ),
                     ),
-                    Tab(
-                      icon: Icon(Icons.list),
-                      child: Text(
-                        tabTitles[1],
-                        style: TextStyle(fontSize: 12.0),
-                      ),
-                    ),
-                    Tab(
-                      icon: Icon(Icons.star),
-                      child: Text(
-                        tabTitles[2],
-                        style: TextStyle(fontSize: 12.0),
-                      ),
-                    ),
-                    Tab(
-                      icon: Icon(Icons.outbond),
-                      child: Text(
-                        tabTitles[3],
-                        style: TextStyle(fontSize: 11.0),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
               // SizedBox(height: 10.toHeight),

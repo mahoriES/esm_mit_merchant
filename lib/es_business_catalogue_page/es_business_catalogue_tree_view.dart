@@ -9,6 +9,7 @@ import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/data/model/es_product_catalogue.dart';
 import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
+import 'package:foore/services/sizeconfig.dart';
 import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
@@ -16,8 +17,6 @@ import 'package:provider/provider.dart';
 import '../app_translations.dart';
 
 class EsBusinessCatalogueTreeView extends StatefulWidget {
-  static const routeName = '/business_catalogue';
-
   EsBusinessCatalogueTreeView({Key key}) : super(key: key);
 
   _EsBusinessCatalogueTreeViewState createState() =>
@@ -44,10 +43,11 @@ class _EsBusinessCatalogueTreeViewState
       create: (context) => this.esBusinessCatalogueBloc,
       dispose: (context, value) => value.dispose(),
       child: StreamBuilder<EsBusinessCatalogueState>(
-          stream: this.esBusinessCatalogueBloc.esBusinessCatalogueStateObservable,
+          stream:
+              this.esBusinessCatalogueBloc.esBusinessCatalogueStateObservable,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Container();
+              return const SizedBox.shrink();
             }
             if (snapshot.data.categoriesLoadingStatus == DataState.LOADING) {
               return Center(
@@ -93,14 +93,14 @@ class _EsBusinessCatalogueTreeViewState
                     flex: 17,
                     child: snapshot.data.subCategories.length == 0
                         ? Container(
-                            height: MediaQuery.of(context).size.height,
+                            height: SizeConfig().screenHeight,
                             width: 500,
                             child: EmptyList(
                                 titleText: AppTranslations.of(context).text(
                                     'business_catalogue_page_no_sub_categories')),
                           )
                         : ListView.builder(
-                            padding: EdgeInsets.only(bottom: 72.0),
+                            padding: const EdgeInsets.only(bottom: 72.0),
                             itemCount: snapshot.data.subCategories.length,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
@@ -137,8 +137,8 @@ class _ParentCategory extends StatelessWidget {
       },
       child: Container(
         color: isSelected ? Colors.blue : null,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16.0),
-        margin: const EdgeInsets.only(bottom: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+        margin: const EdgeInsets.only(bottom: 2.0),
         child: Text(
           parentCategory.categoryName,
           style: Theme.of(context).textTheme.bodyText2.copyWith(
@@ -167,7 +167,7 @@ class _SubCategory extends StatelessWidget {
     return StreamBuilder<EsBusinessCatalogueState>(
       stream: esBusinessCatalogueBloc.esBusinessCatalogueStateObservable,
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return Container();
+        if (!snapshot.hasData) return const SizedBox.shrink();
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -201,7 +201,7 @@ class _SubCategory extends StatelessWidget {
                   elevation: 2,
                   child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8.0),
                     child: Text(
                       AppTranslations.of(context)
                           .text('business_catalogue_page_see_more_products'),
@@ -281,7 +281,7 @@ class _Product extends StatelessWidget {
                 ),
                 Expanded(
                   child: ListTile(
-                    contentPadding: EdgeInsets.all(0.0),
+                    contentPadding: EdgeInsets.zero,
                     title: Text(
                       businessCatalogueProduct.product.dProductName,
                     ),
@@ -303,9 +303,7 @@ class _Product extends StatelessWidget {
                           height: 30.0,
                           width: 1.0,
                         ),
-                        Expanded(
-                          child: Container(),
-                        ),
+                        const Spacer(),
                         Transform.rotate(
                           angle:
                               businessCatalogueProduct.isExpanded ? pi / 2 : 0,
@@ -315,9 +313,7 @@ class _Product extends StatelessWidget {
                             color: Theme.of(context).primaryColor,
                           ),
                         ),
-                        Expanded(
-                          child: Container(),
-                        ),
+                        const Spacer(),
                       ],
                     ),
                   ),
@@ -327,12 +323,12 @@ class _Product extends StatelessWidget {
           ),
         ),
         if (businessCatalogueProduct.isExpanded) ...[
-          SizedBox(
+          const SizedBox(
             height: 8.0,
           ),
           ...businessCatalogueProduct.product.skus.map((e) => _Sku(e)).toList()
         ],
-        SizedBox(
+        const SizedBox(
           height: 16.0,
         ),
       ],
@@ -378,7 +374,7 @@ class _Sku extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
                     sku.dBasePrice,
                     textAlign: TextAlign.right,
