@@ -133,6 +133,7 @@
 	"generic_please_check_internet_connection": "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
 	"generic_submit_failed": "ಸಲ್ಲಿಸುವುದು ವಿಫಲವಾಗಿದೆ",
 	"generic_please_please_try_again": "ದಯವಿಟ್ಟು ಪುನಃ ಪ್ರಯತ್ನಿಸಿ....",
+	"generic_discard": "ತ್ಯಜಿಸಿ",
 	
 	"merchant_profile_page_title": "ಪ್ರೊಫೈಲ್ ರಚಿಸಿ",
 	"merchant_profile_page_name": "ಹೆಸರು",
@@ -268,6 +269,9 @@
 	"orders_page_customer_paid": "ಗ್ರಾಹಕ ಪಾವತಿಸಲಾಗಿದೆ",
 	"orders_page_payment_approved": "ಪಾವತಿ ಅನುಮೋದಿಸಲಾಗಿದೆ",
 	"orders_page_payment_rejected": "ಪಾವತಿ ತಿರಸ್ಕರಿಸಲಾಗಿದೆ",
+	"orders_page_payment_success": "Paid %s using %s",
+	"orders_page_payment_failed": "ಪಾವತಿ ವಿಫಲವಾಗಿದೆ",
+	"orders_page_payment_refunded": "Refunded %s at %s",
 	"orders_page_enter_valid_charge": "ಮಾನ್ಯ ಶುಲ್ಕ ಮೌಲ್ಯವನ್ನು ನಮೂದಿಸಿ!",
 	"orders_page_add_atleast_one_item": "ದಯವಿಟ್ಟು ಆರ್ಡರ್ ನಲ್ಲಿ ಕನಿಷ್ಠ 1 ಐಟಂ ಅನ್ನು ಸೇರಿಸಿ",
 	"orders_page_update_display_line1": "ಪ್ರದರ್ಶನ ಸಾಲು 1 ಅನ್ನು ನವೀಕರಿಸಿ",
@@ -281,6 +285,10 @@
 	"orders_page_could_not_open_maps": "ನಕ್ಷೆಗಳನ್ನು ತೆರೆಯಲಾಗಲಿಲ್ಲ",
 	"orders_page_sure_add_item_to_the_order": "ನೀವು ಆದೇಶಕ್ಕೆ%  ಸೇರಿಸಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ",
 	"orders_page_sure_remove_item_from_the_order": "ಆದೇಶದಿಂದ %s  ಅನ್ನು ತೆಗೆದುಹಾಕಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ? ",
+	"orders_page_payment_confimation_cod_1": "I have received the COD payment of ",
+	"orders_page_payment_confimation_cod_2": "for order ",
+	"orders_page_complete_confirmation_message": "Do you want to mark this order as Completed?",
+
 	"orders_page_order_status_unknown": "ಅಜ್ಞಾತ",
 	"orders_page_order_status_new": "ಹೊಸದು",
 	"orders_page_order_status_complete": "ಪೂರ್ಣಗೊಂಡಿದೆ",
@@ -295,7 +303,6 @@
 	"orders_page_order_status_waiting_pickup": "ಪಿಕಪ್ ಕಾಯಲಾಗುತ್ತಿದೆ",
 	"orders_page_rectrict_complete_order_message": "The delivery agent should be processing this order now, please try after sometime!",
 	
-
 	"products_page_no_products_found": "ಯಾವುದೇ ಉತ್ಪನ್ನಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
 	"products_page_no_products_found_description": "ಹೊಸ ಉತ್ಪನ್ನಗಳನ್ನು ಸೇರಿಸಲು ಐಟಂ ಸೇರಿಸಿ '",
 	"products_page_add_item": "ಐಟಂ ಸೇರಿಸಿ",
@@ -372,6 +379,21 @@
 	"address_updated_message": "Address Updated Successfully",
 	"address_updating_message": "Updating Address ...",
 	"address_discard_message":"The address has been modified. Your changes will be discarded if you continue. Do you want to discard the changes ?",
+
+	"circle_search_hint": "ನಿಮ್ಮ ನಗರದ ಹೆಸರನ್ನು ಟೈಪ್ ಮಾಡುವ ಮೂಲಕ ಸರ್ಕಲ್ ಅನ್ನು ಹುಡುಕಲು ಪ್ರಯತ್ನಿಸಿ. ಉದಾ. ಉಡುಪಿ, ಚಂಡೀಗಡ್",
+	"circle_search_action_hint": "ಸರ್ಕಲ್ ಗಳನ್ನು ಹುಡುಕಿ",
+	"no_circle_selected_msg": "ಯಾವುದೇ ವಲಯವನ್ನು ಆಯ್ಕೆ ಮಾಡಿಲ್ಲ",
+	"select_circle_action": "ಸರ್ಕಲ್ ಆಯ್ಕೆ",
+	"change_circle_action": "ಸರ್ಕಲ್ ಬದಲಾಯಿಸಿ",
+	"enter_circle_code": "ಸರ್ಕಲ್ ಕೋಡ್ ನಮೂದಿಸಿ",
+	"esamudaay_circles": "ಇಸಮುುದಾಯ ಸರ್ಕಲ್ ಗಳು",
+	"trending_circles": "ಟ್ರೆಂಡಿಂಗ್ ಸರ್ಕಲ್ ಗಳು",
+	"suggested_circles": "ಸೂಚಿಸಿದ ಸರ್ಕಲ್ ಗಳು",
+	"turn_on_location": "ಲೊಕೇಶನ್ ಅನ್ನು ಆನ್ ಮಾಡಿ",
+	"turn_on_location_msg": "ನಿಮ್ಮ ಹತ್ತಿರದ ಸರ್ಕಲ್ ಗಳ ಸಲಹೆಗಳನ್ನು ಪಡೆಯಲು ನಿಮ್ಮ ಸಾಧನದ ಲೊಕೇಶನ್ ಆನ್ ಮಾಡಿ",
+	"based_on_current_location": "ನಿಮ್ಮ ಪ್ರಸ್ತುತ ಸ್ಥಳವನ್ನು ಆಧಾರಿಸಿ",
+	"circle_info_1": "ಸರ್ಕಲ್' ಎನ್ನುವುದು ಅಂಗಡಿ ಮಾಲೀಕರು, ರೆಸ್ಟೋರೆಂಟ್‌ಗಳು ಮತ್ತು ವ್ಯಾಪಾರಿಗಳ ಸಮುದಾಯವಾಗಿದೆ",
+	"circle_info_2": "ನಿಮ್ಮ ಲೊಕೇಶನ್ ಅನ್ನು ಆನ್ ಮಾಡುವ ಮೂಲಕ ಅಥವಾ ನಿರ್ದಿಷ್ಟ ಸರ್ಕಲ್ ಅನ್ನು ಹುಡುಕುವ ಮೂಲಕ ನೀವು ಸರ್ಕಲ್ ಅನ್ನು ಸೇರಿಸಬಹುದು",
 
 	"app_update_title": "ಆ್ಯಪ್ಲಿಕೇಶನ್ ಅಪ್ಡೇಟ್ ಲಭ್ಯವಿದೆ",
 	"app_update_banner_msg": "ಹೊಸ ವೈಶಿಷ್ಟ್ಯಗಳು ಮತ್ತು ಕೊಡುಗೆಗಳೊಂದಿಗೆ ಇಸಮುದಾಯವು ಹೆಚ್ಚು ಆಸಕ್ತಿಕರವಾಗಿದೆ. ಈಗಲೇ ಅಪ್ಡೇಟ್ ಮಾಡಿ !!",
