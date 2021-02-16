@@ -70,7 +70,15 @@ class EsProductsBloc {
         queryParameters.addAll({'sort_by': '-rating_val'});
         break;
     }
+
+    // Backwards compatibitily.
+    if (filter == ProductFilters.compatibitilyView) {
+      queryParameters.clear();
+      queryParameters.addAll({'filter': this.searchText});
+    }
+
     final query = Utils.makeQuery(queryParameters);
+    // TODO: update httpSerive to take query as parameter.
     httpService
         .esGet(EsApiPaths.getProducts(
                 this.esBusinessesBloc.getSelectedBusinessId()) +

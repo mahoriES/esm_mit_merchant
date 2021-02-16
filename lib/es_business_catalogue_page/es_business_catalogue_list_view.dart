@@ -229,6 +229,7 @@ class _Product extends StatelessWidget {
                               businessCatalogueProduct.product.dPhotoUrl ?? '',
                           fit: BoxFit.fill,
                           errorWidget: (_, __, ___) => placeHolderImage,
+                           // TODO: Update the placeholder image.
                           placeholder: (_, __) => Container(),
                         ),
                       ),
