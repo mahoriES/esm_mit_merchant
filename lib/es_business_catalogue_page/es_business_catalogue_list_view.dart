@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:foore/data/bloc/es_business_catalogue.dart';
 import 'package:foore/data/bloc/es_products.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/data/model/es_product_catalogue.dart';
@@ -196,6 +197,8 @@ class _Product extends StatelessWidget {
     await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
         arguments: esProductDetailPageParam);
     esProductBloc.reloadProducts(filter);
+    // TODO: We need a better way to handle this.
+    Provider.of<EsBusinessCatalogueBloc>(context).resetDataState();
   }
 
   @override

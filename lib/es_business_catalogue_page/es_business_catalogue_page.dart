@@ -11,7 +11,7 @@ import '../app_translations.dart';
 import 'es_business_catalogue_list_view.dart';
 import 'es_business_catalogue_tree_view.dart';
 
-class EsBusinessCataloguePage extends StatelessWidget {
+class EsBusinessCataloguePage extends StatefulWidget {
   static const routeName = '/business_catalogue';
 
   EsBusinessCataloguePage();
@@ -24,6 +24,27 @@ class EsBusinessCataloguePage extends StatelessWidget {
   ];
 
   @override
+  _EsBusinessCataloguePageState createState() =>
+      _EsBusinessCataloguePageState();
+}
+
+class _EsBusinessCataloguePageState extends State<EsBusinessCataloguePage>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(vsync: this, length: 4);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     viewItem(EsProduct product, {bool openSkuAddUpfront = false}) async {
       EsProductDetailPageParam esProductDetailPageParam =
@@ -31,6 +52,25 @@ class EsBusinessCataloguePage extends StatelessWidget {
               currentProduct: product, openSkuAddUpfront: openSkuAddUpfront);
       await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
           arguments: esProductDetailPageParam);
+      // TODO: Need to update with a better approach.
+      Provider.of<EsBusinessCatalogueBloc>(context).reloadCategories();
+      switch (_tabController.index) {
+        case 0:
+          Provider.of<EsProductsBloc>(context).resetDataState();
+          break;
+        case 1:
+          Provider.of<EsProductsBloc>(context)
+              .reloadProducts(ProductFilters.listView);
+          break;
+        case 2:
+          Provider.of<EsProductsBloc>(context)
+              .reloadProducts(ProductFilters.spotlights);
+          break;
+        case 3:
+          Provider.of<EsProductsBloc>(context)
+              .reloadProducts(ProductFilters.outOfStock);
+          break;
+      }
     }
 
     final List<String> tabTitles = [
@@ -42,45 +82,43 @@ class EsBusinessCataloguePage extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: DefaultTabController(
-          length: tabTitles.length,
-          child: Column(
-            children: <Widget>[
-              Container(
-                child: TabBar(
-                  isScrollable: false,
-                  labelColor: Theme.of(context).primaryColor,
-                  unselectedLabelColor: Colors.black26,
-                  indicatorColor: Colors.transparent,
-                  tabs: List.generate(
-                    tabTitles.length,
-                    (index) => Tab(
-                      icon: tabIcons[index],
-                      child: Text(
-                        tabTitles[index],
-                        style: TextStyle(fontSize: 11.0),
-                      ),
+        child: Column(
+          children: <Widget>[
+            Container(
+              child: TabBar(
+                controller: _tabController,
+                isScrollable: false,
+                labelColor: Theme.of(context).primaryColor,
+                unselectedLabelColor: Colors.black26,
+                indicatorColor: Colors.transparent,
+                tabs: List.generate(
+                  tabTitles.length,
+                  (index) => Tab(
+                    icon: EsBusinessCataloguePage.tabIcons[index],
+                    child: Text(
+                      tabTitles[index],
+                      style: TextStyle(fontSize: 11.0),
                     ),
                   ),
                 ),
               ),
-              // SizedBox(height: 10.toHeight),
-              Divider(
-                color: AppColors.greyishText,
-                height: 0,
+            ),
+            Divider(
+              color: AppColors.greyishText,
+              height: 0,
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  EsBusinessCatalogueTreeView(),
+                  EsBusinessCatalogueListView(ProductFilters.listView),
+                  EsBusinessCatalogueListView(ProductFilters.spotlights),
+                  EsBusinessCatalogueListView(ProductFilters.outOfStock),
+                ],
               ),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    EsBusinessCatalogueTreeView(),
-                    EsBusinessCatalogueListView(ProductFilters.listView),
-                    EsBusinessCatalogueListView(ProductFilters.spotlights),
-                    EsBusinessCatalogueListView(ProductFilters.outOfStock),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: Transform.translate(
@@ -97,8 +135,6 @@ class EsBusinessCataloguePage extends StatelessWidget {
             final product = await Navigator.of(context)
                 .pushNamed(AddMenuItemPage.routeName);
             if (product != null) {
-              Provider.of<EsBusinessCatalogueBloc>(context).resetDataState();
-              Provider.of<EsProductsBloc>(context).resetDataState();
               viewItem(product, openSkuAddUpfront: true);
             }
           },

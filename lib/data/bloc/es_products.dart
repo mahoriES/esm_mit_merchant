@@ -68,7 +68,7 @@ class EsProductsBloc {
     switch (this._esProductsState.selectedSorting) {
       case ProductSorting.recentlyUpdatedAcending:
         queryParameters.addAll({
-          'sort_by': 'modified',
+          'sort_by': '-modified',
         });
         break;
       case ProductSorting.alphabaticallyAcending:

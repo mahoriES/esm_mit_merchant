@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_business_catalogue.dart';
+import 'package:foore/data/bloc/es_products.dart';
 import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/data/model/es_product_catalogue.dart';
@@ -211,25 +212,30 @@ class _Product extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
+  viewItem(EsBusinessCatalogueBloc esBusinessCatalogueBloc,
+      BuildContext context) async {
+    EsProductDetailPageParam esProductDetailPageParam =
+        EsProductDetailPageParam(
+            currentProduct: businessCatalogueProduct.product,
+            openSkuAddUpfront: false);
+    await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
+        arguments: esProductDetailPageParam);
+    esBusinessCatalogueBloc.reloadCategories();
+    // TODO: We need a better way to handle this.
+    Provider.of<EsProductsBloc>(context).resetDataState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final esBusinessCatalogueBloc =
         Provider.of<EsBusinessCatalogueBloc>(context);
-    viewItem() async {
-      EsProductDetailPageParam esProductDetailPageParam =
-          EsProductDetailPageParam(
-              currentProduct: businessCatalogueProduct.product,
-              openSkuAddUpfront: false);
-      await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
-          arguments: esProductDetailPageParam);
-      esBusinessCatalogueBloc.reloadCategories();
-    }
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         InkWell(
-          onTap: viewItem,
+          onTap: () {
+            viewItem(esBusinessCatalogueBloc, context);
+          },
           child: Material(
             elevation: 1.0,
             borderRadius: BorderRadius.circular(6.0),
