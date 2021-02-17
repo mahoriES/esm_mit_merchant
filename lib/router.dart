@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
 import 'package:foore/data/bloc/es_business_categories.dart';
+import 'package:foore/data/bloc/es_business_catalogue.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
 import 'package:foore/data/bloc/es_create_merchant_profile.dart';
@@ -32,12 +33,14 @@ import 'package:provider/provider.dart';
 import 'auth_guard/auth_guard.dart';
 import 'data/bloc/app_update_bloc.dart';
 import 'data/bloc/es_edit_product.dart';
+import 'data/bloc/es_products.dart';
 import 'data/bloc/onboarding.dart';
 import 'data/bloc/people.dart';
 import 'data/http_service.dart';
 import 'data/model/feedback.dart';
 import 'data/model/unirson.dart';
 import 'es_auth_guard/es_auth_guard.dart';
+import 'es_business_catalogue_page/es_business_catalogue_page.dart';
 import 'es_category_page/es_add_category.dart';
 import 'es_category_page/es_category_page.dart';
 import 'es_create_business/es_create_business.dart';
@@ -48,7 +51,6 @@ import 'home_page/home_page.dart';
 import 'intro_page/intro_page.dart';
 import 'login_page/login_page.dart';
 import 'menu_page/add_menu_item_page.dart';
-import 'menu_page/menu_page.dart';
 import 'onboarding_guard/onboarding_guard.dart';
 import 'onboarding_page/location_search_page.dart';
 import 'onboarding_page/location_verify.dart';
@@ -58,7 +60,7 @@ import 'unirson_check_in_page/unirson_check_in_page.dart';
 
 class AppRouter {
   static const homeRoute = '/';
-  static const testRoute = MenuPage.routeName;
+  static const testRoute = EsHomePage.routeName;
   final unauthenticatedHandler = (BuildContext context) => Navigator.of(context)
       .pushNamedAndRemoveUntil(
           IntroPage.routeName, (Route<dynamic> route) => false);
@@ -229,6 +231,16 @@ class AppRouter {
                           EsOrdersBloc(httpServiceBloc, esBusinessesBloc),
                       dispose: (context, value) => value.dispose(),
                     ),
+                    Provider<EsProductsBloc>(
+                      create: (context) =>
+                          EsProductsBloc(httpServiceBloc, esBusinessesBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
+                    Provider<EsBusinessCatalogueBloc>(
+                      create: (context) => EsBusinessCatalogueBloc(
+                          httpServiceBloc, esBusinessesBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
                   ],
                   child: EsHomePage(httpServiceBloc),
                 ),
@@ -250,12 +262,13 @@ class AppRouter {
         return EsCreateMerchantProfilePage.generateRoute(
             settings, httpServiceBloc, authBloc);
         break;
-      case MenuPage.routeName:
+      case EsBusinessCataloguePage.routeName:
         return MaterialPageRoute(
-          builder: (context) => Provider<OnboardingBloc>(
-            builder: (context) => OnboardingBloc(httpServiceBloc),
+          builder: (context) => Provider<EsBusinessCatalogueBloc>(
+            create: (context) =>
+                EsBusinessCatalogueBloc(httpServiceBloc, esBusinessesBloc),
             dispose: (context, value) => value.dispose(),
-            child: MenuPage(),
+            child: EsBusinessCataloguePage(),
           ),
         );
         break;
