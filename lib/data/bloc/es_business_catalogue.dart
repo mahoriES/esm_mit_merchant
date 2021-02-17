@@ -29,6 +29,11 @@ class EsBusinessCatalogueBloc {
     });
   }
 
+  reloadCategories() {
+    resetDataState();
+    getCategories();
+  }
+
   getCategories() {
     if (this._esBusinessCatalogueState._categoriesLoadingStatus ==
         DataState.SUCCESS) {

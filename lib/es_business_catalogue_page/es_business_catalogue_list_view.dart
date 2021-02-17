@@ -195,7 +195,7 @@ class _Product extends StatelessWidget {
             openSkuAddUpfront: false);
     await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
         arguments: esProductDetailPageParam);
-    esProductBloc.getProducts(filter);
+    esProductBloc.reloadProducts(filter);
   }
 
   @override

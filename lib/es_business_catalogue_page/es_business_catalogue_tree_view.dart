@@ -222,7 +222,7 @@ class _Product extends StatelessWidget {
               openSkuAddUpfront: false);
       await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
           arguments: esProductDetailPageParam);
-      esBusinessCatalogueBloc.getCategories();
+      esBusinessCatalogueBloc.reloadCategories();
     }
 
     return Column(

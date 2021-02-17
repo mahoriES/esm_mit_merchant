@@ -41,7 +41,15 @@ class EsProductsBloc {
       _subjectEsProductsState.stream;
 
   getProductsFromSearch() {
+    _esProductsState
+            ._productsLoadingStatusMap[ProductFilters.compatibitilyView] =
+        DataState.IDLE;
     getProducts(ProductFilters.compatibitilyView);
+  }
+
+  reloadProducts(ProductFilters filter) {
+    resetDataState();
+    getProducts(filter);
   }
 
   getProducts(ProductFilters filter) {
@@ -216,7 +224,9 @@ class EsProductsState {
       .toList();
   bool get isLoading =>
       getProductsLoadingStatus(ProductFilters.compatibitilyView) ==
-      DataState.LOADING;
+          DataState.LOADING ||
+      getProductsLoadingStatus(ProductFilters.compatibitilyView) ==
+          DataState.IDLE;
   bool get isLoadingFailed =>
       getProductsLoadingStatus(ProductFilters.compatibitilyView) ==
       DataState.FAILED;
