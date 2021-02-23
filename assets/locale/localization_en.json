@@ -423,6 +423,9 @@
 	"business_catalogue_page_all_products": "All Products",
 	"business_catalogue_page_recently_updated": "Recently Updated",
 	"business_catalogue_page_a_to_z": "A - Z",
-	"business_catalogue_page_rating_high_to_low": "Rating (High to Low)"
+	"business_catalogue_page_rating_high_to_low": "Rating (High to Low)",
+	"business_catalogue_page_search_hint": "Search",
+	"business_catalogue_page_search_for_products": "Search for products",
+	"business_catalogue_page_title_products_found": "Products found"
 
 }

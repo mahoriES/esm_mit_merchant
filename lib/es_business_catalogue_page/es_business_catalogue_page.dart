@@ -9,6 +9,7 @@ import 'package:foore/menu_page/add_menu_item_page.dart';
 import 'package:provider/provider.dart';
 import '../app_translations.dart';
 import 'es_business_catalogue_list_view.dart';
+import 'es_business_catalogue_search_view.dart';
 import 'es_business_catalogue_tree_view.dart';
 
 class EsBusinessCataloguePage extends StatefulWidget {
@@ -81,6 +82,56 @@ class _EsBusinessCataloguePageState extends State<EsBusinessCataloguePage>
     ];
 
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Hero(
+          tag: EsBusinessCatalogueSearchView.searchBarHeroTag,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).canvasColor,
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            child: Material(
+              child: TextField(
+                onTap: () {
+                  Navigator.of(context)
+                      .pushNamed(EsBusinessCatalogueSearchView.routeName);
+                },
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  isDense: false,
+                  hintText: AppTranslations.of(context)
+                      .text('business_catalogue_page_search_hint'),
+                  prefixIcon: Icon(Icons.search),
+                ),
+              ),
+            ),
+          ),
+        ),
+        actions: [
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).canvasColor,
+              border: Border.all(
+                color: Theme.of(context).primaryColor,
+              ),
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            margin: EdgeInsets.only(right: 8.0, top: 4, bottom: 4.0),
+            child: IconButton(
+              icon: Icon(Icons.add),
+              color: Theme.of(context).primaryColor,
+              onPressed: () async {
+                final product = await Navigator.of(context)
+                    .pushNamed(AddMenuItemPage.routeName);
+                if (product != null) {
+                  viewItem(product, openSkuAddUpfront: true);
+                }
+              },
+            ),
+          )
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -121,34 +172,6 @@ class _EsBusinessCataloguePageState extends State<EsBusinessCataloguePage>
           ],
         ),
       ),
-      floatingActionButton: Transform.translate(
-        offset: Offset(0, -15),
-        child: RaisedButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50.0),
-          ),
-          padding: EdgeInsets.symmetric(
-            vertical: 15,
-            horizontal: 25,
-          ),
-          onPressed: () async {
-            final product = await Navigator.of(context)
-                .pushNamed(AddMenuItemPage.routeName);
-            if (product != null) {
-              viewItem(product, openSkuAddUpfront: true);
-            }
-          },
-          child: Container(
-            child: Text(
-              AppTranslations.of(context).text('products_page_add_item'),
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    color: Colors.white,
-                  ),
-            ),
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

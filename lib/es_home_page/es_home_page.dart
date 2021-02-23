@@ -93,18 +93,18 @@ class _EsHomePageState extends State<EsHomePage> {
     return Scaffold(
       drawer: AppDrawer(),
       drawerEnableOpenDragGesture: false,
-      appBar: _selectedIndex == 4
-          ? AppBar(
-              title: Text(
-                AppTranslations.of(context).text("reviews_page_title"),
-              ),
-            )
-          : AppBar(
-              title: EsSelectBusiness(
-                null,
-                allowChange: _selectedIndex == 2 ? false : true,
-              ),
-            ),
+      // appBar: _selectedIndex == 4
+      //     ? AppBar(
+      //         title: Text(
+      //           AppTranslations.of(context).text("reviews_page_title"),
+      //         ),
+      //       )
+      //     : AppBar(
+      //         title: EsSelectBusiness(
+      //           null,
+      //           allowChange: _selectedIndex == 2 ? false : true,
+      //         ),
+      //       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),

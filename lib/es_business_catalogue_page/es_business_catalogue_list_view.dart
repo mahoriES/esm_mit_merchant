@@ -88,7 +88,7 @@ class EsBusinessCatalogueListView extends StatelessWidget {
                         esBusinessCatalogueBloc: esProductBloc,
                         filter: filter,
                       ),
-                    _Product(filter, snapshot.data.getProducts(filter)[index]),
+                    Product(filter, snapshot.data.getProducts(filter)[index]),
                   ],
                 );
               },
@@ -180,10 +180,10 @@ class ProductListHeaderTitle extends StatelessWidget {
   }
 }
 
-class _Product extends StatelessWidget {
+class Product extends StatelessWidget {
   final EsBusinessCatalogueProduct businessCatalogueProduct;
   final ProductFilters filter;
-  const _Product(
+  const Product(
     this.filter,
     this.businessCatalogueProduct, {
     Key key,
