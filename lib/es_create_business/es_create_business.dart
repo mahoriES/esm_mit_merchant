@@ -93,7 +93,8 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
     var esBusinessesBloc = Provider.of<EsBusinessesBloc>(context);
     esBusinessesBloc.addCreatedBusiness(businessInfo);
     esBusinessesBloc.setSelectedBusiness(businessInfo);
-    Navigator.of(context).pushNamed(EsHomePage.routeName);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(EsHomePage.routeName, (_) => false);
   }
 
   addOrEditBusinessCategories() async {
