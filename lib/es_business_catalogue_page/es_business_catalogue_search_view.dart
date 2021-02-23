@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_products.dart';
 import 'package:foore/data/model/es_product_catalogue.dart';
+import 'package:foore/es_business_catalogue_page/widgets/es_business_catalogue_product_tile.dart';
 import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
@@ -142,7 +143,7 @@ class EsBusinessCatalogueSearchView extends StatelessWidget {
                           productsState: snapshot.data,
                           filter: ProductFilters.searchView,
                         ),
-                      Product(
+                      EsBusinessCatalogueProductTile(
                           ProductFilters.searchView,
                           snapshot.data
                               .getProducts(ProductFilters.searchView)[index]),
