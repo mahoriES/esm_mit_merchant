@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:after_layout/after_layout.dart';
 import 'package:circles/themes/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/app_translations.dart';
@@ -15,8 +14,9 @@ import 'package:provider/provider.dart';
 
 class EsCreateBusinessPage extends StatefulWidget {
   static const routeName = '/create-business-page';
+  final bool allowBackButton;
 
-  EsCreateBusinessPage();
+  EsCreateBusinessPage({this.allowBackButton = true});
 
   @override
   EsCreateBusinessPageState createState() => EsCreateBusinessPageState();
@@ -79,8 +79,7 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
   }
 
   Future<bool> _onWillPop() async {
-    Navigator.pop(context);
-    return false;
+    return widget.allowBackButton;
   }
 
   @override
@@ -94,7 +93,8 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
     var esBusinessesBloc = Provider.of<EsBusinessesBloc>(context);
     esBusinessesBloc.addCreatedBusiness(businessInfo);
     esBusinessesBloc.setSelectedBusiness(businessInfo);
-    Navigator.of(context).pushNamed(EsHomePage.routeName);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(EsHomePage.routeName, (_) => false);
   }
 
   addOrEditBusinessCategories() async {
@@ -112,6 +112,7 @@ class EsCreateBusinessPageState extends State<EsCreateBusinessPage>
       initialThemeType: THEME_TYPES.LIGHT,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: widget.allowBackButton,
           title: Text(
             AppTranslations.of(context).text('create_business_page_title'),
           ),

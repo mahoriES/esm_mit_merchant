@@ -76,7 +76,8 @@ class AppRouter {
           OnboardingPage.routeName, (Route<dynamic> route) => false);
 
   final esCreateBusinessRequiredHandler = (BuildContext context) =>
-      Navigator.of(context).pushNamed(EsCreateBusinessPage.routeName);
+      Navigator.of(context)
+          .pushNamed(EsCreateBusinessPage.routeName, arguments: false);
 
   final HttpService httpServiceBloc;
   final AuthBloc authBloc;
@@ -250,11 +251,14 @@ class AppRouter {
         );
         break;
       case EsCreateBusinessPage.routeName:
+        final bool allowBackButton = settings.arguments ?? true;
         return MaterialPageRoute(
           builder: (context) => Provider<EsCreateBusinessBloc>(
             builder: (context) => EsCreateBusinessBloc(httpServiceBloc),
             dispose: (context, value) => value.dispose(),
-            child: EsCreateBusinessPage(),
+            child: EsCreateBusinessPage(
+              allowBackButton: allowBackButton,
+            ),
           ),
         );
         break;
