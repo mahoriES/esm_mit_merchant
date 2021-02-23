@@ -77,8 +77,8 @@ class EsCreateMerchantProfilePageState
         Provider.of<EsCreateMerchantProfileBloc>(context);
 
     onCreateMerchantProfileSuccess(EsProfile profile) {
-      var authBloc = Provider.of<AuthBloc>(context);
-      authBloc.authState.esMerchantProfile = profile;
+      final authBloc = Provider.of<AuthBloc>(context);
+      authBloc.setEsMerchantProfile(profile);
       Navigator.of(context).pushNamed(EsHomePage.routeName);
     }
 
@@ -92,8 +92,7 @@ class EsCreateMerchantProfilePageState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppTranslations.of(context).text('merchant_profile_page_title')
-        ),
+            AppTranslations.of(context).text('merchant_profile_page_title')),
       ),
       body: Form(
         key: _formKey,
@@ -119,7 +118,8 @@ class EsCreateMerchantProfilePageState
                             createMerchantProfileBloc.nameEditController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: AppTranslations.of(context).text('merchant_profile_page_name'),
+                          labelText: AppTranslations.of(context)
+                              .text('merchant_profile_page_name'),
                         ),
                       ),
                     ),

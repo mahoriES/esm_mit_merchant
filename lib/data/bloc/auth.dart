@@ -214,6 +214,12 @@ class AuthBloc {
     //this._storeEsAuthState();
   }
 
+  setEsMerchantProfile(EsProfile profile) {
+    this.authState.esMerchantProfile = profile;
+    this._updateState();
+    this._storeEsAuthState();
+  }
+
   _storeEsAuthState() async {
     esdyPrint.debug("_storeEsAuthState >>");
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
