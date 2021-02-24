@@ -2,7 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'package:flutter/material.dart';
 import 'package:foore/data/model/login.dart';
-import 'package:foore/environments/environment.dart';
+import 'package:foore/utils/environment_config.dart';
 
 class FoAnalytics {
   FirebaseAnalytics _firebaseAnalytics;
@@ -27,7 +27,8 @@ class FoAnalytics {
 
   firebaseAnalyticsInit() {
     this._firebaseAnalytics = FirebaseAnalytics();
-    _firebaseAnalytics.setAnalyticsCollectionEnabled(Environment.isProd);
+    _firebaseAnalytics.setAnalyticsCollectionEnabled(
+        EnvironmentConfig.isProductionEnvironment);
   }
 
   firebaseAnalyticsLogin(AuthInfo authData) {
