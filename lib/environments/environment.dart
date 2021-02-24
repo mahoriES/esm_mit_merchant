@@ -1,8 +1,8 @@
+import 'package:foore/utils/environment_config.dart';
 import 'package:package_info/package_info.dart';
 
 class Environment {
-  //Set False for Staging build
-  static get isProd => false;
+  static get isProd => EnvironmentConfig.isProductionEnvironment;
 
   static get apiUrl =>
       isProd ? EnvironmentProd._apiUrl : EnvironmentPreprod._apiUrl;
@@ -10,7 +10,7 @@ class Environment {
   static get esApiUrl =>
       isProd ? EnvironmentProd._esApiUrl : EnvironmentPreprod._esApiUrl;
 
-  static get esTPID => '5d730376-72ed-478c-8d5e-1a3a6aee9815';
+  static get esTPID => EnvironmentConfig.thirdPartyID;
 
   static get fooreSignUpUrl => "https://www.app.foore.in/signup/";
 
