@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
-import 'package:foore/utils/environment_config.dart';
+import 'environments/environment.dart';
 
 // Toggle this to cause an async error to be thrown during initialization
 // and to test that runZonedGuarded() catches the error
@@ -27,8 +27,8 @@ class CrashlyticsDelegate {
     } else {
       // Else only enable it in non-debug builds.
       // You could additionally extend this to allow users to opt-in.
-      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(
-          EnvironmentConfig.isProductionEnvironment);
+      await FirebaseCrashlytics.instance
+          .setCrashlyticsCollectionEnabled(Environment.isProd);
     }
 
     // Pass all uncaught errors to Crashlytics.

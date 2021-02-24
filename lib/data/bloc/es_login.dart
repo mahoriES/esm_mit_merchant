@@ -5,9 +5,12 @@ import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_auth.dart';
 import 'package:foore/data/model/es_profiles.dart';
-import 'package:foore/utils/environment_config.dart';
+import 'package:foore/environments/environment.dart';
+import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/esdy_print.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../../router.dart';
 import 'auth.dart';
 
 class EsLoginBloc {
@@ -42,11 +45,11 @@ class EsLoginBloc {
 
     _httpService
         .esGetWithoutAuth(EsApiPaths.getOTP +
-            '?phone=$phoneNumberInput&third_party_id=${EnvironmentConfig.thirdPartyID}')
+            '?phone=$phoneNumberInput&third_party_id=${Environment.esTPID}')
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 || httpResponse.statusCode == 202) {
         debugPrint("es_login.dart: " + "sendCode :" + httpResponse.body);
-        if (!EnvironmentConfig.isProductionEnvironment) {
+        if (!Environment.isProd) {
           //Staging show toast for OTP
           Fluttertoast.showToast(
               msg: "OTP: " + json.decode(httpResponse.body)['token'].toString(),
@@ -84,15 +87,14 @@ class EsLoginBloc {
         .esPostWithoutAuth(
             EsApiPaths.postSignUp,
             json.encode(EsSignUpPayload(
-                    phone: phoneNumberInput,
-                    thirdPartyId: EnvironmentConfig.thirdPartyID)
+                    phone: phoneNumberInput, thirdPartyId: Environment.esTPID)
                 .toJson()))
         .then((httpResponse) {
       if (httpResponse.statusCode == 200 ||
           httpResponse.statusCode == 202 ||
           httpResponse.statusCode == 201) {
         debugPrint("es_login.dart: " + "signUp :" + httpResponse.body);
-        if (!EnvironmentConfig.isProductionEnvironment) {
+        if (!Environment.isProd) {
           //Staging show toast for OTP
           Fluttertoast.showToast(
               msg: "OTP: " + json.decode(httpResponse.body)['token'].toString(),
@@ -131,7 +133,7 @@ class EsLoginBloc {
           json.encode(EsGetTokenPayload(
                   phone: '+91' + this.phoneEditController.text,
                   token: this.otpEditController.text,
-                  thirdPartyId: EnvironmentConfig.thirdPartyID)
+                  thirdPartyId: Environment.esTPID)
               .toJson()));
 
       if (authResponse.statusCode == 200 || authResponse.statusCode == 202) {

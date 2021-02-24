@@ -10,6 +10,8 @@ class Environment {
   static get esApiUrl =>
       isProd ? EnvironmentProd._esApiUrl : EnvironmentPreprod._esApiUrl;
 
+  static get esTPID => EnvironmentConfig.thirdPartyID;
+
   static get fooreSignUpUrl => "https://www.app.foore.in/signup/";
 
   static Future<String> get version async {

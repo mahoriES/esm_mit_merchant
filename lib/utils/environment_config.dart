@@ -8,7 +8,7 @@ class EnvironmentConfig {
   );
 
   static const String thirdPartyID = String.fromEnvironment(
-    'ThirdPartyID',
+    'thirdPartyID',
     defaultValue: "5d730376-72ed-478c-8d5e-1a3a6aee9815",
   );
 }
