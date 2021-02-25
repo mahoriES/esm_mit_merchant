@@ -20,6 +20,8 @@ class EsProductsBloc {
 
   BehaviorSubject<EsProductsState> _subjectEsProductsState;
 
+  TextEditingController searchController;
+
   onSearchTextChanged(TextEditingController controller) {
     this.searchText = controller.text != null ? controller.text : '';
     _esProductsState
@@ -28,12 +30,27 @@ class EsProductsBloc {
     this.getProducts(ProductFilters.compatibitilyView);
   }
 
+  clearSearch() {
+    this.searchController.clear();
+  }
+
   EsProductsBloc(this.httpService, this.esBusinessesBloc) {
     this._subjectEsProductsState =
         new BehaviorSubject<EsProductsState>.seeded(_esProductsState);
     this._subscription =
         this.esBusinessesBloc.esBusinessesStateObservable.listen((event) {
       this.resetDataState();
+    });
+    this.searchController = new TextEditingController();
+    this.searchController.addListener(() {
+      _esProductsState._productsLoadingStatusMap[ProductFilters.searchView] =
+          DataState.IDLE;
+      this._esProductsState._responseMap[ProductFilters.searchView] = null;
+      this._esProductsState._productsMap[ProductFilters.searchView] = [];
+      if (this.searchController.text.isNotEmpty) {
+        this.getProducts(ProductFilters.searchView);
+      }
+      _updateState();
     });
   }
 
@@ -77,6 +94,11 @@ class EsProductsBloc {
       case ProductSorting.ratingDecending:
         queryParameters.addAll({'sort_by': '-rating_val'});
         break;
+    }
+
+    if (filter == ProductFilters.searchView) {
+      queryParameters.clear();
+      queryParameters.addAll({'filter': this.searchController.text});
     }
 
     // Backwards compatibitily.
@@ -178,6 +200,7 @@ class EsProductsBloc {
   dispose() {
     this._subjectEsProductsState.close();
     this._subscription.cancel();
+    this.searchController.dispose();
   }
 
   expandProduct(ProductFilters filter, int productId, bool isExpanded) {

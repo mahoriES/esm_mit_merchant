@@ -8,6 +8,8 @@ import 'package:foore/data/model/es_business.dart';
 import 'package:foore/es_business_categories/es_business_categories_view.dart';
 import 'package:foore/es_business_profile/es_business_image_list.dart';
 import 'package:foore/es_business_profile/es_edit_text_generic.dart';
+import 'package:foore/home_page/app_drawer.dart';
+import 'package:foore/widgets/es_select_business.dart';
 import 'package:provider/provider.dart';
 import 'es_edit_business_address.dart';
 import 'widgets/share_link_widget.dart';
@@ -437,6 +439,13 @@ class _EsBusinessProfileState extends State<EsBusinessProfile>
     }
 
     return Scaffold(
+      drawer: AppDrawer(),
+      drawerEnableOpenDragGesture: false,
+      appBar: AppBar(
+        title: EsSelectBusiness(
+          null,
+        ),
+      ),
       body: SafeArea(
         child: Container(
           height: double.infinity,
