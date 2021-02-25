@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/data/bloc/es_address_bloc.dart';
 import 'package:foore/data/bloc/es_business_profile.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
+import 'package:foore/es_business_categories/es_business_categories_view.dart';
 import 'package:foore/es_business_profile/es_business_image_list.dart';
 import 'package:foore/es_business_profile/es_edit_text_generic.dart';
+import 'package:foore/home_page/app_drawer.dart';
+import 'package:foore/widgets/es_select_business.dart';
 import 'package:provider/provider.dart';
 import 'es_edit_business_address.dart';
 import 'widgets/share_link_widget.dart';
@@ -19,13 +23,9 @@ class EsBusinessProfile extends StatefulWidget {
   _EsBusinessProfileState createState() => _EsBusinessProfileState();
 }
 
-class _EsBusinessProfileState extends State<EsBusinessProfile> {
+class _EsBusinessProfileState extends State<EsBusinessProfile>
+    with ChipsWidgetMixin {
   EsBusinessProfileBloc esBusinessProfileBloc;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
 
   @override
   void dispose() {
@@ -37,8 +37,9 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
     await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => EsEditBaseTextPage(
             this.esBusinessProfileBloc,
-             AppTranslations.of(context).text("profile_page_update_business_name"),
-             AppTranslations.of(context).text("profile_page_business_name"),
+            AppTranslations.of(context)
+                .text("profile_page_update_business_name"),
+            AppTranslations.of(context).text("profile_page_business_name"),
             this.esBusinessProfileBloc.nameEditController,
             this.esBusinessProfileBloc.updateName,
             64)));
@@ -48,8 +49,10 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
     await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => new EsEditBaseTextPage(
             this.esBusinessProfileBloc,
-            AppTranslations.of(context).text("profile_page_add_notification_phone"),
-            AppTranslations.of(context).text("profile_page_10_digit_Mobile_number"),
+            AppTranslations.of(context)
+                .text("profile_page_add_notification_phone"),
+            AppTranslations.of(context)
+                .text("profile_page_10_digit_Mobile_number"),
             this.esBusinessProfileBloc.notificationPhoneEditingControllers,
             this.esBusinessProfileBloc.addNotificationPhone,
             10)));
@@ -59,7 +62,8 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
     await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => new EsEditBaseTextPage(
             this.esBusinessProfileBloc,
-            AppTranslations.of(context).text("profile_page_add_notification_email"),
+            AppTranslations.of(context)
+                .text("profile_page_add_notification_email"),
             AppTranslations.of(context).text("profile_page_email_id"),
             this.esBusinessProfileBloc.notificationEmailEditingControllers,
             this.esBusinessProfileBloc.addNotificationEmail,
@@ -83,7 +87,8 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
         builder: (context) => EsEditBaseTextPage(
             this.esBusinessProfileBloc,
             AppTranslations.of(context).text("profile_page_add_mobile_number"),
-            AppTranslations.of(context).text("profile_page_10_digit_Mobile_number"),
+            AppTranslations.of(context)
+                .text("profile_page_10_digit_Mobile_number"),
             this.esBusinessProfileBloc.phoneNumberEditingControllers,
             this.esBusinessProfileBloc.addPhone,
             10),
@@ -92,12 +97,13 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
   }
 
   addAddress() async {
-    await Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
-            EsEditBusinessAddressPage(this.esBusinessProfileBloc)))
-            .then(
-              (value) => Provider.of<EsAddressBloc>(context).reset(),
-            );
+    await Navigator.of(context)
+        .push(MaterialPageRoute(
+            builder: (context) =>
+                EsEditBusinessAddressPage(this.esBusinessProfileBloc)))
+        .then(
+          (value) => Provider.of<EsAddressBloc>(context).reset(),
+        );
   }
 
   addDescription() async {
@@ -105,8 +111,10 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
       MaterialPageRoute(
         builder: (context) => EsEditBaseTextPage(
             this.esBusinessProfileBloc,
-            AppTranslations.of(context).text("profile_page_update_business_description"),
-            AppTranslations.of(context).text("profile_page_business_description"),
+            AppTranslations.of(context)
+                .text("profile_page_update_business_description"),
+            AppTranslations.of(context)
+                .text("profile_page_business_description"),
             this.esBusinessProfileBloc.descriptionEditController,
             this.esBusinessProfileBloc.updateDescription,
             512),
@@ -114,13 +122,35 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
     );
   }
 
+  addOrEditBusinessCategories() async {
+    debugPrint('Over here to add/edit categories');
+    final categories = await Navigator.of(context).pushNamed(
+        BusinessCategoriesPickerView.routeName,
+        arguments: List<EsBusinessCategory>.from(
+            this.esBusinessProfileBloc.selectedBusinessCategories));
+    if (categories == null) return;
+    this.esBusinessProfileBloc.updateBusinessCategories(
+        (categories as List<EsBusinessCategory>).map((e) => e.bcat).toList(),
+        () {
+      Fluttertoast.showToast(
+        msg: AppTranslations.of(context).text("categories_updated_success"),
+      );
+    }, () {
+      Fluttertoast.showToast(
+        msg: AppTranslations.of(context).text("categories_updation_failed"),
+      );
+    });
+  }
+
   addNotice() async {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EsEditBaseTextPage(
             this.esBusinessProfileBloc,
-            AppTranslations.of(context).text("profile_page_update_business_notice"),
-            AppTranslations.of(context).text('profile_page_update_business_notice_label'),
+            AppTranslations.of(context)
+                .text("profile_page_update_business_notice"),
+            AppTranslations.of(context)
+                .text('profile_page_update_business_notice_label'),
             this.esBusinessProfileBloc.noticeEditController,
             this.esBusinessProfileBloc.updateNotice,
             127),
@@ -144,69 +174,22 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
     );
   }
 
-  List<Widget> getTextChips(List<String> inputTextList, Function onDelete) {
-    List<Widget> widgets = List<Widget>();
-    for (String inputText in inputTextList) {
-      widgets.add(
-        Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: Chip(
-            label: Text(
-              inputText,
-              overflow: TextOverflow.ellipsis,
-            ),
-            onDeleted: () {
-              onDelete(inputText);
-            },
-          ),
-        ),
-      );
-    }
-    return widgets;
-  }
-
-  Widget getChipTextListWidget(
-      String label, List<String> textList, Function onDelete, Function onAdd) {
-    return Container(
-      child: textList.length == 0
-          ? Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                FlatButton(
-                  onPressed: onAdd,
-                  child: Text(
-                    label,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            )
-          : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Wrap(
-                      children: getTextChips(textList, onDelete),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: onAdd,
-                    icon: Icon(
-                      Icons.add,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  )
-                ],
-              ),
-            ),
-    );
-  }
-
   Widget getPhoneWidget(EsBusinessInfo businessInfo) {
-    return getChipTextListWidget("+ "+AppTranslations.of(context).text("profile_page_add_phone"), businessInfo.dPhones,
-        this.esBusinessProfileBloc.deletePhoneWithNumber, addPhone);
+    return getChipTextListWidget(
+        "+ " + AppTranslations.of(context).text("profile_page_add_phone"),
+        businessInfo.dPhones,
+        this.esBusinessProfileBloc.deletePhoneWithNumber,
+        addPhone,
+        Icons.add);
+  }
+
+  Widget getBusinessCategoriesWidget(EsBusinessInfo businessInfo) {
+    return getChipTextListWidget(
+        "+ " + AppTranslations.of(context).text("profile_page_add_bcats"),
+        businessInfo.businessCategoriesNamesList,
+        null,
+        addOrEditBusinessCategories,
+        Icons.edit);
   }
 
   Widget getHeaderWithSwitchWidget(
@@ -246,7 +229,9 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                 FlatButton(
                   onPressed: editUpiAddress,
                   child: Text(
-                    "+ " + AppTranslations.of(context).text("profile_page_add_upi_id"),
+                    "+ " +
+                        AppTranslations.of(context)
+                            .text("profile_page_add_upi_id"),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -286,7 +271,8 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                 FlatButton(
                   onPressed: editName,
                   child: Text(
-                    AppTranslations.of(context).text('profile_page_button_add_business_name'),
+                    AppTranslations.of(context)
+                        .text('profile_page_button_add_business_name'),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -326,7 +312,9 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                 FlatButton(
                   onPressed: addAddress,
                   child: Text(
-                    "+ " +  AppTranslations.of(context).text("profile_page_add_address") ,
+                    "+ " +
+                        AppTranslations.of(context)
+                            .text("profile_page_add_address"),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -366,7 +354,9 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                 FlatButton(
                   onPressed: addDescription,
                   child: Text(
-                    "+ " +  AppTranslations.of(context).text("profile_page_add_description"),
+                    "+ " +
+                        AppTranslations.of(context)
+                            .text("profile_page_add_description"),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -406,7 +396,9 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                 FlatButton(
                   onPressed: addNotice,
                   child: Text(
-                    "+ " +  AppTranslations.of(context).text("profile_page_add_notice"),
+                    "+ " +
+                        AppTranslations.of(context)
+                            .text("profile_page_add_notice"),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -447,6 +439,13 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
     }
 
     return Scaffold(
+      drawer: AppDrawer(),
+      drawerEnableOpenDragGesture: false,
+      appBar: AppBar(
+        title: EsSelectBusiness(
+          null,
+        ),
+      ),
       body: SafeArea(
         child: Container(
           height: double.infinity,
@@ -475,7 +474,8 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                                   padding: const EdgeInsets.only(
                                       right: 0, top: 13, bottom: 13),
                                   child: Text(
-                                     AppTranslations.of(context).text("profile_page_delivery"),
+                                    AppTranslations.of(context)
+                                        .text("profile_page_delivery"),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -497,7 +497,8 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                                   padding: const EdgeInsets.only(
                                       right: 0, top: 13, bottom: 13),
                                   child: Text(
-                                    AppTranslations.of(context).text("profile_page_store_open"),
+                                    AppTranslations.of(context)
+                                        .text("profile_page_store_open"),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -513,18 +514,26 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                       ),
                     ),
                     Divider(thickness: 2),
-                    getBaseHeaderWidget( AppTranslations.of(context).text("profile_page_logo")),
+                    getBaseHeaderWidget(
+                        AppTranslations.of(context).text("profile_page_logo")),
                     SizedBox(height: 20),
                     EsBusinessProfileImageList(esBusinessProfileBloc,
                         allowMany: false),
                     SizedBox(height: 8),
-                    getBaseHeaderWidget( AppTranslations.of(context).text("profile_page_name")),
+                    getBaseHeaderWidget(
+                        AppTranslations.of(context).text("profile_page_name")),
                     getBusinessNameWidget(businessInfo),
-                    getBaseHeaderWidget(AppTranslations.of(context).text("profile_page_description")),
+                    getBaseHeaderWidget(AppTranslations.of(context)
+                        .text("profile_page_description")),
                     getDescriptionWidget(businessInfo),
-                    getBaseHeaderWidget(AppTranslations.of(context).text("profile_page_address")),
+                    getBaseHeaderWidget(
+                        AppTranslations.of(context).text("profile_page_bcats")),
+                    getBusinessCategoriesWidget(businessInfo),
+                    getBaseHeaderWidget(AppTranslations.of(context)
+                        .text("profile_page_address")),
                     getAddressWidget(businessInfo),
-                    getBaseHeaderWidget(AppTranslations.of(context).text("profile_page_notice")),
+                    getBaseHeaderWidget(AppTranslations.of(context)
+                        .text("profile_page_notice")),
                     getNoticeWidget(businessInfo),
                     EsShareLink(esBusinessProfileBloc),
                     // getHeaderWithSwitchWidget(
@@ -532,40 +541,32 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
                     //     businessInfo.dBusinessPaymentStatus,
                     //     this.esBusinessProfileBloc.updateUpiStatus),
                     // getUpiWidget(businessInfo),
-                    getBaseHeaderWidget( AppTranslations.of(context).text("profile_page_support_phone")),
+                    getBaseHeaderWidget(AppTranslations.of(context)
+                        .text("profile_page_support_phone")),
                     getChipTextListWidget(
-                        "+ " + AppTranslations.of(context).text("profile_page_add_phone"),
+                        "+ " +
+                            AppTranslations.of(context)
+                                .text("profile_page_add_phone"),
                         businessInfo.dPhones,
                         this.esBusinessProfileBloc.deletePhoneWithNumber,
-                        addPhone),
+                        addPhone,
+                        Icons.add),
                     Divider(thickness: 2),
-
                     getHeaderWithSwitchWidget(
-                        AppTranslations.of(context).text("profile_page_email_notifications"),
+                        AppTranslations.of(context)
+                            .text("profile_page_email_notifications"),
                         businessInfo.notificationEmailStatus,
                         this
                             .esBusinessProfileBloc
                             .updateNotificationEmailStatus),
                     getChipTextListWidget(
-                        "+ " + AppTranslations.of(context).text("profile_page_add_email"),
+                        "+ " +
+                            AppTranslations.of(context)
+                                .text("profile_page_add_email"),
                         businessInfo.notificationEmails,
                         this.esBusinessProfileBloc.deleteNotificationEmail,
-                        addNotificationEmail),
-                    // getHeaderWithSwitchWidget(
-                    //     AppTranslations.of(context).text("profile_page_sms_notifications"),
-                    //     businessInfo.notificationPhoneStatus,
-                    //     this
-                    //         .esBusinessProfileBloc
-                    //         .updateNotificationPhoneStatus),
-                    // getChipTextListWidget(
-                    //     "+ " +
-                    //     AppTranslations.of(context).text("profile_page_add_phone"),
-                    //     businessInfo.notificationPhones,
-                    //     this
-                    //         .esBusinessProfileBloc
-                    //         .deleteNotificationPhoneWithNumber,
-                    //     addNotificationPhone),
-                    //SizedBox(height: 120),
+                        addNotificationEmail,
+                        Icons.add),
                   ],
                 );
               },
@@ -574,5 +575,69 @@ class _EsBusinessProfileState extends State<EsBusinessProfile> {
         ),
       ),
     );
+  }
+}
+
+mixin ChipsWidgetMixin<T extends StatefulWidget> on State<T> {
+  Widget getChipTextListWidget(String label, List<String> textList,
+      Function onDelete, Function onAdd, IconData icon) {
+    return Container(
+      child: textList.length == 0
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: onAdd,
+                  child: Text(
+                    label,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            )
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Wrap(
+                      children: getTextChips(textList, onDelete),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: onAdd,
+                    icon: Icon(
+                      icon,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  )
+                ],
+              ),
+            ),
+    );
+  }
+
+  List<Widget> getTextChips(List<String> inputTextList, Function onDelete) {
+    List<Widget> widgets = List<Widget>();
+    for (String inputText in inputTextList) {
+      widgets.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: Chip(
+            label: Text(
+              inputText,
+              overflow: TextOverflow.ellipsis,
+            ),
+            onDeleted: onDelete == null
+                ? null
+                : () {
+                    onDelete(inputText);
+                  },
+          ),
+        ),
+      );
+    }
+    return widgets;
   }
 }

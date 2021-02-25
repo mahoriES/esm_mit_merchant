@@ -1,15 +1,18 @@
+import 'package:esamudaay_themes/esamudaay_themes.dart';
 import 'package:flutter/material.dart';
 
 class FoSubmitButton extends StatelessWidget {
   final String text;
   final bool isLoading;
   final bool isSuccess;
+  final bool isEnabled;
   final Function onPressed;
   final Color color;
   const FoSubmitButton({
     this.text,
     this.isLoading,
     this.isSuccess,
+    this.isEnabled = true,
     this.onPressed,
     this.color,
   });
@@ -75,8 +78,10 @@ class FoSubmitButton extends StatelessWidget {
         vertical: 15,
         horizontal: 45,
       ),
-      onPressed: onPressed,
-      color: color ?? Theme.of(context).primaryColor,
+      onPressed: isEnabled ? onPressed : null,
+      color: isEnabled
+          ? (color ?? Theme.of(context).primaryColor)
+          : EsamudaayTheme.of(context).colors.disabledAreaColor,
       child: Container(
         child: Text(text),
       ),

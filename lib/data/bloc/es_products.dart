@@ -1,91 +1,187 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_product.dart';
+import 'package:foore/data/model/es_product_catalogue.dart';
+import 'package:foore/utils/utils.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EsProductsBloc {
-  final EsProductsState _esProductsState = new EsProductsState();
+  EsProductsState _esProductsState = new EsProductsState();
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
+
+  StreamSubscription<EsBusinessesState> _subscription;
 
   String searchText = '';
 
   BehaviorSubject<EsProductsState> _subjectEsProductsState;
 
+  TextEditingController searchController;
+
   onSearchTextChanged(TextEditingController controller) {
     this.searchText = controller.text != null ? controller.text : '';
-    this.getProductsFromSearch();
+    _esProductsState
+            ._productsLoadingStatusMap[ProductFilters.compatibitilyView] =
+        DataState.IDLE;
+    this.getProducts(ProductFilters.compatibitilyView);
+  }
+
+  clearSearch() {
+    this.searchController.clear();
   }
 
   EsProductsBloc(this.httpService, this.esBusinessesBloc) {
     this._subjectEsProductsState =
         new BehaviorSubject<EsProductsState>.seeded(_esProductsState);
+    this._subscription =
+        this.esBusinessesBloc.esBusinessesStateObservable.listen((event) {
+      this.resetDataState();
+    });
+    this.searchController = new TextEditingController();
+    this.searchController.addListener(() {
+      _esProductsState._productsLoadingStatusMap[ProductFilters.searchView] =
+          DataState.IDLE;
+      this._esProductsState._responseMap[ProductFilters.searchView] = null;
+      this._esProductsState._productsMap[ProductFilters.searchView] = [];
+      if (this.searchController.text.isNotEmpty) {
+        this.getProducts(ProductFilters.searchView);
+      }
+      _updateState();
+    });
   }
 
   Observable<EsProductsState> get esProductStateObservable =>
       _subjectEsProductsState.stream;
 
   getProductsFromSearch() {
-    this._esProductsState.isLoading = true;
-    this._esProductsState.response = null;
+    _esProductsState
+            ._productsLoadingStatusMap[ProductFilters.compatibitilyView] =
+        DataState.IDLE;
+    getProducts(ProductFilters.compatibitilyView);
+  }
+
+  reloadProducts(ProductFilters filter) {
+    resetDataState();
+    getProducts(filter);
+  }
+
+  getProducts(ProductFilters filter) {
+    if (this._esProductsState.getProductsLoadingStatus(filter) ==
+        DataState.SUCCESS) {
+      return;
+    }
+    this._esProductsState._productsLoadingStatusMap[filter] = DataState.LOADING;
     this._updateState();
+    final Map<String, String> queryParameters = Map();
+    if (filter == ProductFilters.outOfStock) {
+      queryParameters.addAll({'in_stock': 'false'});
+    } else if (filter == ProductFilters.spotlights) {
+      queryParameters.addAll({'spotlight': 'true'});
+    }
+    switch (this._esProductsState.selectedSorting) {
+      case ProductSorting.recentlyUpdatedAcending:
+        queryParameters.addAll({
+          'sort_by': '-modified',
+        });
+        break;
+      case ProductSorting.alphabaticallyAcending:
+        queryParameters.addAll({'sort_by': 'product_name'});
+        break;
+      case ProductSorting.ratingDecending:
+        queryParameters.addAll({'sort_by': '-rating_val'});
+        break;
+    }
+
+    if (filter == ProductFilters.searchView) {
+      queryParameters.clear();
+      queryParameters.addAll({'filter': this.searchController.text});
+    }
+
+    // Backwards compatibitily.
+    if (filter == ProductFilters.compatibitilyView) {
+      queryParameters.clear();
+      queryParameters.addAll({'filter': this.searchText});
+    }
+
+    final query = Utils.makeQuery(queryParameters);
+    // TODO: update httpSerive to take query as parameter.
     httpService
         .esGet(EsApiPaths.getProducts(
                 this.esBusinessesBloc.getSelectedBusinessId()) +
-            '?filter=${this.searchText}')
+            query)
         .then((httpResponse) {
       if (httpResponse.statusCode == 200) {
-        this._esProductsState.isLoadingFailed = false;
-        this._esProductsState.isLoading = false;
-        this._esProductsState.response =
+        this._esProductsState._productsLoadingStatusMap[filter] =
+            DataState.SUCCESS;
+        this._esProductsState._responseMap[filter] =
             EsGetProductsResponse.fromJson(json.decode(httpResponse.body));
-        this._esProductsState.items = this._esProductsState.response.results;
+        this._esProductsState._productsMap[filter] =
+            this._esProductsState.getResponse(filter).results.map(
+          (element) {
+            return EsBusinessCatalogueProduct(
+              product: element,
+              isExpanded: false,
+            );
+          },
+        ).toList();
       } else {
-        this._esProductsState.isLoadingFailed = true;
-        this._esProductsState.isLoading = false;
+        this._esProductsState._productsLoadingStatusMap[filter] =
+            DataState.FAILED;
       }
       this._updateState();
     }).catchError((onError) {
-      this._esProductsState.isLoadingFailed = true;
-      this._esProductsState.isLoading = false;
+      this._esProductsState._productsLoadingStatusMap[filter] =
+          DataState.FAILED;
       this._updateState();
     });
   }
 
-  loadMore() {
-    if (this._esProductsState.response == null ||
-        this._esProductsState.isLoadingMore) {
+  loadMore({filter = ProductFilters.compatibitilyView}) {
+    if (this._esProductsState.getResponse(filter) == null ||
+        this._esProductsState.getProductsLoadingMoreStatus(filter) ==
+            DataState.LOADING) {
       return;
     }
-    if (this._esProductsState.response.next == null) {
+    if (this._esProductsState.getResponse(filter).next == null) {
       return;
     }
-    this._esProductsState.isLoadingMore = true;
-    this._esProductsState.isLoadingMoreFailed = false;
+    this._esProductsState._productsLoadingMoreStatusMap[filter] =
+        DataState.LOADING;
     this._updateState();
     httpService
-        .esGetUrl(this._esProductsState.response.next)
+        .esGetUrl(this._esProductsState.getResponse(filter).next)
         .then((httpResponse) {
       if (httpResponse.statusCode == 200) {
-        this._esProductsState.response =
+        this._esProductsState._responseMap[filter] =
             EsGetProductsResponse.fromJson(json.decode(httpResponse.body));
-        this
+        this._esProductsState._productsMap[filter] = this
             ._esProductsState
-            .items
-            .addAll(this._esProductsState.response.results);
-        this._esProductsState.isLoadingMoreFailed = false;
-        this._esProductsState.isLoadingMore = false;
+            .getResponse(filter)
+            .results
+            .fold<List<EsBusinessCatalogueProduct>>(
+          this._esProductsState._productsMap[filter],
+          (previousValue, element) {
+            previousValue.add(EsBusinessCatalogueProduct(
+              product: element,
+              isExpanded: false,
+            ));
+            return previousValue;
+          },
+        );
+        this._esProductsState._productsLoadingMoreStatusMap[filter] =
+            DataState.SUCCESS;
       } else {
-        this._esProductsState.isLoadingMoreFailed = true;
-        this._esProductsState.isLoadingMore = false;
+        this._esProductsState._productsLoadingMoreStatusMap[filter] =
+            DataState.FAILED;
       }
       this._updateState();
     }).catchError((err) {
-      this._esProductsState.isLoadingMoreFailed = true;
-      this._esProductsState.isLoadingMore = false;
+      this._esProductsState._productsLoadingMoreStatusMap[filter] =
+          DataState.FAILED;
       this._updateState();
     });
   }
@@ -96,22 +192,88 @@ class EsProductsBloc {
     }
   }
 
+  resetDataState() {
+    _esProductsState = new EsProductsState();
+    this._updateState();
+  }
+
   dispose() {
     this._subjectEsProductsState.close();
+    this._subscription.cancel();
+    this.searchController.dispose();
+  }
+
+  expandProduct(ProductFilters filter, int productId, bool isExpanded) {
+    _esProductsState._productsMap[filter] =
+        _esProductsState.getProducts(filter).map((e) {
+      if (e.product.productId == productId) {
+        e.isExpanded = isExpanded;
+      }
+      return e;
+    }).toList();
+    _updateState();
+  }
+
+  setSorting(ProductFilters filter, ProductSorting sorting) {
+    _esProductsState.selectedSorting = sorting;
+    _esProductsState._productsLoadingStatusMap[filter] = DataState.IDLE;
+    getProducts(filter);
   }
 }
 
 class EsProductsState {
-  bool isLoading = false;
-  EsGetProductsResponse response;
-  List<EsProduct> items = new List<EsProduct>();
-  bool isLoadingFailed = false;
-  bool isLoadingMore;
-  bool isLoadingMoreFailed;
-  EsProductsState() {
-    this.isLoading = false;
-    this.isLoadingFailed = false;
-    this.isLoadingMore = false;
-    this.isLoadingMoreFailed = false;
+  Map<ProductFilters, DataState> _productsLoadingStatusMap;
+  Map<ProductFilters, DataState> _productsLoadingMoreStatusMap;
+  Map<ProductFilters, EsGetProductsResponse> _responseMap;
+  Map<ProductFilters, List<EsBusinessCatalogueProduct>> _productsMap;
+
+  List<EsBusinessCatalogueProduct> getProducts(ProductFilters filter) =>
+      _productsMap[filter] ?? [];
+
+  EsGetProductsResponse getResponse(ProductFilters filter) =>
+      _responseMap[filter];
+
+  DataState getProductsLoadingStatus(ProductFilters filter) =>
+      _productsLoadingStatusMap[filter] ?? DataState.IDLE;
+
+  DataState getProductsLoadingMoreStatus(ProductFilters filter) =>
+      _productsLoadingMoreStatusMap[filter] ?? DataState.IDLE;
+
+  ProductSorting selectedSorting;
+
+  // Backwards compatibility
+  List<EsProduct> get items => getProducts(ProductFilters.compatibitilyView)
+      .map((e) => e.product)
+      .toList();
+  bool get isLoading =>
+      getProductsLoadingStatus(ProductFilters.compatibitilyView) ==
+          DataState.LOADING ||
+      getProductsLoadingStatus(ProductFilters.compatibitilyView) ==
+          DataState.IDLE;
+  bool get isLoadingFailed =>
+      getProductsLoadingStatus(ProductFilters.compatibitilyView) ==
+      DataState.FAILED;
+  bool get isLoadingMore =>
+      getProductsLoadingMoreStatus(ProductFilters.compatibitilyView) ==
+      DataState.LOADING;
+
+  getNumberOfProducts(ProductFilters filter) {
+    if (getResponse(filter) == null) {
+      return '';
+    }
+    return ' (${getResponse(filter).count})';
+  }
+
+  EsProductsState({
+    this.selectedSorting = ProductSorting.recentlyUpdatedAcending,
+    Map<ProductFilters, DataState> productsLoadingStatusMap,
+    Map<ProductFilters, DataState> productsLoadingMoreStatusMap,
+    Map<ProductFilters, EsGetProductsResponse> responseMap,
+    Map<ProductFilters, List<EsBusinessCatalogueProduct>> productsMap,
+  }) {
+    this._productsLoadingStatusMap = productsLoadingStatusMap ?? Map();
+    this._productsLoadingMoreStatusMap = productsLoadingMoreStatusMap ?? Map();
+    this._productsMap = productsMap ?? Map();
+    this._responseMap = responseMap ?? Map();
   }
 }

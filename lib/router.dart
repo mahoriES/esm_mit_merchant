@@ -1,16 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
+import 'package:foore/data/bloc/es_business_categories.dart';
+import 'package:foore/data/bloc/es_business_catalogue.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
 import 'package:foore/data/bloc/es_create_merchant_profile.dart';
 import 'package:foore/data/bloc/es_orders.dart';
+import 'package:foore/data/bloc/es_products.dart';
+import 'package:foore/data/bloc/es_select_circle.dart';
 import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/data/model/es_product.dart';
+import 'package:foore/es_address_picker_view/add_new_address_view.dart/add_new_address_view.dart';
 import 'package:foore/es_address_picker_view/search_view/search_view.dart';
+import 'package:foore/es_business_categories/es_business_categories_view.dart';
 import 'package:foore/es_business_guard/es_businesses_guard.dart';
 import 'package:foore/es_category_page/es_add_subcategory.dart';
 import 'package:foore/es_category_page/es_subcategory_page.dart';
+import 'package:foore/es_circles/es_circle_picker_view.dart';
+import 'package:foore/es_circles/es_circle_search.dart';
 import 'package:foore/es_home_page/es_home_page.dart';
 import 'package:foore/es_login_page/es_login_page.dart';
 import 'package:foore/es_order_page/es_order_details.dart';
@@ -24,13 +32,17 @@ import 'package:foore/setting_page/settting_page.dart';
 import 'package:foore/shopping_page/shopping_page.dart';
 import 'package:provider/provider.dart';
 import 'auth_guard/auth_guard.dart';
+import 'data/bloc/app_update_bloc.dart';
 import 'data/bloc/es_edit_product.dart';
 import 'data/bloc/onboarding.dart';
 import 'data/bloc/people.dart';
 import 'data/http_service.dart';
+import 'data/model/es_product_catalogue.dart';
 import 'data/model/feedback.dart';
 import 'data/model/unirson.dart';
 import 'es_auth_guard/es_auth_guard.dart';
+import 'es_business_catalogue_page/es_business_catalogue_page.dart';
+import 'es_business_catalogue_page/es_business_catalogue_search_view.dart';
 import 'es_category_page/es_add_category.dart';
 import 'es_category_page/es_category_page.dart';
 import 'es_create_business/es_create_business.dart';
@@ -41,7 +53,6 @@ import 'home_page/home_page.dart';
 import 'intro_page/intro_page.dart';
 import 'login_page/login_page.dart';
 import 'menu_page/add_menu_item_page.dart';
-import 'menu_page/menu_page.dart';
 import 'onboarding_guard/onboarding_guard.dart';
 import 'onboarding_page/location_search_page.dart';
 import 'onboarding_page/location_verify.dart';
@@ -51,7 +62,7 @@ import 'unirson_check_in_page/unirson_check_in_page.dart';
 
 class AppRouter {
   static const homeRoute = '/';
-  static const testRoute = MenuPage.routeName;
+  static const testRoute = EsHomePage.routeName;
   final unauthenticatedHandler = (BuildContext context) => Navigator.of(context)
       .pushNamedAndRemoveUntil(
           IntroPage.routeName, (Route<dynamic> route) => false);
@@ -67,7 +78,8 @@ class AppRouter {
           OnboardingPage.routeName, (Route<dynamic> route) => false);
 
   final esCreateBusinessRequiredHandler = (BuildContext context) =>
-      Navigator.of(context).pushNamed(EsCreateBusinessPage.routeName);
+      Navigator.of(context)
+          .pushNamed(EsCreateBusinessPage.routeName, arguments: false);
 
   final HttpService httpServiceBloc;
   final AuthBloc authBloc;
@@ -82,6 +94,16 @@ class AppRouter {
     print(settings.name);
     this.authBloc.foAnalytics.setCurrentScreen(settings.name);
     switch (settings.name) {
+      case BusinessCategoriesPickerView.routeName:
+        return MaterialPageRoute(
+            builder: (context) => Provider<EsBusinessCategoriesBloc>(
+                  create: (context) =>
+                      EsBusinessCategoriesBloc(httpServiceBloc),
+                  dispose: (context, bloc) => bloc.dispose(),
+                  child: BusinessCategoriesPickerView(),
+                ),
+            settings: settings);
+        break;
       case HomePage.routeName:
         return MaterialPageRoute(
           builder: (context) => AuthGuard(
@@ -183,45 +205,62 @@ class AppRouter {
         break;
       case homeRoute:
         return MaterialPageRoute(
-          builder: (context) => EsAuthGuard(
-            unauthenticatedPage: ShoppingPage(),
-            noMerchantProfilePage: Provider(
-              builder: (context) =>
-                  EsCreateMerchantProfileBloc(httpServiceBloc, authBloc),
-              dispose: (context, value) => value.dispose(),
-              child: EsCreateMerchantProfilePage(),
-            ),
-            child: EsBusinessesGuard(
-              createBusinessRequiredHandler: esCreateBusinessRequiredHandler,
-              child: MultiProvider(
-                providers: [
-                  Provider<PeopleBloc>(
-                    builder: (context) => PeopleBloc(httpServiceBloc),
-                    dispose: (context, value) => value.dispose(),
-                  ),
-                  Provider<EsVideoBloc>(
-                    builder: (context) =>
-                        EsVideoBloc(httpServiceBloc, esBusinessesBloc),
-                    dispose: (context, value) => value.dispose(),
-                  ),
-                  Provider<EsOrdersBloc>(
-                    create: (context) =>
-                        EsOrdersBloc(httpServiceBloc, esBusinessesBloc),
-                    dispose: (context, value) => value.dispose(),
-                  ),
-                ],
-                child: EsHomePage(httpServiceBloc),
+          builder: (context) => Provider(
+            create: (context) => EsAppUpdateBloc(),
+            dispose: (context, value) => value.dispose(),
+            child: EsAuthGuard(
+              unauthenticatedPage: ShoppingPage(),
+              noMerchantProfilePage: Provider(
+                builder: (context) =>
+                    EsCreateMerchantProfileBloc(httpServiceBloc, authBloc),
+                dispose: (context, value) => value.dispose(),
+                child: EsCreateMerchantProfilePage(),
+              ),
+              child: EsBusinessesGuard(
+                createBusinessRequiredHandler: esCreateBusinessRequiredHandler,
+                child: MultiProvider(
+                  providers: [
+                    Provider<PeopleBloc>(
+                      builder: (context) => PeopleBloc(httpServiceBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
+                    Provider<EsVideoBloc>(
+                      builder: (context) =>
+                          EsVideoBloc(httpServiceBloc, esBusinessesBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
+                    Provider<EsOrdersBloc>(
+                      create: (context) =>
+                          EsOrdersBloc(httpServiceBloc, esBusinessesBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
+                    Provider<EsProductsBloc>(
+                      create: (context) =>
+                          EsProductsBloc(httpServiceBloc, esBusinessesBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
+                    Provider<EsBusinessCatalogueBloc>(
+                      create: (context) => EsBusinessCatalogueBloc(
+                          httpServiceBloc, esBusinessesBloc),
+                      dispose: (context, value) => value.dispose(),
+                    ),
+                  ],
+                  child: EsHomePage(httpServiceBloc),
+                ),
               ),
             ),
           ),
         );
         break;
       case EsCreateBusinessPage.routeName:
+        final bool allowBackButton = settings.arguments ?? true;
         return MaterialPageRoute(
           builder: (context) => Provider<EsCreateBusinessBloc>(
             builder: (context) => EsCreateBusinessBloc(httpServiceBloc),
             dispose: (context, value) => value.dispose(),
-            child: EsCreateBusinessPage(),
+            child: EsCreateBusinessPage(
+              allowBackButton: allowBackButton,
+            ),
           ),
         );
         break;
@@ -229,12 +268,13 @@ class AppRouter {
         return EsCreateMerchantProfilePage.generateRoute(
             settings, httpServiceBloc, authBloc);
         break;
-      case MenuPage.routeName:
+      case EsBusinessCataloguePage.routeName:
         return MaterialPageRoute(
-          builder: (context) => Provider<OnboardingBloc>(
-            builder: (context) => OnboardingBloc(httpServiceBloc),
+          builder: (context) => Provider<EsBusinessCatalogueBloc>(
+            create: (context) =>
+                EsBusinessCatalogueBloc(httpServiceBloc, esBusinessesBloc),
             dispose: (context, value) => value.dispose(),
-            child: MenuPage(),
+            child: EsBusinessCataloguePage(),
           ),
         );
         break;
@@ -327,6 +367,33 @@ class AppRouter {
       case SearchAddressView.routeName:
         return MaterialPageRoute(
           builder: (context) => SearchAddressView(),
+        );
+        break;
+      case AddNewAddressView.routeName:
+        return MaterialPageRoute(
+          builder: (context) => AddNewAddressView(),
+        );
+        break;
+      case CirclePickerView.routeName:
+        return MaterialPageRoute(
+            builder: (context) => Provider<EsSelectCircleBloc>(
+                  create: (context) => EsSelectCircleBloc(httpServiceBloc),
+                  dispose: (context, bloc) => bloc.dispose(),
+                  child: CirclePickerView(),
+                ));
+        break;
+      case CircleSearchView.routeName:
+        return MaterialPageRoute(
+            builder: (context) => CircleSearchView(), settings: settings);
+        break;
+      case EsBusinessCatalogueSearchView.routeName:
+        return MaterialPageRoute(
+          builder: (context) => Provider<EsProductsBloc>(
+            create: (context) =>
+                EsProductsBloc(httpServiceBloc, esBusinessesBloc),
+            dispose: (context, bloc) => bloc.dispose(),
+            child: EsBusinessCatalogueSearchView(),
+          ),
         );
         break;
       default:

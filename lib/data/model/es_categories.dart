@@ -110,7 +110,7 @@ class EsCategory {
     categoryDescription = json['category_description'];
     parentCategoryId = json['parent_category_id'];
     isActive = json['is_active'];
-    images = json['images'].cast<String>();
+    if (json['images'] != null) images = json['images'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {

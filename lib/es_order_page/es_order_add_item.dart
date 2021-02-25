@@ -33,6 +33,12 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
   }
 
   @override
+  void dispose() {
+    this.esProductsBloc.resetDataState();
+    super.dispose();
+  }
+
+  @override
   void didChangeDependencies() {
     final httpService = Provider.of<HttpService>(context);
     final businessBloc = Provider.of<EsBusinessesBloc>(context);

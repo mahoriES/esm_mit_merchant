@@ -77,8 +77,8 @@ class EsCreateMerchantProfilePageState
         Provider.of<EsCreateMerchantProfileBloc>(context);
 
     onCreateMerchantProfileSuccess(EsProfile profile) {
-      var authBloc = Provider.of<AuthBloc>(context);
-      authBloc.authState.esMerchantProfile = profile;
+      final authBloc = Provider.of<AuthBloc>(context);
+      authBloc.setEsMerchantProfile(profile);
       Navigator.of(context).pushNamed(EsHomePage.routeName);
     }
 
@@ -89,83 +89,87 @@ class EsCreateMerchantProfilePageState
       }
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          AppTranslations.of(context).text('merchant_profile_page_title')
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(
+              AppTranslations.of(context).text('merchant_profile_page_title')),
         ),
-      ),
-      body: Form(
-        key: _formKey,
-        onWillPop: _onWillPop,
-        child: StreamBuilder<EsCreateMerchantProfileState>(
-            stream: createMerchantProfileBloc.createMerchantProfileObservable,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Container();
-              }
-              return Scrollbar(
-                child: ListView(
-                  children: <Widget>[
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 24.0,
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: TextFormField(
-                        controller:
-                            createMerchantProfileBloc.nameEditController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: AppTranslations.of(context).text('merchant_profile_page_name'),
+        body: Form(
+          key: _formKey,
+          onWillPop: _onWillPop,
+          child: StreamBuilder<EsCreateMerchantProfileState>(
+              stream: createMerchantProfileBloc.createMerchantProfileObservable,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container();
+                }
+                return Scrollbar(
+                  child: ListView(
+                    children: <Widget>[
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 24.0,
+                          left: 20,
+                          right: 20,
+                        ),
+                        child: TextFormField(
+                          controller:
+                              createMerchantProfileBloc.nameEditController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: AppTranslations.of(context)
+                                .text('merchant_profile_page_name'),
+                          ),
                         ),
                       ),
-                    ),
-                    // Container(
-                    //   padding: const EdgeInsets.only(
-                    //     top: 24.0,
-                    //     left: 20,
-                    //     right: 20,
-                    //     bottom: 8,
-                    //     // bottom: 8.0,
-                    //   ),
-                    //   alignment: Alignment.bottomLeft,
-                    //   child: Text(
-                    //     'Categories',
-                    //     style: Theme.of(context).textTheme.subtitle2,
-                    //   ),
-                    // ),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(
-                    //     horizontal: 16.0,
-                    //     vertical: 4.0,
-                    //   ),
-                    //   child: DropdownButton<EsCluster>(
-                    //     value: snapshot.data.selectedCluster,
-                    //     elevation: 4,
-                    //     onChanged: createMerchantProfileBloc.setSelectedCluster,
-                    //     items: snapshot.data.clusters
-                    //         .map<DropdownMenuItem<EsCluster>>(
-                    //             (EsCluster cluster) {
-                    //       return DropdownMenuItem<EsCluster>(
-                    //         value: cluster,
-                    //         child: Text(cluster.clusterName),
-                    //       );
-                    //     }).toList(),
-                    //   ),
-                    // ),
-                  ],
-                ),
-              );
-            }),
+                      // Container(
+                      //   padding: const EdgeInsets.only(
+                      //     top: 24.0,
+                      //     left: 20,
+                      //     right: 20,
+                      //     bottom: 8,
+                      //     // bottom: 8.0,
+                      //   ),
+                      //   alignment: Alignment.bottomLeft,
+                      //   child: Text(
+                      //     'Categories',
+                      //     style: Theme.of(context).textTheme.subtitle2,
+                      //   ),
+                      // ),
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(
+                      //     horizontal: 16.0,
+                      //     vertical: 4.0,
+                      //   ),
+                      //   child: DropdownButton<EsCluster>(
+                      //     value: snapshot.data.selectedCluster,
+                      //     elevation: 4,
+                      //     onChanged: createMerchantProfileBloc.setSelectedCluster,
+                      //     items: snapshot.data.clusters
+                      //         .map<DropdownMenuItem<EsCluster>>(
+                      //             (EsCluster cluster) {
+                      //       return DropdownMenuItem<EsCluster>(
+                      //         value: cluster,
+                      //         child: Text(cluster.clusterName),
+                      //       );
+                      //     }).toList(),
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                );
+              }),
+        ),
+        floatingActionButton: FoSubmitButton(
+          text: AppTranslations.of(context).text('generic_save'),
+          onPressed: submit,
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
-      floatingActionButton: FoSubmitButton(
-        text: AppTranslations.of(context).text('generic_save'),
-        onPressed: submit,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.7+2"
+  app_settings:
+    dependency: "direct main"
+    description:
+      name: app_settings
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.4"
   async:
     dependency: transitive
     description:
@@ -57,6 +64,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.10"
+  circles:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: c836d355476c7ae43f933675788311208fdbd349
+      url: "https://kaustubh-pandey@bitbucket.org/ese1/esm_comp_circle.git"
+    source: git
+    version: "0.0.2"
   clock:
     dependency: transitive
     description:
@@ -99,6 +115,24 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3"
+  esamudaay_app_update:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "v0.0.1"
+      resolved-ref: b75dc8d04b8fb7dd1d5c49fb858a5bc96880c995
+      url: "https://anushka_agrawal@bitbucket.org/ese1/esm_comp_appupdate.git"
+    source: git
+    version: "0.0.1+2"
+  esamudaay_themes:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "v0.0.1"
+      resolved-ref: "311ad6fbc1906a94380f7be641e1706f529846bb"
+      url: "https://anushka_agrawal@bitbucket.org/ese1/esm_comp_themes.git"
+    source: git
+    version: "0.0.1"
   esys_flutter_share:
     dependency: "direct main"
     description:
@@ -216,6 +250,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.3"
+  flutter_keyboard_visibility:
+    dependency: transitive
+    description:
+      name: flutter_keyboard_visibility
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.2"
+  flutter_keyboard_visibility_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_keyboard_visibility_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
+  flutter_keyboard_visibility_web:
+    dependency: transitive
+    description:
+      name: flutter_keyboard_visibility_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -247,6 +302,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_typeahead:
+    dependency: "direct main"
+    description:
+      name: flutter_typeahead
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -357,6 +419,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
+  in_app_update:
+    dependency: transitive
+    description:
+      name: in_app_update
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.15"
   intl:
     dependency: "direct main"
     description:

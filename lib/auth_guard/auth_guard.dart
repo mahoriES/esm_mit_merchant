@@ -2,8 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/auth.dart';
+import 'package:foore/home_page/app_drawer.dart';
 import 'package:foore/logo_page/logo_page.dart';
 import 'package:provider/provider.dart';
+
+import '../app_translations.dart';
 
 typedef void AuthGuardUnauthenticatedHandler(BuildContext context);
 
@@ -27,22 +30,12 @@ class AuthGuard extends StatefulWidget {
 
 class _AuthGuardState extends State<AuthGuard> {
   Widget currentWidget;
-  StreamSubscription<AuthState> _subscription;
 
   @override
   void initState() {
     super.initState();
     currentWidget = LogoPage();
   }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   if (_subscription != null) {
-  //     _subscription.cancel();
-  //     _subscription = null;
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -58,18 +51,21 @@ class _AuthGuardState extends State<AuthGuard> {
             currentWidget = LogoPage();
           } else if (snapshot.data.isLoggedIn) {
             currentWidget = widget.child;
-          } else if(snapshot.data.isLoggedOut) {
+          } else if (snapshot.data.isLoggedOut) {
             currentWidget = widget.unauthenticatedPage;
           }
         }
-        return currentWidget;
+        return Scaffold(
+          drawer: AppDrawer(),
+          drawerEnableOpenDragGesture: false,
+          appBar: AppBar(
+            title: Text(
+              AppTranslations.of(context).text("reviews_page_title"),
+            ),
+          ),
+          body: currentWidget,
+        );
       },
     );
   }
-
-  // _onAuthenticationChange(AuthState authState) {
-  //   if (authState.isLoggedOut) {
-  //     widget.unauthenticatedHandler(context);
-  //   }
-  // }
 }

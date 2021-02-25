@@ -394,6 +394,13 @@ class EsSku {
     return '';
   }
 
+  get dVariationValue {
+    if (variationValue != null) {
+      return variationValue;
+    }
+    return '';
+  }
+
   setInStock(bool inStock) {
     this.inStock = inStock;
   }

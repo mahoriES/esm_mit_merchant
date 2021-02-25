@@ -120,7 +120,7 @@
     "create_business_page_business_name": "व्यवसाय का नाम",
     "create_business_page_circle": "सर्कल",
     "create_business_page_get_in_touch_to_get_circle_code": "सर्किल कोड प्राप्त करने के लिए हमसे संपर्क करें",
-	"create_business_page_save": "सेव",
+	"create_business_page_save": "बनाएँ",
 	
 	"generic_save": "सेव",
 	"generic_confirm": "पुष्टि करें",
@@ -133,6 +133,7 @@
 	"generic_please_check_internet_connection": "अपने इंटरनेट कनेक्शन की जाँच करें और पुन: प्रयास करें",
 	"generic_submit_failed": "सबमिट विफल रहा",
 	"generic_please_please_try_again": "कृपया पुन: प्रयास करें..",
+	"generic_discard": "रद्द करें",
 	
 	"merchant_profile_page_title": "प्रोफ़ाइल बनाएं",
 	"merchant_profile_page_name": "नाम",
@@ -172,6 +173,8 @@
 	"profile_page_add_address": "पता  लिखें",
 	"profile_page_notice": "नोटिस",
 	"profile_page_add_notice": "नोटिस लिखें",
+	"profile_page_bcats": "व्यापार श्रेणियाँ",
+	"profile_page_add_bcats": "व्यवसाय श्रेणी जोड़ें",
 	"profile_page_store_Link": "स्टोर लिंक",
 	"profile_page_share_your_store_link": "अपना स्टोर लिंक शेयर करें",
 	"profile_page_link_description": "अपने ग्राहकों को इस लिंक के माध्यम से सीधे अपने स्टोर को देखने दें",
@@ -270,6 +273,9 @@
 	"orders_page_customer_paid": "ग्राहक ने भुगतान कर दिया है",
 	"orders_page_payment_approved": "भुगतान स्वीकृत",
 	"orders_page_payment_rejected": "भुगतान अस्वीकृत",
+	"orders_page_payment_success": "रु %s का भुगतान %s के माध्यम से किया",
+	"orders_page_payment_failed": "भुगतान असफल हुआ",
+	"orders_page_payment_refunded": "Refunded %s at %s",
 	"orders_page_enter_valid_charge": "मान्य शुल्क मान दर्ज करें",
 	"orders_page_add_atleast_one_item": "कृपया ऑर्डर में कम से कम 1 आइटम जोड़ें",
 	"orders_page_update_display_line1": "अद्यतन पंक्ति 1",
@@ -283,6 +289,9 @@
 	"orders_page_could_not_open_maps": "मैप नहीं खोल सके",
 	"orders_page_sure_add_item_to_the_order": "क्या आप सुनिश्चित हैं कि आप ऑर्डर में %s  जोड़ना चाहते हैं",
 	"orders_page_sure_remove_item_from_the_order": "क्या आप सुनिश्चित हैं कि आप ऑर्डर से %s  हटाना चाहते हैं?",
+	"orders_page_payment_confimation_cod_1": "मुझे COD भुगतान प्राप्त हुआ है ",
+	"orders_page_payment_confimation_cod_2": "ऑर्डर के लिए ",
+	"orders_page_complete_confirmation_message": "क्या आप इस ऑर्डर को पूर्ण चिह्नित करना चाहते हैं?",
 
 	"orders_page_order_status_unknown": "अज्ञात",
 	"orders_page_order_status_new": "नया",
@@ -296,7 +305,7 @@
 	"orders_page_order_status_awaiting_customer_confirmation": "ग्राहक की पुष्टि का इंतजार कर रहे",
 	"orders_page_order_status_delivering": "डिलीवरी कर रहे",
 	"orders_page_order_status_waiting_pickup": "पिकअप का इंतजार है",
-	
+	"orders_page_rectrict_complete_order_message": "The delivery agent should be processing this order now, please try after sometime!",
 
 	"products_page_no_products_found": "कोई प्रोडक्ट नहीं मिला",
 	"products_page_no_products_found_description": "नए प्रोडक्ट को जोड़ने के लिए 'आइटम जोड़ें",
@@ -332,7 +341,6 @@
 	"products_page_edit": "एडिट करें",
 	"products_page_please_select_unit_first": "कृपया पहले यूनिट का चयन करें",
 
-
 	"video_page_publish": "प्रकाशित करें",
 	"video_page_unpublish": "अप्रकाशित करें",
 	"video_page_update": "अपडेट करें",
@@ -358,5 +366,48 @@
 	"category_page_sub_category_name": "सब कैटेगरी का नाम",
 	"category_page_select_a_category": "एक कैटेगरी का चयन करें",
 	"category_page_no_categories_found": "कोई कैटेगरी नहीं मिलीं",
-	"category_page_no_categories_found_message": "नई कैटेगरी जोड़ने के लिए 'कैटेगरी जोड़ें' दबाएँ"
+	"category_page_no_categories_found_message": "नई कैटेगरी जोड़ने के लिए 'कैटेगरी जोड़ें' दबाएँ",	
+
+	"address_page_enter_address_details": "पता विवरण दर्ज करें",
+	"address_page_your_location": "आपका स्थान",
+	"address_page_house_number": "हाउस नं / फ्लैट नं / बंगला नाम ",
+	"address_page_landmark": "लैंडमार्क / दिशा दर्ज करें",
+	"address_page_save_address": "पता जोड़ें",
+	"address_page_change": "बदलें",
+	"address_page_search_location": "स्थान खोजें",
+	"address_page_select_location": "स्थान चुनें",
+	"address_page_confirm_location": "स्थान की पुष्टि करें",
+	"address_page_invalid_address": "अमान्य पता",
+	"address_over_query_error": "क्वेरी सीमा से अधिक। कृपया कुछ देर बाद प्रयास करें।",
+	"address_updated_message": "पता सफलतापूर्वक अपडेट",
+	"address_updating_message": "पता अपडेट हो रहा है ...",
+	"address_discard_message":"पता संशोधित किया गया है। यदि आप जारी रखते हैं तो आपके परिवर्तन रद्द कर दिए जाएंगे। क्या आप परिवर्तनों को छोड़ना चाहते हैं?",
+
+	"circle_search_hint": "अपने शहर के नाम को टाइप करके एक सर्किल खोजने का प्रयास करें। उदाहरण उडुपी, चंडीगढ़",
+	"circle_search_action_hint": "सर्कल की खोज करें",
+	"no_circle_selected_msg": "कोई सर्कल चयनित नहीं है",
+	"select_circle_action": "सर्कल का चयन करें",
+	"change_circle_action": "सर्कल बदलें",
+	"enter_circle_code": "सर्कल कोड दर्ज करें",
+	"esamudaay_circles": "eSamudaay सर्कल",
+	"trending_circles": "ट्रेंडिंग सर्किल",
+	"suggested_circles": "सुझाए गए सर्किल",
+	"turn_on_location": "स्थान को चालू करें",
+	"turn_on_location_msg": "अपने आस-पास सर्कल के सुझाव प्राप्त करने के लिए अपने डिवाइस के स्थान को चालू करें",
+	"based_on_current_location": "आपके वर्तमान स्थान के आधार पर",
+	"circle_info_1": "एक 'सर्कल' दुकान मालिकों, रेस्तरां और व्यापारियों का एक समुदाय है जो एक इलाके में सेवा करते हैं",
+	"circle_info_2": "आप अपना स्थान बदलकर या एक विशिष्ट सर्कल खोजकर एक सर्कल जोड़ सकते हैं",
+
+	"done_category": "पूर्ण",
+	"search_category": "श्रेणी खोजें ",
+	"search_business_category": "व्यवसाय श्रेणी खोजें",
+	"business_categories": "व्यापार श्रेणी",
+	"categories_updation_failed": "श्रेणियाँ अपडेशन विफल। कृपया पुन: प्रयास करें!",
+	"categories_updated_success": "श्रेणियाँ सफलतापूर्वक अपडेट की गईं!",
+
+	"app_update_title": "ऐप अपडेट उपलब्ध है",
+	"app_update_banner_msg": "eSamudaay नई सुविधाओं और ऑफ़र के साथ और अधिक दिलचस्प हो गया। अभी अपडेट करें !!",
+	"app_update_popup_msg": "हमारे द्वारा आपके लिए डिज़ाइन की गई नई सुविधाओं का अनुभव करने के लिए ऐप को अभी अपडेट करें!",
+	"app_update_action": "अपडेट करें",
+	"app_update_later": "बाद में"
 }

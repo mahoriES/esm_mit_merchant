@@ -1,7 +1,7 @@
 name: foore
 description: Foore mobile app
 
-version: 0.5.1+99
+version: 0.5.3+112
 
 environment:
   sdk: ">=2.8.0 <3.0.0"
@@ -76,6 +76,24 @@ dependencies:
 
   google_maps_flutter: ^1.0.6
 
+  flutter_typeahead: ^2.0.0
+
+  esamudaay_app_update:
+    git:
+      url: https://anushka_agrawal@bitbucket.org/ese1/esm_comp_appupdate.git
+      ref: v0.0.1
+
+  esamudaay_themes:
+    git:
+      url: https://anushka_agrawal@bitbucket.org/ese1/esm_comp_themes.git
+      ref: v0.0.1
+
+  app_settings: ^4.0.4
+
+  circles:
+    git:
+      url: https://kaustubh-pandey@bitbucket.org/ese1/esm_comp_circle.git
+
 dependency_overrides:
   provider: ^3.1.0
 
@@ -102,6 +120,16 @@ flutter:
     - assets/english-share.png
     - assets/sms-code.png
     - assets/promotion-banner.png
+    - assets/circle_tile_placeholder.png
+    - assets/location-pointer.png
+    - assets/category_placeholder.png
+    
+    - assets/icons/categories.png
+    - assets/icons/list-view.png
+    - assets/icons/spotlights.png
+    - assets/icons/out-of-stock.png
+    - assets/icons/sort.png
+    
     - assets/locale/localization_hi.json
     - assets/locale/localization_kn.json
     # - assets/locale/localization_ml.json
