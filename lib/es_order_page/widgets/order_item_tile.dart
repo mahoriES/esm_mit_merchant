@@ -11,11 +11,13 @@ class OrderItemTile extends StatefulWidget {
   final EsOrderItem orderItem;
   final Function(int quantity, double unitPrice) onChanged;
   final Function() onDelete;
+  final bool canBeUpdated;
   OrderItemTile(
     this.orderItem,
     this.onChanged,
-    this.onDelete,
-  );
+    this.onDelete, {
+    @required this.canBeUpdated,
+  });
   @override
   _OrderItemTileState createState() => _OrderItemTileState();
 }
@@ -44,69 +46,74 @@ class _OrderItemTileState extends State<OrderItemTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        Expanded(
-          child: Text(
-            widget.orderItem.productName +
-                (widget.orderItem.variationOption != null
-                    ? ("(${widget.orderItem.variationOption})")
-                    : ''),
+    return IgnorePointer(
+      ignoring: !widget.canBeUpdated,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Expanded(
+            child: Text(
+              widget.orderItem.productName +
+                  (widget.orderItem.variationOption != null
+                      ? ("(${widget.orderItem.variationOption})")
+                      : ''),
+            ),
           ),
-        ),
-        Text('  x  '),
-        Container(
-          width: 20.toWidth,
-          child: TextFormField(
-            textAlign: TextAlign.center,
-            controller: quantityController,
-            keyboardType: TextInputType.number,
-            onChanged: (v) {
-              int quantity = int.tryParse(v ?? 1) ?? 1;
-              widget.onChanged(
-                quantity,
-                widget.orderItem.unitPrice,
-              );
-            },
+          Text('  x  '),
+          Container(
+            width: 20.toWidth,
+            child: TextFormField(
+              textAlign: TextAlign.center,
+              controller: quantityController,
+              keyboardType: TextInputType.number,
+              onChanged: (v) {
+                int quantity = int.tryParse(v ?? 1) ?? 1;
+                widget.onChanged(
+                  quantity,
+                  widget.orderItem.unitPrice,
+                );
+              },
+            ),
           ),
-        ),
-        Expanded(
-          child: Container(),
-        ),
-        Text('\u{20B9}'),
-        Container(
-          width: 70.toWidth,
-          child: TextFormField(
-            textAlign: TextAlign.center,
-            controller: priceController,
-            keyboardType: TextInputType.number,
-            onChanged: (v) {
-              double price = double.tryParse(v ?? 0) ?? 0;
-              widget.onChanged(widget.orderItem.itemQuantity, price);
-            },
+          Expanded(
+            child: Container(),
           ),
-        ),
-        SizedBox(width: 6.toWidth),
-        InkWell(
-          child: Icon(
-            Icons.cancel,
-            color: Colors.red,
+          Text('\u{20B9}'),
+          Container(
+            width: 70.toWidth,
+            child: TextFormField(
+              textAlign: TextAlign.center,
+              controller: priceController,
+              keyboardType: TextInputType.number,
+              onChanged: (v) {
+                double price = double.tryParse(v ?? 0) ?? 0;
+                widget.onChanged(widget.orderItem.itemQuantity, price);
+              },
+            ),
           ),
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) => AddOrDeleteItemDialogue(
-                message: sprintf(
-                    AppTranslations.of(context)
-                        .text('orders_page_sure_remove_item_from_the_order'),
-                    [widget.orderItem.productName]),
-                onConfirm: widget.onDelete,
-              ),
-            );
-          },
-        ),
-      ],
+          SizedBox(width: 6.toWidth),
+          widget.canBeUpdated
+              ? InkWell(
+                  child: Icon(
+                    Icons.cancel,
+                    color: Colors.red,
+                  ),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AddOrDeleteItemDialogue(
+                        message: sprintf(
+                            AppTranslations.of(context).text(
+                                'orders_page_sure_remove_item_from_the_order'),
+                            [widget.orderItem.productName]),
+                        onConfirm: widget.onDelete,
+                      ),
+                    );
+                  },
+                )
+              : SizedBox.shrink(),
+        ],
+      ),
     );
   }
 }

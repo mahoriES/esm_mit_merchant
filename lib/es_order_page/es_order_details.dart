@@ -62,7 +62,16 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
   @override
   void initState() {
     details = widget.params.esOrderDetailsResponse;
-    isOrderUpdated = false;
+
+    debugPrint(
+        "order details => ${details.paymentInfo.paymentStatus} *****************************************************");
+
+    isOrderUpdated =
+        (widget.params.esOrderDetailsResponse?.customerNoteImages?.length ??
+                    0) >
+                0
+            ? true
+            : false;
     isOrderStatusCreated = details.orderStatus == EsOrderStatus.CREATED;
     super.initState();
   }
@@ -232,6 +241,9 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                             FreeFormItemStatus.notAdded;
                         setState(() {});
                       },
+                      // If payment is already done then
+                      // don't allow merchant to update the freeform items.
+                      canBeUpdated: !details.paymentInfo.isAlreadyPaid,
                     ),
                   ),
                 ],
@@ -278,32 +290,38 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                         }
                         setState(() {});
                       },
+                      // If payment is already done then
+                      // don't allow merchant to update the catalogue items.
+                      canBeUpdated: !details.paymentInfo.isAlreadyPaid,
                     );
                   },
                 ),
                 SizedBox(height: 15.toHeight),
-                Align(
-                  alignment: Alignment.center,
-                  child: InkWell(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.add_circle_outline,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        SizedBox(width: 5.toWidth),
-                        Text(
-                          AppTranslations.of(context)
-                              .text("orders_page_add_item"),
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                        ),
-                      ],
+                // If payment is already done then don't show add item option.
+                if (!details.paymentInfo.isAlreadyPaid) ...[
+                  Align(
+                    alignment: Alignment.center,
+                    child: InkWell(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.add_circle_outline,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          SizedBox(width: 5.toWidth),
+                          Text(
+                            AppTranslations.of(context)
+                                .text("orders_page_add_item"),
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        ],
+                      ),
+                      onTap: () => _addItemsFromCatalogue(),
                     ),
-                    onTap: () => _addItemsFromCatalogue(),
                   ),
-                ),
+                ],
                 if (details.customerNote != null ||
                     (details.customerNoteImages != null &&
                         details.customerNoteImages.isNotEmpty)) ...[
@@ -418,88 +436,117 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
                               SizedBox(width: 20.toWidth),
                               Expanded(
                                 flex: 1,
-                                child: isCatalogueItemsNotAvailable
+                                // If payment is already done then show only accept option.
+                                child: details.paymentInfo.isAlreadyPaid
                                     ? RaisedButton(
                                         child: Text(AppTranslations.of(context)
-                                            .text("orders_page_update_order")),
+                                            .text("orders_page_accept_order")),
                                         padding: EdgeInsets.symmetric(
                                             vertical: 10.toHeight),
-                                        onPressed: () => showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              ResponseDialogue(
-                                            '',
-                                            message: AppTranslations.of(context)
-                                                .text(
-                                                    'orders_page_add_atleast_one_item'),
-                                          ),
-                                        ),
-                                        color: Colors.grey[400],
+                                        color: Theme.of(context).primaryColor,
+                                        onPressed: () {
+                                          debugPrint('Accept tapped');
+                                          debugPrint(details
+                                              .additionalChargesDetails
+                                              .toString());
+                                          widget.params.acceptOrder(context);
+                                        },
                                       )
-                                    : (details.freeFormItems != null &&
-                                            details.freeFormItems.length > 0)
-                                        ? allItemsUpdated
-                                            ? RaisedButton(
-                                                child: Text(AppTranslations.of(
+                                    : isCatalogueItemsNotAvailable
+                                        ? RaisedButton(
+                                            child: Text(AppTranslations.of(
+                                                    context)
+                                                .text(
+                                                    "orders_page_update_order")),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 10.toHeight),
+                                            onPressed: () => showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  ResponseDialogue(
+                                                '',
+                                                message: AppTranslations.of(
                                                         context)
                                                     .text(
-                                                        "orders_page_update_order")),
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 10.toHeight),
-                                                onPressed: _updateOrder,
-                                              )
-                                            : RaisedButton(
-                                                child: Text(AppTranslations.of(
-                                                        context)
-                                                    .text(
-                                                        "orders_page_update_order")),
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 10.toHeight),
-                                                onPressed: () => showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      ResponseDialogue(
-                                                    '',
-                                                    message: AppTranslations.of(
-                                                            context)
-                                                        .text(
-                                                            "orders_page_customer_items_due_error"),
-                                                  ),
-                                                ),
-                                                color: Colors.grey[400],
-                                              )
-
-                                        ///The [ValueNotifier] flag is used here to update the button title
-                                        : (isOrderUpdated || value)
-                                            ? RaisedButton(
-                                                child: Text(AppTranslations.of(
-                                                        context)
-                                                    .text(
-                                                        "orders_page_update_order")),
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 10.toHeight),
-                                                onPressed: _updateOrder,
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                              )
-                                            : RaisedButton(
-                                                child: Text(AppTranslations.of(
-                                                        context)
-                                                    .text(
-                                                        "orders_page_accept_order")),
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 10.toHeight),
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                onPressed: () {
-                                                  debugPrint('Accept tapped');
-                                                  debugPrint(details
-                                                      .additionalChargesDetails
-                                                      .toString());
-                                                  widget.params
-                                                      .acceptOrder(context);
-                                                },
+                                                        'orders_page_add_atleast_one_item'),
                                               ),
+                                            ),
+                                            color: Colors.grey[400],
+                                          )
+                                        : (details.freeFormItems != null &&
+                                                details.freeFormItems.length >
+                                                    0)
+                                            ? allItemsUpdated
+                                                ? RaisedButton(
+                                                    child: Text(AppTranslations
+                                                            .of(context)
+                                                        .text(
+                                                            "orders_page_update_order")),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical:
+                                                                10.toHeight),
+                                                    onPressed: _updateOrder,
+                                                  )
+                                                : RaisedButton(
+                                                    child: Text(AppTranslations
+                                                            .of(context)
+                                                        .text(
+                                                            "orders_page_update_order")),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical:
+                                                                10.toHeight),
+                                                    onPressed: () => showDialog(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          ResponseDialogue(
+                                                        '',
+                                                        message: AppTranslations
+                                                                .of(context)
+                                                            .text(
+                                                                "orders_page_customer_items_due_error"),
+                                                      ),
+                                                    ),
+                                                    color: Colors.grey[400],
+                                                  )
+
+                                            ///The [ValueNotifier] flag is used here to update the button title
+                                            : (isOrderUpdated || value)
+                                                ? RaisedButton(
+                                                    child: Text(AppTranslations
+                                                            .of(context)
+                                                        .text(
+                                                            "orders_page_update_order")),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical:
+                                                                10.toHeight),
+                                                    onPressed: _updateOrder,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                  )
+                                                : RaisedButton(
+                                                    child: Text(AppTranslations
+                                                            .of(context)
+                                                        .text(
+                                                            "orders_page_accept_order")),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical:
+                                                                10.toHeight),
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    onPressed: () {
+                                                      debugPrint(
+                                                          'Accept tapped');
+                                                      debugPrint(details
+                                                          .additionalChargesDetails
+                                                          .toString());
+                                                      widget.params
+                                                          .acceptOrder(context);
+                                                    },
+                                                  ),
                               ),
                             ],
                           );
