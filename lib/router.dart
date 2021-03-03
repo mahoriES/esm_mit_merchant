@@ -7,6 +7,7 @@ import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/bloc/es_create_business.dart';
 import 'package:foore/data/bloc/es_create_merchant_profile.dart';
 import 'package:foore/data/bloc/es_orders.dart';
+import 'package:foore/data/bloc/es_products.dart';
 import 'package:foore/data/bloc/es_select_circle.dart';
 import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/data/model/es_product.dart';
@@ -33,14 +34,15 @@ import 'package:provider/provider.dart';
 import 'auth_guard/auth_guard.dart';
 import 'data/bloc/app_update_bloc.dart';
 import 'data/bloc/es_edit_product.dart';
-import 'data/bloc/es_products.dart';
 import 'data/bloc/onboarding.dart';
 import 'data/bloc/people.dart';
 import 'data/http_service.dart';
+import 'data/model/es_product_catalogue.dart';
 import 'data/model/feedback.dart';
 import 'data/model/unirson.dart';
 import 'es_auth_guard/es_auth_guard.dart';
 import 'es_business_catalogue_page/es_business_catalogue_page.dart';
+import 'es_business_catalogue_page/es_business_catalogue_search_view.dart';
 import 'es_category_page/es_add_category.dart';
 import 'es_category_page/es_category_page.dart';
 import 'es_create_business/es_create_business.dart';
@@ -383,6 +385,16 @@ class AppRouter {
       case CircleSearchView.routeName:
         return MaterialPageRoute(
             builder: (context) => CircleSearchView(), settings: settings);
+        break;
+      case EsBusinessCatalogueSearchView.routeName:
+        return MaterialPageRoute(
+          builder: (context) => Provider<EsProductsBloc>(
+            create: (context) =>
+                EsProductsBloc(httpServiceBloc, esBusinessesBloc),
+            dispose: (context, bloc) => bloc.dispose(),
+            child: EsBusinessCatalogueSearchView(),
+          ),
+        );
         break;
       default:
         return MaterialPageRoute(

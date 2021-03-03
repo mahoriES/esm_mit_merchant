@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foore/app_colors.dart';
 import 'package:foore/data/model/es_orders.dart';
+import 'package:foore/home_page/app_drawer.dart';
+import 'package:foore/widgets/es_select_business.dart';
 import '../app_translations.dart';
 import 'es_order_list.dart';
 import 'package:foore/services/sizeconfig.dart';
@@ -21,6 +23,13 @@ class EsOrderPage extends StatelessWidget {
       AppTranslations.of(context).text("orders_page_all")
     ];
     return Scaffold(
+      drawer: AppDrawer(),
+      drawerEnableOpenDragGesture: false,
+      appBar: AppBar(
+        title: EsSelectBusiness(
+          null,
+        ),
+      ),
       body: SafeArea(
         child: DefaultTabController(
           length: tabTitles.length,

@@ -8,8 +8,10 @@ import 'package:foore/data/bloc/es_video.dart';
 import 'package:foore/data/model/es_video_models/es_video_list.dart';
 import 'package:foore/es_video_page/es_add_video.dart';
 import 'package:foore/es_video_page/es_play_video.dart';
+import 'package:foore/home_page/app_drawer.dart';
 import 'package:foore/services/sizeconfig.dart';
 import 'package:foore/widgets/empty_list.dart';
+import 'package:foore/widgets/es_select_business.dart';
 import 'package:foore/widgets/response_dialog.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +30,13 @@ class _EsVideoPageState extends State<EsVideoPage> {
 
     return SafeArea(
       child: Scaffold(
+        drawer: AppDrawer(),
+        drawerEnableOpenDragGesture: false,
+        appBar: AppBar(
+          title: EsSelectBusiness(
+            null,
+          ),
+        ),
         floatingActionButton: FoSubmitButton(
           text: AppTranslations.of(context).text('video_page_add_video'),
           onPressed: () =>
