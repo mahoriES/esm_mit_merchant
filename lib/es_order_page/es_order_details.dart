@@ -63,15 +63,7 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
   void initState() {
     details = widget.params.esOrderDetailsResponse;
 
-    debugPrint(
-        "order details => ${details.paymentInfo.paymentStatus} *****************************************************");
-
-    isOrderUpdated =
-        (widget.params.esOrderDetailsResponse?.customerNoteImages?.length ??
-                    0) >
-                0
-            ? true
-            : false;
+    isOrderUpdated = false;
     isOrderStatusCreated = details.orderStatus == EsOrderStatus.CREATED;
     super.initState();
   }
