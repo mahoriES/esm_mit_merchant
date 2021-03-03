@@ -7,6 +7,7 @@ import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_business.dart';
 import 'package:foore/es_business_categories/es_business_categories_view.dart';
 import 'package:foore/es_business_profile/es_business_image_list.dart';
+import 'package:foore/es_business_profile/es_edit_charges.dart';
 import 'package:foore/es_business_profile/es_edit_text_generic.dart';
 import 'package:foore/home_page/app_drawer.dart';
 import 'package:foore/widgets/es_select_business.dart';
@@ -519,6 +520,26 @@ class _EsBusinessProfileState extends State<EsBusinessProfile>
                     SizedBox(height: 20),
                     EsBusinessProfileImageList(esBusinessProfileBloc,
                         allowMany: false),
+                    SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            AppTranslations.of(context)
+                                .text("profile_order_charges"),
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                          IconButton(
+                            color: Theme.of(context).primaryColor,
+                            onPressed: () => Navigator.of(context)
+                                .pushNamed(EsEditOrderCharges.routeName),
+                            icon: Icon(Icons.edit),
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(height: 8),
                     getBaseHeaderWidget(
                         AppTranslations.of(context).text("profile_page_name")),

@@ -426,6 +426,11 @@
 	"business_catalogue_page_rating_high_to_low": "Rating (High to Low)",
 	"business_catalogue_page_search_hint": "Search",
 	"business_catalogue_page_search_for_products": "Search for products",
-	"business_catalogue_page_title_products_found": "Products found"
+	"business_catalogue_page_title_products_found": "Products found",
+
+	"profile_update_order_charges": "Update Order Charges",
+	"profile_order_charges": "Order Charges",
+	"generic_update": "Update",
+	"error_invalid_input": "Invalid input"
 
 }
