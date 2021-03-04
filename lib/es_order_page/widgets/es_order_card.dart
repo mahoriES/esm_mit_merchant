@@ -208,13 +208,29 @@ class _EsOrderCardState extends State<EsOrderCard> {
                     ////////////////////////////////////
                     ///// Order Total Price.
                     ////////////////////////////////////
-                    Text(
-                      widget.esOrder.dOrderTotal,
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1
-                          .copyWith(color: Theme.of(context).primaryColor),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widget.esOrder.dOrderTotal,
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(color: Theme.of(context).primaryColor),
+                        ),
+                        if (widget.esOrder.paymentInfo.isAlreadyPaid) ...[
+                          Text(
+                            "Paid via ${widget.esOrder.paymentInfo.dPaymentMadeVia}",
+                            style:
+                                Theme.of(context).textTheme.subtitle2.copyWith(
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                          ),
+                        ],
+                      ],
                     ),
+
                     SizedBox(height: 15.toHeight),
 
                     ////////////////////////////////////

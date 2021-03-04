@@ -119,14 +119,29 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         centerTitle: false,
-        title: Text(
-          AppTranslations.of(context).text('orders_page_order') +
-              ' #' +
-              details.orderShortNumber,
-          style: Theme.of(context)
-              .textTheme
-              .subtitle1
-              .copyWith(fontWeight: FontWeight.w600),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppTranslations.of(context).text('orders_page_order') +
+                  ' #' +
+                  details.orderShortNumber,
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1
+                  .copyWith(fontWeight: FontWeight.w600),
+            ),
+            if (details.paymentInfo.isAlreadyPaid) ...[
+              const SizedBox(height: 5),
+              Text(
+                "Paid ${details.paymentInfo.dAmount} via ${details.paymentInfo.dPaymentMadeVia}",
+                style: Theme.of(context).textTheme.subtitle2.copyWith(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+            ],
+          ],
         ),
         actions: [
           if (details?.customerPhones?.length != null &&
