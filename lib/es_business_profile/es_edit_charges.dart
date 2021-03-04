@@ -132,7 +132,6 @@ class ChargeTile extends StatelessWidget {
         Flexible(
           flex: 3,
           child: SizedBox(
-            height: 35,
             width: 150,
             child: TextFormField(
               key: new UniqueKey(),
@@ -163,7 +162,7 @@ class ChargeTile extends StatelessWidget {
                     ],
                   ),
                 ),
-                contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                contentPadding: const EdgeInsets.all(8),
               ),
               onChanged: (text) => onEditChargeValue(),
             ),
