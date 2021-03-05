@@ -340,7 +340,7 @@ class AdditionChargesMetaDataGenerator {
         return 'PACKING';
         break;
       case AdditionalChargeType.serviceCharge:
-        return 'SERVICE';
+        return 'TAX';
         break;
       default:
         return 'OTHER';
@@ -348,10 +348,9 @@ class AdditionChargesMetaDataGenerator {
   }
 
   static List<String> get allKeyOptions =>
-      ['DELIVERY', 'EXTRA', 'PACKING', 'SERVICE'];
+      ['DELIVERY', 'EXTRA', 'PACKING', 'TAX'];
 
-  static List<String> get selfPickupKeyOptions =>
-      ['EXTRA', 'PACKING', 'SERVICE'];
+  static List<String> get selfPickupKeyOptions => ['EXTRA', 'PACKING', 'TAX'];
 
   // Todo: Where is it used?
   static String friendlyChargeNameFromEnumValue(
@@ -385,7 +384,7 @@ class AdditionChargesMetaDataGenerator {
       case 'PACKING':
         return 'Packing Charges';
         break;
-      case 'SERVICE':
+      case 'TAX':
         return 'Service Charges';
         break;
       default:
