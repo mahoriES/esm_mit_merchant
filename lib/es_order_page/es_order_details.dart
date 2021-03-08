@@ -134,11 +134,8 @@ class _EsOrderDetailsState extends State<EsOrderDetails> {
             if (details.paymentInfo.isAlreadyPaid) ...[
               const SizedBox(height: 5),
               Text(
-                "Paid ${details.paymentInfo.dAmount} via ${details.paymentInfo.dPaymentMadeVia}",
-                style: Theme.of(context).textTheme.subtitle2.copyWith(
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+                "Paid ${details.paymentInfo.dAmount} using ${details.paymentInfo.dPaymentMadeVia}",
+                style: Theme.of(context).textTheme.subtitle2,
               ),
             ],
           ],

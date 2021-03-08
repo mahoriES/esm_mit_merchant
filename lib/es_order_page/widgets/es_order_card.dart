@@ -208,27 +208,12 @@ class _EsOrderCardState extends State<EsOrderCard> {
                     ////////////////////////////////////
                     ///// Order Total Price.
                     ////////////////////////////////////
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          widget.esOrder.dOrderTotal,
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .copyWith(color: Theme.of(context).primaryColor),
-                        ),
-                        if (widget.esOrder.paymentInfo.isAlreadyPaid) ...[
-                          Text(
-                            "Paid via ${widget.esOrder.paymentInfo.dPaymentMadeVia}",
-                            style:
-                                Theme.of(context).textTheme.subtitle2.copyWith(
-                                      color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                          ),
-                        ],
-                      ],
+                    Text(
+                      widget.esOrder.dOrderTotal,
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(color: Theme.of(context).primaryColor),
                     ),
 
                     SizedBox(height: 15.toHeight),
@@ -662,7 +647,8 @@ class PaymentStatusRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Removed Merchant Updated status for this check.
-    return esOrder.orderStatus == EsOrderStatus.CREATED
+    return esOrder.orderStatus == EsOrderStatus.CREATED &&
+            !esOrder.paymentInfo.isAlreadyPaid
         ? Container()
         : Row(
             children: <Widget>[
