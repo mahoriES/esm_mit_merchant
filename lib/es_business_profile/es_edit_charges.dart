@@ -134,16 +134,16 @@ class ChargeTile extends StatelessWidget {
           child: SizedBox(
             width: 150,
             child: TextFormField(
-              key: new UniqueKey(),
               keyboardType: TextInputType.number,
               controller: textEditingController,
               textAlign: TextAlign.right,
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.deny(RegExp("[,]"))
               ],
-              validator: chargeData.chargeType == ChargeTypeConstants.PERCENTAGE
-                  ? Validators.percentageValue
-                  : Validators.nullValueCheck,
+              validator: (input) =>
+                  chargeData.chargeType == ChargeTypeConstants.PERCENTAGE
+                      ? Validators.percentageValue(input, context)
+                      : Validators.nullValueCheck(input, context),
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 suffixIcon: DropdownButtonHideUnderline(

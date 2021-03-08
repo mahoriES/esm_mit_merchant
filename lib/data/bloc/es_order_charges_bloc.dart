@@ -5,6 +5,7 @@ import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/constants/state_constants.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_order_charges.dart';
+import 'package:foore/utils/utils.dart';
 import 'package:http/http.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -70,13 +71,10 @@ class EsOrderChargesBloc {
     if (_esOrderChargesState.chargesMap[chargeName].chargeType ==
         ChargeTypeConstants.FLAT) {
       _esOrderChargesState.chargesMap[chargeName].chargeValue =
-          ((double.tryParse(getControllerForChargeName(chargeName).text) ?? 0) *
-                  100)
-              .toInt();
+          Utils.getPriceInPaisa(getControllerForChargeName(chargeName).text);
     } else {
       _esOrderChargesState.chargesMap[chargeName].chargeValue =
-          ((double.tryParse(getControllerForChargeName(chargeName).text) ?? 0))
-              .toInt();
+          Utils.getPriceInPercent(getControllerForChargeName(chargeName).text);
     }
   }
 
@@ -86,12 +84,7 @@ class EsOrderChargesBloc {
       _updateState();
 
       List<EsOrderChargesModel> _chargesList =
-          // List.from(_esOrderChargesState.chargesMap.values);
-          [
-        _esOrderChargesState.chargesMap[ChargeNameConstants.DELIVERY],
-        _esOrderChargesState.chargesMap[ChargeNameConstants.TAX],
-        _esOrderChargesState.chargesMap[ChargeNameConstants.PACKING],
-      ];
+          List.from(_esOrderChargesState.chargesMap.values);
 
       Response response = await httpService.esPut(
         EsApiPaths.getBusinessCharges(esBusinessesBloc.getSelectedBusinessId()),
