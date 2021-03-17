@@ -51,14 +51,15 @@ class EsEditOrderCharges extends StatelessWidget {
             );
           }
           return Container(
-            padding: EdgeInsets.all(24),
+            padding: const EdgeInsets.all(24),
             width: double.infinity,
             child: Form(
               key: formKey,
               autovalidateMode: AutovalidateMode.always,
               child: ListView.separated(
                 itemCount: snapshot.data.chargesMap.length,
-                separatorBuilder: (context, index) => SizedBox(height: 20),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 20),
                 itemBuilder: (context, index) {
                   final EsOrderChargesModel chargeData =
                       snapshot.data.chargesMap[
@@ -153,7 +154,7 @@ class ChargeTile extends StatelessWidget {
                     items: [
                       DropdownMenuItem(
                         value: ChargeTypeConstants.FLAT,
-                        child: Text("Rs."),
+                        child: Text("\u{20B9}"),
                       ),
                       DropdownMenuItem(
                         value: ChargeTypeConstants.PERCENTAGE,

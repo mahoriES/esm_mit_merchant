@@ -43,7 +43,7 @@ class EsOrderChargesBloc {
       );
 
       if (response.statusCode == 200) {
-        dynamic data = jsonDecode(response.body);
+        final data = jsonDecode(response.body);
 
         _parseChargesFromList(data);
 
@@ -111,36 +111,38 @@ class EsOrderChargesBloc {
   _parseChargesFromList(responseData) {
     _esOrderChargesState.chargesMap = {};
 
-    responseData.forEach(
-      (chargeData) {
-        EsOrderChargesModel _chargeData =
-            EsOrderChargesModel.fromJson(chargeData);
+    if (responseData != null) {
+      responseData.forEach(
+        (chargeData) {
+          EsOrderChargesModel _chargeData =
+              EsOrderChargesModel.fromJson(chargeData);
 
-        switch (_chargeData.chargeName) {
-          case ChargeNameConstants.DELIVERY:
-            _esOrderChargesState.chargesMap[ChargeNameConstants.DELIVERY] =
-                _chargeData;
-            deliveryChargeController.text = _chargeData.dChargeValue;
-            break;
-          case ChargeNameConstants.TAX:
-            _esOrderChargesState.chargesMap[ChargeNameConstants.TAX] =
-                _chargeData;
-            serviceChargeController.text = _chargeData.dChargeValue;
-            break;
-          case ChargeNameConstants.PACKING:
-            _esOrderChargesState.chargesMap[ChargeNameConstants.PACKING] =
-                _chargeData;
-            packingChargeController.text = _chargeData.dChargeValue;
-            break;
-          case ChargeNameConstants.EXTRA:
-            _esOrderChargesState.chargesMap[ChargeNameConstants.EXTRA] =
-                _chargeData;
-            otherChargeController.text = _chargeData.dChargeValue;
-            break;
-          default:
-        }
-      },
-    );
+          switch (_chargeData.chargeName) {
+            case ChargeNameConstants.DELIVERY:
+              _esOrderChargesState.chargesMap[ChargeNameConstants.DELIVERY] =
+                  _chargeData;
+              deliveryChargeController.text = _chargeData.dChargeValue;
+              break;
+            case ChargeNameConstants.TAX:
+              _esOrderChargesState.chargesMap[ChargeNameConstants.TAX] =
+                  _chargeData;
+              serviceChargeController.text = _chargeData.dChargeValue;
+              break;
+            case ChargeNameConstants.PACKING:
+              _esOrderChargesState.chargesMap[ChargeNameConstants.PACKING] =
+                  _chargeData;
+              packingChargeController.text = _chargeData.dChargeValue;
+              break;
+            case ChargeNameConstants.EXTRA:
+              _esOrderChargesState.chargesMap[ChargeNameConstants.EXTRA] =
+                  _chargeData;
+              otherChargeController.text = _chargeData.dChargeValue;
+              break;
+            default:
+          }
+        },
+      );
+    }
 
     if (!_esOrderChargesState.chargesMap
         .containsKey(ChargeNameConstants.DELIVERY)) {
@@ -202,6 +204,10 @@ class EsOrderChargesBloc {
   }
 
   dispose() {
+    deliveryChargeController.dispose();
+    serviceChargeController.dispose();
+    packingChargeController.dispose();
+    otherChargeController.dispose();
     _subjectEsOrderChargesState.close();
   }
 }
