@@ -75,9 +75,7 @@ class _OrderItemTileState extends State<OrderItemTile> {
               },
             ),
           ),
-          Expanded(
-            child: Container(),
-          ),
+          Spacer(),
           Text('\u{20B9}'),
           Container(
             width: 70.toWidth,
