@@ -540,7 +540,7 @@ class _EsBusinessProfileState extends State<EsBusinessProfile>
                         ],
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     getBaseHeaderWidget(
                         AppTranslations.of(context).text("profile_page_name")),
                     getBusinessNameWidget(businessInfo),
