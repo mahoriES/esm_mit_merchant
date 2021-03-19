@@ -4,14 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
-import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_category_page/es_category_page.dart';
 import 'package:provider/provider.dart';
 import 'es_edit_product_image_list.dart';
-import 'es_edit_product_name.dart';
-import 'es_edit_product_unit.dart';
-import 'es_edit_product_variation.dart';
 
 class EsProductDetailPageParam {
   final EsProduct currentProduct;
@@ -68,11 +64,6 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
     final esEditProductBloc = Provider.of<EsEditProductBloc>(context);
     esEditProductBloc.setCurrentProduct(widget.currentProduct);
     esEditProductBloc.getCategories();
-    if (widget.openSkuAddUpfront) {
-      //This page was called because the person added a
-      //new product and now we want to add SKU for product directly
-      addSku(esEditProductBloc);
-    }
     esEditProductBloc.esEditProductStateObservable.listen((event) {
       if (event.isSubmitFailed) {
         this._showFailedAlertDialog();
@@ -81,30 +72,19 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  addSku(EsEditProductBloc esEditProductBloc) async {
-    await Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
-            EsEditProductVariationPage(esEditProductBloc, null)));
-  }
-
-  @override
   Widget build(BuildContext context) {
     final esEditProductBloc = Provider.of<EsEditProductBloc>(context);
-    addCategory(List<int> preSelectedCategories) async {
-      var selectedCategories = await Navigator.of(context).pushNamed(
-          EsCategoryPage.routeName,
-          arguments: preSelectedCategories);
+
+    addPreSelectedCategory(List<int> existedCategoryIds) async {
+      final selectedCategories = await Navigator.of(context)
+          .pushNamed(EsCategoryPage.routeName, arguments: existedCategoryIds);
       if (selectedCategories != null) {
-        esEditProductBloc.putCategoriesToProduct(selectedCategories);
+        esEditProductBloc.addPreSelectedCategories(selectedCategories);
       }
     }
 
-    removeCategory(EsCategory category) {
-      esEditProductBloc.removeCategoryFromProduct(category);
+    removePreSelectedCategory(int categoryId) async {
+      esEditProductBloc.removePreSelectedCategory(categoryId);
     }
 
     submit() {
@@ -113,23 +93,6 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
           Navigator.of(context).pop(product);
         });
       }
-    }
-
-    editName() async {
-      await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => EsEditProductNamePage(esEditProductBloc)));
-    }
-
-    editUnit() async {
-      await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => EsEditProductUnitPage(esEditProductBloc)));
-    }
-
-    editSku(EsSku sku) async {
-      print(sku.toJson());
-      await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) =>
-              EsEditProductVariationPage(esEditProductBloc, sku)));
     }
 
     return Scaffold(
@@ -150,26 +113,31 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
               child: ListView(
                 children: <Widget>[
                   SizedBox(height: 16),
+
+                  /// Categories Section
+                  ///
                   Padding(
                     padding: const EdgeInsets.only(left: 14, right: 20),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        if (snapshot.data.categories.length > 0) ...[
+                        if (snapshot.data.preSelectedCategories.length > 0) ...[
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: List.generate(
-                                  snapshot.data.categories.length, (index) {
+                                  snapshot.data.preSelectedCategories.length,
+                                  (index) {
                                 final category =
-                                    snapshot.data.categories[index];
+                                    snapshot.data.preSelectedCategories[index];
                                 final parentCategory = snapshot.data
                                     .getCategoryById(category.parentCategoryId);
                                 return Chip(
                                   backgroundColor:
                                       Colors.black.withOpacity(0.05),
                                   onDeleted: () {
-                                    removeCategory(category);
+                                    removePreSelectedCategory(
+                                        category.categoryId);
                                   },
                                   label: Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -220,22 +188,24 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                               }),
                             ),
                           ),
-                          IconButton(
-                            onPressed: () {
-                              addCategory(snapshot.data.categories
-                                  .map((e) => e.categoryId)
-                                  .toList());
-                            },
-                            icon: Icon(
-                              Icons.add,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
+                          // IconButton(
+                          //   onPressed: () {
+                          //     addPreSelectedCategory(snapshot
+                          //         .data.preSelectedCategories
+                          //         .map((e) => e.categoryId)
+                          //         .toList());
+                          //   },
+                          //   icon: Icon(
+                          //     Icons.add,
+                          //     color: Theme.of(context).primaryColor,
+                          //   ),
+                          // ),
                         ],
-                        if (snapshot.data.categories.length == 0)
+                        if (snapshot.data.preSelectedCategories.length == 0)
                           InkWell(
                             onTap: () {
-                              addCategory(snapshot.data.categories
+                              addPreSelectedCategory(snapshot
+                                  .data.preSelectedCategories
                                   .map((e) => e.categoryId)
                                   .toList());
                             },
@@ -259,6 +229,9 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ],
                     ),
                   ),
+
+                  /// Name Section
+                  ///
                   Padding(
                     padding: const EdgeInsets.only(
                       top: 24.0,
@@ -274,6 +247,9 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       ),
                     ),
                   ),
+
+                  /// Variations Section
+                  ///
                   Container(
                     padding: const EdgeInsets.only(
                       top: 4.0,
@@ -282,15 +258,16 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                     ),
                     child: Column(
                       children: List.generate(
-                          widget.currentProduct.dActiveSkus.length + 1,
+                          snapshot.data.preSelectedActiveSKUs.length + 1,
                           (index) {
-                        if (widget.currentProduct.dActiveSkus.length == index) {
+                        if (snapshot.data.preSelectedActiveSKUs.length ==
+                            index) {
                           return Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               FlatButton(
                                 onPressed: () {
-                                  showRestoreVariationsModel(context);
+                                  esEditProductBloc.addPreSelectedSKU();
                                 },
                                 child: Text(
                                   '+ ' +
@@ -303,13 +280,15 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                           );
                         }
                         return VariationCard(
-                          snapshot.data.currentProduct.dActiveSkus[index],
+                          snapshot.data.preSelectedActiveSKUs[index],
                           esEditProductBloc,
-                          editSku,
                         );
                       }),
                     ),
                   ),
+
+                  /// Images Section
+                  ///
                   Container(
                     padding: const EdgeInsets.only(
                       top: 16.0,
@@ -324,7 +303,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       style: Theme.of(context).textTheme.subtitle2,
                     ),
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: 8),
                   EsEditProductImageList(esEditProductBloc),
                   SizedBox(height: 32),
                   Padding(
@@ -332,13 +311,13 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       horizontal: 20,
                     ),
                     child: TextFormField(
-                      controller: esEditProductBloc.shortDescriptionEditController,
+                      controller:
+                          esEditProductBloc.shortDescriptionEditController,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: AppTranslations.of(context)
-                            .text('Description'),
-                        helperText: 'Optional'
-                      ),
+                          border: OutlineInputBorder(),
+                          labelText:
+                              AppTranslations.of(context).text('Description'),
+                          helperText: 'Optional'),
                     ),
                   ),
                   SizedBox(height: 100),
@@ -346,7 +325,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
               ),
             );
           }),
-    floatingActionButton: StreamBuilder<EsEditProductState>(
+      floatingActionButton: StreamBuilder<EsEditProductState>(
           stream: esEditProductBloc.esEditProductStateObservable,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
@@ -358,279 +337,17 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
               isLoading: snapshot.data.isSubmitting,
             );
           }),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,  
-    );
-  }
-
-  showRestoreVariationsModel(BuildContext context) {
-    final esEditProductBloc = Provider.of<EsEditProductBloc>(context);
-    final _formKey = GlobalKey<FormState>();
-
-    onSuccess() {
-      Navigator.of(context).pop();
-    }
-
-    onFail() {
-      // this._showFailedAlertDialog();
-    }
-
-    submit() {
-      if (this._formKey.currentState.validate()) {
-        esEditProductBloc.addSkuToProduct(true, false, onSuccess, onFail);
-      }
-    }
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      enableDrag: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return Stack(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Container(color: Colors.transparent),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: StreamBuilder<EsEditProductState>(
-                stream: esEditProductBloc.esEditProductStateObservable,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Container();
-                  }
-                  return DraggableScrollableSheet(
-                    initialChildSize: snapshot.data.currentProduct
-                                .dInactiveActiveSkus.length >
-                            0
-                        ? 0.4
-                        : 0.25,
-                    minChildSize: 0.25,
-                    maxChildSize: 1,
-                    builder: (context, scrollController) {
-                      return Container(
-                        color: Colors.white,
-                        child: ListView.builder(
-                          controller: scrollController,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 20.0),
-                          itemCount: snapshot.data.currentProduct
-                                  .dInactiveActiveSkus.length +
-                              1,
-                          itemBuilder: (context, index) {
-                            if (index == 0) {
-                              return Form(
-                                key: _formKey,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      height: 16.0,
-                                    ),
-                                    Text(
-                                      'Add Variation',
-                                      style:
-                                          Theme.of(context).textTheme.subtitle1,
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.symmetric(
-                                        vertical: 16.0,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            flex: 3,
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 8.0),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  width: 1,
-                                                  color: Colors.black26,
-                                                ),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: TextFormField(
-                                                      controller: esEditProductBloc
-                                                          .skuVariationValueEditController,
-                                                      decoration:
-                                                          InputDecoration(
-                                                        isDense: true,
-                                                        border:
-                                                            InputBorder.none,
-                                                      ),
-                                                      validator: (text) {
-                                                        return text.length == 0
-                                                            ? AppTranslations
-                                                                    .of(context)
-                                                                .text(
-                                                                    'error_messages_required')
-                                                            : null;
-                                                      },
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Container(
-                                                      child: DropdownButton(
-                                                        underline:
-                                                            SizedBox.shrink(),
-                                                        // isDense: true,
-                                                        isExpanded: true,
-                                                        value: esEditProductBloc
-                                                            .unitEditController
-                                                            .text,
-                                                        items: snapshot
-                                                            .data.unitsList
-                                                            .map((unit) =>
-                                                                DropdownMenuItem(
-                                                                    value: unit,
-                                                                    child: Text(
-                                                                        unit)))
-                                                            .toList(),
-                                                        onChanged:
-                                                            (String value) {
-                                                          esEditProductBloc
-                                                              .setSelectedUnit(
-                                                                  value);
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 12.0,
-                                          ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: Container(
-                                              // padding: EdgeInsets.symmetric(horizontal: 8.0),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  width: 1,
-                                                  color: Colors.black26,
-                                                ),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                      vertical: 10,
-                                                      horizontal: 12,
-                                                    ),
-                                                    color: Colors.black12,
-                                                    child: Text(
-                                                      '₹',
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 8.0),
-                                                      child: TextFormField(
-                                                        controller:
-                                                            esEditProductBloc
-                                                                .skuPriceEditController,
-                                                        decoration:
-                                                            InputDecoration(
-                                                          isDense: true,
-                                                          border:
-                                                              InputBorder.none,
-                                                        ),
-                                                        validator: (text) {
-                                                          if (double.tryParse(
-                                                                  text) ==
-                                                              null) {
-                                                            return AppTranslations
-                                                                    .of(context)
-                                                                .text(
-                                                                    'orders_page_invalid_price');
-                                                          }
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 12.0,
-                                          ),
-                                          RaisedButton(
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: 16.0,
-                                            ),
-                                            onPressed: submit,
-                                            child: Text('Add'),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            } else if (index == 1) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: 24.0,
-                                  ),
-                                  Text('Restore deleted variations'),
-                                  RestoreVariationCard(
-                                    snapshot.data.currentProduct
-                                        .dInactiveActiveSkus[index - 1],
-                                    esEditProductBloc,
-                                    (a) {},
-                                  ),
-                                ],
-                              );
-                            } else
-                              return RestoreVariationCard(
-                                snapshot.data.currentProduct
-                                    .dInactiveActiveSkus[index - 1],
-                                esEditProductBloc,
-                                (a) {},
-                              );
-                          },
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
-        );
-      },
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
 
 class VariationCard extends StatelessWidget {
-  final EsSku sku;
+  final EsProductSKUTamplate skuTemplate;
   final EsEditProductBloc esEditProductBloc;
-  final Function(EsSku sku) onSkuClick;
   const VariationCard(
-    this.sku,
-    this.esEditProductBloc,
-    this.onSkuClick, {
+    this.skuTemplate,
+    this.esEditProductBloc, {
     Key key,
   }) : super(key: key);
 
@@ -643,14 +360,21 @@ class VariationCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(
-                'SKU: ' + sku.dSkuCode,
-                style: Theme.of(context).textTheme.caption,
-              ),
+              skuTemplate.skuCode != null
+                  ? Text(
+                      'SKU: ' + skuTemplate.skuCode,
+                      style: Theme.of(context).textTheme.caption,
+                    )
+                  : Text(
+                      'New',
+                      style: Theme.of(context).textTheme.caption.copyWith(
+                          // color: Theme.of(context).primaryColor,
+                          fontStyle: FontStyle.italic),
+                    ),
               SizedBox(
                 width: 4.0,
               ),
-              if (!sku.isActive)
+              if (!skuTemplate.isActive)
                 Text(
                   '(Inactive)',
                   style: Theme.of(context).textTheme.caption.copyWith(
@@ -682,8 +406,7 @@ class VariationCard extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: TextFormField(
-                          controller:
-                              esEditProductBloc.skuVariationValueEditController,
+                          controller: skuTemplate.quantityController,
                           decoration: InputDecoration(
                             isDense: true,
                             border: InputBorder.none,
@@ -701,19 +424,20 @@ class VariationCard extends StatelessWidget {
                         child: Container(
                           child: DropdownButton(
                             underline: SizedBox.shrink(),
-                            // isDense: true,
                             isExpanded: true,
-                            value: esEditProductBloc.unitEditController.text,
-                            items: [
-                              esEditProductBloc.unitEditController.text,
-                              'Kg',
-                              'Gram'
-                            ]
+                            value: skuTemplate.unit,
+                            style: Theme.of(context)
+                                .textTheme
+                                .caption
+                                .copyWith(color: Colors.black),
+                            items: esEditProductBloc
+                                .getUnitsList(skuTemplate.unit)
                                 .map((unit) => DropdownMenuItem(
                                     value: unit, child: Text(unit)))
                                 .toList(),
                             onChanged: (String value) {
-                              esEditProductBloc.setSelectedUnit(value);
+                              esEditProductBloc.updatePreSelectedSKUUnit(
+                                  skuTemplate.key, value);
                             },
                           ),
                         ),
@@ -728,7 +452,6 @@ class VariationCard extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Container(
-                  // padding: EdgeInsets.symmetric(horizontal: 8.0),
                   decoration: BoxDecoration(
                     border: Border.all(
                       width: 1,
@@ -754,8 +477,7 @@ class VariationCard extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: TextFormField(
-                            controller:
-                                esEditProductBloc.skuPriceEditController,
+                            controller: skuTemplate.priceController,
                             decoration: InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
@@ -793,10 +515,10 @@ class VariationCard extends StatelessWidget {
                         SizedBox(
                           height: 36.0,
                           child: Switch(
-                            value: sku.inStock,
+                            value: skuTemplate.inStock,
                             onChanged: (updatedVal) {
-                              esEditProductBloc.editSkuStock(
-                                  sku.skuId, updatedVal);
+                              esEditProductBloc.updatePreSelectedSKUStock(
+                                  skuTemplate.key, updatedVal);
                             },
                           ),
                         ),
@@ -810,7 +532,9 @@ class VariationCard extends StatelessWidget {
               ),
               PopupMenuButton<int>(
                 onSelected: (result) {
-                  if (result == 1) {}
+                  if (result == 1) {
+                    esEditProductBloc.removePreSelectedSKU(skuTemplate.key);
+                  }
                 },
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
                   PopupMenuItem(
@@ -819,113 +543,6 @@ class VariationCard extends StatelessWidget {
                   ),
                 ],
               ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class RestoreVariationCard extends StatelessWidget {
-  final EsSku sku;
-  final EsEditProductBloc esEditProductBloc;
-  final Function(EsSku sku) onSkuClick;
-  const RestoreVariationCard(
-    this.sku,
-    this.esEditProductBloc,
-    this.onSkuClick, {
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 12.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                'SKU: ' + sku.dSkuCode,
-                style: Theme.of(context).textTheme.caption,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 4.0,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Flexible(
-                flex: 2,
-                child: Container(
-                  height: 50.0,
-                  padding: EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black12),
-                  ),
-                  child: Center(child: Text(sku.variationValue ?? '')),
-                ),
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              Flexible(
-                flex: 3,
-                child: Container(
-                  height: 50.0,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black12),
-                  ),
-                  child: Center(
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 72.0,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12,
-                          ),
-                          color: Colors.black12,
-                          child: Center(
-                            child: Text(
-                              '₹',
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            child: Text(
-                              sku.dBasePriceWithoutRupeeSymbol.toString(),
-                              softWrap: true,
-                              textAlign: TextAlign.right,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              IconButton(
-                color: Theme.of(context).colorScheme.onSurface,
-                icon: Icon(Icons.replay),
-                onPressed: () {
-                  this.onSkuClick(this.sku);
-                },
-              )
             ],
           ),
         ],

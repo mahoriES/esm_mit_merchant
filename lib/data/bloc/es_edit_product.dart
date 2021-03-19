@@ -1,7 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/constants/es_api_path.dart';
 import 'package:foore/data/http_service.dart';
@@ -40,70 +40,116 @@ class EsEditProductBloc {
     shortDescriptionEditController.text = product?.dProductDescription;
     longDescriptionEditController.text = product?.dProductLongDescription;
     displayLine1EditController.text = product?.dLine1;
-    // unitEditController.text = product?.dUnit;
+    unitEditController.text = product?.dUnit;
+    this._esEditProductState.preSelectedSKUs = product.skus.map((sku) {
+      return EsProductSKUTamplate(
+        skuCode: sku.skuCode,
+        skuId: sku.skuId,
+        inStock: sku.inStock,
+        isActive: sku.isActive,
+        price: sku.basePrice,
+        quantity: sku.properties?.quant?.val,
+        unit: sku.properties?.quant?.unit,
+      );
+    }).toList();
+    _updateState();
   }
 
   updateControllersForSku(EsSku sku) {
-    final unit = sku?.properties?.quant?.unit ?? '';
-    final quantity = sku?.properties?.quant?.val?.toString() ?? '1';
-    if (!_esEditProductState.unitsList.contains(unit)) {
-      _esEditProductState.addNewEntryToUnitsList(unit);
-    }
     skuPriceEditController.text = (sku.basePrice / 100).toString();
-    print('Quantity is::');
-    print(quantity);
-    skuVariationValueEditController.text = quantity;
-    unitEditController.text = unit;
-    this._updateState();
+    skuVariationValueEditController.text = sku.variationValue;
   }
 
-  addProduct(Function onAddProductSuccess) {
-    //print('add Product');
+  addProduct(Function onAddProductSuccess) async {
     this._esEditProductState.isSubmitting = true;
     this._esEditProductState.isSubmitFailed = false;
     this._esEditProductState.isSubmitSuccess = false;
     this._updateState();
-    var payload = new EsAddProductPayload(
+    final payload = new EsAddProductPayload(
       productName: this.nameEditController.text,
-      productDescription: this.shortDescriptionEditController.text,
-      longDescription: this.longDescriptionEditController.text,
       images: _esEditProductState.uploadedImages
-          .map((e) => EsImage(photoId: e.photoId))
+          .map(
+            (e) => EsImage(
+              photoId: e.photoId,
+              photoUrl: e.photoUrl,
+              contentType: e.contentType,
+            ),
+          )
           .toList(),
-      unitName: this.unitEditController.text,
-      displayLine1: this.displayLine1EditController.text,
+      masterId: _esEditProductState.productMasterId,
     );
-    var payloadString = json.encode(payload.toJson());
+    final payloadString = json.encode(payload.toJson());
+
+    debugPrint(payloadString);
     //print(payloadString);
-    this
-        .httpService
-        .esPost(
-            EsApiPaths.postAddProductToBusiness(
-                this.esBusinessesBloc.getSelectedBusinessId()),
-            payloadString)
-        .then((httpResponse) {
-      if (httpResponse.statusCode == 200 ||
-          httpResponse.statusCode == 202 ||
-          httpResponse.statusCode == 201) {
-        this._esEditProductState.isSubmitting = false;
-        this._esEditProductState.isSubmitFailed = false;
-        this._esEditProductState.isSubmitSuccess = true;
-        var addedProduct = EsProduct.fromJson(json.decode(httpResponse.body));
-        if (onAddProductSuccess != null) {
-          onAddProductSuccess(addedProduct);
+    final httpResponse = await this.httpService.esPost(
+        EsApiPaths.postAddProductToBusiness(
+            this.esBusinessesBloc.getSelectedBusinessId()),
+        payloadString);
+    // TODO: Refactor status codes
+    if (httpResponse.statusCode == 200 ||
+        httpResponse.statusCode == 202 ||
+        httpResponse.statusCode == 201) {
+      this._esEditProductState.isSubmitting = false;
+      this._esEditProductState.isSubmitFailed = false;
+      this._esEditProductState.isSubmitSuccess = true;
+      final addedProduct = EsProduct.fromJson(json.decode(httpResponse.body));
+
+      // put categories to the product
+      final addCategoriesToProductPayload = AddCategoriesToProductPayload(
+          categoryIds: this
+              ._esEditProductState
+              .preSelectedCategories
+              .map((e) => e.categoryId)
+              .toList());
+      final addCategoriesToProductPayloadString =
+          json.encode(addCategoriesToProductPayload.toJson());
+      await this.httpService.esPut(
+            EsApiPaths.putAddCategoriesToProduct(
+              this.esBusinessesBloc.getSelectedBusinessId(),
+              addedProduct.productId,
+            ),
+            addCategoriesToProductPayloadString,
+          );
+
+      // Add SKU to product
+      this._esEditProductState.preSelectedSKUs.forEach((element) async {
+        final addSKUPayload = AddSkuPayload(
+            basePrice:
+                (double.parse(element.priceController.text) * 100).toInt(),
+            properties: SKUProperties(
+                quant: SKUQuant(
+              unit: element.unit,
+              val: element.quantityController.text,
+            )),
+            inStock: true,
+            isActive: true,
+            skuCode: element.skuCode,
+            masterId: element.masterId);
+        final skuHttpResponse = await this.httpService.esPost(
+              EsApiPaths.postAddSkuToProduct(
+                this.esBusinessesBloc.getSelectedBusinessId(),
+                addedProduct.productId,
+              ),
+              json.encode(addSKUPayload.toJson()),
+            );
+        if (skuHttpResponse.statusCode == 200 ||
+            skuHttpResponse.statusCode == 202 ||
+            skuHttpResponse.statusCode == 201) {
+          final addedSku = EsSku.fromJson(json.decode(skuHttpResponse.body));
+          addedProduct.skus.add(addedSku);
         }
-      } else {
-        this._esEditProductState.isSubmitting = false;
-        this._esEditProductState.isSubmitFailed = true;
-        this._esEditProductState.isSubmitSuccess = false;
+      });
+
+      if (onAddProductSuccess != null) {
+        onAddProductSuccess(addedProduct);
       }
-      this._updateState();
-    }).catchError((onError) {
+    } else {
       this._esEditProductState.isSubmitting = false;
       this._esEditProductState.isSubmitFailed = true;
       this._esEditProductState.isSubmitSuccess = false;
-      this._updateState();
-    });
+    }
+    this._updateState();
   }
 
   updateProduct(
@@ -197,18 +243,13 @@ class EsEditProductBloc {
   }
 
   addSkuToProduct(bool inStock, bool isActive, onSuccess, onFail) {
-    final payload = AddSkuPayload(
-      basePrice: (double.parse(skuPriceEditController.text) * 100).toInt(),
-      properties: SKUProperties(
-        quant: SKUQuant(
-          unit: unitEditController.text,
-          val: skuVariationValueEditController.text,
-        ),
-      ),
-      inStock: inStock,
-      isActive: isActive,
-    );
-
+    var payload = AddSkuPayload(
+        basePrice: (double.parse(skuPriceEditController.text) * 100).toInt(),
+        // skuCode: skuCodeEditController.text,
+        variationValue:
+            "${skuVariationValueEditController.text} ${unitEditController.text}",
+        inStock: inStock,
+        isActive: isActive);
     this._esEditProductState.isSubmitting = true;
     this._esEditProductState.isSubmitFailed = false;
     this._esEditProductState.isSubmitSuccess = false;
@@ -252,12 +293,8 @@ class EsEditProductBloc {
   editCurrentSku(int skuId, bool inStock, bool isActive, onSuccess, onFail) {
     var payload = AddSkuPayload(
         basePrice: (double.parse(skuPriceEditController.text) * 100).toInt(),
-        properties: SKUProperties(
-          quant: SKUQuant(
-            unit: unitEditController.text,
-            val: skuVariationValueEditController.text,
-          ),
-        ),
+        variationValue:
+            "${skuVariationValueEditController.text} ${unitEditController.text}",
         inStock: inStock,
         isActive: isActive);
     this._esEditProductState.isSubmitting = true;
@@ -280,8 +317,10 @@ class EsEditProductBloc {
         this._esEditProductState.isSubmitting = false;
         this._esEditProductState.isSubmitFailed = false;
         this._esEditProductState.isSubmitSuccess = true;
-        final updatedSku = EsSku.fromJson(json.decode(httpResponse.body));
+        var updatedSku = EsSku.fromJson(json.decode(httpResponse.body));
+
         this._esEditProductState.currentProduct.updateSku(updatedSku);
+
         onSuccess();
       } else {
         this._esEditProductState.isSubmitting = false;
@@ -291,39 +330,11 @@ class EsEditProductBloc {
       }
       this._updateState();
     }).catchError((onError) {
+      print(onError.toString());
       this._esEditProductState.isSubmitting = false;
       this._esEditProductState.isSubmitFailed = true;
       this._esEditProductState.isSubmitSuccess = false;
       onFail();
-      this._updateState();
-    });
-  }
-
-  editSkuStock(int skuId, bool inStock) {
-    final payload = AddSkuPayload(
-      inStock: inStock,
-    );
-    this._esEditProductState.currentProduct.setInStockForSku(skuId, inStock);
-    this._updateState();
-    final payloadString = json.encode(payload.toJson());
-    this
-        .httpService
-        .esPatch(
-            EsApiPaths.updateSku(this.esBusinessesBloc.getSelectedBusinessId(),
-                this._esEditProductState.currentProductId, skuId),
-            payloadString)
-        .then((httpResponse) {
-      if (httpResponse.statusCode != 200) {
-        Fluttertoast.showToast(msg: 'Failed to update product variation.');
-        this
-            ._esEditProductState
-            .currentProduct
-            .setInStockForSku(skuId, !inStock);
-      }
-      this._updateState();
-    }).catchError((onError) {
-      Fluttertoast.showToast(msg: 'Failed to update product variation.');
-      this._esEditProductState.currentProduct.setInStockForSku(skuId, !inStock);
       this._updateState();
     });
   }
@@ -368,7 +379,7 @@ class EsEditProductBloc {
 
   getCategories() async {
     this._esEditProductState.isLoading = true;
-    this._esEditProductState.response = null;
+    this._esEditProductState.productCategoriesResponse = null;
     this._esEditProductState.categories = List<EsCategory>();
     this._updateState();
     if (await getAllCategories()) {
@@ -380,11 +391,13 @@ class EsEditProductBloc {
         if (httpResponse.statusCode == 200) {
           this._esEditProductState.isLoadingFailed = false;
           this._esEditProductState.isLoading = false;
-          this._esEditProductState.response =
+          this._esEditProductState.productCategoriesResponse =
               EsGetCategoriesForProductResponse.fromJson(
                   json.decode(httpResponse.body));
           this._esEditProductState.categories =
-              this._esEditProductState.response.categories;
+              this._esEditProductState.productCategoriesResponse.categories;
+          this._esEditProductState.preSelectedCategories =
+              this._esEditProductState.productCategoriesResponse.categories;
         } else {
           this._esEditProductState.isLoadingFailed = true;
           this._esEditProductState.isLoading = false;
@@ -485,7 +498,6 @@ class EsEditProductBloc {
   setCurrentProduct(EsProduct product) {
     this._esEditProductState.currentProduct = product;
     updateControllers(product);
-    // this._esEditProductState.isProductInStock = product.inStock;
     this._updateState();
   }
 
@@ -497,11 +509,6 @@ class EsEditProductBloc {
 
   setIsSubmitting(bool isSubmitting) {
     this._esEditProductState.isSubmitting = isSubmitting;
-    this._updateState();
-  }
-
-  setSelectedUnit(String unit) {
-    this.unitEditController.text = unit;
     this._updateState();
   }
 
@@ -698,6 +705,60 @@ class EsEditProductBloc {
       }
     } catch (err) {}
   }
+
+  // Add Product flow
+  addPreSelectedCategories(List<EsCategory> categories) {
+    this._esEditProductState.preSelectedCategories = categories;
+    this._updateState();
+  }
+
+  addPreSelectedSKU() {
+    this._esEditProductState.preSelectedSKUs.add(EsProductSKUTamplate());
+    this._updateState();
+  }
+
+  removePreSelectedCategory(int categoryId) {
+    this
+        ._esEditProductState
+        .preSelectedCategories
+        .removeWhere((element) => element.categoryId == categoryId);
+    this._updateState();
+  }
+
+  removePreSelectedSKU(UniqueKey id) {
+    this
+        ._esEditProductState
+        .preSelectedSKUs
+        .removeWhere((element) => element.key == id);
+    this._updateState();
+  }
+
+  updatePreSelectedSKUUnit(UniqueKey id, String unit) {
+    this._esEditProductState.preSelectedSKUs.forEach((element) {
+      if (element.key == id) {
+        element.unit = unit;
+      }
+    });
+    this._updateState();
+  }
+
+  updatePreSelectedSKUStock(UniqueKey id, bool inStock) {
+    this._esEditProductState.preSelectedSKUs.forEach((element) {
+      if (element.key == id) {
+        element.inStock = inStock;
+      }
+    });
+    this._updateState();
+  }
+
+  List<String> getUnitsList(String preSelectedUnit) {
+    List<String> unitList = [...EsEditProductState.unitsList];
+    if (preSelectedUnit != null) {
+      unitList.removeWhere((element) => preSelectedUnit == element);
+      unitList = [preSelectedUnit, ...unitList];
+    }
+    return unitList;
+  }
 }
 
 class EsEditProductState {
@@ -707,7 +768,7 @@ class EsEditProductState {
   bool isSubmitSuccess = false;
   bool isSubmitFailed = false;
 
-  final List<String> unitsList = [
+  static const List<String> unitsList = [
     "Piece",
     "Serving",
     "Kg",
@@ -717,8 +778,7 @@ class EsEditProductState {
     "Dozen",
     "ft",
     "meter",
-    "sq. ft.",
-    ""
+    "sq. ft."
   ];
 
   addNewEntryToUnitsList(String unit) {
@@ -733,7 +793,7 @@ class EsEditProductState {
   EsGetCategoriesResponse allCategoriesResponse;
 
   List<EsCategory> categories = List<EsCategory>();
-  EsGetCategoriesForProductResponse response;
+  EsGetCategoriesForProductResponse productCategoriesResponse;
 
   EsProduct currentProduct;
   EsSku currentSku;
@@ -746,6 +806,23 @@ class EsEditProductState {
 
   bool get isNewSku => currentSku == null;
 
+  int productMasterId;
+
+  //Add Product flow
+  List<EsCategory> preSelectedCategories = List<EsCategory>();
+
+  List<EsProductSKUTamplate> preSelectedSKUs = [EsProductSKUTamplate()];
+
+  List<EsProductSKUTamplate> get preSelectedActiveSKUs =>
+      preSelectedSKUs.where((value) => value.isActive).toList();
+
+  EsProductSKUTamplate getPreSelectedSKU(Key key) {
+    return preSelectedSKUs.firstWhere(
+      (element) => element.key == key,
+      orElse: () => null,
+    );
+  }
+
   EsCategory getCategoryById(int categoryId) {
     if (allCategoriesResponse == null) {
       return null;
@@ -756,4 +833,39 @@ class EsEditProductState {
   }
 
   EsEditProductState();
+}
+
+class EsProductSKUTamplate {
+  UniqueKey key;
+  int masterId;
+  TextEditingController quantityController;
+  String unit;
+  TextEditingController priceController;
+  String skuCode;
+  bool isActive;
+  bool inStock;
+  int skuId;
+  EsProductSKUTamplate({
+    UniqueKey id,
+    int masterId,
+    String quantity,
+    String unit,
+    int price,
+    String skuCode,
+    bool isActive,
+    bool inStock,
+    int skuId,
+  }) {
+    this.key = id ?? new UniqueKey();
+    this.quantityController = new TextEditingController();
+    this.quantityController.text = quantity ?? '1';
+    this.priceController = new TextEditingController();
+    this.priceController.text = price?.toString() ?? '1';
+    this.unit = unit ?? 'Piece';
+    this.masterId = masterId;
+    this.skuCode = skuCode;
+    this.isActive = isActive ?? true;
+    this.inStock = inStock ?? true;
+    this.skuId = skuId;
+  }
 }
