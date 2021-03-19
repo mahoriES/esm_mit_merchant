@@ -256,6 +256,21 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
+                              const Spacer(),
+                              if (snapshot.data.preSelectedInactiveSKUs.length >
+                                  0)
+                                FlatButton(
+                                  onPressed: () {
+                                    showRestoreVariationsModel(context);
+                                  },
+                                  child: Text(
+                                    'Restore deleted variations',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context).textTheme.caption,
+  
+                                  ),
+                                  // color: Theme.of(context).colorScheme.surface,
+                                ),
                             ],
                           );
                         }
@@ -318,6 +333,171 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
             );
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  showRestoreVariationsModel(BuildContext context) {
+    final esEditProductBloc = Provider.of<EsEditProductBloc>(context);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Stack(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(color: Colors.transparent),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: StreamBuilder<EsEditProductState>(
+                stream: esEditProductBloc.esEditProductStateObservable,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Container();
+                  }
+                  return DraggableScrollableSheet(
+                    initialChildSize: 0.4,
+                    minChildSize: 0.25,
+                    maxChildSize: 1,
+                    builder: (context, scrollController) {
+                      return Container(
+                        color: Colors.white,
+                        child: ListView.builder(
+                          controller: scrollController,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 20.0),
+                          itemCount:
+                              snapshot.data.preSelectedInactiveSKUs.length,
+                          itemBuilder: (context, index) {
+                            return RestoreVariationCard(
+                                snapshot.data.preSelectedInactiveSKUs[index],
+                                esEditProductBloc);
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class RestoreVariationCard extends StatelessWidget {
+  final EsProductSKUTamplate skuTemplate;
+  final EsEditProductBloc esEditProductBloc;
+  const RestoreVariationCard(
+    this.skuTemplate,
+    this.esEditProductBloc, {
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                'SKU: ' + skuTemplate.skuCode,
+                style: Theme.of(context).textTheme.caption,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 4.0,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Flexible(
+                flex: 2,
+                child: Container(
+                  height: 50.0,
+                  padding: EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black12),
+                  ),
+                  child: Center(
+                    child: Text(skuTemplate.quantityController.text +
+                        ' ' +
+                        (skuTemplate.unit)),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              Flexible(
+                flex: 3,
+                child: Container(
+                  height: 50.0,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black12),
+                  ),
+                  child: Center(
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 72.0,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                          ),
+                          color: Colors.black12,
+                          child: Center(
+                            child: Text(
+                              '₹',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: Text(
+                              skuTemplate.priceController.text.toString(),
+                              softWrap: true,
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              IconButton(
+                color: Theme.of(context).primaryColor,
+                icon: Icon(Icons.replay),
+                onPressed: () {
+                  this.esEditProductBloc.restorePreSelectedSKU(skuTemplate.key);
+                },
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

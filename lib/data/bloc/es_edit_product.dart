@@ -9,6 +9,7 @@ import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/data/model/es_media.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/data/model/full_product_payload.dart';
+import 'package:foore/utils/utils.dart';
 import 'package:foore/widgets/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
@@ -161,7 +162,9 @@ class EsEditProductBloc {
     this._updateState();
     final fullProductPayload = FullProductPayload(
         productInfo: EsAddProductPayload(
+          productId: this._esEditProductState.currentProduct.productId,
           productName: this.nameEditController.text,
+          productDescription: this.shortDescriptionEditController.text,
           images: _esEditProductState.uploadedImages
               .map(
                 (e) => EsImage(
@@ -204,7 +207,7 @@ class EsEditProductBloc {
     debugPrint(payloadString);
     //print(payloadString);
     final httpResponse = await this.httpService.esPatch(
-        EsApiPaths.patchUpdateProduct(
+        EsApiPaths.patchUpdateFullProduct(
             this.esBusinessesBloc.getSelectedBusinessId(),
             this._esEditProductState.currentProductId),
         payloadString);
@@ -801,10 +804,33 @@ class EsEditProductBloc {
   }
 
   removePreSelectedSKU(UniqueKey id) {
-    this
+    // If the sku is already created we will deactivate it otherwise we will remove from the list.
+    this._esEditProductState.preSelectedSKUs = this
         ._esEditProductState
         .preSelectedSKUs
-        .removeWhere((element) => element.key == id);
+        .fold<List<EsProductSKUTamplate>>([], (previousValue, element) {
+      if (element.key == id) {
+        if (element.skuCode != null) {
+          element.isActive = false;
+        } else {
+          return previousValue;
+        }
+      }
+      return [...previousValue, element];
+    });
+    this._updateState();
+  }
+
+  restorePreSelectedSKU(UniqueKey key) {
+    this._esEditProductState.preSelectedSKUs = this
+        ._esEditProductState
+        .preSelectedSKUs
+        .fold<List<EsProductSKUTamplate>>([], (previousValue, element) {
+      if (element.key == key) {
+        element.isActive = true;
+      }
+      return [...previousValue, element];
+    });
     this._updateState();
   }
 
@@ -891,6 +917,9 @@ class EsEditProductState {
   List<EsProductSKUTamplate> get preSelectedActiveSKUs =>
       preSelectedSKUs.where((value) => value.isActive).toList();
 
+  List<EsProductSKUTamplate> get preSelectedInactiveSKUs =>
+      preSelectedSKUs.where((value) => !value.isActive).toList();
+
   EsProductSKUTamplate getPreSelectedSKU(Key key) {
     return preSelectedSKUs.firstWhere(
       (element) => element.key == key,
@@ -935,7 +964,8 @@ class EsProductSKUTamplate {
     this.quantityController = new TextEditingController();
     this.quantityController.text = quantity ?? '1';
     this.priceController = new TextEditingController();
-    this.priceController.text = price?.toString() ?? '1';
+    this.priceController.text =
+        price != null ? (price / 100).toString() : '1.00';
     this.unit = unit ?? 'Piece';
     this.masterId = masterId;
     this.skuCode = skuCode;

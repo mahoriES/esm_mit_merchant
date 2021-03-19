@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Utils {
   static String getTimeDiffrence(String timeString) {
@@ -86,4 +87,12 @@ Future<void> showFailedAlertDialog(BuildContext context) async {
       );
     },
   );
+}
+
+String getPriceStringWithoutRupeeSymbol(int price) {
+  if (price != null) {
+    return NumberFormat.currency(locale: 'en_IN', symbol: '')
+        .format(price / 100);
+  }
+  return '0.00';
 }

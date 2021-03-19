@@ -25,6 +25,8 @@ class EsApiPaths {
       'businesses/$businessId/catalog/products/$productId/categories/$categoryId';
   static final patchUpdateProduct = (String businessId, int productId) =>
       'businesses/$businessId/catalog/products/$productId';
+  static final patchUpdateFullProduct = (String businessId, int productId) =>
+      'businesses/$businessId/catalog/products/full';
   static final delProduct = (String businessId, int productId) =>
       'businesses/$businessId/catalog/products/$productId';
   static final postAddProductToBusiness =

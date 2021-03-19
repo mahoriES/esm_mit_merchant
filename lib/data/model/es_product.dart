@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 
 class EsAddProductPayload {
+  int productId;
   String productName;
   String unitName;
   String productDescription;
@@ -11,6 +12,7 @@ class EsAddProductPayload {
 
   EsAddProductPayload(
       {this.productName,
+      this.productId,
       this.unitName,
       this.productDescription,
       this.images,
@@ -31,6 +33,7 @@ class EsAddProductPayload {
     longDescription = json['long_description'];
     displayLine1 = json['display_line_1'];
     masterId = json['master_id'];
+    productId = json['product_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -55,6 +58,9 @@ class EsAddProductPayload {
     }
     if (this.masterId != null) {
       data['master_id'] = this.masterId;
+    }
+    if (this.productId != null) {
+      data['product_id'] = this.productId;
     }
     return data;
   }
