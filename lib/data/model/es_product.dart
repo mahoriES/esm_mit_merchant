@@ -485,6 +485,7 @@ class AddSkuPayload {
   int basePrice;
   String skuCode;
   String variationValue;
+  int skuId;
   bool isActive;
   bool inStock;
   SKUProperties properties;
@@ -497,6 +498,7 @@ class AddSkuPayload {
       this.isActive,
       this.inStock,
       this.properties,
+      this.skuId,
       this.masterId});
 
   AddSkuPayload.fromJson(Map<String, dynamic> inputJson) {
@@ -515,6 +517,7 @@ class AddSkuPayload {
     properties = inputJson['properties'] != null
         ? new SKUProperties.fromJson(inputJson['properties'])
         : null;
+    skuId = inputJson['sku_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -542,6 +545,9 @@ class AddSkuPayload {
     }
     if (this.properties != null) {
       data['properties'] = this.properties.toJson();
+    }
+    if (this.skuId != null) {
+      data['sku_id'] = this.skuId;
     }
     return data;
   }

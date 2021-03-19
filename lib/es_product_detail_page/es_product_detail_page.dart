@@ -69,7 +69,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
 
     submit() {
       if (this._formKey.currentState.validate()) {
-        esEditProductBloc.addProduct((EsProduct product) {
+        esEditProductBloc.updateProductFull((EsProduct product) {
           Navigator.of(context).pop(product);
         });
       }
