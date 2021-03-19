@@ -1,13 +1,15 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_category_page/es_category_page.dart';
+import 'package:foore/menu_page/add_menu_image_list.dart';
+import 'package:foore/utils/utils.dart';
 import 'package:provider/provider.dart';
-import 'es_edit_product_image_list.dart';
 
 class EsProductDetailPageParam {
   final EsProduct currentProduct;
@@ -37,28 +39,6 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
     return false;
   }
 
-  // todo Move this function to a common place.
-  _showFailedAlertDialog() async {
-    await showDialog(
-      context: context,
-      barrierDismissible: true, // user must tap button for close dialog!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Submit failed'),
-          content: const Text('Please try again.'),
-          actions: <Widget>[
-            FlatButton(
-              child: const Text('Dismiss'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
-
   @override
   void afterFirstLayout(BuildContext context) {
     final esEditProductBloc = Provider.of<EsEditProductBloc>(context);
@@ -66,7 +46,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
     esEditProductBloc.getCategories();
     esEditProductBloc.esEditProductStateObservable.listen((event) {
       if (event.isSubmitFailed) {
-        this._showFailedAlertDialog();
+        showFailedAlertDialog(context);
       }
     });
   }
@@ -280,9 +260,9 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                           );
                         }
                         return VariationCard(
-                          snapshot.data.preSelectedActiveSKUs[index],
-                          esEditProductBloc,
-                        );
+                            snapshot.data.preSelectedActiveSKUs[index],
+                            esEditProductBloc,
+                            snapshot.data.preSelectedActiveSKUs.length);
                       }),
                     ),
                   ),
@@ -304,7 +284,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                     ),
                   ),
                   SizedBox(height: 8),
-                  EsEditProductImageList(esEditProductBloc),
+                  EsAddMenuItemImageList(esEditProductBloc),
                   SizedBox(height: 32),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -344,10 +324,12 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
 
 class VariationCard extends StatelessWidget {
   final EsProductSKUTamplate skuTemplate;
+  final numberOfPreSelectetSkuTemplate;
   final EsEditProductBloc esEditProductBloc;
   const VariationCard(
     this.skuTemplate,
-    this.esEditProductBloc, {
+    this.esEditProductBloc,
+    this.numberOfPreSelectetSkuTemplate, {
     Key key,
   }) : super(key: key);
 
@@ -478,6 +460,8 @@ class VariationCard extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: TextFormField(
                             controller: skuTemplate.priceController,
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.end,
                             decoration: InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
@@ -538,6 +522,7 @@ class VariationCard extends StatelessWidget {
                 },
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
                   PopupMenuItem(
+                    enabled: numberOfPreSelectetSkuTemplate > 1,
                     value: 1,
                     child: Text('Remove'),
                   ),

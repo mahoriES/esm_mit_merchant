@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 class Utils {
@@ -62,5 +64,26 @@ Widget get placeHolderImage {
   return Image.asset(
     'assets/category_placeholder.png',
     fit: BoxFit.cover,
+  );
+}
+
+Future<void> showFailedAlertDialog(BuildContext context) async {
+  await showDialog(
+    context: context,
+    barrierDismissible: true, // user must tap button for close dialog!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Submit failed'),
+        content: const Text('Please try again.'),
+        actions: <Widget>[
+          FlatButton(
+            child: const Text('Dismiss'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      );
+    },
   );
 }

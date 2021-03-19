@@ -52,6 +52,7 @@ class EsEditProductBloc {
         unit: sku.properties?.quant?.unit,
       );
     }).toList();
+    this._esEditProductState.uploadedImages = product.images;
     _updateState();
   }
 
