@@ -192,6 +192,7 @@ class _EsOrderDetailsChargesComponentState
                     child: TextFormField(
                       //This key is very important to refresh the values for the fields when charges are added/removed.
                       key: Key(additionalChargesList.length.toString()),
+                      enabled: !widget.orderDetails.paymentInfo.isAlreadyPaid,
                       onChanged: (value) {
                         var valid = validateChargeValueInput(value);
                         //We make sure that the correct values is saved under the hood, so we don't accidentally, send invalid values to backend.
@@ -232,8 +233,10 @@ class _EsOrderDetailsChargesComponentState
                     ),
                   ),
                   Expanded(flex: 12, child: SizedBox.shrink()),
-                  getDeleteIconWidget(
-                      context, additionalChargesList[index].chargeName),
+                  if (!widget.orderDetails.paymentInfo.isAlreadyPaid) ...[
+                    getDeleteIconWidget(
+                        context, additionalChargesList[index].chargeName),
+                  ],
                 ],
               ),
             ),
