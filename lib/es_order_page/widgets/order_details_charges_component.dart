@@ -239,8 +239,10 @@ class _EsOrderDetailsChargesComponentState
             ),
           ),
         ],
-        if (additionalChargesList.length <
-            AdditionChargesMetaDataGenerator.allKeyOptions.length) ...[
+        // If payment is already done, don't allow merchant to update the charges.
+        if (!widget.orderDetails.paymentInfo.isAlreadyPaid &&
+            additionalChargesList.length <
+                AdditionChargesMetaDataGenerator.allKeyOptions.length) ...[
           SizedBox(height: 15.toHeight),
           Center(
             child: InkWell(

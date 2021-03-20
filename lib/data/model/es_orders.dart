@@ -633,6 +633,12 @@ class EsOrderPaymentInfo {
         : '';
   }
 
+  bool get isAlreadyPaid {
+    return this.paymentStatus == EsOrderPaymentStatus.APPROVED ||
+        this.paymentStatus == EsOrderPaymentStatus.SUCCESS ||
+        this.paymentStatus == EsOrderPaymentStatus.INITIATED;
+  }
+
   EsOrderPaymentInfo(
       {this.upi,
       this.paymentStatus,
