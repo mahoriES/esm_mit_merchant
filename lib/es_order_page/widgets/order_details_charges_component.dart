@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foore/app_colors.dart';
 import 'package:foore/app_translations.dart';
+import 'package:foore/data/model/es_order_charges.dart';
 import 'package:foore/data/model/es_order_details.dart';
 import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/services/sizeconfig.dart';
@@ -329,27 +330,34 @@ class AdditionChargesMetaDataGenerator {
   static String keyFromEnumValue(AdditionalChargeType chargeType) {
     switch (chargeType) {
       case AdditionalChargeType.deliveryCharge:
-        return 'DELIVERY';
+        return ChargeNameConstants.DELIVERY;
         break;
       case AdditionalChargeType.extraCharge:
-        return 'EXTRA';
+        return ChargeNameConstants.EXTRA;
         break;
       case AdditionalChargeType.packingCharge:
-        return 'PACKING';
+        return ChargeNameConstants.PACKING;
         break;
       case AdditionalChargeType.serviceCharge:
-        return 'SERVICE';
+        return ChargeNameConstants.TAX;
         break;
       default:
         return 'OTHER';
     }
   }
 
-  static List<String> get allKeyOptions =>
-      ['DELIVERY', 'EXTRA', 'PACKING', 'SERVICE'];
+  static List<String> get allKeyOptions => [
+        ChargeNameConstants.DELIVERY,
+        ChargeNameConstants.EXTRA,
+        ChargeNameConstants.PACKING,
+        ChargeNameConstants.TAX
+      ];
 
-  static List<String> get selfPickupKeyOptions =>
-      ['EXTRA', 'PACKING', 'SERVICE'];
+  static List<String> get selfPickupKeyOptions => [
+        ChargeNameConstants.EXTRA,
+        ChargeNameConstants.PACKING,
+        ChargeNameConstants.TAX
+      ];
 
   // Todo: Where is it used?
   static String friendlyChargeNameFromEnumValue(
@@ -374,16 +382,16 @@ class AdditionChargesMetaDataGenerator {
 
   static String friendlyChargeNameFromKeyValue(String key) {
     switch (key) {
-      case 'DELIVERY':
+      case ChargeNameConstants.DELIVERY:
         return 'Delivery Charges';
         break;
-      case 'EXTRA':
+      case ChargeNameConstants.EXTRA:
         return 'Extra Charges';
         break;
-      case 'PACKING':
+      case ChargeNameConstants.PACKING:
         return 'Packing Charges';
         break;
-      case 'SERVICE':
+      case ChargeNameConstants.TAX:
         return 'Service Charges';
         break;
       default:
