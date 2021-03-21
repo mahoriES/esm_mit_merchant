@@ -7,7 +7,7 @@ import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_category_page/es_category_page.dart';
-import 'package:foore/menu_page/add_menu_image_list.dart';
+import 'package:foore/es_product_detail_page/add_menu_image_list.dart';
 import 'package:foore/utils/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -89,8 +89,8 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
       appBar: AppBar(
         title: Text(
           widget.currentProduct != null
-              ? widget.currentProduct.dProductName
-              : "Add Product",
+              ? AppTranslations.of(context).text('products_page_edit_product')
+              : AppTranslations.of(context).text('products_page_add_product'),
         ),
       ),
       body: StreamBuilder<EsEditProductState>(
@@ -547,13 +547,6 @@ class VariationCard extends StatelessWidget {
               SizedBox(
                 width: 4.0,
               ),
-              if (!skuTemplate.isActive)
-                Text(
-                  '(Inactive)',
-                  style: Theme.of(context).textTheme.caption.copyWith(
-                      color:
-                          Theme.of(context).colorScheme.error.withOpacity(0.8)),
-                ),
             ],
           ),
           SizedBox(

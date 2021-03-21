@@ -5,7 +5,6 @@ import 'package:foore/data/bloc/es_products.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/data/model/es_product_catalogue.dart';
 import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
-import 'package:foore/menu_page/add_menu_item_page.dart';
 import 'package:provider/provider.dart';
 import '../app_translations.dart';
 import 'es_business_catalogue_list_view.dart';

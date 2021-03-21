@@ -5,7 +5,6 @@ import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_orders.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_product_detail_page/es_product_detail_page.dart';
-import 'package:foore/menu_page/add_menu_item_page.dart';
 import 'package:foore/menu_page/menu_item.dart';
 import 'package:foore/menu_page/menu_searchbar.dart';
 import 'package:foore/widgets/empty_list.dart';
@@ -116,15 +115,7 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () async {
-              dynamic product = await Navigator.of(context)
-                  .pushNamed(AddMenuItemPage.routeName);
-              if (product != null) {
-                //Open product detail for recently added product
-                debugPrint("Moving to product detail with add sku==true");
-                viewItem(product, openSkuAddUpfront: true);
-              } else {
-                esProductsBloc.getProductsFromSearch();
-              }
+              viewItem(null, openSkuAddUpfront: false);
             },
           )
         ],
