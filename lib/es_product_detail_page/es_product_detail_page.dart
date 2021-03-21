@@ -42,8 +42,12 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
   @override
   void afterFirstLayout(BuildContext context) {
     final esEditProductBloc = Provider.of<EsEditProductBloc>(context);
-    esEditProductBloc.setCurrentProduct(widget.currentProduct);
-    esEditProductBloc.getCategories();
+    if (widget.currentProduct != null) {
+      esEditProductBloc.setCurrentProduct(widget.currentProduct);
+      esEditProductBloc.getCategories();
+    } else {
+      esEditProductBloc.getAllCategories();
+    }
     esEditProductBloc.esEditProductStateObservable.listen((event) {
       if (event.isSubmitFailed) {
         showFailedAlertDialog(context);
@@ -69,16 +73,24 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
 
     submit() {
       if (this._formKey.currentState.validate()) {
-        esEditProductBloc.updateProductFull((EsProduct product) {
-          Navigator.of(context).pop(product);
-        });
+        if (widget.currentProduct != null) {
+          esEditProductBloc.updateProductFull((EsProduct product) {
+            Navigator.of(context).pop(product);
+          });
+        } else {
+          esEditProductBloc.addProductFull((EsProduct product) {
+            Navigator.of(context).pop(product);
+          });
+        }
       }
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.currentProduct.dProductName,
+          widget.currentProduct != null
+              ? widget.currentProduct.dProductName
+              : "Add Product",
         ),
       ),
       body: StreamBuilder<EsEditProductState>(
@@ -267,7 +279,6 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                     'Restore deleted variations',
                                     overflow: TextOverflow.ellipsis,
                                     style: Theme.of(context).textTheme.caption,
-  
                                   ),
                                   // color: Theme.of(context).colorScheme.surface,
                                 ),

@@ -9,7 +9,6 @@ import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/data/model/es_media.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/data/model/full_product_payload.dart';
-import 'package:foore/utils/utils.dart';
 import 'package:foore/widgets/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
@@ -155,6 +154,77 @@ class EsEditProductBloc {
     this._updateState();
   }
 
+  addProductFull(Function onUpdateProductSuccess) async {
+    this._esEditProductState.isSubmitting = true;
+    this._esEditProductState.isSubmitFailed = false;
+    this._esEditProductState.isSubmitSuccess = false;
+    this._updateState();
+    final fullProductPayload = FullProductPayload(
+        productInfo: EsAddProductPayload(
+          productName: this.nameEditController.text,
+          productDescription: this.shortDescriptionEditController.text,
+          images: _esEditProductState.uploadedImages
+              .map(
+                (e) => EsImage(
+                  photoId: e.photoId,
+                  photoUrl: e.photoUrl,
+                  contentType: e.contentType,
+                ),
+              )
+              .toList(),
+          // masterId: _esEditProductState.productMasterId,
+        ),
+        skuInfo: this._esEditProductState.preSelectedSKUs.map((element) {
+          return AddSkuPayload(
+            skuId: element.skuId,
+            basePrice:
+                (double.parse(element.priceController.text) * 100).toInt(),
+            properties: SKUProperties(
+                quant: SKUQuant(
+              unit: element.unit,
+              val: element.quantityController.text,
+            )),
+            inStock: element.inStock,
+            isActive: element.isActive,
+            // masterId: element.masterId,
+          );
+        }).toList(),
+        // CategoriesInfo
+        categoriesInfo:
+            this._esEditProductState.preSelectedCategories.length > 0
+                ? this
+                    ._esEditProductState
+                    .preSelectedCategories
+                    .map((e) => CategoriesInfoForFullProduct(
+                          categoryId: e.categoryId,
+                        ))
+                    .toList()[0]
+                : null);
+    final payloadString = json.encode(fullProductPayload.toJson());
+    final httpResponse = await this.httpService.esPost(
+        EsApiPaths.postAddFullProduct(
+          this.esBusinessesBloc.getSelectedBusinessId(),
+        ),
+        payloadString);
+    // TODO: Refactor status codes
+    if (httpResponse.statusCode == 200 ||
+        httpResponse.statusCode == 202 ||
+        httpResponse.statusCode == 201) {
+      this._esEditProductState.isSubmitting = false;
+      this._esEditProductState.isSubmitFailed = false;
+      this._esEditProductState.isSubmitSuccess = true;
+      final addedProduct = EsProduct.fromJson(json.decode(httpResponse.body));
+      if (onUpdateProductSuccess != null) {
+        onUpdateProductSuccess(addedProduct);
+      }
+    } else {
+      this._esEditProductState.isSubmitting = false;
+      this._esEditProductState.isSubmitFailed = true;
+      this._esEditProductState.isSubmitSuccess = false;
+    }
+    this._updateState();
+  }
+
   updateProductFull(Function onUpdateProductSuccess) async {
     this._esEditProductState.isSubmitting = true;
     this._esEditProductState.isSubmitFailed = false;
@@ -178,18 +248,17 @@ class EsEditProductBloc {
         ),
         skuInfo: this._esEditProductState.preSelectedSKUs.map((element) {
           return AddSkuPayload(
-              skuId: element.skuId,
-              basePrice:
-                  (double.parse(element.priceController.text) * 100).toInt(),
-              properties: SKUProperties(
-                  quant: SKUQuant(
-                unit: element.unit,
-                val: element.quantityController.text,
-              )),
-              inStock: true,
-              isActive: true,
-              skuCode: element.skuCode,
-              masterId: element.masterId);
+            skuId: element.skuId,
+            basePrice:
+                (double.parse(element.priceController.text) * 100).toInt(),
+            properties: SKUProperties(
+                quant: SKUQuant(
+              unit: element.unit,
+              val: element.quantityController.text,
+            )),
+            inStock: element.inStock,
+            isActive: element.isActive,
+          );
         }).toList(),
         // CategoriesInfo
         categoriesInfo:
@@ -208,8 +277,8 @@ class EsEditProductBloc {
     //print(payloadString);
     final httpResponse = await this.httpService.esPatch(
         EsApiPaths.patchUpdateFullProduct(
-            this.esBusinessesBloc.getSelectedBusinessId(),
-            this._esEditProductState.currentProductId),
+          this.esBusinessesBloc.getSelectedBusinessId(),
+        ),
         payloadString);
     // TODO: Refactor status codes
     if (httpResponse.statusCode == 200 ||

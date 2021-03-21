@@ -122,11 +122,7 @@ class _EsBusinessCataloguePageState extends State<EsBusinessCataloguePage>
               icon: Icon(Icons.add),
               color: Theme.of(context).primaryColor,
               onPressed: () async {
-                final product = await Navigator.of(context)
-                    .pushNamed(AddMenuItemPage.routeName);
-                if (product != null) {
-                  viewItem(product, openSkuAddUpfront: true);
-                }
+                viewItem(null, openSkuAddUpfront: false);
               },
             ),
           )
