@@ -46,10 +46,9 @@ class _EsBusinessCataloguePageState extends State<EsBusinessCataloguePage>
 
   @override
   Widget build(BuildContext context) {
-    viewItem(EsProduct product, {bool openSkuAddUpfront = false}) async {
+    addProduct() async {
       EsProductDetailPageParam esProductDetailPageParam =
-          EsProductDetailPageParam(
-              currentProduct: product, openSkuAddUpfront: openSkuAddUpfront);
+          EsProductDetailPageParam();
       await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
           arguments: esProductDetailPageParam);
       // TODO: Need to update with a better approach.
@@ -121,7 +120,7 @@ class _EsBusinessCataloguePageState extends State<EsBusinessCataloguePage>
               icon: Icon(Icons.add),
               color: Theme.of(context).primaryColor,
               onPressed: () async {
-                viewItem(null, openSkuAddUpfront: false);
+                addProduct();
               },
             ),
           )

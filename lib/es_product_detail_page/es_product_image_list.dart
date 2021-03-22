@@ -4,19 +4,19 @@ import 'package:foore/app_translations.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
 
-class EsAddMenuItemImageList extends StatefulWidget {
+class EsProductItemImageList extends StatefulWidget {
   final EsEditProductBloc esEdiProductBloc;
 
-  EsAddMenuItemImageList(
+  EsProductItemImageList(
     this.esEdiProductBloc, {
     Key key,
   }) : super(key: key);
 
   @override
-  _EsAddMenuItemImageListState createState() => _EsAddMenuItemImageListState();
+  _EsProductItemImageListState createState() => _EsProductItemImageListState();
 }
 
-class _EsAddMenuItemImageListState extends State<EsAddMenuItemImageList> {
+class _EsProductItemImageListState extends State<EsProductItemImageList> {
   File imageFile;
 
   @override

@@ -96,11 +96,10 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
 
   @override
   Widget build(BuildContext context) {
-    viewItem(EsProduct product, {bool openSkuAddUpfront = false}) async {
+    addProduct() async {
       EsProductDetailPageParam esProductDetailPageParam =
-          EsProductDetailPageParam(
-              currentProduct: product, openSkuAddUpfront: openSkuAddUpfront);
-      var result = await Navigator.of(context).pushNamed(
+          EsProductDetailPageParam();
+      await Navigator.of(context).pushNamed(
         EsProductDetailPage.routeName,
         arguments: esProductDetailPageParam,
       );
@@ -115,7 +114,7 @@ class _EsOrderAddItemState extends State<EsOrderAddItem> {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () async {
-              viewItem(null, openSkuAddUpfront: false);
+              addProduct();
             },
           )
         ],

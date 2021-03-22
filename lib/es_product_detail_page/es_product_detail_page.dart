@@ -7,15 +7,13 @@ import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_category_page/es_category_page.dart';
-import 'package:foore/es_product_detail_page/add_menu_image_list.dart';
+import 'package:foore/es_product_detail_page/es_product_image_list.dart';
 import 'package:foore/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class EsProductDetailPageParam {
   final EsProduct currentProduct;
-  //if this is true, we push directly to add sku item
-  final bool openSkuAddUpfront;
-  EsProductDetailPageParam({this.currentProduct, this.openSkuAddUpfront});
+  EsProductDetailPageParam({this.currentProduct});
 }
 
 class EsProductDetailPage extends StatefulWidget {
@@ -48,11 +46,6 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
     } else {
       esEditProductBloc.getAllCategories();
     }
-    esEditProductBloc.esEditProductStateObservable.listen((event) {
-      if (event.isSubmitFailed) {
-        showFailedAlertDialog(context);
-      }
-    });
   }
 
   @override
@@ -76,10 +69,14 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
         if (widget.currentProduct != null) {
           esEditProductBloc.updateProductFull((EsProduct product) {
             Navigator.of(context).pop(product);
+          }, () {
+            showFailedAlertDialog(context);
           });
         } else {
           esEditProductBloc.addProductFull((EsProduct product) {
             Navigator.of(context).pop(product);
+          }, () {
+            showFailedAlertDialog(context);
           });
         }
       }
@@ -104,7 +101,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
               onWillPop: _onWillPop,
               child: ListView(
                 children: <Widget>[
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   /// Categories Section
                   ///
@@ -276,7 +273,8 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                     showRestoreVariationsModel(context);
                                   },
                                   child: Text(
-                                    'Restore deleted variations',
+                                    AppTranslations.of(context).text(
+                                        'products_page_restore_variations'),
                                     overflow: TextOverflow.ellipsis,
                                     style: Theme.of(context).textTheme.caption,
                                   ),
@@ -305,13 +303,13 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                     ),
                     alignment: Alignment.bottomLeft,
                     child: Text(
-                      'Product images',
+                      AppTranslations.of(context).text('products_page_images'),
                       style: Theme.of(context).textTheme.subtitle2,
                     ),
                   ),
-                  SizedBox(height: 8),
-                  EsAddMenuItemImageList(esEditProductBloc),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 8),
+                  EsProductItemImageList(esEditProductBloc),
+                  const SizedBox(height: 32),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,
@@ -321,12 +319,13 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                           esEditProductBloc.shortDescriptionEditController,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText:
-                              AppTranslations.of(context).text('Description'),
-                          helperText: 'Optional'),
+                          labelText: AppTranslations.of(context)
+                              .text('products_page_description'),
+                          helperText: AppTranslations.of(context)
+                              .text('generic_optional')),
                     ),
                   ),
-                  SizedBox(height: 100),
+                  const SizedBox(height: 100),
                 ],
               ),
             );
@@ -349,6 +348,13 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
 
   showRestoreVariationsModel(BuildContext context) {
     final esEditProductBloc = Provider.of<EsEditProductBloc>(context);
+    final subscription = esEditProductBloc.esEditProductStateObservable
+        .map((state) => state.preSelectedInactiveSKUs.length)
+        .where((skuLength) => skuLength == 0)
+        .take(1)
+        .listen((event) {
+      Navigator.of(context).pop();
+    });
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -359,6 +365,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
           children: [
             GestureDetector(
               onTap: () {
+                subscription.cancel();
                 Navigator.of(context).pop();
               },
               child: Container(color: Colors.transparent),
@@ -381,7 +388,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                         color: Colors.white,
                         child: ListView.builder(
                           controller: scrollController,
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 20.0, vertical: 20.0),
                           itemCount:
                               snapshot.data.preSelectedInactiveSKUs.length,
@@ -428,7 +435,7 @@ class RestoreVariationCard extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 4.0,
           ),
           Row(
@@ -440,7 +447,7 @@ class RestoreVariationCard extends StatelessWidget {
                 flex: 2,
                 child: Container(
                   height: 50.0,
-                  padding: EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(12.0),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black12),
                   ),
@@ -451,7 +458,7 @@ class RestoreVariationCard extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10.0,
               ),
               Flexible(
@@ -466,7 +473,7 @@ class RestoreVariationCard extends StatelessWidget {
                       children: [
                         Container(
                           height: 72.0,
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 12,
                           ),
                           color: Colors.black12,
@@ -482,7 +489,7 @@ class RestoreVariationCard extends StatelessWidget {
                         Expanded(
                           flex: 1,
                           child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10),
+                            padding: const EdgeInsets.only(left: 10, right: 10),
                             child: Text(
                               skuTemplate.priceController.text.toString(),
                               softWrap: true,
@@ -495,7 +502,7 @@ class RestoreVariationCard extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10.0,
               ),
               IconButton(
@@ -539,17 +546,17 @@ class VariationCard extends StatelessWidget {
                       style: Theme.of(context).textTheme.caption,
                     )
                   : Text(
-                      'New',
+                      AppTranslations.of(context).text('products_page_new'),
                       style: Theme.of(context).textTheme.caption.copyWith(
                           // color: Theme.of(context).primaryColor,
                           fontStyle: FontStyle.italic),
                     ),
-              SizedBox(
+              const SizedBox(
                 width: 4.0,
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 4.0,
           ),
           Row(
@@ -560,7 +567,7 @@ class VariationCard extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   decoration: BoxDecoration(
                     border: Border.all(
                       width: 1,
@@ -589,7 +596,7 @@ class VariationCard extends StatelessWidget {
                         flex: 1,
                         child: Container(
                           child: DropdownButton(
-                            underline: SizedBox.shrink(),
+                            underline: const SizedBox.shrink(),
                             isExpanded: true,
                             value: skuTemplate.unit,
                             style: Theme.of(context)
@@ -612,7 +619,7 @@ class VariationCard extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 12.0,
               ),
               Expanded(
@@ -627,7 +634,7 @@ class VariationCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 10,
                           horizontal: 6,
                         ),
@@ -653,7 +660,7 @@ class VariationCard extends StatelessWidget {
                             validator: (text) {
                               if (double.tryParse(text) == null) {
                                 return AppTranslations.of(context)
-                                    .text('orders_page_invalid_price');
+                                    .text('products_page_invalid_price');
                               }
                             },
                           ),
@@ -663,7 +670,7 @@ class VariationCard extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 8.0,
               ),
               Container(
@@ -676,7 +683,8 @@ class VariationCard extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            'In Stock',
+                            AppTranslations.of(context)
+                                .text('products_page_in_stock'),
                             style: Theme.of(context).textTheme.caption,
                           ),
                         ),
@@ -695,7 +703,7 @@ class VariationCard extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 4.0,
               ),
               PopupMenuButton<int>(
@@ -708,7 +716,8 @@ class VariationCard extends StatelessWidget {
                   PopupMenuItem(
                     enabled: numberOfPreSelectetSkuTemplate > 1,
                     value: 1,
-                    child: Text('Remove'),
+                    child: Text(
+                        AppTranslations.of(context).text('generic_remove')),
                   ),
                 ],
               ),

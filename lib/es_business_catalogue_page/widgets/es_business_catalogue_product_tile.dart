@@ -22,8 +22,7 @@ class EsBusinessCatalogueProductTile extends StatelessWidget {
   viewItem(EsProductsBloc esProductBloc, BuildContext context) async {
     EsProductDetailPageParam esProductDetailPageParam =
         EsProductDetailPageParam(
-            currentProduct: businessCatalogueProduct.product,
-            openSkuAddUpfront: false);
+            currentProduct: businessCatalogueProduct.product);
     await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
         arguments: esProductDetailPageParam);
     esProductBloc.reloadProducts(filter);

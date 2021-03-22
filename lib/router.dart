@@ -285,8 +285,7 @@ class AppRouter {
             builder: (context) =>
                 EsEditProductBloc(httpServiceBloc, esBusinessesBloc),
             dispose: (context, value) => value.dispose(),
-            child: EsProductDetailPage(esProductDetailPageParam.currentProduct,
-                openSkuAddUpfront: esProductDetailPageParam.openSkuAddUpfront),
+            child: EsProductDetailPage(esProductDetailPageParam.currentProduct),
           ),
         );
         break;

@@ -17,12 +17,6 @@ class EsEditProductBloc {
   EsEditProductState _esEditProductState = new EsEditProductState();
   final nameEditController = TextEditingController();
   final shortDescriptionEditController = TextEditingController();
-  // final longDescriptionEditController = TextEditingController();
-  // final displayLine1EditController = TextEditingController();
-  // final unitEditController = TextEditingController();
-  // final skuPriceEditController = TextEditingController();
-  // final skuCodeEditController = TextEditingController();
-  // final skuVariationValueEditController = TextEditingController();
   final HttpService httpService;
   final EsBusinessesBloc esBusinessesBloc;
 
@@ -38,10 +32,6 @@ class EsEditProductBloc {
 
   updateControllers(EsProduct product) {
     nameEditController.text = product?.dProductName;
-    // shortDescriptionEditController.text = product?.dProductDescription;
-    // longDescriptionEditController.text = product?.dProductLongDescription;
-    // displayLine1EditController.text = product?.dLine1;
-    // unitEditController.text = product?.dUnit;
     this._esEditProductState.preSelectedSKUs = product.skus.map((sku) {
       return EsProductSKUTamplate(
         skuCode: sku.skuCode,
@@ -57,7 +47,8 @@ class EsEditProductBloc {
     _updateState();
   }
 
-  addProductFull(Function onUpdateProductSuccess) async {
+  addProductFull(
+      Function onAddProductSuccess, Function onAddProductFailed) async {
     this._esEditProductState.isSubmitting = true;
     this._esEditProductState.isSubmitFailed = false;
     this._esEditProductState.isSubmitSuccess = false;
@@ -117,18 +108,22 @@ class EsEditProductBloc {
       this._esEditProductState.isSubmitFailed = false;
       this._esEditProductState.isSubmitSuccess = true;
       final addedProduct = EsProduct.fromJson(json.decode(httpResponse.body));
-      if (onUpdateProductSuccess != null) {
-        onUpdateProductSuccess(addedProduct);
+      if (onAddProductSuccess != null) {
+        onAddProductSuccess(addedProduct);
       }
     } else {
       this._esEditProductState.isSubmitting = false;
       this._esEditProductState.isSubmitFailed = true;
       this._esEditProductState.isSubmitSuccess = false;
+      if (onAddProductFailed != null) {
+        onAddProductFailed();
+      }
     }
     this._updateState();
   }
 
-  updateProductFull(Function onUpdateProductSuccess) async {
+  updateProductFull(
+      Function onUpdateProductSuccess, Function onUpdateProductFailed) async {
     this._esEditProductState.isSubmitting = true;
     this._esEditProductState.isSubmitFailed = false;
     this._esEditProductState.isSubmitSuccess = false;
@@ -198,6 +193,9 @@ class EsEditProductBloc {
       this._esEditProductState.isSubmitting = false;
       this._esEditProductState.isSubmitFailed = true;
       this._esEditProductState.isSubmitSuccess = false;
+      if (onUpdateProductFailed != null) {
+        onUpdateProductFailed();
+      }
     }
     this._updateState();
   }
@@ -258,67 +256,6 @@ class EsEditProductBloc {
       return false;
     }
   }
-
-  // Future<bool> updateSku(int skuId, payloadString) async {
-  //   bool success = false;
-  //   this._esEditProductState.isSubmitting = true;
-  //   this._esEditProductState.isSubmitFailed = false;
-  //   this._esEditProductState.isSubmitSuccess = false;
-  //   this._updateState();
-
-  //   try {
-  //     var httpResponse = await this.httpService.esPatch(
-  //         EsApiPaths.updateSku(this.esBusinessesBloc.getSelectedBusinessId(),
-  //             this._esEditProductState.currentProductId, skuId),
-  //         payloadString);
-  //     if (httpResponse.statusCode == 200 ||
-  //         httpResponse.statusCode == 202 ||
-  //         httpResponse.statusCode == 201) {
-  //       this._esEditProductState.isSubmitting = false;
-  //       this._esEditProductState.isSubmitFailed = false;
-  //       this._esEditProductState.isSubmitSuccess = true;
-  //       success = true;
-  //     } else {
-  //       this._esEditProductState.isSubmitting = false;
-  //       this._esEditProductState.isSubmitFailed = true;
-  //       this._esEditProductState.isSubmitSuccess = false;
-  //     }
-  //   } catch (err) {
-  //     print(err.toString());
-  //     this._esEditProductState.isSubmitting = false;
-  //     this._esEditProductState.isSubmitFailed = true;
-  //     this._esEditProductState.isSubmitSuccess = false;
-  //   }
-
-  //   return success;
-  // }
-
-  // updateSkuInStock(int skuId, bool inStock) async {
-  //   final Map<String, dynamic> data = new Map<String, dynamic>();
-  //   data['in_stock'] = inStock;
-  //   var payloadString = json.encode(data);
-  //   print(payloadString);
-  //   bool sucess = await updateSku(skuId, payloadString);
-  //   if (sucess) {
-  //     this._esEditProductState.currentProduct.setInStockForSku(skuId, inStock);
-  //   }
-  //   this._updateState();
-  // }
-
-  // updateSkuInActive(int skuId, bool isActive) async {
-  //   final Map<String, dynamic> data = new Map<String, dynamic>();
-  //   data['is_active'] = isActive;
-  //   var payloadString = json.encode(data);
-  //   print(payloadString);
-  //   bool sucess = await updateSku(skuId, payloadString);
-  //   if (sucess) {
-  //     this
-  //         ._esEditProductState
-  //         .currentProduct
-  //         .setIsActiveForSku(skuId, isActive);
-  //   }
-  //   this._updateState();
-  // }
 
   setCurrentProduct(EsProduct product) {
     this._esEditProductState.currentProduct = product;

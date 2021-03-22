@@ -135,6 +135,8 @@
 	"generic_submit_failed": "Submit failed",
 	"generic_please_please_try_again": "Please try again..",
 	"generic_discard": "Discard",
+	"generic_optional": "Optional",
+	"generic_remove": "Remove",
  
 	"merchant_profile_page_title": "Create profile",
 	"merchant_profile_page_name": "Name",
@@ -341,6 +343,11 @@
 	"products_page_save": "Save",
 	"products_page_edit": "Edit",
 	"products_page_please_select_unit_first": "Please Select Unit First",
+	"products_page_restore_variations": "Restore deleted variations",
+	"products_page_images": "Product images",
+	"products_page_description": "Description",
+	"products_page_new": "New",
+	"products_page_invalid_price": "Invalid price",
 
 
 	"video_page_publish": "Publish",
