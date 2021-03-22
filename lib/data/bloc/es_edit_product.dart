@@ -44,6 +44,7 @@ class EsEditProductBloc {
       );
     }).toList();
     this._esEditProductState.uploadedImages = product.images;
+    this._esEditProductState.spotlight = product.spotlight ?? false;
     _updateState();
   }
 
@@ -57,6 +58,8 @@ class EsEditProductBloc {
         productInfo: EsAddProductPayload(
           productName: this.nameEditController.text,
           productDescription: this.shortDescriptionEditController.text,
+          spotlight: this._esEditProductState.spotlight,
+          inStock: this._esEditProductState.inStock,
           images: _esEditProductState.uploadedImages
               .map(
                 (e) => EsImage(
@@ -133,6 +136,8 @@ class EsEditProductBloc {
           productId: this._esEditProductState.currentProduct.productId,
           productName: this.nameEditController.text,
           productDescription: this.shortDescriptionEditController.text,
+          spotlight: this._esEditProductState.spotlight,
+          inStock: this._esEditProductState.inStock,
           images: _esEditProductState.uploadedImages
               .map(
                 (e) => EsImage(
@@ -417,6 +422,20 @@ class EsEditProductBloc {
     this._updateState();
   }
 
+  updateProductStock(bool inStock) {
+    this._esEditProductState.preSelectedSKUs.forEach((element) {
+      if (element.isActive) {
+        element.inStock = inStock;
+      }
+    });
+    this._updateState();
+  }
+
+  updateProductSpotlight(bool spotlight) {
+    this._esEditProductState.spotlight = spotlight;
+    this._updateState();
+  }
+
   List<String> getUnitsList(String preSelectedUnit) {
     List<String> unitList = [...EsEditProductState.unitsList];
     if (preSelectedUnit != null) {
@@ -473,6 +492,12 @@ class EsEditProductState {
   bool get isNewSku => currentSku == null;
 
   int productMasterId;
+
+  bool spotlight = false;
+  bool get inStock => preSelectedActiveSKUs.fold(
+      false,
+      (previousValue, element) =>
+          element.inStock ? element.inStock : previousValue);
 
   //Add Product flow
   List<EsCategory> preSelectedCategories = List<EsCategory>();

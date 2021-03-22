@@ -8,6 +8,8 @@ import 'package:foore/data/bloc/es_edit_product.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_category_page/es_category_page.dart';
 import 'package:foore/es_product_detail_page/es_product_image_list.dart';
+import 'package:foore/utils/input_limit.dart';
+import 'package:foore/utils/input_validations.dart';
 import 'package:foore/utils/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -101,7 +103,55 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
               onWillPop: _onWillPop,
               child: ListView(
                 children: <Widget>[
-                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Switch(
+                            value: snapshot.data.inStock,
+                            onChanged: (updatedVal) {
+                              esEditProductBloc.updateProductStock(updatedVal);
+                            },
+                          ),
+                          Text(
+                            AppTranslations.of(context)
+                                .text('products_page_in_stock'),
+                            style: Theme.of(context).textTheme.caption,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              esEditProductBloc.updateProductSpotlight(
+                                  !snapshot.data.spotlight);
+                            },
+                            child: ImageIcon(
+                              AssetImage('assets/icons/spotlights.png'),
+                              color: snapshot.data.spotlight
+                                  ? Theme.of(context).primaryColor
+                                  : Colors.black26,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 12.0,
+                          ),
+                          Text(
+                            AppTranslations.of(context)
+                                .text('products_page_spotlight'),
+                            style: Theme.of(context).textTheme.caption,
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  Divider(
+                    color: Colors.black12,
+                  ),
 
                   /// Categories Section
                   ///
@@ -234,6 +284,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                         labelText: AppTranslations.of(context)
                             .text('products_page_name'),
                       ),
+                      maxLength: ProductsInputLimit.kProductName,
                     ),
                   ),
 
@@ -323,6 +374,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                               .text('products_page_description'),
                           helperText: AppTranslations.of(context)
                               .text('generic_optional')),
+                      maxLength: ProductsInputLimit.kProductShortDescription,
                     ),
                   ),
                   const SizedBox(height: 100),
@@ -583,6 +635,7 @@ class VariationCard extends StatelessWidget {
                           decoration: InputDecoration(
                             isDense: true,
                             border: InputBorder.none,
+                            counterText: "",
                           ),
                           validator: (text) {
                             return text.length == 0
@@ -590,6 +643,7 @@ class VariationCard extends StatelessWidget {
                                     .text('error_messages_required')
                                 : null;
                           },
+                          maxLength: ProductsInputLimit.kSkuQuantity,
                         ),
                       ),
                       Expanded(
@@ -658,10 +712,7 @@ class VariationCard extends StatelessWidget {
                               border: InputBorder.none,
                             ),
                             validator: (text) {
-                              if (double.tryParse(text) == null) {
-                                return AppTranslations.of(context)
-                                    .text('products_page_invalid_price');
-                              }
+                              return validateSkuPrice(text, context);
                             },
                           ),
                         ),

@@ -9,6 +9,8 @@ class EsAddProductPayload {
   String longDescription;
   String displayLine1;
   int masterId;
+  bool spotlight;
+  bool inStock;
 
   EsAddProductPayload(
       {this.productName,
@@ -18,6 +20,8 @@ class EsAddProductPayload {
       this.images,
       this.longDescription,
       this.displayLine1,
+      this.spotlight,
+      this.inStock,
       this.masterId});
 
   EsAddProductPayload.fromJson(Map<String, dynamic> json) {
@@ -34,6 +38,8 @@ class EsAddProductPayload {
     displayLine1 = json['display_line_1'];
     masterId = json['master_id'];
     productId = json['product_id'];
+    spotlight = json['spotlight'];
+    inStock = json['in_stock'];
   }
 
   Map<String, dynamic> toJson() {
@@ -61,6 +67,12 @@ class EsAddProductPayload {
     }
     if (this.productId != null) {
       data['product_id'] = this.productId;
+    }
+    if (this.spotlight != null) {
+      data['spotlight'] = this.spotlight;
+    }
+    if (this.inStock != null) {
+      data['in_stock'] = this.inStock;
     }
     return data;
   }
@@ -170,6 +182,7 @@ class EsProduct {
   String productDescription;
   bool isActive;
   bool inStock;
+  bool spotlight;
   List<EsImage> images;
   String longDescription;
   String displayLine1;
@@ -324,6 +337,7 @@ class EsProduct {
         images.add(new EsImage.fromJson(v));
       });
     }
+    spotlight = json['spotlight'];
   }
 
   Map<String, dynamic> toJson() {
@@ -336,6 +350,7 @@ class EsProduct {
     data['long_description'] = this.longDescription;
     data['display_line_1'] = this.displayLine1;
     data['unit_name'] = this.unitName;
+    data['spotlight'] = this.spotlight;
     if (this.skus != null) {
       data['skus'] = this.skus.map((v) => v.toJson()).toList();
     }
