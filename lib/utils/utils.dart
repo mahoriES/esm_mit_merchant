@@ -59,6 +59,17 @@ class Utils {
 
     return result.toString();
   }
+
+  static int getPriceInPaisa(input) {
+    double priceInRupees = double.tryParse(input) ?? 0;
+    int priceInPaisa = (priceInRupees * 100).round();
+    return priceInPaisa;
+  }
+
+  static int getPriceInPercent(input) {
+    double price = double.tryParse(input) ?? 0;
+    return price.round();
+  }
 }
 
 Widget get placeHolderImage {

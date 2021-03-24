@@ -10,10 +10,12 @@ class FreeFormItemTile extends StatefulWidget {
   final FreeFormItems item;
   final Function() onReject;
   final Function() onConfirm;
+  final bool canBeUpdated;
   FreeFormItemTile({
     @required this.item,
     @required this.onReject,
     @required this.onConfirm,
+    @required this.canBeUpdated,
   });
 
   @override
@@ -31,51 +33,55 @@ class _FreeFormItemTileState extends State<FreeFormItemTile> {
           child: Container(),
         ),
         SizedBox(width: 10.toWidth),
-        InkWell(
-          child: Icon(
-            Icons.check_circle,
-            color: widget.item.productStatus == FreeFormItemStatus.added
-                ? Theme.of(context).primaryColor
-                : Colors.grey,
+        // Generally it won't be possible to pay before merchant confirmation if free form items are added.
+        // But adding this check to avoid any inconsistencies.
+        if (widget.canBeUpdated) ...[
+          InkWell(
+            child: Icon(
+              Icons.check_circle,
+              color: widget.item.productStatus == FreeFormItemStatus.added
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey,
+            ),
+            onTap: () {
+              if (widget.item.productStatus != FreeFormItemStatus.added) {
+                showDialog(
+                  context: context,
+                  builder: (context) => AddOrDeleteItemDialogue(
+                    message: sprintf(
+                        AppTranslations.of(context)
+                            .text('orders_page_sure_add_item_to_the_order'),
+                        [widget.item.skuName]),
+                    onConfirm: widget.onConfirm,
+                  ),
+                );
+              }
+            },
           ),
-          onTap: () {
-            if (widget.item.productStatus != FreeFormItemStatus.added) {
-              showDialog(
-                context: context,
-                builder: (context) => AddOrDeleteItemDialogue(
-                  message: sprintf(
-                      AppTranslations.of(context).text(
-                          'orders_page_sure_add_item_to_the_order'),
-                      [widget.item.skuName]),
-                  onConfirm: widget.onConfirm,
-                ),
-              );
-            }
-          },
-        ),
-        SizedBox(width: 15.toWidth),
-        InkWell(
-          child: Icon(
-            Icons.cancel,
-            color: widget.item.productStatus == FreeFormItemStatus.notAdded
-                ? Colors.red
-                : Colors.grey,
+          SizedBox(width: 15.toWidth),
+          InkWell(
+            child: Icon(
+              Icons.cancel,
+              color: widget.item.productStatus == FreeFormItemStatus.notAdded
+                  ? Colors.red
+                  : Colors.grey,
+            ),
+            onTap: () {
+              if (widget.item.productStatus != FreeFormItemStatus.notAdded) {
+                showDialog(
+                  context: context,
+                  builder: (context) => AddOrDeleteItemDialogue(
+                    message: sprintf(
+                        AppTranslations.of(context).text(
+                            'orders_page_sure_remove_item_from_the_order'),
+                        [widget.item.skuName]),
+                    onConfirm: widget.onReject,
+                  ),
+                );
+              }
+            },
           ),
-          onTap: () {
-            if (widget.item.productStatus != FreeFormItemStatus.notAdded) {
-              showDialog(
-                context: context,
-                builder: (context) => AddOrDeleteItemDialogue(
-                  message: sprintf(
-                      AppTranslations.of(context).text(
-                          'orders_page_sure_remove_item_from_the_order'),
-                      [widget.item.skuName]),
-                  onConfirm: widget.onReject,
-                ),
-              );
-            }
-          },
-        ),
+        ],
       ],
     );
   }
