@@ -1,3 +1,5 @@
+import 'es_media.dart';
+
 class EsGetCategoriesResponse {
   List<EsCategory> categories;
 
@@ -72,9 +74,10 @@ class EsCategory {
   String categoryDescription;
   int parentCategoryId;
   bool isActive;
-  List<String> images;
+  List<EsUploadImageResponse> images;
 
   bool _isSelected;
+  bool _isExpanded;
 
   get dCategoryName {
     if (categoryName != null) {
@@ -90,11 +93,27 @@ class EsCategory {
     return '';
   }
 
+  get dImageUrl {
+    if (images == null) {
+      return '';
+    }
+    if (images.length == 0) {
+      return '';
+    }
+    return images.first.photoUrl ?? '';
+  }
+
   set dIsSelected(bool isSelected) {
     this._isSelected = isSelected;
   }
 
+  set dIsExpanded(bool isExpanded) {
+    this._isExpanded = isExpanded;
+  }
+
   get dIsSelected => this._isSelected ?? false;
+
+  get dIsExpanded => this._isExpanded ?? false;
 
   EsCategory(
       {this.categoryId,
@@ -110,7 +129,12 @@ class EsCategory {
     categoryDescription = json['category_description'];
     parentCategoryId = json['parent_category_id'];
     isActive = json['is_active'];
-    if (json['images'] != null) images = json['images'].cast<String>();
+    if (json['images'] != null) {
+      images = new List<EsUploadImageResponse>();
+      json['images'].forEach((v) {
+        images.add(new EsUploadImageResponse.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -120,7 +144,9 @@ class EsCategory {
     data['category_description'] = this.categoryDescription;
     data['parent_category_id'] = this.parentCategoryId;
     data['is_active'] = this.isActive;
-    data['images'] = this.images;
+    if (this.images != null) {
+      data['images'] = this.images.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
