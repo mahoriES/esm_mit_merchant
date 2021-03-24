@@ -215,6 +215,7 @@ class _EsOrderCardState extends State<EsOrderCard> {
                           .subtitle1
                           .copyWith(color: Theme.of(context).primaryColor),
                     ),
+
                     SizedBox(height: 15.toHeight),
 
                     ////////////////////////////////////
@@ -646,7 +647,8 @@ class PaymentStatusRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Removed Merchant Updated status for this check.
-    return esOrder.orderStatus == EsOrderStatus.CREATED
+    return esOrder.orderStatus == EsOrderStatus.CREATED &&
+            !esOrder.paymentInfo.isAlreadyPaid
         ? Container()
         : Row(
             children: <Widget>[
