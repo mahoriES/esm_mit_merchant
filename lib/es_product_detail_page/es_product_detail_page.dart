@@ -5,12 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:foore/app_translations.dart';
 import 'package:foore/buttons/fo_submit_button.dart';
 import 'package:foore/data/bloc/es_edit_product.dart';
+import 'package:foore/data/constants/state_constants.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/es_category_page/es_category_page.dart';
 import 'package:foore/es_product_detail_page/es_product_image_list.dart';
 import 'package:foore/utils/input_limit.dart';
-import 'package:foore/utils/input_validations.dart';
 import 'package:foore/utils/utils.dart';
+import 'package:foore/utils/validators.dart';
 import 'package:provider/provider.dart';
 
 class EsProductDetailPageParam {
@@ -96,7 +97,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
           stream: esEditProductBloc.esEditProductStateObservable,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Container();
+              return const SizedBox.shrink();
             }
             return Form(
               key: _formKey,
@@ -149,7 +150,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       )
                     ],
                   ),
-                  Divider(
+                  const Divider(
                     color: Colors.black12,
                   ),
 
@@ -203,7 +204,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                               : null,
                                         ),
                                       ),
-                                      Icon(Icons.chevron_right),
+                                      const Icon(Icons.chevron_right),
                                       Flexible(
                                         flex: 1,
                                         child: Container(
@@ -250,7 +251,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                             },
                             child: Chip(
                               backgroundColor: Theme.of(context).primaryColor,
-                              avatar: Icon(
+                              avatar: const Icon(
                                 Icons.add,
                                 color: Colors.white,
                               ),
@@ -350,7 +351,6 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                       left: 20,
                       right: 20,
                       bottom: 8,
-                      // bottom: 8.0,
                     ),
                     alignment: Alignment.bottomLeft,
                     child: Text(
@@ -386,12 +386,12 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
           stream: esEditProductBloc.esEditProductStateObservable,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Container();
+              return const SizedBox.shrink();
             }
             return FoSubmitButton(
               text: AppTranslations.of(context).text('products_page_save'),
               onPressed: submit,
-              isLoading: snapshot.data.isSubmitting,
+              isLoading: snapshot.data.submitState == LoadingState.LOADING,
             );
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -400,6 +400,8 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
 
   showRestoreVariationsModel(BuildContext context) {
     final esEditProductBloc = Provider.of<EsEditProductBloc>(context);
+    // Closing the bottom sheet when all the list items restored.
+    // The stream gets unsubsribed once its closed.
     final subscription = esEditProductBloc.esEditProductStateObservable
         .map((state) => state.preSelectedInactiveSKUs.length)
         .where((skuLength) => skuLength == 0)
@@ -429,7 +431,7 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                 stream: esEditProductBloc.esEditProductStateObservable,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return Container();
+                    return const SizedBox.shrink();
                   }
                   return DraggableScrollableSheet(
                     initialChildSize: 0.4,
@@ -529,7 +531,7 @@ class RestoreVariationCard extends StatelessWidget {
                             horizontal: 12,
                           ),
                           color: Colors.black12,
-                          child: Center(
+                          child: const Center(
                             child: Text(
                               '₹',
                               style: TextStyle(
@@ -712,7 +714,7 @@ class VariationCard extends StatelessWidget {
                               border: InputBorder.none,
                             ),
                             validator: (text) {
-                              return validateSkuPrice(text, context);
+                              return Validators.validateSkuPrice(text, context);
                             },
                           ),
                         ),

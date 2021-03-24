@@ -4,11 +4,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:foore/data/bloc/es_businesses.dart';
 import 'package:foore/data/constants/es_api_path.dart';
+import 'package:foore/data/constants/state_constants.dart';
+import 'package:foore/data/constants/string_constants.dart';
 import 'package:foore/data/http_service.dart';
 import 'package:foore/data/model/es_categories.dart';
 import 'package:foore/data/model/es_media.dart';
 import 'package:foore/data/model/es_product.dart';
 import 'package:foore/data/model/full_product_payload.dart';
+import 'package:foore/utils/utils.dart';
 import 'package:foore/widgets/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
@@ -50,9 +53,7 @@ class EsEditProductBloc {
 
   addProductFull(
       Function onAddProductSuccess, Function onAddProductFailed) async {
-    this._esEditProductState.isSubmitting = true;
-    this._esEditProductState.isSubmitFailed = false;
-    this._esEditProductState.isSubmitSuccess = false;
+    this._esEditProductState.submitState = LoadingState.LOADING;
     this._updateState();
     final fullProductPayload = FullProductPayload(
         productInfo: EsAddProductPayload(
@@ -74,8 +75,7 @@ class EsEditProductBloc {
         skuInfo: this._esEditProductState.preSelectedSKUs.map((element) {
           return AddSkuPayload(
             skuId: element.skuId,
-            basePrice:
-                (double.parse(element.priceController.text) * 100).toInt(),
+            basePrice: Utils.getPriceInPaisa(element.priceController.text),
             properties: SKUProperties(
                 quant: SKUQuant(
               unit: element.unit,
@@ -107,17 +107,13 @@ class EsEditProductBloc {
     if (httpResponse.statusCode == 200 ||
         httpResponse.statusCode == 202 ||
         httpResponse.statusCode == 201) {
-      this._esEditProductState.isSubmitting = false;
-      this._esEditProductState.isSubmitFailed = false;
-      this._esEditProductState.isSubmitSuccess = true;
+      this._esEditProductState.submitState = LoadingState.SUCCESS;
       final addedProduct = EsProduct.fromJson(json.decode(httpResponse.body));
       if (onAddProductSuccess != null) {
         onAddProductSuccess(addedProduct);
       }
     } else {
-      this._esEditProductState.isSubmitting = false;
-      this._esEditProductState.isSubmitFailed = true;
-      this._esEditProductState.isSubmitSuccess = false;
+      this._esEditProductState.submitState = LoadingState.ERROR;
       if (onAddProductFailed != null) {
         onAddProductFailed();
       }
@@ -127,9 +123,7 @@ class EsEditProductBloc {
 
   updateProductFull(
       Function onUpdateProductSuccess, Function onUpdateProductFailed) async {
-    this._esEditProductState.isSubmitting = true;
-    this._esEditProductState.isSubmitFailed = false;
-    this._esEditProductState.isSubmitSuccess = false;
+    this._esEditProductState.submitState = LoadingState.LOADING;
     this._updateState();
     final fullProductPayload = FullProductPayload(
         productInfo: EsAddProductPayload(
@@ -152,8 +146,7 @@ class EsEditProductBloc {
         skuInfo: this._esEditProductState.preSelectedSKUs.map((element) {
           return AddSkuPayload(
             skuId: element.skuId,
-            basePrice:
-                (double.parse(element.priceController.text) * 100).toInt(),
+            basePrice: Utils.getPriceInPaisa(element.priceController.text),
             properties: SKUProperties(
                 quant: SKUQuant(
               unit: element.unit,
@@ -187,17 +180,13 @@ class EsEditProductBloc {
     if (httpResponse.statusCode == 200 ||
         httpResponse.statusCode == 202 ||
         httpResponse.statusCode == 201) {
-      this._esEditProductState.isSubmitting = false;
-      this._esEditProductState.isSubmitFailed = false;
-      this._esEditProductState.isSubmitSuccess = true;
+      this._esEditProductState.submitState = LoadingState.SUCCESS;
       final addedProduct = EsProduct.fromJson(json.decode(httpResponse.body));
       if (onUpdateProductSuccess != null) {
         onUpdateProductSuccess(addedProduct);
       }
     } else {
-      this._esEditProductState.isSubmitting = false;
-      this._esEditProductState.isSubmitFailed = true;
-      this._esEditProductState.isSubmitSuccess = false;
+      this._esEditProductState.submitState = LoadingState.ERROR;
       if (onUpdateProductFailed != null) {
         onUpdateProductFailed();
       }
@@ -206,10 +195,11 @@ class EsEditProductBloc {
   }
 
   getCategories() async {
-    this._esEditProductState.isLoading = true;
+    this._esEditProductState.loadingState = LoadingState.LOADING;
     this._esEditProductState.productCategoriesResponse = null;
     this._esEditProductState.categories = List<EsCategory>();
     this._updateState();
+    // We need to load all categories to show the parent category in the UI.
     if (await getAllCategories()) {
       httpService
           .esGet(EsApiPaths.getCategoriesForProduct(
@@ -217,8 +207,7 @@ class EsEditProductBloc {
               this._esEditProductState.currentProduct.productId.toString()))
           .then((httpResponse) {
         if (httpResponse.statusCode == 200) {
-          this._esEditProductState.isLoadingFailed = false;
-          this._esEditProductState.isLoading = false;
+          this._esEditProductState.loadingState = LoadingState.SUCCESS;
           this._esEditProductState.productCategoriesResponse =
               EsGetCategoriesForProductResponse.fromJson(
                   json.decode(httpResponse.body));
@@ -227,18 +216,15 @@ class EsEditProductBloc {
           this._esEditProductState.preSelectedCategories =
               this._esEditProductState.productCategoriesResponse.categories;
         } else {
-          this._esEditProductState.isLoadingFailed = true;
-          this._esEditProductState.isLoading = false;
+          this._esEditProductState.loadingState = LoadingState.ERROR;
         }
         this._updateState();
       }).catchError((onError) {
-        this._esEditProductState.isLoadingFailed = true;
-        this._esEditProductState.isLoading = false;
+        this._esEditProductState.loadingState = LoadingState.ERROR;
         this._updateState();
       });
     } else {
-      this._esEditProductState.isLoadingFailed = true;
-      this._esEditProductState.isLoading = false;
+      this._esEditProductState.loadingState = LoadingState.ERROR;
       this._updateState();
     }
   }
@@ -268,8 +254,8 @@ class EsEditProductBloc {
     this._updateState();
   }
 
-  setIsSubmitting(bool isSubmitting) {
-    this._esEditProductState.isSubmitting = isSubmitting;
+  setIsSubmitting(LoadingState isSubmitting) {
+    this._esEditProductState.submitState = isSubmitting;
     this._updateState();
   }
 
@@ -284,7 +270,7 @@ class EsEditProductBloc {
   }
 
   removeUploadableImage(EsUploadableFile image) {
-    var index = this
+    final index = this
         ._esEditProductState
         .uploadingImages
         .indexWhere((element) => element.id == image.id);
@@ -293,7 +279,7 @@ class EsEditProductBloc {
   }
 
   removeUploadedImage(EsImage image) {
-    var index = this
+    final index = this
         ._esEditProductState
         .uploadedImages
         .indexWhere((element) => element.photoId == image.photoId);
@@ -312,7 +298,7 @@ class EsEditProductBloc {
 
   selectAndUploadImageForAddProduct() async {
     try {
-      var file = await _pickImageFromGallery();
+      final file = await _pickImageFromGallery();
       if (file != null) {
         final croppedImageFile =
             await ImageCropperView.getSquareCroppedImage(file);
@@ -324,10 +310,10 @@ class EsEditProductBloc {
             .add(EsUploadableFile(croppedImageFile));
         this._updateState();
         try {
-          var respnose = await this
+          final respnose = await this
               .httpService
               .esUpload(EsApiPaths.uploadPhoto, croppedImageFile);
-          var uploadImageResponse =
+          final uploadImageResponse =
               EsUploadImageResponse.fromJson(json.decode(respnose));
 
           this._esEditProductState.uploadedImages.add(
@@ -336,14 +322,14 @@ class EsEditProductBloc {
                     contentType: uploadImageResponse.contentType,
                     photoUrl: uploadImageResponse.photoUrl),
               );
-          var index = this
+          final index = this
               ._esEditProductState
               .uploadingImages
               .indexWhere((element) => element.id == uploadableFile.id);
           this._esEditProductState.uploadingImages.removeAt(index);
           this._updateState();
         } catch (err) {
-          var index = this
+          final index = this
               ._esEditProductState
               .uploadingImages
               .indexWhere((element) => element.id == uploadableFile.id);
@@ -437,7 +423,7 @@ class EsEditProductBloc {
   }
 
   List<String> getUnitsList(String preSelectedUnit) {
-    List<String> unitList = [...EsEditProductState.unitsList];
+    List<String> unitList = [...StringConstants.unitsList];
     if (preSelectedUnit != null) {
       unitList.removeWhere((element) => preSelectedUnit == element);
       unitList = [preSelectedUnit, ...unitList];
@@ -447,28 +433,8 @@ class EsEditProductBloc {
 }
 
 class EsEditProductState {
-  bool isLoading = true;
-  bool isLoadingFailed = false;
-  bool isSubmitting = false;
-  bool isSubmitSuccess = false;
-  bool isSubmitFailed = false;
-
-  static const List<String> unitsList = [
-    "Piece",
-    "Serving",
-    "Kg",
-    "Gm",
-    "Litre",
-    "Ml",
-    "Dozen",
-    "ft",
-    "meter",
-    "sq. ft."
-  ];
-
-  addNewEntryToUnitsList(String unit) {
-    if (unit != null) unitsList.insert(0, unit);
-  }
+  LoadingState loadingState = LoadingState.IDLE;
+  LoadingState submitState = LoadingState.IDLE;
 
   // Only used for creating product.
   List<EsImage> uploadedImages = List<EsImage>();
