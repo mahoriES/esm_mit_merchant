@@ -158,9 +158,13 @@
 	"login_page_don't_have_an_account": "Don't have an account?",
 	"login_page_enter_otp_validation": "Please enter a valid otp.",
 	"login_page_login": "Login",
+
 	"error_messages_required": "Required",
 	"error_messages_phone_number_invalid": "Phone number invalid",
 	"error_messages_verification_failed": "Verification Failed",
+	"error_messages_value_too_small": "Value too small",
+	"error_messages_value_too_big": "Value too big",
+
 	"bottom_nav_profile": "Profile",
 	"bottom_nav_orders": "Orders",
 	"bottom_nav_products": "Products",

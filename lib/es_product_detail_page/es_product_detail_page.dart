@@ -285,6 +285,9 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                         labelText: AppTranslations.of(context)
                             .text('products_page_name'),
                       ),
+                      validator: (input) {
+                        return Validators.requiredValueCheck(input, context);
+                      },
                       maxLength: ProductsInputLimit.kProductName,
                     ),
                   ),
@@ -506,9 +509,8 @@ class RestoreVariationCard extends StatelessWidget {
                     border: Border.all(color: Colors.black12),
                   ),
                   child: Center(
-                    child: Text(skuTemplate.quantity +
-                        ' ' +
-                        (skuTemplate.unit)),
+                    child:
+                        Text(skuTemplate.quantity + ' ' + (skuTemplate.unit)),
                   ),
                 ),
               ),
@@ -631,7 +633,7 @@ class VariationCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Expanded(
-                        flex: 1,
+                        flex: 9,
                         child: TextFormField(
                           initialValue: skuTemplate.quantity,
                           decoration: InputDecoration(
@@ -639,11 +641,9 @@ class VariationCard extends StatelessWidget {
                             border: InputBorder.none,
                             counterText: "",
                           ),
-                          validator: (text) {
-                            return text.length == 0
-                                ? AppTranslations.of(context)
-                                    .text('error_messages_required')
-                                : null;
+                          validator: (input) {
+                            return Validators.requiredValueCheck(
+                                input, context);
                           },
                           onChanged: (value) {
                             esEditProductBloc.updatePreSelectedSKUQuantity(
@@ -653,7 +653,7 @@ class VariationCard extends StatelessWidget {
                         ),
                       ),
                       Expanded(
-                        flex: 1,
+                        flex: 10,
                         child: Container(
                           child: DropdownButton(
                             underline: const SizedBox.shrink(),
@@ -680,7 +680,7 @@ class VariationCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(
-                width: 12.0,
+                width: 8.0,
               ),
               Expanded(
                 flex: 2,
@@ -763,9 +763,6 @@ class VariationCard extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(
-                width: 4.0,
               ),
               PopupMenuButton<int>(
                 onSelected: (result) {

@@ -1,6 +1,7 @@
 class ProductsInputLimit {
-  static const kProductName = 50;
-  static const kProductShortDescription = 100;
-  static const kSkuQuantity = 100;
-  static const kSkuPrice = 12;
+  static const kProductName = 128;
+  static const kProductShortDescription = 255;
+  static const kSkuQuantity = 128;
+  static const kSkuPriceMax = 1000000;
+  static const kSkuPriceMin = 0.01;
 }
