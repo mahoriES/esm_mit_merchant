@@ -506,7 +506,7 @@ class RestoreVariationCard extends StatelessWidget {
                     border: Border.all(color: Colors.black12),
                   ),
                   child: Center(
-                    child: Text(skuTemplate.quantityController.text +
+                    child: Text(skuTemplate.quantityController +
                         ' ' +
                         (skuTemplate.unit)),
                   ),
@@ -545,7 +545,7 @@ class RestoreVariationCard extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 10, right: 10),
                             child: Text(
-                              skuTemplate.priceController.text.toString(),
+                              skuTemplate.priceController.toString(),
                               softWrap: true,
                               textAlign: TextAlign.right,
                             ),
@@ -633,7 +633,7 @@ class VariationCard extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: TextFormField(
-                          controller: skuTemplate.quantityController,
+                          initialValue: skuTemplate.quantityController,
                           decoration: InputDecoration(
                             isDense: true,
                             border: InputBorder.none,
@@ -644,6 +644,10 @@ class VariationCard extends StatelessWidget {
                                 ? AppTranslations.of(context)
                                     .text('error_messages_required')
                                 : null;
+                          },
+                          onChanged: (value) {
+                            esEditProductBloc.updatePreSelectedSKUQuantity(
+                                skuTemplate.key, value);
                           },
                           maxLength: ProductsInputLimit.kSkuQuantity,
                         ),
@@ -706,13 +710,17 @@ class VariationCard extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: TextFormField(
-                            controller: skuTemplate.priceController,
+                            initialValue: skuTemplate.priceController,
                             keyboardType: TextInputType.number,
                             textAlign: TextAlign.end,
                             decoration: InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
                             ),
+                            onChanged: (value) {
+                              esEditProductBloc.updatePreSelectedSKUPrice(
+                                  skuTemplate.key, value);
+                            },
                             validator: (text) {
                               return Validators.validateSkuPrice(text, context);
                             },

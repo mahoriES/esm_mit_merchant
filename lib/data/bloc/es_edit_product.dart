@@ -75,11 +75,11 @@ class EsEditProductBloc {
         skuInfo: this._esEditProductState.preSelectedSKUs.map((element) {
           return AddSkuPayload(
             skuId: element.skuId,
-            basePrice: Utils.getPriceInPaisa(element.priceController.text),
+            basePrice: Utils.getPriceInPaisa(element.priceController),
             properties: SKUProperties(
                 quant: SKUQuant(
               unit: element.unit,
-              val: element.quantityController.text,
+              val: element.quantityController,
             )),
             inStock: element.inStock,
             isActive: element.isActive,
@@ -103,10 +103,7 @@ class EsEditProductBloc {
           this.esBusinessesBloc.getSelectedBusinessId(),
         ),
         payloadString);
-    // TODO: Refactor status codes
-    if (httpResponse.statusCode == 200 ||
-        httpResponse.statusCode == 202 ||
-        httpResponse.statusCode == 201) {
+    if (httpResponse.statusCode == 200) {
       this._esEditProductState.submitState = LoadingState.SUCCESS;
       final addedProduct = EsProduct.fromJson(json.decode(httpResponse.body));
       if (onAddProductSuccess != null) {
@@ -146,11 +143,11 @@ class EsEditProductBloc {
         skuInfo: this._esEditProductState.preSelectedSKUs.map((element) {
           return AddSkuPayload(
             skuId: element.skuId,
-            basePrice: Utils.getPriceInPaisa(element.priceController.text),
+            basePrice: Utils.getPriceInPaisa(element.priceController),
             properties: SKUProperties(
                 quant: SKUQuant(
               unit: element.unit,
-              val: element.quantityController.text,
+              val: element.quantityController,
             )),
             inStock: element.inStock,
             isActive: element.isActive,
@@ -176,10 +173,7 @@ class EsEditProductBloc {
           this.esBusinessesBloc.getSelectedBusinessId(),
         ),
         payloadString);
-    // TODO: Refactor status codes
-    if (httpResponse.statusCode == 200 ||
-        httpResponse.statusCode == 202 ||
-        httpResponse.statusCode == 201) {
+    if (httpResponse.statusCode == 200) {
       this._esEditProductState.submitState = LoadingState.SUCCESS;
       final addedProduct = EsProduct.fromJson(json.decode(httpResponse.body));
       if (onUpdateProductSuccess != null) {
@@ -399,6 +393,24 @@ class EsEditProductBloc {
     this._updateState();
   }
 
+  updatePreSelectedSKUPrice(UniqueKey id, String price) {
+    this._esEditProductState.preSelectedSKUs.forEach((element) {
+      if (element.key == id) {
+        element.priceController = price;
+      }
+    });
+    this._updateState();
+  }
+
+  updatePreSelectedSKUQuantity(UniqueKey id, String quantity) {
+    this._esEditProductState.preSelectedSKUs.forEach((element) {
+      if (element.key == id) {
+        element.quantityController = quantity;
+      }
+    });
+    this._updateState();
+  }
+
   updatePreSelectedSKUStock(UniqueKey id, bool inStock) {
     this._esEditProductState.preSelectedSKUs.forEach((element) {
       if (element.key == id) {
@@ -498,9 +510,9 @@ class EsEditProductState {
 class EsProductSKUTamplate {
   UniqueKey key;
   int masterId;
-  TextEditingController quantityController;
+  String quantityController;
   String unit;
-  TextEditingController priceController;
+  String priceController;
   String skuCode;
   bool isActive;
   bool inStock;
@@ -517,11 +529,8 @@ class EsProductSKUTamplate {
     int skuId,
   }) {
     this.key = id ?? new UniqueKey();
-    this.quantityController = new TextEditingController();
-    this.quantityController.text = quantity ?? '1';
-    this.priceController = new TextEditingController();
-    this.priceController.text =
-        price != null ? (price / 100).toString() : '1.00';
+    this.quantityController = quantity ?? '1';
+    this.priceController = price != null ? (price / 100).toString() : '1.00';
     this.unit = unit ?? 'Piece';
     this.masterId = masterId;
     this.skuCode = skuCode;
