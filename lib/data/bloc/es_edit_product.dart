@@ -75,11 +75,11 @@ class EsEditProductBloc {
         skuInfo: this._esEditProductState.preSelectedSKUs.map((element) {
           return AddSkuPayload(
             skuId: element.skuId,
-            basePrice: Utils.getPriceInPaisa(element.priceController),
+            basePrice: Utils.getPriceInPaisa(element.price),
             properties: SKUProperties(
                 quant: SKUQuant(
               unit: element.unit,
-              val: element.quantityController,
+              val: element.quantity,
             )),
             inStock: element.inStock,
             isActive: element.isActive,
@@ -143,11 +143,11 @@ class EsEditProductBloc {
         skuInfo: this._esEditProductState.preSelectedSKUs.map((element) {
           return AddSkuPayload(
             skuId: element.skuId,
-            basePrice: Utils.getPriceInPaisa(element.priceController),
+            basePrice: Utils.getPriceInPaisa(element.price),
             properties: SKUProperties(
                 quant: SKUQuant(
               unit: element.unit,
-              val: element.quantityController,
+              val: element.quantity,
             )),
             inStock: element.inStock,
             isActive: element.isActive,
@@ -396,7 +396,7 @@ class EsEditProductBloc {
   updatePreSelectedSKUPrice(UniqueKey id, String price) {
     this._esEditProductState.preSelectedSKUs.forEach((element) {
       if (element.key == id) {
-        element.priceController = price;
+        element.price = price;
       }
     });
     this._updateState();
@@ -405,7 +405,7 @@ class EsEditProductBloc {
   updatePreSelectedSKUQuantity(UniqueKey id, String quantity) {
     this._esEditProductState.preSelectedSKUs.forEach((element) {
       if (element.key == id) {
-        element.quantityController = quantity;
+        element.quantity = quantity;
       }
     });
     this._updateState();
@@ -510,9 +510,9 @@ class EsEditProductState {
 class EsProductSKUTamplate {
   UniqueKey key;
   int masterId;
-  String quantityController;
+  String quantity;
   String unit;
-  String priceController;
+  String price;
   String skuCode;
   bool isActive;
   bool inStock;
@@ -529,8 +529,8 @@ class EsProductSKUTamplate {
     int skuId,
   }) {
     this.key = id ?? new UniqueKey();
-    this.quantityController = quantity ?? '1';
-    this.priceController = price != null ? (price / 100).toString() : '1.00';
+    this.quantity = quantity ?? '1';
+    this.price = price != null ? (price / 100).toString() : '1.00';
     this.unit = unit ?? 'Piece';
     this.masterId = masterId;
     this.skuCode = skuCode;

@@ -506,7 +506,7 @@ class RestoreVariationCard extends StatelessWidget {
                     border: Border.all(color: Colors.black12),
                   ),
                   child: Center(
-                    child: Text(skuTemplate.quantityController +
+                    child: Text(skuTemplate.quantity +
                         ' ' +
                         (skuTemplate.unit)),
                   ),
@@ -545,7 +545,7 @@ class RestoreVariationCard extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 10, right: 10),
                             child: Text(
-                              skuTemplate.priceController.toString(),
+                              skuTemplate.price.toString(),
                               softWrap: true,
                               textAlign: TextAlign.right,
                             ),
@@ -633,7 +633,7 @@ class VariationCard extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: TextFormField(
-                          initialValue: skuTemplate.quantityController,
+                          initialValue: skuTemplate.quantity,
                           decoration: InputDecoration(
                             isDense: true,
                             border: InputBorder.none,
@@ -710,7 +710,7 @@ class VariationCard extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: TextFormField(
-                            initialValue: skuTemplate.priceController,
+                            initialValue: skuTemplate.price,
                             keyboardType: TextInputType.number,
                             textAlign: TextAlign.end,
                             decoration: InputDecoration(
