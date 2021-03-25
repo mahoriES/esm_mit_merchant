@@ -13,6 +13,7 @@ import 'package:foore/data/model/es_product.dart';
 import 'package:foore/data/model/full_product_payload.dart';
 import 'package:foore/utils/utils.dart';
 import 'package:foore/widgets/image_cropper.dart';
+import 'package:foore/widgets/image_picker_dialog.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -281,18 +282,16 @@ class EsEditProductBloc {
     this._updateState();
   }
 
-  Future<File> _pickImageFromGallery() async {
-    final pickedFile = await ImagePicker().getImage(
-      source: ImageSource.gallery,
-      imageQuality: 25,
-    );
+  Future<File> _pickImageFromGallery(BuildContext context) async {
+    final pickedFile =
+        await ImagePickerDialog.showImagePickerBottomSheet(context);
     final file = new File(pickedFile.path);
     return file;
   }
 
-  selectAndUploadImageForAddProduct() async {
+  selectAndUploadImageForAddProduct(BuildContext context) async {
     try {
-      final file = await _pickImageFromGallery();
+      final file = await _pickImageFromGallery(context);
       if (file != null) {
         final croppedImageFile =
             await ImageCropperView.getSquareCroppedImage(file);

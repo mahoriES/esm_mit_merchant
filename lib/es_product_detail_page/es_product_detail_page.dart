@@ -182,29 +182,34 @@ class EsProductDetailPageState extends State<EsProductDetailPage>
                                   label: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Flexible(
-                                        flex: 1,
-                                        child: Container(
-                                          child: parentCategory.dCategoryName !=
-                                                  null
-                                              ? Text(
-                                                  parentCategory
-                                                          .dCategoryName ??
-                                                      '',
-                                                  overflow: TextOverflow.fade,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .subtitle1
-                                                      .copyWith(
-                                                        color: ListTileTheme.of(
-                                                                context)
-                                                            .textColor,
-                                                      ),
-                                                )
-                                              : null,
+                                      if (parentCategory != null)
+                                        Flexible(
+                                          flex: 1,
+                                          child: Container(
+                                            child: parentCategory
+                                                        .dCategoryName !=
+                                                    null
+                                                ? Text(
+                                                    parentCategory
+                                                            .dCategoryName ??
+                                                        '',
+                                                    overflow: TextOverflow.fade,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .subtitle1
+                                                        .copyWith(
+                                                          color:
+                                                              ListTileTheme.of(
+                                                                      context)
+                                                                  .textColor,
+                                                        ),
+                                                  )
+                                                : null,
+                                          ),
                                         ),
-                                      ),
-                                      const Icon(Icons.chevron_right),
+                                      if (parentCategory != null)
+                                        const Icon(Icons.chevron_right,
+                                            color: Colors.black45),
                                       Flexible(
                                         flex: 1,
                                         child: Container(

@@ -444,6 +444,9 @@
 	"profile_order_charges": "Order Charges",
 	"generic_update": "Update",
 	"generic_invalid_error": "Invalid Value",
-	"error_invalid_input": "Invalid input"
+	"error_invalid_input": "Invalid input",
+
+	"image_picker_gallery": "Gallery",
+	"image_picker_camera": "Camera"
 
 }
