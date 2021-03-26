@@ -108,40 +108,40 @@ class _EsCategoryPageState extends State<EsCategoryPage> {
           ),
         ),
       ),
-      floatingActionButton: Transform.translate(
-        offset: Offset(0, -15),
-        child: StreamBuilder<EsCategoriesState>(
-            stream: this.esCategoriesBloc.esCategoriesStateObservable,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Container();
-              }
-              return RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.0),
-                ),
-                padding: EdgeInsets.symmetric(
-                  vertical: 15,
-                  horizontal: 25,
-                ),
-                onPressed: //snapshot.data.numberOfSelectedItems > 0?
-                    () {
-                  selectItems(snapshot.data.selectedCategories);
-                }
-                //: null
-                ,
-                child: Container(
-                  child: Text(
-                    AppTranslations.of(context).text('generic_save'),
-                    style: Theme.of(context).textTheme.subhead.copyWith(
-                          color: Colors.white,
-                        ),
-                  ),
-                ),
-              );
-            }),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: Transform.translate(
+      //   offset: Offset(0, -15),
+      //   child: StreamBuilder<EsCategoriesState>(
+      //       stream: this.esCategoriesBloc.esCategoriesStateObservable,
+      //       builder: (context, snapshot) {
+      //         if (!snapshot.hasData) {
+      //           return Container();
+      //         }
+      //         return RaisedButton(
+      //           shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.circular(50.0),
+      //           ),
+      //           padding: EdgeInsets.symmetric(
+      //             vertical: 15,
+      //             horizontal: 25,
+      //           ),
+      //           onPressed: //snapshot.data.numberOfSelectedItems > 0?
+      //               () {
+      //             selectItems(snapshot.data.selectedCategories);
+      //           }
+      //           //: null
+      //           ,
+      //           child: Container(
+      //             child: Text(
+      //               AppTranslations.of(context).text('generic_save'),
+      //               style: Theme.of(context).textTheme.subhead.copyWith(
+      //                     color: Colors.white,
+      //                   ),
+      //             ),
+      //           ),
+      //         );
+      //       }),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

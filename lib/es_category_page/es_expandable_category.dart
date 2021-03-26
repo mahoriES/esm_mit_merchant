@@ -211,7 +211,7 @@ class EsCategoryItemWidget extends StatelessWidget {
       //       )
       //     : null,
       trailing: onSelected != null
-          ? FlatButton(
+          ? RaisedButton(
               onPressed: () {
                 // addSubcategory();
                 onSelected(true);

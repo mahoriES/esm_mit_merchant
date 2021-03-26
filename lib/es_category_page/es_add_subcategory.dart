@@ -152,19 +152,19 @@ class EsAddSubCategoryPageState extends State<EsAddSubCategoryPage>
               );
             }),
       ),
-      // floatingActionButton: StreamBuilder<EsAddCategoryState>(
-      //     stream: this.esCategoriesBloc.esAddCategoryStateObservable,
-      //     builder: (context, snapshot) {
-      //       if (!snapshot.hasData) {
-      //         return Container();
-      //       }
-      //       return FoSubmitButton(
-      //         text: AppTranslations.of(context).text('generic_save'),
-      //         onPressed: submit,
-      //         isLoading: snapshot.data.isSubmitting,
-      //       );
-      //     }),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: StreamBuilder<EsAddCategoryState>(
+          stream: this.esCategoriesBloc.esAddCategoryStateObservable,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Container();
+            }
+            return FoSubmitButton(
+              text: AppTranslations.of(context).text('generic_save'),
+              onPressed: submit,
+              isLoading: snapshot.data.isSubmitting,
+            );
+          }),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
