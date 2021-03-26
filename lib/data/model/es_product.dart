@@ -594,13 +594,14 @@ class SKUProperties {
 
 class SKUQuant {
   String unit;
-  dynamic val;
+  String val;
 
   SKUQuant({this.unit, this.val});
 
   SKUQuant.fromJson(Map<String, dynamic> json) {
     unit = json['unit'];
-    val = json['val'];
+    // Val can be a string or number
+    val = json['val'].toString();
   }
 
   Map<String, dynamic> toJson() {

@@ -14,7 +14,6 @@ import 'package:foore/data/model/full_product_payload.dart';
 import 'package:foore/utils/utils.dart';
 import 'package:foore/widgets/image_cropper.dart';
 import 'package:foore/widgets/image_picker_dialog.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EsEditProductBloc {

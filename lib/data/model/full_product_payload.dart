@@ -1,8 +1,5 @@
 import 'es_product.dart';
 
-
-  
-
 class FullProductPayload {
   List<AddSkuPayload> skuInfo;
   EsAddProductPayload productInfo;
