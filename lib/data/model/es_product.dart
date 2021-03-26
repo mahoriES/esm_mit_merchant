@@ -600,8 +600,10 @@ class SKUQuant {
 
   SKUQuant.fromJson(Map<String, dynamic> json) {
     unit = json['unit'];
+    if (json['val'] != null) {
+      val = json['val'].toString();
+    }
     // Val can be a string or number
-    val = json['val'].toString();
   }
 
   Map<String, dynamic> toJson() {
