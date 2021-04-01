@@ -633,7 +633,15 @@ class EsOrderPaymentInfo {
         : '';
   }
 
+  bool get isCodSelected {
+    return this.paymentStatus == EsOrderPaymentStatus.INITIATED &&
+        this.paymentMadeVia == "COD";
+  }
+
   bool get isAlreadyPaid {
+    if (isCodSelected) {
+      return false;
+    }
     return this.paymentStatus == EsOrderPaymentStatus.APPROVED ||
         this.paymentStatus == EsOrderPaymentStatus.SUCCESS ||
         this.paymentStatus == EsOrderPaymentStatus.INITIATED;
