@@ -17,4 +17,17 @@ class StringConstants {
     "formatted_address",
     "geometry",
   ];
+
+  static const List<String> unitsList = [
+    "Piece",
+    "Serving",
+    "Kg",
+    "Gm",
+    "Litre",
+    "Ml",
+    "Dozen",
+    "ft",
+    "meter",
+    "sq. ft."
+  ];
 }

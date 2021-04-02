@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 class EsAddSubCategoryPageParams {
   final String parentCategoryName;
   final int parentCategoryId;
-
   EsAddSubCategoryPageParams(this.parentCategoryId, this.parentCategoryName);
 }
 

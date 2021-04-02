@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Utils {
   static String getTimeDiffrence(String timeString) {
@@ -74,4 +77,33 @@ Widget get placeHolderImage {
     'assets/category_placeholder.png',
     fit: BoxFit.cover,
   );
+}
+
+Future<void> showFailedAlertDialog(BuildContext context) async {
+  await showDialog(
+    context: context,
+    barrierDismissible: true, // user must tap button for close dialog!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Submit failed'),
+        content: const Text('Please try again.'),
+        actions: <Widget>[
+          FlatButton(
+            child: const Text('Dismiss'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      );
+    },
+  );
+}
+
+String getPriceStringWithoutRupeeSymbol(int price) {
+  if (price != null) {
+    return NumberFormat.currency(locale: 'en_IN', symbol: '')
+        .format(price / 100);
+  }
+  return '0.00';
 }

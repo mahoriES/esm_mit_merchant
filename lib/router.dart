@@ -54,7 +54,6 @@ import 'es_order_page/es_order_add_item.dart';
 import 'home_page/home_page.dart';
 import 'intro_page/intro_page.dart';
 import 'login_page/login_page.dart';
-import 'menu_page/add_menu_item_page.dart';
 import 'onboarding_guard/onboarding_guard.dart';
 import 'onboarding_page/location_search_page.dart';
 import 'onboarding_page/location_verify.dart';
@@ -280,17 +279,6 @@ class AppRouter {
           ),
         );
         break;
-      case AddMenuItemPage.routeName:
-        EsProduct esProduct = settings.arguments;
-        return MaterialPageRoute(
-          builder: (context) => Provider<EsEditProductBloc>(
-            builder: (context) =>
-                EsEditProductBloc(httpServiceBloc, esBusinessesBloc),
-            dispose: (context, value) => value.dispose(),
-            child: AddMenuItemPage(esProduct),
-          ),
-        );
-        break;
       case EsProductDetailPage.routeName:
         EsProductDetailPageParam esProductDetailPageParam = settings.arguments;
 
@@ -299,8 +287,7 @@ class AppRouter {
             builder: (context) =>
                 EsEditProductBloc(httpServiceBloc, esBusinessesBloc),
             dispose: (context, value) => value.dispose(),
-            child: EsProductDetailPage(esProductDetailPageParam.currentProduct,
-                openSkuAddUpfront: esProductDetailPageParam.openSkuAddUpfront),
+            child: EsProductDetailPage(esProductDetailPageParam.currentProduct),
           ),
         );
         break;

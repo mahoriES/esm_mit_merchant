@@ -8,8 +8,8 @@ import 'package:foore/es_category_page/es_subcategory_page.dart';
 import 'package:foore/widgets/empty_list.dart';
 import 'package:foore/widgets/something_went_wrong.dart';
 import 'package:provider/provider.dart';
-
 import 'es_add_category.dart';
+import 'es_expandable_category.dart';
 
 class EsCategoryPage extends StatefulWidget {
   static const routeName = '/categories';
@@ -38,21 +38,11 @@ class _EsCategoryPageState extends State<EsCategoryPage> {
   @override
   Widget build(BuildContext context) {
     addItem() async {
-      var result =
+      final result =
           await Navigator.of(context).pushNamed(EsAddCategoryPage.routeName);
       if (result != null) {
         this.esCategoriesBloc.addUserCreatedCategory(result);
       }
-      //esCategoriesBloc.getCategories();
-    }
-
-    categoryDetail(EsCategory selectedCategory) async {
-      //var result =
-      await Navigator.of(context).pushNamed(EsSubCategoryPage.routeName,
-          arguments: EsSabCategoryParam(
-              esCategoriesBloc: this.esCategoriesBloc,
-              parentCategory: selectedCategory));
-      //esCategoriesBloc.getCategories();
     }
 
     selectItems(List<EsCategory> categories) {
@@ -61,12 +51,6 @@ class _EsCategoryPageState extends State<EsCategoryPage> {
 
     return Scaffold(
       appBar: AppBar(
-        // leading: IconButton(
-        //   icon: Icon(Icons.dehaze),
-        //   onPressed: () {
-        //     Scaffold.of(context).openDrawer();
-        //   },
-        // ),
         title: Text(AppTranslations.of(context)
             .text('category_page_select_a_category')),
         actions: <Widget>[
@@ -108,33 +92,14 @@ class _EsCategoryPageState extends State<EsCategoryPage> {
                         return ListView.builder(
                             padding: EdgeInsets.only(
                               bottom: 72,
-                              // top: 30,
+                              top: 30,
                             ),
                             itemCount: snapshot.data.parentCategories.length,
                             itemBuilder: (context, index) {
                               final currentCategory =
                                   snapshot.data.parentCategories[index];
-
-                              return ListTile(
-                                  title: Text(currentCategory.dCategoryName),
-                                  trailing: InkWell(
-                                    child: Icon(Icons.chevron_right),
-                                    onTap: () {
-                                      categoryDetail(currentCategory);
-                                    },
-                                  ));
-                              /*
-                              return CheckboxListTile(
-                                onChanged: (bool value) {
-                                  this.esCategoriesBloc.setCategorySelected(
-                                      currentCategory.categoryId, value);
-                                },
-                                value: currentCategory.dIsSelected,
-                                title: Text(currentCategory.dCategoryName),
-                                subtitle:
-                                    Text(currentCategory.dCategoryDescription),
-                              );
-                              */
+                              return EsExpandableCategory(
+                                  currentCategory, esCategoriesBloc);
                             });
                       }
                     }),
@@ -143,40 +108,40 @@ class _EsCategoryPageState extends State<EsCategoryPage> {
           ),
         ),
       ),
-      floatingActionButton: Transform.translate(
-        offset: Offset(0, -15),
-        child: StreamBuilder<EsCategoriesState>(
-            stream: this.esCategoriesBloc.esCategoriesStateObservable,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Container();
-              }
-              return RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.0),
-                ),
-                padding: EdgeInsets.symmetric(
-                  vertical: 15,
-                  horizontal: 25,
-                ),
-                onPressed: //snapshot.data.numberOfSelectedItems > 0?
-                    () {
-                  selectItems(snapshot.data.selectedCategories);
-                }
-                //: null
-                ,
-                child: Container(
-                  child: Text(
-                    AppTranslations.of(context).text('generic_save'),
-                    style: Theme.of(context).textTheme.subhead.copyWith(
-                          color: Colors.white,
-                        ),
-                  ),
-                ),
-              );
-            }),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: Transform.translate(
+      //   offset: Offset(0, -15),
+      //   child: StreamBuilder<EsCategoriesState>(
+      //       stream: this.esCategoriesBloc.esCategoriesStateObservable,
+      //       builder: (context, snapshot) {
+      //         if (!snapshot.hasData) {
+      //           return Container();
+      //         }
+      //         return RaisedButton(
+      //           shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.circular(50.0),
+      //           ),
+      //           padding: EdgeInsets.symmetric(
+      //             vertical: 15,
+      //             horizontal: 25,
+      //           ),
+      //           onPressed: //snapshot.data.numberOfSelectedItems > 0?
+      //               () {
+      //             selectItems(snapshot.data.selectedCategories);
+      //           }
+      //           //: null
+      //           ,
+      //           child: Container(
+      //             child: Text(
+      //               AppTranslations.of(context).text('generic_save'),
+      //               style: Theme.of(context).textTheme.subhead.copyWith(
+      //                     color: Colors.white,
+      //                   ),
+      //             ),
+      //           ),
+      //         );
+      //       }),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

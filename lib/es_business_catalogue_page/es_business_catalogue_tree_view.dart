@@ -216,8 +216,7 @@ class _Product extends StatelessWidget {
       BuildContext context) async {
     EsProductDetailPageParam esProductDetailPageParam =
         EsProductDetailPageParam(
-            currentProduct: businessCatalogueProduct.product,
-            openSkuAddUpfront: false);
+            currentProduct: businessCatalogueProduct.product);
     await Navigator.of(context).pushNamed(EsProductDetailPage.routeName,
         arguments: esProductDetailPageParam);
     esBusinessCatalogueBloc.reloadCategories();

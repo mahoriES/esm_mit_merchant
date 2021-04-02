@@ -79,6 +79,17 @@ class EsCategoriesBloc {
     this._esCategoriesState.items.add(userCreatedCategory);
     this._updateState();
   }
+
+  setCategoryExpanded(int categoryId, bool isExpanded) {
+    this._esCategoriesState.items =
+        this._esCategoriesState.items.map((esCategory) {
+      if (esCategory.categoryId == categoryId) {
+        esCategory.dIsExpanded = isExpanded;
+      }
+      return esCategory;
+    }).toList();
+    this._updateState();
+  }
 }
 
 class EsCategoriesState {

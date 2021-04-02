@@ -1,20 +1,28 @@
 import 'package:intl/intl.dart';
 
 class EsAddProductPayload {
+  int productId;
   String productName;
   String unitName;
   String productDescription;
   List<EsImage> images;
   String longDescription;
   String displayLine1;
+  int masterId;
+  bool spotlight;
+  bool inStock;
 
   EsAddProductPayload(
       {this.productName,
+      this.productId,
       this.unitName,
       this.productDescription,
       this.images,
       this.longDescription,
-      this.displayLine1});
+      this.displayLine1,
+      this.spotlight,
+      this.inStock,
+      this.masterId});
 
   EsAddProductPayload.fromJson(Map<String, dynamic> json) {
     productName = json['product_name'];
@@ -28,18 +36,44 @@ class EsAddProductPayload {
     }
     longDescription = json['long_description'];
     displayLine1 = json['display_line_1'];
+    masterId = json['master_id'];
+    productId = json['product_id'];
+    spotlight = json['spotlight'];
+    inStock = json['in_stock'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['product_name'] = this.productName;
-    data['unit_name'] = this.unitName;
-    data['product_description'] = this.productDescription;
+    if (this.productName != null) {
+      data['product_name'] = this.productName;
+    }
+    if (this.unitName != null) {
+      data['unit_name'] = this.unitName;
+    }
+    if (this.productDescription != null) {
+      data['product_description'] = this.productDescription;
+    }
     if (this.images != null) {
       data['images'] = this.images.map((v) => v.toJson()).toList();
     }
-    data['long_description'] = this.longDescription;
-    data['display_line_1'] = this.displayLine1;
+    if (this.longDescription != null) {
+      data['long_description'] = this.longDescription;
+    }
+    if (this.displayLine1 != null) {
+      data['display_line_1'] = this.displayLine1;
+    }
+    if (this.masterId != null) {
+      data['master_id'] = this.masterId;
+    }
+    if (this.productId != null) {
+      data['product_id'] = this.productId;
+    }
+    if (this.spotlight != null) {
+      data['spotlight'] = this.spotlight;
+    }
+    if (this.inStock != null) {
+      data['in_stock'] = this.inStock;
+    }
     return data;
   }
 }
@@ -148,6 +182,7 @@ class EsProduct {
   String productDescription;
   bool isActive;
   bool inStock;
+  bool spotlight;
   List<EsImage> images;
   String longDescription;
   String displayLine1;
@@ -181,6 +216,7 @@ class EsProduct {
         currentSku.inStock = updatedSku.inStock;
         currentSku.isActive = updatedSku.isActive;
         currentSku.variationValue = updatedSku.variationValue;
+        currentSku.properties = updatedSku.properties;
 
         break;
       }
@@ -220,6 +256,20 @@ class EsProduct {
       return displayLine1;
     }
     return '';
+  }
+
+  List<EsSku> get dActiveSkus {
+    if (skus == null) {
+      return [];
+    }
+    return skus.where((element) => element.isActive).toList();
+  }
+
+  List<EsSku> get dInactiveActiveSkus {
+    if (skus == null) {
+      return [];
+    }
+    return skus.where((element) => !element.isActive).toList();
   }
 
   String get dPrice {
@@ -287,6 +337,7 @@ class EsProduct {
         images.add(new EsImage.fromJson(v));
       });
     }
+    spotlight = json['spotlight'];
   }
 
   Map<String, dynamic> toJson() {
@@ -299,6 +350,7 @@ class EsProduct {
     data['long_description'] = this.longDescription;
     data['display_line_1'] = this.displayLine1;
     data['unit_name'] = this.unitName;
+    data['spotlight'] = this.spotlight;
     if (this.skus != null) {
       data['skus'] = this.skus.map((v) => v.toJson()).toList();
     }
@@ -334,6 +386,16 @@ class EsSku {
   int basePrice;
   Map<String, dynamic> variationOptions;
   String variationValue;
+  SKUProperties properties;
+
+  get dBasePriceWithoutRupeeSymbol {
+    if (basePrice != null) {
+      // return NumberFormat.simpleCurrency(locale: 'en_IN').format(basePrice / 100);
+      return NumberFormat.currency(locale: 'en_IN', symbol: '')
+          .format(basePrice / 100);
+    }
+    return '0.00';
+  }
 
   get dBasePrice {
     if (basePrice != null) {
@@ -375,6 +437,7 @@ class EsSku {
       this.inStock,
       this.charges,
       this.basePrice,
+      this.properties,
       this.variationOptions});
 
   EsSku.fromJson(Map<String, dynamic> json) {
@@ -392,6 +455,9 @@ class EsSku {
         variationValue = variationOptions.values.toList()[0];
       }
     }
+    properties = json['properties'] != null
+        ? new SKUProperties.fromJson(json['properties'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -406,6 +472,9 @@ class EsSku {
       //variation_options['variation_options'] = this.variationValue;
       //data['variation_options'] = variation_options;
       data['variation_options'] = {'Weight': this.variationValue};
+    }
+    if (this.properties != null) {
+      data['properties'] = this.properties.toJson();
     }
     return data;
   }
@@ -435,23 +504,30 @@ class EsImage {
 
 class AddSkuPayload {
   int basePrice;
-  // String skuCode;
+  String skuCode;
   String variationValue;
+  int skuId;
   bool isActive;
   bool inStock;
+  SKUProperties properties;
+  int masterId;
 
   AddSkuPayload(
       {this.basePrice,
-      // this.skuCode,
+      this.skuCode,
       this.variationValue,
       this.isActive,
-      this.inStock});
+      this.inStock,
+      this.properties,
+      this.skuId,
+      this.masterId});
 
   AddSkuPayload.fromJson(Map<String, dynamic> inputJson) {
     basePrice = inputJson['base_price'];
-    // skuCode = inputJson['sku_code'];
+    skuCode = inputJson['sku_code'];
     isActive = inputJson['is_active'];
     inStock = inputJson['in_stock'];
+    masterId = inputJson['master_id'];
     if (inputJson.containsKey('variation_option') &&
         inputJson['variation_option'] != null) {
       Map<String, dynamic> variationOptions = inputJson['variation_option'];
@@ -459,20 +535,81 @@ class AddSkuPayload {
         variationValue = variationOptions.values.toList()[0];
       }
     }
+    properties = inputJson['properties'] != null
+        ? new SKUProperties.fromJson(inputJson['properties'])
+        : null;
+    skuId = inputJson['sku_id'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['base_price'] = this.basePrice;
-    // data['sku_code'] = this.skuCode;
+    if (this.basePrice != null) {
+      data['base_price'] = this.basePrice;
+    }
+    if (this.skuCode != null) {
+      data['sku_code'] = this.skuCode;
+    }
     if (variationValue != null && variationValue.isNotEmpty) {
       //final Map<String, dynamic> variation_options = new Map<String, dynamic>();
       //variation_options['variation_options'] = this.variationValue;
       //data['variation_options'] = variation_options;
       data['variation_options'] = {'Weight': this.variationValue};
     }
-    data['is_active'] = this.isActive;
-    data['in_stock'] = this.inStock;
+    if (this.isActive != null) {
+      data['is_active'] = this.isActive;
+    }
+    if (this.inStock != null) {
+      data['in_stock'] = this.inStock;
+    }
+    if (this.masterId != null) {
+      data['master_id'] = this.masterId;
+    }
+    if (this.properties != null) {
+      data['properties'] = this.properties.toJson();
+    }
+    if (this.skuId != null) {
+      data['sku_id'] = this.skuId;
+    }
+    return data;
+  }
+}
+
+class SKUProperties {
+  SKUQuant quant;
+
+  SKUProperties({this.quant});
+
+  SKUProperties.fromJson(Map<String, dynamic> json) {
+    quant = json['quant'] != null ? new SKUQuant.fromJson(json['quant']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.quant != null) {
+      data['quant'] = this.quant.toJson();
+    }
+    return data;
+  }
+}
+
+class SKUQuant {
+  String unit;
+  String val;
+
+  SKUQuant({this.unit, this.val});
+
+  SKUQuant.fromJson(Map<String, dynamic> json) {
+    unit = json['unit'];
+    if (json['val'] != null) {
+      val = json['val'].toString();
+    }
+    // Val can be a string or number
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['unit'] = this.unit;
+    data['val'] = this.val;
     return data;
   }
 }
