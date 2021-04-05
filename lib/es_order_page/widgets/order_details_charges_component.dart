@@ -180,7 +180,7 @@ class _EsOrderDetailsChargesComponentState
                     child: Text(
                       AdditionChargesMetaDataGenerator
                           .friendlyChargeNameFromKeyValue(
-                              additionalChargesList[index].chargeName),
+                              additionalChargesList[index].chargeName, context),
                       style: Theme.of(context)
                           .textTheme
                           .subtitle2
@@ -209,7 +209,7 @@ class _EsOrderDetailsChargesComponentState
                             additionalChargesList[index].value = 0;
                             Fluttertoast.showToast(
                                 msg:
-                                    'Invalid ${AdditionChargesMetaDataGenerator.friendlyChargeNameFromKeyValue(additionalChargesList[index].chargeName)} value!');
+                                    'Invalid ${AdditionChargesMetaDataGenerator.friendlyChargeNameFromKeyValue(additionalChargesList[index].chargeName, context)} value!');
                           });
                         }
                       },
@@ -245,7 +245,8 @@ class _EsOrderDetailsChargesComponentState
         // If payment is already done, don't allow merchant to update the charges.
         if (!widget.orderDetails.paymentInfo.isAlreadyPaid &&
             additionalChargesList.length <
-                AdditionChargesMetaDataGenerator.allKeyOptions.length) ...[
+                AdditionChargesMetaDataGenerator.availableKeysLength(
+                    widget.orderDetails.isSelfPickupOrder)) ...[
           SizedBox(height: 15.toHeight),
           Center(
             child: InkWell(
@@ -312,16 +313,6 @@ class _EsOrderDetailsChargesComponentState
   }
 }
 
-enum AdditionalChargeType {
-  deliveryCharge,
-  extraCharge,
-  packingCharge,
-  serviceCharge,
-}
-
-///This class acts as an interface between the backend keys for charges and user-friendly charges string
-///by a 1 on 1 mapping between the both.
-
 class AdditionChargesMetaDataGenerator {
   static AdditionChargesMetaDataGenerator _instance;
 
@@ -331,25 +322,6 @@ class AdditionChargesMetaDataGenerator {
 
   factory AdditionChargesMetaDataGenerator() =>
       _instance ?? AdditionChargesMetaDataGenerator._internal();
-
-  static String keyFromEnumValue(AdditionalChargeType chargeType) {
-    switch (chargeType) {
-      case AdditionalChargeType.deliveryCharge:
-        return ChargeNameConstants.DELIVERY;
-        break;
-      case AdditionalChargeType.extraCharge:
-        return ChargeNameConstants.EXTRA;
-        break;
-      case AdditionalChargeType.packingCharge:
-        return ChargeNameConstants.PACKING;
-        break;
-      case AdditionalChargeType.serviceCharge:
-        return ChargeNameConstants.TAX;
-        break;
-      default:
-        return 'OTHER';
-    }
-  }
 
   static List<String> get allKeyOptions => [
         ChargeNameConstants.DELIVERY,
@@ -364,43 +336,27 @@ class AdditionChargesMetaDataGenerator {
         ChargeNameConstants.TAX
       ];
 
-  // Todo: Where is it used?
-  static String friendlyChargeNameFromEnumValue(
-      BuildContext context, AdditionalChargeType chargeType) {
-    switch (chargeType) {
-      case AdditionalChargeType.deliveryCharge:
+  static int availableKeysLength(bool isSelfPickup) {
+    return isSelfPickup ? selfPickupKeyOptions.length : allKeyOptions.length;
+  }
+
+  static String friendlyChargeNameFromKeyValue(
+      String key, BuildContext context) {
+    switch (key) {
+      case ChargeNameConstants.DELIVERY:
         return AppTranslations.of(context).text('orders_page_delivery_charges');
         break;
-      case AdditionalChargeType.extraCharge:
+      case ChargeNameConstants.EXTRA:
         return AppTranslations.of(context).text('orders_page_extra_charges');
         break;
-      case AdditionalChargeType.packingCharge:
+      case ChargeNameConstants.PACKING:
         return AppTranslations.of(context).text('orders_page_packing_charges');
         break;
-      case AdditionalChargeType.serviceCharge:
-        return AppTranslations.of(context).text('orders_page_service_charges');
+      case ChargeNameConstants.TAX:
+        return AppTranslations.of(context).text('orders_page_taxes');
         break;
       default:
         return AppTranslations.of(context).text('orders_page_other_charges');
-    }
-  }
-
-  static String friendlyChargeNameFromKeyValue(String key) {
-    switch (key) {
-      case ChargeNameConstants.DELIVERY:
-        return 'Delivery Charges';
-        break;
-      case ChargeNameConstants.EXTRA:
-        return 'Extra Charges';
-        break;
-      case ChargeNameConstants.PACKING:
-        return 'Packing Charges';
-        break;
-      case ChargeNameConstants.TAX:
-        return 'Service Charges';
-        break;
-      default:
-        return 'Other Charge';
     }
   }
 }
