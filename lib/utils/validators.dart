@@ -6,7 +6,10 @@ import 'input_limit.dart';
 class Validators {
   static String percentageValue(String input, BuildContext context) {
     double percentage = double.tryParse(input);
-    if (input == null || input.isEmpty || percentage > 100)
+    if (input == null ||
+        input.isEmpty ||
+        percentage == null ||
+        percentage > 100)
       return AppTranslations.of(context).text("generic_invalid_error");
     return null;
   }

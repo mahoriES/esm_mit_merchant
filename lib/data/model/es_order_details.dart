@@ -160,6 +160,10 @@ class EsOrderDetailsResponse {
     return b;
   }
 
+  bool get isSelfPickupOrder {
+    return this.deliveryType == 'SELF_PICK_UP';
+  }
+
   EsOrderDetailsResponse.fromJson(
     Map<String, dynamic> json, {
     bool divideUnitPriceBy100 = true,

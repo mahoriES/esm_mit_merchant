@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:foore/app_translations.dart';
+
 class ChargeTypeConstants {
   static const String FLAT = "FLAT";
   static const String PERCENTAGE = "PERCENTAGE";
@@ -30,21 +33,22 @@ class EsOrderChargesModel {
     chargeState = json["charge_state"];
   }
 
-  String get dChargeName {
+  String dChargeName(BuildContext context) {
     switch (this.chargeName) {
       case ChargeNameConstants.DELIVERY:
-        return "Delivery Charge";
+        return AppTranslations.of(context).text("orders_page_delivery_charges");
 
       case ChargeNameConstants.TAX:
-        return "Service Charge";
+        return AppTranslations.of(context).text("orders_page_taxes");
 
       case ChargeNameConstants.PACKING:
-        return "Packing Charge";
+        return AppTranslations.of(context).text("orders_page_packing_charges");
 
       case ChargeNameConstants.EXTRA:
-        return "Other Charges";
+        return AppTranslations.of(context).text("orders_page_extra_charges");
+
       default:
-        return "";
+        return AppTranslations.of(context).text("orders_page_other_charges");
     }
   }
 

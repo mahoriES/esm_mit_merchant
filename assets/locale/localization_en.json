@@ -229,7 +229,7 @@
 	"orders_page_payment_details": "Payment Details",
 	"orders_page_delivery_charges": "Delivery Charges",
 	"orders_page_packing_charges": "Packing Charges",
-	"orders_page_service_charges": "Service Charges",
+	"orders_page_taxes": "Taxes",
 	"orders_page_extra_charges": "Extra Charges",
 	"orders_page_other_charges": "Other Charges",
 	"orders_page_amount": "Amount",

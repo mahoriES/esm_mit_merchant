@@ -61,7 +61,7 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
         : sprintf(
             AppTranslations.of(context).text('orders_page_edit_a_charge'), [
             AdditionChargesMetaDataGenerator.friendlyChargeNameFromKeyValue(
-                widget.toBeEditedChargeName)
+                widget.toBeEditedChargeName, context)
           ]);
     // : 'Edit ${}';
     return GestureDetector(
@@ -191,7 +191,7 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
           child: FittedBox(
             child: Text(
               AdditionChargesMetaDataGenerator.friendlyChargeNameFromKeyValue(
-                  widget.availableChargesOptions[index]),
+                  widget.availableChargesOptions[index], context),
             ),
           ),
         ),
@@ -205,7 +205,7 @@ class _AdditionalChargeDialogueState extends State<AdditionalChargeDialogue> {
   Widget get editChargeNameLabel {
     return Text(
       AdditionChargesMetaDataGenerator.friendlyChargeNameFromKeyValue(
-              widget.toBeEditedChargeName) ??
+              widget.toBeEditedChargeName, context) ??
           AppTranslations.of(context).text('orders_page_unknown_charge'),
       style: TextStyle(
         color: AppColors.greyishText,

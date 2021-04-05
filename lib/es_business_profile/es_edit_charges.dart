@@ -122,7 +122,7 @@ class ChargeTile extends StatelessWidget {
         Expanded(
           flex: 2,
           child: Text(
-            chargeData.dChargeName,
+            chargeData.dChargeName(context),
             style: EsamudaayTheme.of(context)
                 .textStyles
                 .sectionHeading1

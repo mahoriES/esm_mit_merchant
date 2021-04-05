@@ -222,7 +222,7 @@
 	"orders_page_payment_details": "भुगतान का विवरण",
 	"orders_page_delivery_charges": "वितरण शुल्क",
 	"orders_page_packing_charges": "पैकिंग शुल्क",
-	"orders_page_service_charges": "सेवा शुल्क",
+	"orders_page_taxes": "Taxes",
 	"orders_page_extra_charges": "अतिरिक्त शुल्क",
 	"orders_page_other_charges": "अन्य शुल्क",
 	"orders_page_amount": "राशि",
