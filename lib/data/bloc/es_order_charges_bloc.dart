@@ -64,6 +64,7 @@ class EsOrderChargesBloc {
     @required String chargeName,
   }) {
     _esOrderChargesState.chargesMap[chargeName].chargeType = chargeType;
+    editChargeValue(chargeName: chargeName);
     _updateState();
   }
 
