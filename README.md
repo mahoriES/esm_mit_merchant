@@ -1,18 +1,20 @@
-# Foore
+# eSamudaay - Merchant app (Foore)
 
-A new Flutter project.
+## Important Note:
 
-> key.properties file is not version controlled.
-/android/key.properties
-storePassword=`password`
-keyPassword=`password`
-keyAlias=key
-storeFile=`location of the key store file, such as /Users/<user name>/key.jks`
+We at eSamudaay are currently using Flutter verison **1.22.1** which is behind the latest stable release(Flutter has migrated to Null Safety) due to some stability and compatibility issues. Hence you will not be able to run the app if on latest Flutter release. Hence we strongly recommend downgrading to the version we use.
 
-## Release for production
+>Note: We are working on migrating our projects to Null Safety and then this workaround won't be required
 
-flutter build appbundle --release
+Please use the following command for resolving this issue
 
-Updated pubspec.yaml version code (After +)
-Override app build.gradle 'flutterVersionName' if required.
-Updated data->http_service.dart to change API paths
+``` flutter downgrade v1.22.1 ``` 
+
+After this, run any Flutter command (such as `flutter doctor`), and Flutter will take care of downloading/compiling everything required to run this version.
+
+
+## Code usage Guidelines
+
+The teams need to fork the base repo and submit code changes on the forked repository.
+
+The fork names shall be of the form - **esm_mit_your-team-name**
