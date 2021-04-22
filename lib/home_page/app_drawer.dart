@@ -1,3 +1,4 @@
+import 'package:foore/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:foore/environments/environment.dart';
 
@@ -5,7 +6,6 @@ import 'package:foore/language_selection_page/language_selection_page.dart';
 
 import 'package:provider/provider.dart';
 import 'package:foore/data/bloc/auth.dart';
-
 import '../app_translations.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -45,6 +45,7 @@ class AppDrawer extends StatelessWidget {
                   new VersionName()
                 ],
               ),
+
               decoration: BoxDecoration(
                 color: Color.fromARGB(80, 233, 233, 233),
               ),

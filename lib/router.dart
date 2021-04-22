@@ -60,6 +60,7 @@ import 'onboarding_page/location_verify.dart';
 import 'onboarding_page/onboarding_page.dart';
 import 'review_page/reply_gmb.dart';
 import 'unirson_check_in_page/unirson_check_in_page.dart';
+import 'package:foore/dashboard/dashboard.dart';
 
 class AppRouter {
   static const homeRoute = '/';
@@ -111,14 +112,14 @@ class AppRouter {
             unauthenticatedPage: IntroPage(),
             child: OnboardingGuard(
               onboardingRequiredPage: Provider<OnboardingBloc>(
-                builder: (context) => OnboardingBloc(httpServiceBloc),
+                create: (context) => OnboardingBloc(httpServiceBloc),
                 dispose: (context, value) => value.dispose(),
                 child: OnboardingPage(),
               ),
               child: MultiProvider(
                 providers: [
                   Provider<PeopleBloc>(
-                    builder: (context) => PeopleBloc(httpServiceBloc),
+                    create: (context) => PeopleBloc(httpServiceBloc),
                     dispose: (context, value) => value.dispose(),
                   ),
                 ],
@@ -147,7 +148,7 @@ class AppRouter {
       case OnboardingPage.routeName:
         return MaterialPageRoute(
           builder: (context) => Provider<OnboardingBloc>(
-            builder: (context) => OnboardingBloc(httpServiceBloc),
+            create: (context) => OnboardingBloc(httpServiceBloc),
             dispose: (context, value) => value.dispose(),
             child: OnboardingPage(),
           ),
@@ -212,7 +213,7 @@ class AppRouter {
             child: EsAuthGuard(
               unauthenticatedPage: ShoppingPage(),
               noMerchantProfilePage: Provider(
-                builder: (context) =>
+                create: (context) =>
                     EsCreateMerchantProfileBloc(httpServiceBloc, authBloc),
                 dispose: (context, value) => value.dispose(),
                 child: EsCreateMerchantProfilePage(),
@@ -222,11 +223,11 @@ class AppRouter {
                 child: MultiProvider(
                   providers: [
                     Provider<PeopleBloc>(
-                      builder: (context) => PeopleBloc(httpServiceBloc),
+                      create: (context) => PeopleBloc(httpServiceBloc),
                       dispose: (context, value) => value.dispose(),
                     ),
                     Provider<EsVideoBloc>(
-                      builder: (context) =>
+                      create: (context) =>
                           EsVideoBloc(httpServiceBloc, esBusinessesBloc),
                       dispose: (context, value) => value.dispose(),
                     ),
@@ -257,7 +258,7 @@ class AppRouter {
         final bool allowBackButton = settings.arguments ?? true;
         return MaterialPageRoute(
           builder: (context) => Provider<EsCreateBusinessBloc>(
-            builder: (context) => EsCreateBusinessBloc(httpServiceBloc),
+            create: (context) => EsCreateBusinessBloc(httpServiceBloc),
             dispose: (context, value) => value.dispose(),
             child: EsCreateBusinessPage(
               allowBackButton: allowBackButton,
@@ -284,7 +285,7 @@ class AppRouter {
 
         return MaterialPageRoute(
           builder: (context) => Provider<EsEditProductBloc>(
-            builder: (context) =>
+            create: (context) =>
                 EsEditProductBloc(httpServiceBloc, esBusinessesBloc),
             dispose: (context, value) => value.dispose(),
             child: EsProductDetailPage(esProductDetailPageParam.currentProduct),
@@ -332,7 +333,7 @@ class AppRouter {
       case EsAddVideo.routeName:
         return MaterialPageRoute(
           builder: (context) => Provider<EsVideoBloc>(
-            builder: (context) =>
+            create: (context) =>
                 EsVideoBloc(httpServiceBloc, esBusinessesBloc),
             dispose: (context, value) => value.dispose(),
             child: EsAddVideo(),
@@ -342,7 +343,7 @@ class AppRouter {
       case PlayVideoPage.routeName:
         return MaterialPageRoute(
           builder: (context) => Provider<EsVideoBloc>(
-            builder: (context) =>
+            create: (context) =>
                 EsVideoBloc(httpServiceBloc, esBusinessesBloc),
             dispose: (context, value) => value.dispose(),
             child: PlayVideoPage(settings.arguments),
