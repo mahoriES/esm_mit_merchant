@@ -21,7 +21,7 @@ class SettingPage extends StatefulWidget {
   static Route generateRoute(RouteSettings settings, HttpService httpService) {
     return MaterialPageRoute(
         builder: (context) => Provider(
-              builder: (context) =>
+              create: (context) =>
                   AccountSettingBloc(httpService: httpService),
               dispose: (context, value) => value.dispose(),
               child: SettingPage(),

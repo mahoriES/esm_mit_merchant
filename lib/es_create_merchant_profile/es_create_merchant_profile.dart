@@ -19,7 +19,7 @@ class EsCreateMerchantProfilePage extends StatefulWidget {
       RouteSettings settings, HttpService httpService, AuthBloc authBloc) {
     return MaterialPageRoute(
       builder: (context) => Provider(
-        builder: (context) =>
+        create: (context) =>
             EsCreateMerchantProfileBloc(httpService, authBloc),
         dispose: (context, value) => value.dispose(),
         child: EsCreateMerchantProfilePage(),

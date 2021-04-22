@@ -18,7 +18,7 @@ class SenderCodePage extends StatefulWidget {
   static Route generateRoute(RouteSettings settings, HttpService httpService) {
     return MaterialPageRoute(
         builder: (context) => Provider(
-              builder: (context) => SenderCodeBloc(httpService: httpService),
+              create: (context) => SenderCodeBloc(httpService: httpService),
               dispose: (context, value) => value.dispose(),
               child: SenderCodePage(),
             ));

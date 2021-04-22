@@ -25,7 +25,7 @@ class LocationVerifyPage extends StatefulWidget {
     GmbLocationItem locationItem = settings.arguments;
     return MaterialPageRoute(
       builder: (context) => Provider<CompleteVerificationBloc>(
-        builder: (context) => CompleteVerificationBloc(
+        create: (context) => CompleteVerificationBloc(
           httpService: httpService,
           authBloc: authBloc,
           locationItem: locationItem,

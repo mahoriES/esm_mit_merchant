@@ -20,6 +20,7 @@ import 'package:foore/router.dart';
 import 'package:foore/services/sizeconfig.dart';
 import 'package:foore/widgets/es_select_business.dart';
 import 'package:provider/provider.dart';
+import 'package:foore/dashboard/dashboard.dart';
 
 class EsHomePage extends StatefulWidget {
   static const routeName = '/';
@@ -34,16 +35,20 @@ class _EsHomePageState extends State<EsHomePage> {
 
   final List<IconData> icons = [
     Icons.store,
-    Icons.shopping_basket,
     Icons.menu,
+    Icons.shopping_basket,
     Icons.play_circle_outline,
+    Icons.multiline_chart,
     Icons.feedback,
   ];
 
   void _onItemTapped(int index) {
-    if (index == 0) {
-      Navigator.of(context).pushNamed(AppRouter.homeRoute);
-    } else {
+    if(index==4){
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => dashboard()),);}
+    else {
       setState(() {
         _selectedIndex = index;
       });
@@ -57,7 +62,9 @@ class _EsHomePageState extends State<EsHomePage> {
       AppTranslations.of(context).text("bottom_nav_orders"),
       AppTranslations.of(context).text("bottom_nav_products"),
       AppTranslations.of(context).text("bottom_nav_videos"),
-      AppTranslations.of(context).text("bottom_nav_reviews")
+      AppTranslations.of(context).text("Dashboard"),
+      AppTranslations.of(context).text("bottom_nav_reviews"),
+
     ];
     SizeConfig().init(context);
     final List<Widget> _widgetOptions = <Widget>[
@@ -71,7 +78,7 @@ class _EsHomePageState extends State<EsHomePage> {
           onboardingRequiredPage: MultiProvider(
             providers: [
               Provider<PeopleBloc>(
-                builder: (context) => PeopleBloc(widget.httpServiceBloc),
+                create: (context) => PeopleBloc(widget.httpServiceBloc),
                 dispose: (context, value) => value.dispose(),
               ),
             ],
@@ -80,7 +87,7 @@ class _EsHomePageState extends State<EsHomePage> {
           child: MultiProvider(
             providers: [
               Provider<PeopleBloc>(
-                builder: (context) => PeopleBloc(widget.httpServiceBloc),
+                create: (context) => PeopleBloc(widget.httpServiceBloc),
                 dispose: (context, value) => value.dispose(),
               ),
             ],

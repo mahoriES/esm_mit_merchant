@@ -37,27 +37,27 @@ void main() async {
       MultiProvider(
         providers: [
           Provider<AuthBloc>(
-            builder: (context) => AuthBloc(),
+            create: (context) => AuthBloc(),
             dispose: (context, value) => value.dispose(),
           ),
           ProxyProvider<AuthBloc, HttpService>(
-            builder: (_, authBloc, __) => HttpService(authBloc),
+            update: (_, authBloc, __) => HttpService(authBloc),
           ),
           ProxyProvider2<HttpService, AuthBloc, LoginBloc>(
-            builder: (_, httpService, authBloc, __) =>
+            update: (_, httpService, authBloc, __) =>
                 LoginBloc(httpService, authBloc),
           ),
           ProxyProvider<HttpService, OnboardingGuardBloc>(
-            builder: (_, http, __) => OnboardingGuardBloc(http),
+            update: (_, http, __) => OnboardingGuardBloc(http),
             dispose: (context, value) => value.dispose(),
           ),
           ProxyProvider2<HttpService, AuthBloc, EsBusinessesBloc>(
-            builder: (_, http, authBloc, __) =>
+            update: (_, http, authBloc, __) =>
                 EsBusinessesBloc(http, authBloc),
             dispose: (context, value) => value.dispose(),
           ),
           Provider<AppTranslationsBloc>(
-            builder: (context) => AppTranslationsBloc(),
+            create: (context) => AppTranslationsBloc(),
             dispose: (context, value) => value.dispose(),
           ),
           Provider<EsAddressBloc>(
@@ -135,7 +135,7 @@ class _ReviewAppState extends State<ReviewApp>
           return EsamudaayTheme(
             initialThemeType: THEME_TYPES.MERCHANT_APP_PRIMARY_THEME,
             child: MaterialApp(
-              title: 'Foore',
+              title: 'InteLEC',
               debugShowCheckedModeBanner: false,
               initialRoute: AppRouter.homeRoute,
               onGenerateRoute: router.routeGenerator,

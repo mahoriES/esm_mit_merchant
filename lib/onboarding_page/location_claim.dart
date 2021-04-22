@@ -29,7 +29,7 @@ class LocationClaimPage extends StatefulWidget {
     GmbLocationItem locationItem = argumentsForLocationClaim['locationItem'];
     return MaterialPageRoute(
       builder: (context) => Provider<LocationClaimBloc>(
-        builder: (context) => LocationClaimBloc(
+        create: (context) => LocationClaimBloc(
           httpService: httpService,
           authBloc: authBloc,
           googleLocation: googleLocation,
